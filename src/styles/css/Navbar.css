@@ -1,0 +1,18 @@
+.navbar {
+    background-color: #333 !important; /* Adding !important to override default styles */
+  }
+  
+  .navbar .navbar-title {
+    flex-grow: 1;
+  }
+  
+  @media (max-width: 600px) {
+    .navbar .navbar-title {
+      font-size: 1.2rem;
+    }
+  
+    .navbar .MuiButton-root {
+      font-size: 0.8rem;
+    }
+  }
+  
