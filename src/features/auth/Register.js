@@ -65,7 +65,7 @@ const Register = () => {
       <Box className="register-hero">
         <Container 
           className="d-flex align-items-center justify-content-center" 
-          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: "80vh", paddingTop: 0, marginTop: 0 }}
+          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: "82vh", paddingTop: 0, marginTop: 0 }}
         >
           <Card className="register-container" style={{ marginTop: '0 !important' }}>
             <Typography variant="h4" component="h1" gutterBottom className="text-center">
@@ -112,7 +112,7 @@ const Register = () => {
                 }}
                 required
               />
-              <Button variant="contained" color="primary" type="submit" className="w-100" disabled={!passwordValid}>
+              <Button variant="contained" color="primary" type="submit" className="w-100" disabled={!passwordValid} style={{marginTop: '15px'}}>
                 Register
               </Button>
             </form>
