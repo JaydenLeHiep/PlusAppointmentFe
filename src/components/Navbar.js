@@ -5,7 +5,7 @@ import '../styles/css/Navbar.css';
 
 const Navbar = () => {
   return (
-    <AppBar position="static" className="navbar" >
+    <AppBar position="static" className="navbar">
       <Toolbar>
         <Typography variant="h6" className="navbar-title">
           Nail Store
