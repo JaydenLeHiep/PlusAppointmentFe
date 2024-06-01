@@ -4,7 +4,7 @@ import HomePage from './features/home/HomePage';
 import LoginPage from './features/auth/LoginPage';
 import Register from './features/auth/Register';
 import CustomerDashboard from './features/customer/CustomerDashboard';
-import OwnerDashboard from './features/owner/OwnerDashboard';
+import OwnerDashboard from './features/ownerDashboard/OwnerDashboard';
 import AppProvider from './app-provider';
 import GlobalStyles from '../src/styles/GobalStyles';
 
