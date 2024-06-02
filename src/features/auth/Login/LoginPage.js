@@ -1,8 +1,8 @@
 import React from 'react';
-import { Container, Box } from '@mui/material';
+import { Container, Card, Box } from '@mui/material';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
-import LoginForm from '../Login/LoginForm';
+import LoginForm from './LoginForm';
 import '../../../styles/css/LoginPage.css';
 
 const LoginPage = () => {
@@ -14,7 +14,9 @@ const LoginPage = () => {
           className="d-flex align-items-center justify-content-center" 
           style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: "82vh", paddingTop: 0, marginTop: 0 }}
         >
-          <LoginForm />
+          <Card className="login-container">
+            <LoginForm />
+          </Card>
         </Container>
       </Box>
       <Footer />
