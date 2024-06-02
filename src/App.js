@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './features/home/HomePage';
-import LoginPage from './features/auth/LoginPage';
-import Register from './features/auth/Register';
+import LoginPage from './features/auth/Login/LoginPage';
+import RegisterPage from './features/auth/Register/RegisterPage';
 import CustomerDashboard from './features/customer/CustomerDashboard';
 import OwnerDashboard from './features/ownerDashboard/OwnerDashboard';
 import AppProvider from './app-provider';
@@ -15,7 +15,7 @@ const App = () => (
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/customer-dashboard" element={<CustomerDashboard />} />
         <Route path="/owner-dashboard" element={<OwnerDashboard />} />
       </Routes>
