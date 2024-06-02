@@ -1,7 +1,7 @@
 // src/hooks/useFetchBusinesses.js
 
 import { useState, useEffect } from 'react';
-import { fetchBusinesses } from '../lib/OwnerDashboardApiClient';
+import { fetchBusinesses } from '../lib/apiClient';
 
 const useFetchBusinesses = () => {
   const [businesses, setBusinesses] = useState([]);
