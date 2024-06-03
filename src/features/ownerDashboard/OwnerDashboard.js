@@ -55,7 +55,7 @@ const OwnerDashboard = () => {
                 {showAppointments && (
                   <Box mt={2}>
                     <Typography variant="h5" gutterBottom>
-                      Appointments for {selectedBusiness.businessName}
+                      {selectedBusiness.businessName}
                     </Typography>
                     <Appointments businessId={selectedBusiness.businessId} />
                   </Box>

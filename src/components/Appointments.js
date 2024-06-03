@@ -18,6 +18,7 @@ const Appointments = ({ businessId }) => {
           <Paper key={appointment.appointmentId} sx={{ padding: 2 }}>
             <Stack spacing={1}>
               <Typography variant="h6">{appointment.customerName}</Typography>
+              <Typography>Customer Phone: {appointment.customerPhone}</Typography>
               <Typography>Service: {appointment.serviceName}</Typography>
               <Typography>Staff: {appointment.staffName}</Typography>
               <Typography>Time: {new Date(appointment.appointmentTime).toLocaleString()}</Typography>
