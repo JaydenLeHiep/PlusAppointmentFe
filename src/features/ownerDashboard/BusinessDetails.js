@@ -1,68 +1,66 @@
-// src/features/ownerDashboard/BusinessDetails.js
-
-import React, { useState } from 'react';
-import { Typography, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, List, ListItem, ListItemText, IconButton, TextField } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Typography, Box, Button, List, ListItem, ListItemText, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, IconButton } from '@mui/material';
+import { Delete } from '@mui/icons-material';
+import { fetchStaff, addStaff, deleteStaff } from '../../lib/apiClient';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { Delete } from '@mui/icons-material';
+import '../../styles/css/OwnerDashboard.css';
 
-const BusinessDetails = ({ selectedBusiness, handleBackToList }) => {
-  const [events, setEvents] = useState(selectedBusiness.appointments?.$values || []);
-  const [open, setOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedDateEvents, setSelectedDateEvents] = useState([]);
-  const [newAppointment, setNewAppointment] = useState({
-    title: '',
-    start: '',
-    end: '',
+const BusinessDetails = ({ selectedBusiness, events, setSelectedBusiness }) => {
+  const [staff, setStaff] = useState([]);
+  const [staffOpen, setStaffOpen] = useState(false);
+  const [newStaff, setNewStaff] = useState({
+    username: '',
+    password: '',
+    email: '',
   });
 
-  const handleDateClick = (info) => {
-    const dateEvents = events.filter(event => new Date(event.start).toDateString() === new Date(info.dateStr).toDateString());
-    setSelectedDate(info.dateStr);
-    setSelectedDateEvents(dateEvents);
-    setOpen(true);
-  };
-
-  const handleEventClick = (info) => {
-    const dateEvents = events.filter(event => new Date(event.start).toDateString() === new Date(info.event.start).toDateString());
-    setSelectedDate(new Date(info.event.start).toDateString());
-    setSelectedDateEvents(dateEvents);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setSelectedDate(null);
-    setSelectedDateEvents([]);
-    setNewAppointment({
-      title: '',
-      start: '',
-      end: '',
-    });
-  };
-
-  const handleDelete = (eventId) => {
-    setEvents(events.filter(event => event.id !== eventId));
-    setSelectedDateEvents(selectedDateEvents.filter(event => event.id !== eventId));
-  };
-
-  const handleAddAppointment = () => {
-    const newEvent = {
-      id: new Date().getTime(),
-      title: newAppointment.title,
-      start: new Date(`${selectedDate}T${newAppointment.start}`).toISOString(),
-      end: new Date(`${selectedDate}T${newAppointment.end}`).toISOString(),
+  useEffect(() => {
+    const fetchStaffData = async () => {
+      if (selectedBusiness) {
+        try {
+          const staffData = await fetchStaff();
+          setStaff(staffData.filter(member => member.BusinessId === selectedBusiness.id));
+        } catch (error) {
+          console.error('Failed to fetch staff:', error);
+        }
+      }
     };
-    setEvents([...events, newEvent]);
-    setSelectedDateEvents([...selectedDateEvents, newEvent]);
-    setNewAppointment({
-      title: '',
-      start: '',
-      end: '',
+    fetchStaffData();
+  }, [selectedBusiness]);
+
+  const handleStaffOpen = () => {
+    setStaffOpen(true);
+  };
+
+  const handleStaffClose = () => {
+    setStaffOpen(false);
+    setNewStaff({
+      username: '',
+      password: '',
+      email: '',
     });
+  };
+
+  const handleAddStaff = async () => {
+    try {
+      const addedStaff = await addStaff(selectedBusiness.id, newStaff);
+      setStaff([...staff, addedStaff]);
+      handleStaffClose();
+    } catch (error) {
+      console.error('Failed to add staff:', error);
+    }
+  };
+
+  const handleDeleteStaff = async (StaffId) => {
+    try {
+      await deleteStaff(StaffId);
+      setStaff(prevStaff => prevStaff.filter((member)  => member.StaffId !== StaffId));
+    } catch (error) {
+      console.error('Failed to delete staff:', error);
+    }
   };
 
   return (
@@ -88,70 +86,70 @@ const BusinessDetails = ({ selectedBusiness, handleBackToList }) => {
       <Typography variant="body1" gutterBottom>
         <strong>Services:</strong> {selectedBusiness.services?.$values?.length || selectedBusiness.services?.length || 0}
       </Typography>
-      <Box className="calendar-container">
+      <Box className="calendar-container" style={{ marginBottom: '10px' }}>
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
           events={events}
           height="auto"
-          dateClick={handleDateClick}
-          eventClick={handleEventClick}
         />
       </Box>
-      <Button variant="contained" color="primary" onClick={handleBackToList} style={{ marginTop: '10px' }}>
+      <Button variant="contained" color="primary" onClick={() => setSelectedBusiness(null)} style={{ marginTop: '10px' }}>
         Back to list
       </Button>
-
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Appointments for {selectedDate}</DialogTitle>
+      <Button variant="contained" color="secondary" onClick={handleStaffOpen} style={{ marginTop: '10px', marginLeft: '10px' }}>
+        Show Staff
+      </Button>
+      <Dialog open={staffOpen} onClose={handleStaffClose}>
+        <DialogTitle>Staff List</DialogTitle>
         <DialogContent>
-          {selectedDateEvents.length > 0 ? (
+          {staff.length > 0 ? (
             <List>
-              {selectedDateEvents.map(event => (
-                <ListItem key={event.id} secondaryAction={
-                  <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(event.id)}>
+              {staff.map((member) => (
+                <ListItem key={member.staffId} secondaryAction={
+                  <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteStaff(member.staffId)}>
                     <Delete />
                   </IconButton>
                 }>
                   <ListItemText
-                    primary={event.title}
-                    secondary={`${new Date(event.start).toLocaleTimeString()} - ${new Date(event.end).toLocaleTimeString()}`}
+                    primary={member.name}
+                    secondary={member.email}
                   />
                 </ListItem>
               ))}
             </List>
           ) : (
-            <DialogContentText>No appointments for this date.</DialogContentText>
+            <DialogContentText>No staff found for this business.</DialogContentText>
           )}
-          <DialogContentText>Add New Appointment</DialogContentText>
+          <DialogContentText>Add New Staff</DialogContentText>
           <TextField
             margin="dense"
-            label="Title"
+            label="Username"
             type="text"
             fullWidth
-            value={newAppointment.title}
-            onChange={(e) => setNewAppointment({ ...newAppointment, title: e.target.value })}
+            value={newStaff.username}
+            onChange={(e) => setNewStaff({ ...newStaff, username: e.target.value })}
           />
           <TextField
             margin="dense"
-            label="Start Time"
-            type="time"
+            label="Password"
+            type="password"
             fullWidth
-            value={newAppointment.start}
-            onChange={(e) => setNewAppointment({ ...newAppointment, start: e.target.value })}
+            value={newStaff.password}
+            onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
           />
           <TextField
             margin="dense"
-            label="End Time"
-            type="time"
+            label="Email"
+            type="email"
             fullWidth
-            value={newAppointment.end}
-            onChange={(e) => setNewAppointment({ ...newAppointment, end: e.target.value })}
+            value={newStaff.email}
+            onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">Cancel</Button>
-          <Button onClick={handleAddAppointment} color="primary">Add Appointment</Button>
+          <Button onClick={handleStaffClose} color="primary">Cancel</Button>
+          <Button onClick={handleAddStaff} color="primary">Add Staff</Button>
         </DialogActions>
       </Dialog>
     </Box>

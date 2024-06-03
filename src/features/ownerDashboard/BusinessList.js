@@ -1,9 +1,7 @@
-// src/features/ownerDashboard/BusinessList.js
-
 import React from 'react';
-import { Card, Typography, Box } from '@mui/material';
+import { Typography, Card, Box } from '@mui/material';
 
-const BusinessList = ({ businesses, handleBusinessClick }) => {
+const BusinessList = ({ businesses, onBusinessClick }) => {
   return (
     <Box>
       <Typography variant="h5" gutterBottom className="text-center">
@@ -11,7 +9,7 @@ const BusinessList = ({ businesses, handleBusinessClick }) => {
       </Typography>
       {businesses.length ? (
         businesses.map((business) => (
-          <Card key={business.businessId} className="business-card" onClick={() => handleBusinessClick(business.businessId)}>
+          <Card key={business.businessId} className="business-card" onClick={() => onBusinessClick(business)}>
             <Typography variant="h6">{business.name}</Typography>
             <Typography variant="body2">{business.address}</Typography>
           </Card>
