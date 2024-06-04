@@ -22,7 +22,13 @@ const BusinessDetails = ({ selectedBusiness, events, setSelectedBusiness }) => {
       if (selectedBusiness) {
         try {
           const staffData = await fetchStaff();
-          setStaff(staffData.filter(member => member.BusinessId === selectedBusiness.id));
+          const filteredStaff = staffData.filter(member => member.StaffId === selectedBusiness.id);
+          const staffWithNewIds = filteredStaff.map((member, index) => ({
+            ...member,
+            staff_id: index
+          }));
+          console.log(staffWithNewIds);
+          setStaff(staffWithNewIds);
         } catch (error) {
           console.error('Failed to fetch staff:', error);
         }
@@ -30,7 +36,6 @@ const BusinessDetails = ({ selectedBusiness, events, setSelectedBusiness }) => {
     };
     fetchStaffData();
   }, [selectedBusiness]);
-
   const handleStaffOpen = () => {
     setStaffOpen(true);
   };
@@ -56,8 +61,14 @@ const BusinessDetails = ({ selectedBusiness, events, setSelectedBusiness }) => {
 
   const handleDeleteStaff = async (StaffId) => {
     try {
+      console.log("Staff ID to delete:", StaffId);
+
+      const memberToDelete = staff.find(member => member.staffId);
+      console.log("Member to delete:", memberToDelete);
+
       await deleteStaff(StaffId);
-      setStaff(prevStaff => prevStaff.filter((member)  => member.StaffId !== StaffId));
+      // fix delete staff****
+      setStaff(prevStaff => prevStaff.filter((member) => member.staffId !== StaffId));
     } catch (error) {
       console.error('Failed to delete staff:', error);
     }
