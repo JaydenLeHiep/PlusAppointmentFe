@@ -27,7 +27,7 @@ const BusinessDetails = ({ selectedBusiness, events, setSelectedBusiness }) => {
             ...member,
             staff_id: index
           }));
-          console.log(staffWithNewIds);
+          
           setStaff(staffWithNewIds);
         } catch (error) {
           console.error('Failed to fetch staff:', error);
@@ -63,8 +63,9 @@ const BusinessDetails = ({ selectedBusiness, events, setSelectedBusiness }) => {
     try {
       console.log("Staff ID to delete:", StaffId);
 
-      const memberToDelete = staff.find(member => member.staffId);
-      console.log("Member to delete:", memberToDelete);
+     
+      
+
 
       await deleteStaff(StaffId);
       // fix delete staff****
