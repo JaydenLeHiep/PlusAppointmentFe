@@ -8,7 +8,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import '../../styles/css/OwnerDashboard.css';
 
-const BusinessDetails = ({ selectedBusiness, events, setSelectedBusiness }) => {
+const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
   const [staff, setStaff] = useState([]);
   const [staffOpen, setStaffOpen] = useState(false);
   const [newStaff, setNewStaff] = useState({
@@ -22,20 +22,16 @@ const BusinessDetails = ({ selectedBusiness, events, setSelectedBusiness }) => {
       if (selectedBusiness) {
         try {
           const staffData = await fetchStaff();
-          const filteredStaff = staffData.filter(member => member.StaffId === selectedBusiness.id);
-          const staffWithNewIds = filteredStaff.map((member, index) => ({
-            ...member,
-            staff_id: index
-          }));
-          
-          setStaff(staffWithNewIds);
+          setStaff(staffData.filter(member => member.BusinessId === selectedBusiness.id));
         } catch (error) {
           console.error('Failed to fetch staff:', error);
         }
       }
     };
+
     fetchStaffData();
   }, [selectedBusiness]);
+
   const handleStaffOpen = () => {
     setStaffOpen(true);
   };
@@ -61,14 +57,7 @@ const BusinessDetails = ({ selectedBusiness, events, setSelectedBusiness }) => {
 
   const handleDeleteStaff = async (StaffId) => {
     try {
-      console.log("Staff ID to delete:", StaffId);
-
-     
-      
-
-
       await deleteStaff(StaffId);
-      // fix delete staff****
       setStaff(prevStaff => prevStaff.filter((member) => member.staffId !== StaffId));
     } catch (error) {
       console.error('Failed to delete staff:', error);
@@ -102,7 +91,7 @@ const BusinessDetails = ({ selectedBusiness, events, setSelectedBusiness }) => {
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
-          events={events}
+          events={selectedBusiness.events}
           height="auto"
         />
       </Box>

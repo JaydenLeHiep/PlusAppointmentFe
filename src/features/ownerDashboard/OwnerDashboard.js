@@ -28,16 +28,33 @@ const OwnerDashboard = () => {
     };
 
     loadBusinesses();
+
+    // Retrieve selected business from local storage if it exists
+    const storedBusiness = localStorage.getItem('selectedBusiness');
+    if (storedBusiness) {
+      setSelectedBusiness(JSON.parse(storedBusiness));
+    }
+
+    const storedShowAppointments = localStorage.getItem('showAppointments');
+    if (storedShowAppointments) {
+      setShowAppointments(JSON.parse(storedShowAppointments));
+    }
   }, []);
+
+  useEffect(() => {
+    // Save selected business and show appointments state to local storage
+    if (selectedBusiness) {
+      localStorage.setItem('selectedBusiness', JSON.stringify(selectedBusiness));
+    } else {
+      localStorage.removeItem('selectedBusiness');
+    }
+
+    localStorage.setItem('showAppointments', JSON.stringify(showAppointments));
+  }, [selectedBusiness, showAppointments]);
 
   const handleBusinessClick = (business) => {
     setSelectedBusiness(business);
     setShowAppointments(false); // Reset appointments visibility when a new business is selected
-  };
-
-  const handleBackToList = () => {
-    setSelectedBusiness(null);
-    setShowAppointments(false); // Hide appointments when going back to the list
   };
 
   const toggleShowAppointments = () => {
@@ -56,11 +73,8 @@ const OwnerDashboard = () => {
               <Alert severity="error">{error}</Alert>
             ) : selectedBusiness ? (
               <>
-                <BusinessDetails selectedBusiness={selectedBusiness} handleBackToList={handleBackToList} />
+                <BusinessDetails selectedBusiness={selectedBusiness} setSelectedBusiness={setSelectedBusiness} />
                 <Box mt={2}>
-                  {/* <Button variant="contained" color="primary" onClick={handleBackToList} style={{ marginRight: '8px' }}>
-                    Back to List
-                  </Button> */}
                   <Button variant="contained" color="secondary" onClick={toggleShowAppointments}>
                     {showAppointments ? 'Hide Appointments' : 'Show Appointments'}
                   </Button>
