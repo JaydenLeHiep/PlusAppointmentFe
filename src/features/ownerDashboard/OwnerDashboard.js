@@ -69,7 +69,7 @@ const OwnerDashboard = () => {
   };
 
   return (
-    <Box>
+    <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar />
       <Box className="dashboard-hero">
         <Container className="d-flex align-items-center justify-content-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '82vh', paddingTop: 0, marginTop: 0 }}>

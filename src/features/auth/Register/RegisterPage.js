@@ -56,7 +56,7 @@ const RegisterPage = () => {
   const toggleShowPassword = () => setShowPassword(!showPassword);
 
   return (
-    <Box>
+    <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar />
       <Box className="register-hero">
         <Container 

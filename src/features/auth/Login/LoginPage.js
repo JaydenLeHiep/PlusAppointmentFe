@@ -11,14 +11,14 @@ const LoginPage = () => {
   }, []);
 
   return (
-    <Box>
+    <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar />
-      <Box className="login-hero">
+      <Box className="login-hero" flex="1">
         <Container 
           className="d-flex align-items-center justify-content-center" 
-          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: "82vh", paddingTop: 0, marginTop: 0 }}
+          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100%', paddingTop: 0, marginTop: 0 }}
         >
-          <Card className="login-container" style={{ marginTop: '0 !important' }}>
+          <Card className="login-container">
             <Typography variant="h4" component="h1" gutterBottom className="text-center">
               Login
             </Typography>
