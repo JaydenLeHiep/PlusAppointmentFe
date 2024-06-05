@@ -29,7 +29,7 @@ const OwnerDashboard = () => {
 
     loadBusinesses();
 
-    // Retrieve selected business from local storage if it exists
+    // Retrieve selected business and showAppointments from local storage if they exist
     const storedBusiness = localStorage.getItem('selectedBusiness');
     if (storedBusiness) {
       setSelectedBusiness(JSON.parse(storedBusiness));
@@ -42,7 +42,7 @@ const OwnerDashboard = () => {
   }, []);
 
   useEffect(() => {
-    // Save selected business and show appointments state to local storage
+    // Save selected business and showAppointments state to local storage
     if (selectedBusiness) {
       localStorage.setItem('selectedBusiness', JSON.stringify(selectedBusiness));
     } else {
