@@ -1,5 +1,4 @@
-// src/features/auth/Register/RegisterForm.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TextField, Button, InputAdornment, IconButton, Alert } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
@@ -19,6 +18,11 @@ const RegisterForm = ({
   message,
   alertVariant
 }) => {
+
+  useEffect(() => {
+    localStorage.setItem('registerForm', JSON.stringify({ username, email, phone, password }));
+  }, [username, email, phone, password]);
+
   return (
     <form onSubmit={handleRegister}>
       <TextField

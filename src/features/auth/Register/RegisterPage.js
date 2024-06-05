@@ -1,5 +1,4 @@
-// src/features/auth/Register/RegisterPage.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Container, Card, Typography } from '@mui/material';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
@@ -19,6 +18,17 @@ const RegisterPage = () => {
 
   const passwordValid = usePasswordValidation(password);
 
+  useEffect(() => {
+    const savedForm = JSON.parse(localStorage.getItem('registerForm'));
+    if (savedForm) {
+      setUsername(savedForm.username);
+      setEmail(savedForm.email);
+      setPhone(savedForm.phone);
+      setPassword(savedForm.password);
+    }
+    localStorage.setItem('currentPath', window.location.pathname);
+  }, []);
+
   const handleRegister = async (event) => {
     event.preventDefault();
     if (!passwordValid) {
@@ -36,6 +46,7 @@ const RegisterPage = () => {
       setPassword('');
       setEmail('');
       setPhone('');
+      localStorage.removeItem('registerForm');
     } catch (error) {
       setMessage(error.message);
       setAlertVariant('danger');
