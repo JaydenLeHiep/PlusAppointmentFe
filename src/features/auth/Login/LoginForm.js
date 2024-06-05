@@ -27,6 +27,9 @@ const LoginForm = () => {
       // Store token in localStorage and update auth state
       login(data.token, { username: usernameOrEmail });
 
+      // Set a flag indicating a new login
+      localStorage.setItem('isNewLogin', 'true');
+
       // Redirect based on user role or other criteria
       navigate('/owner-dashboard');
     } catch (error) {

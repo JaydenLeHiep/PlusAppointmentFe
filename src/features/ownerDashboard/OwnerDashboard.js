@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Card, Box, CircularProgress, Alert, Button, Typography } from '@mui/material';
+import { Container, Card, Box, CircularProgress, Alert } from '@mui/material';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import BusinessList from './BusinessList';
 import BusinessDetails from './BusinessDetails';
-import Appointments from '../../components/Appointments'; // Import the Appointments component
+import AppointmentsButton from './AppointmentsButton';
 import { fetchBusinesses } from '../../lib/apiClient';
 import '../../styles/css/OwnerDashboard.css';
 
 const OwnerDashboard = () => {
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
-  const [showAppointments, setShowAppointments] = useState(false); // State to manage visibility of appointments
+  const [showAppointments, setShowAppointments] = useState(false); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -29,20 +29,27 @@ const OwnerDashboard = () => {
 
     loadBusinesses();
 
-    // Retrieve selected business and showAppointments from local storage if they exist
-    const storedBusiness = localStorage.getItem('selectedBusiness');
-    if (storedBusiness) {
-      setSelectedBusiness(JSON.parse(storedBusiness));
-    }
+    const isNewLogin = localStorage.getItem('isNewLogin');
+    if (isNewLogin) {
+      // Clear the flag and reset state for a new login
+      localStorage.removeItem('isNewLogin');
+      setSelectedBusiness(null);
+      setShowAppointments(false);
+    } else {
+      // Retrieve selected business and showAppointments from local storage if they exist
+      const storedBusiness = localStorage.getItem('selectedBusiness');
+      if (storedBusiness) {
+        setSelectedBusiness(JSON.parse(storedBusiness));
+      }
 
-    const storedShowAppointments = localStorage.getItem('showAppointments');
-    if (storedShowAppointments) {
-      setShowAppointments(JSON.parse(storedShowAppointments));
+      const storedShowAppointments = localStorage.getItem('showAppointments');
+      if (storedShowAppointments) {
+        setShowAppointments(JSON.parse(storedShowAppointments));
+      }
     }
   }, []);
 
   useEffect(() => {
-    // Save selected business and showAppointments state to local storage
     if (selectedBusiness) {
       localStorage.setItem('selectedBusiness', JSON.stringify(selectedBusiness));
     } else {
@@ -54,7 +61,7 @@ const OwnerDashboard = () => {
 
   const handleBusinessClick = (business) => {
     setSelectedBusiness(business);
-    setShowAppointments(false); // Reset appointments visibility when a new business is selected
+    setShowAppointments(false);
   };
 
   const toggleShowAppointments = () => {
@@ -74,19 +81,7 @@ const OwnerDashboard = () => {
             ) : selectedBusiness ? (
               <>
                 <BusinessDetails selectedBusiness={selectedBusiness} setSelectedBusiness={setSelectedBusiness} />
-                <Box mt={2}>
-                  <Button variant="contained" color="secondary" onClick={toggleShowAppointments}>
-                    {showAppointments ? 'Hide Appointments' : 'Show Appointments'}
-                  </Button>
-                </Box>
-                {showAppointments && (
-                  <Box mt={2}>
-                    <Typography variant="h5" gutterBottom>
-                      {selectedBusiness.businessName}
-                    </Typography>
-                    <Appointments businessId={selectedBusiness.businessId} />
-                  </Box>
-                )}
+                <AppointmentsButton showAppointments={showAppointments} toggleShowAppointments={toggleShowAppointments} selectedBusiness={selectedBusiness} />
               </>
             ) : (
               <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />
