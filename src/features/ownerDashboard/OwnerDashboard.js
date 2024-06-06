@@ -52,8 +52,10 @@ const OwnerDashboard = () => {
   useEffect(() => {
     if (selectedBusiness) {
       localStorage.setItem('selectedBusiness', JSON.stringify(selectedBusiness));
+      localStorage.setItem('selectedBusinessId', selectedBusiness.businessId); // Save BusinessId
     } else {
       localStorage.removeItem('selectedBusiness');
+      localStorage.removeItem('selectedBusinessId'); // Remove BusinessId
     }
 
     localStorage.setItem('showAppointments', JSON.stringify(showAppointments));

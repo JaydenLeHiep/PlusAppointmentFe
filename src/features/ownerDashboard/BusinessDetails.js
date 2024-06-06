@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Box, Button, List, ListItem, ListItemText, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, IconButton } from '@mui/material';
+import { Typography, Box, Button, List, ListItem, ListItemText, Dialog, DialogActions, DialogContent, Alert, DialogContentText, DialogTitle, TextField, IconButton } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { fetchStaff, addStaff, deleteStaff } from '../../lib/apiClient';
 import FullCalendar from '@fullcalendar/react';
@@ -12,10 +12,12 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
   const [staff, setStaff] = useState([]);
   const [staffOpen, setStaffOpen] = useState(false);
   const [newStaff, setNewStaff] = useState({
-    username: '',
-    password: '',
+    name: '',
     email: '',
+    phone: '',
+    password: ''
   });
+  const [alert, setAlert] = useState({ message: '', severity: '' });
 
   useEffect(() => {
     const fetchStaffData = async () => {
@@ -39,19 +41,40 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
   const handleStaffClose = () => {
     setStaffOpen(false);
     setNewStaff({
-      username: '',
-      password: '',
+      name: '',
       email: '',
+      phone: '',
+      password: ''
     });
+    setAlert({ message: '', severity: '' }); // Clear alert message
   };
 
   const handleAddStaff = async () => {
     try {
-      const addedStaff = await addStaff(selectedBusiness.id, newStaff);
-      setStaff([...staff, addedStaff]);
-      handleStaffClose();
+      const staffDetails = {
+        name: newStaff.name,
+        email: newStaff.email,
+        phone: newStaff.phone,
+        password: newStaff.password,
+        BusinessId: selectedBusiness.businessId // Use BusinessId from selectedBusiness
+      };
+
+      const addedStaff = await addStaff(selectedBusiness.businessId, staffDetails);
+      setStaff(prevStaff => {
+        const updatedStaff = [...prevStaff, addedStaff];
+        console.log("Updated staff list after adding new member:", updatedStaff);
+        return updatedStaff;
+      });
+      setNewStaff({
+        name: '',
+        email: '',
+        phone: '',
+        password: ''
+      });
+      setAlert({ message: 'Staff added successfully!', severity: 'success' });
     } catch (error) {
       console.error('Failed to add staff:', error);
+      setAlert({ message: 'Failed to add staff. Please try again.', severity: 'error' });
     }
   };
 
@@ -59,8 +82,10 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
     try {
       await deleteStaff(StaffId);
       setStaff(prevStaff => prevStaff.filter((member) => member.staffId !== StaffId));
+      setAlert({ message: 'Staff deleted successfully!', severity: 'success' });
     } catch (error) {
       console.error('Failed to delete staff:', error);
+      setAlert({ message: 'Failed to delete staff. Please try again.', severity: 'error' });
     }
   };
 
@@ -125,19 +150,11 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
           <DialogContentText>Add New Staff</DialogContentText>
           <TextField
             margin="dense"
-            label="Username"
+            label="Name"
             type="text"
             fullWidth
-            value={newStaff.username}
-            onChange={(e) => setNewStaff({ ...newStaff, username: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="Password"
-            type="password"
-            fullWidth
-            value={newStaff.password}
-            onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
+            value={newStaff.name}
+            onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
           />
           <TextField
             margin="dense"
@@ -147,6 +164,27 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
             value={newStaff.email}
             onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
           />
+          <TextField
+            margin="dense"
+            label="Phone"
+            type="text"
+            fullWidth
+            value={newStaff.phone}
+            onChange={(e) => setNewStaff({ ...newStaff, phone: e.target.value })}
+          />
+          <TextField
+            margin="dense"
+            label="Password"
+            type="password"
+            fullWidth
+            value={newStaff.password}
+            onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
+          />
+          {alert.message && (
+            <Alert severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} sx={{ mt: 2 }}>
+              {alert.message}
+            </Alert>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleStaffClose} color="primary">Cancel</Button>
