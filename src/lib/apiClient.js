@@ -107,7 +107,6 @@ export const addStaff = async (businessId, staffDetails) => {
   if (!token) {
     throw new Error('User not authenticated');
   }
-
   const response = await fetch(`${staffApiUrl}/${businessId}/add`, {
     method: 'POST',
     headers: {
@@ -116,13 +115,10 @@ export const addStaff = async (businessId, staffDetails) => {
     },
     body: JSON.stringify(staffDetails),
   });
-
   const data = await response.json();
-
   if (!response.ok) {
-    throw new Error(data.message);
+    throw new Error(data.message || 'Failed to add staff');
   }
-
   return data;
 };
 
