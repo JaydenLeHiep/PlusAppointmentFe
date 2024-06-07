@@ -1,5 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Typography, Box, Button, List, ListItem, ListItemText, Dialog, DialogActions, DialogContent, Alert, DialogContentText, DialogTitle, TextField, IconButton } from '@mui/material';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  Typography,
+  Box,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Alert,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  IconButton
+} from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { fetchStaff, addStaff, deleteStaff } from '../../lib/apiClient';
 import FullCalendar from '@fullcalendar/react';
@@ -19,20 +34,20 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
   });
   const [alert, setAlert] = useState({ message: '', severity: '' });
 
-  useEffect(() => {
-    const fetchStaffData = async () => {
-      if (selectedBusiness) {
-        try {
-          const staffData = await fetchStaff();
-          setStaff(staffData.filter(member => member.BusinessId === selectedBusiness.id));
-        } catch (error) {
-          console.error('Failed to fetch staff:', error);
-        }
+  const fetchStaffData = useCallback(async () => {
+    if (selectedBusiness) {
+      try {
+        const staffData = await fetchStaff(selectedBusiness.businessId);
+        setStaff(staffData);
+      } catch (error) {
+        console.error('Failed to fetch staff:', error);
       }
-    };
-
-    fetchStaffData();
+    }
   }, [selectedBusiness]);
+
+  useEffect(() => {
+    fetchStaffData();
+  }, [selectedBusiness, fetchStaffData]);
 
   const handleStaffOpen = () => {
     setStaffOpen(true);
@@ -46,7 +61,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
       phone: '',
       password: ''
     });
-    setAlert({ message: '', severity: '' }); // Clear alert message
+    setAlert({ message: '', severity: '' });
   };
 
   const handleAddStaff = async () => {
@@ -56,15 +71,11 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
         email: newStaff.email,
         phone: newStaff.phone,
         password: newStaff.password,
-        BusinessId: selectedBusiness.businessId // Use BusinessId from selectedBusiness
+        BusinessId: selectedBusiness.businessId
       };
 
-      const addedStaff = await addStaff(selectedBusiness.businessId, staffDetails);
-      setStaff(prevStaff => {
-        const updatedStaff = [...prevStaff, addedStaff];
-        console.log("Updated staff list after adding new member:", updatedStaff);
-        return updatedStaff;
-      });
+      await addStaff(selectedBusiness.businessId, staffDetails);
+      await fetchStaffData();  // Fetch the updated staff list
       setNewStaff({
         name: '',
         email: '',
@@ -78,10 +89,10 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
     }
   };
 
-  const handleDeleteStaff = async (StaffId) => {
+  const handleDeleteStaff = async (staffId) => {
     try {
-      await deleteStaff(StaffId);
-      setStaff(prevStaff => prevStaff.filter((member) => member.staffId !== StaffId));
+      await deleteStaff(staffId);
+      await fetchStaffData();  // Fetch the updated staff list
       setAlert({ message: 'Staff deleted successfully!', severity: 'success' });
     } catch (error) {
       console.error('Failed to delete staff:', error);
@@ -104,13 +115,13 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
         <strong>Email:</strong> {selectedBusiness.email}
       </Typography>
       <Typography variant="body1" gutterBottom>
-        <strong>Staffs:</strong> {selectedBusiness.staffs?.$values?.length || selectedBusiness.staffs?.length || 0}
+        <strong>Staffs:</strong> {staff.length}
       </Typography>
       <Typography variant="body1" gutterBottom>
-        <strong>Appointments:</strong> {selectedBusiness.appointments?.$values?.length || selectedBusiness.appointments?.length || 0}
+        <strong>Appointments:</strong> {selectedBusiness.appointments?.length || 0}
       </Typography>
       <Typography variant="body1" gutterBottom>
-        <strong>Services:</strong> {selectedBusiness.services?.$values?.length || selectedBusiness.services?.length || 0}
+        <strong>Services:</strong> {selectedBusiness.services?.length || 0}
       </Typography>
       <Box className="calendar-container" style={{ marginBottom: '10px' }}>
         <FullCalendar
@@ -120,10 +131,20 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
           height="auto"
         />
       </Box>
-      <Button variant="contained" color="primary" onClick={() => setSelectedBusiness(null)} style={{ marginTop: '10px' }}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setSelectedBusiness(null)}
+        style={{ marginTop: '10px' }}
+      >
         Back to list
       </Button>
-      <Button variant="contained" color="secondary" onClick={handleStaffOpen} style={{ marginTop: '10px', marginLeft: '10px' }}>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={handleStaffOpen}
+        style={{ marginTop: '10px', marginLeft: '10px' }}
+      >
         Show Staff
       </Button>
       <Dialog open={staffOpen} onClose={handleStaffClose}>
@@ -132,15 +153,15 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
           {staff.length > 0 ? (
             <List>
               {staff.map((member) => (
-                <ListItem key={member.staffId} secondaryAction={
-                  <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteStaff(member.staffId)}>
-                    <Delete />
-                  </IconButton>
-                }>
-                  <ListItemText
-                    primary={member.name}
-                    secondary={member.email}
-                  />
+                <ListItem
+                  key={member.staffId}
+                  secondaryAction={
+                    <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteStaff(member.staffId)}>
+                      <Delete />
+                    </IconButton>
+                  }
+                >
+                  <ListItemText primary={member.name} secondary={member.email} />
                 </ListItem>
               ))}
             </List>
@@ -187,8 +208,12 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleStaffClose} color="primary">Cancel</Button>
-          <Button onClick={handleAddStaff} color="primary">Add Staff</Button>
+          <Button onClick={handleStaffClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleAddStaff} color="primary">
+            Add Staff
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>
