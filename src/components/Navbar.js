@@ -17,28 +17,29 @@ const Navbar = () => {
     <AppBar position="static" className="navbar">
       <Toolbar>
         <Typography variant="h6" className="navbar-title">
-          Nail Store
+          Plus Appointment
         </Typography>
         {!isAuthenticated && (
-          <Button color="inherit" component={RouterLink} to="/">
+          <Button color="primary" component={RouterLink} to="/">
             Home
           </Button>
         )}
         {isAuthenticated ? (
           <>
+            {/* remove this welcome */}
             <Typography variant="h6" className="navbar-title">
               Welcome, {user.username || 'Owner'}
             </Typography>
-            <Button color="inherit" onClick={handleLogout}>
+            <Button color="primary" onClick={handleLogout}>
               Logout
             </Button>
           </>
         ) : (
           <>
-            <Button color="inherit" component={RouterLink} to="/register">
+            <Button color="primary" component={RouterLink} to="/register">
               Register
             </Button>
-            <Button color="inherit" component={RouterLink} to="/login">
+            <Button color="primary" component={RouterLink} to="/login">
               Login
             </Button>
           </>

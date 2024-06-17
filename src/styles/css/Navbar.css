@@ -1,9 +1,10 @@
 .navbar {
-    background-color: #333 !important; /* Adding !important to override default styles */
+    background-color: #FFFFFF !important; /* Adding !important to override default styles */
   }
   
   .navbar .navbar-title {
     flex-grow: 1;
+    color: black;
   }
   
   @media (max-width: 600px) {

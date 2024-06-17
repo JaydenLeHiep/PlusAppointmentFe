@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <Box className="footer">
       <Typography variant="body2" color="textSecondary">
-        &copy; {new Date().getFullYear()} Nail Store. All rights reserved.
+        &copy; {new Date().getFullYear()} Plus Appointment. All rights reserved.
       </Typography>
     </Box>
   );
