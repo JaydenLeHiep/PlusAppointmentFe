@@ -1,26 +1,38 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from './features/home/HomePage';
 import LoginPage from './features/auth/Login/LoginPage';
 import RegisterPage from './features/auth/Register/RegisterPage';
-import CustomerDashboard from './features/customer/CustomerDashboard';
 import OwnerDashboard from './features/ownerDashboard/OwnerDashboard';
-import AppProvider from './app-provider';
-import GlobalStyles from '../src/styles/GobalStyles';
+import GlobalStyles from './styles/GlobalStyles';
+import { useAuth } from './hooks/useAuth';
 
-const App = () => (
-  <AppProvider>
-    <GlobalStyles />
-    <Router>
+const App = () => {
+  const { isAuthenticated, user } = useAuth();
+  console.log(user)
+
+  const getDashboardPath = () => {
+    if (user?.role === 'Owner') {
+      return '/owner-dashboard';
+    }
+    if (user?.role === 'Admin') {
+      return '/admin-dashboard';
+    }
+    return '/'; // Default case, should not happen if roles are properly set
+  };
+
+  return (
+    <>
+      <GlobalStyles />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/customer-dashboard" element={<CustomerDashboard />} />
-        <Route path="/owner-dashboard" element={<OwnerDashboard />} />
+        <Route path="/" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> :<HomePage />} />
+        <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
+        <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
+        <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
+        {/* <Route path="/admin-dashboard" element={isAuthenticated ? <HelloAdmin /> : <Navigate to="/login" />} /> */}
       </Routes>
-    </Router>
-  </AppProvider>
-);
+    </>
+  );
+};
 
 export default App;
