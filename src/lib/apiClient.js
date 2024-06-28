@@ -1,8 +1,8 @@
 import { apiBaseUrl } from '../config/apiConfig';
 
-const businessApiUrl = `${apiBaseUrl}/api/business`;
+const businessApiUrl = `${apiBaseUrl}/api/business/byUser`;
 const userApiUrl = `${apiBaseUrl}/api/users`;
-const staffApiUrl = `${apiBaseUrl}/api/staff`;
+const staffApiUrl = `${apiBaseUrl}/api/staff/business_id`;
 const appointmentApiUrl = `${apiBaseUrl}/api/appointments`;
 
 //API client function for Ownerdashboard
@@ -25,6 +25,7 @@ export const fetchBusinesses = async () => {
   }
 
   const data = await response.json();
+  
   if (Array.isArray(data)) {
     return data;
   } else if (data.$values) {
@@ -73,13 +74,13 @@ export const loginUser = async (loginDetails) => {
 };
 
 // API client function for fetching staff
-export const fetchStaff = async () => {
+export const fetchStaff = async (businessId) => {
   const token = localStorage.getItem('token');
   if (!token) {
     throw new Error('User not authenticated');
   }
-
-  const response = await fetch(staffApiUrl, {
+  const staffApiUrl_1 = `${apiBaseUrl}/api/staff/business_id=${businessId}`;
+  const response = await fetch(staffApiUrl_1, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -152,7 +153,7 @@ export const fetchAppointments = async (businessId) => {
   if (!token) {
     throw new Error('User not authenticated');
   }
-  const appointmentBusinessApiUrl = `${appointmentApiUrl}/business/${businessId}`; // Correctly interpolate businessId
+  const appointmentBusinessApiUrl = `${appointmentApiUrl}/business/business_id=${businessId}`; // Correctly interpolate businessId
   const response = await fetch(appointmentBusinessApiUrl, {
     method: 'GET',
     headers: {
