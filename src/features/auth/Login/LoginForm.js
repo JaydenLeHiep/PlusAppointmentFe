@@ -25,7 +25,8 @@ const LoginForm = () => {
       setAlertVariant('success');
       
       // Store token in localStorage and update auth state
-      login(data.token, { username: usernameOrEmail });
+      login(data.token, { username: data.username, role: data.role });
+
 
       // Set a flag indicating a new login
       localStorage.setItem('isNewLogin', 'true');
