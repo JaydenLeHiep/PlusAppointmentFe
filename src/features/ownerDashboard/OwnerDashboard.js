@@ -4,14 +4,14 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import BusinessList from './BusinessList';
 import BusinessDetails from './BusinessDetails';
-import AppointmentsButton from './AppointmentsButton';
-import { fetchBusinesses } from '../../lib/apiClient';
+import AppointmentList from '../appointment/AppointmentList';
+import { fetchBusinesses, fetchAppointments } from '../../lib/apiClient';
 import '../../styles/css/OwnerDashboard.css';
 
 const OwnerDashboard = () => {
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
-  const [showAppointments, setShowAppointments] = useState(false); 
+  const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -31,20 +31,12 @@ const OwnerDashboard = () => {
 
     const isNewLogin = localStorage.getItem('isNewLogin');
     if (isNewLogin) {
-      // Clear the flag and reset state for a new login
       localStorage.removeItem('isNewLogin');
       setSelectedBusiness(null);
-      setShowAppointments(false);
     } else {
-      // Retrieve selected business and showAppointments from local storage if they exist
       const storedBusiness = localStorage.getItem('selectedBusiness');
       if (storedBusiness) {
         setSelectedBusiness(JSON.parse(storedBusiness));
-      }
-
-      const storedShowAppointments = localStorage.getItem('showAppointments');
-      if (storedShowAppointments) {
-        setShowAppointments(JSON.parse(storedShowAppointments));
       }
     }
   }, []);
@@ -52,29 +44,36 @@ const OwnerDashboard = () => {
   useEffect(() => {
     if (selectedBusiness) {
       localStorage.setItem('selectedBusiness', JSON.stringify(selectedBusiness));
-      localStorage.setItem('selectedBusinessId', selectedBusiness.businessId); // Save BusinessId
+      localStorage.setItem('selectedBusinessId', selectedBusiness.businessId);
+      loadAppointments(selectedBusiness.businessId);
     } else {
       localStorage.removeItem('selectedBusiness');
-      localStorage.removeItem('selectedBusinessId'); // Remove BusinessId
+      localStorage.removeItem('selectedBusinessId');
+      setAppointments([]);
     }
+  }, [selectedBusiness]);
 
-    localStorage.setItem('showAppointments', JSON.stringify(showAppointments));
-  }, [selectedBusiness, showAppointments]);
+  const loadAppointments = async (businessId) => {
+    try {
+      const appointmentList = await fetchAppointments(businessId);
+      setAppointments(appointmentList);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   const handleBusinessClick = (business) => {
     setSelectedBusiness(business);
-    setShowAppointments(false);
-  };
-
-  const toggleShowAppointments = () => {
-    setShowAppointments((prevShowAppointments) => !prevShowAppointments);
   };
 
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar />
       <Box className="dashboard-hero">
-        <Container className="d-flex align-items-center justify-content-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '82vh', paddingTop: 0, marginTop: 0 }}>
+        <Container
+          className="d-flex align-items-center justify-content-center"
+          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '82vh', paddingTop: 0, marginTop: 0 }}
+        >
           <Card className="dashboard-container">
             {loading ? (
               <CircularProgress />
@@ -82,8 +81,8 @@ const OwnerDashboard = () => {
               <Alert severity="error">{error}</Alert>
             ) : selectedBusiness ? (
               <>
-                <BusinessDetails selectedBusiness={selectedBusiness} setSelectedBusiness={setSelectedBusiness} />
-                <AppointmentsButton showAppointments={showAppointments} toggleShowAppointments={toggleShowAppointments} selectedBusiness={selectedBusiness} />
+                <BusinessDetails selectedBusiness={selectedBusiness} setSelectedBusiness={setSelectedBusiness} appointments={appointments} />
+                <AppointmentList appointments={appointments} />
               </>
             ) : (
               <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />
