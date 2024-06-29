@@ -105,6 +105,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments }
     return hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000;
   };
   
+  console.log(appointments)
 
   return (
     <Box>
@@ -130,9 +131,9 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments }
         <strong>Services:</strong> {selectedBusiness.services?.length || 0}
       </Typography>
       <Box className="calendar-container" style={{ marginBottom: '10px' }}>
-        <FullCalendarComponent events={appointments.map(appt => ({
+      <FullCalendarComponent events={appointments.map(appt => ({
           title: `${appt.customerName}`,
-          start: appt.appointmentTime,
+          start: new Date(appt.appointmentTime).toISOString(),  // Ensure the correct date format
           end: new Date(new Date(appt.appointmentTime).getTime() + parseDuration(appt.duration)).toISOString(),
           extendedProps: {
             service: appt.serviceName,
