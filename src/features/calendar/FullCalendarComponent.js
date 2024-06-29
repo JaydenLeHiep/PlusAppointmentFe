@@ -1,5 +1,3 @@
-// src/components/FullCalendarComponent.js
-
 import React, { useState, useRef, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -15,22 +13,57 @@ const FullCalendarComponent = ({ events }) => {
     if (calendarRef.current) {
       const calendarApi = calendarRef.current.getApi();
       calendarApi.changeView('timeGridDay', arg.dateStr);
+      setCurrentView('timeGridDay'); // Update the state after changing the view
+    }
+  };
+
+  const handleViewChange = (view) => {
+    if (calendarRef.current) {
+      const calendarApi = calendarRef.current.getApi();
+      calendarApi.changeView(view);
+      setCurrentView(view); // Update the state after changing the view
     }
   };
 
   useEffect(() => {
     if (calendarRef.current) {
       const calendarApi = calendarRef.current.getApi();
-      calendarApi.changeView(currentView);
+      calendarApi.on('datesSet', () => {
+        setCurrentView(calendarApi.view.type);
+      });
     }
-  }, [currentView]);
+  }, []);
+
+  const renderEventContent = (eventInfo) => {
+    const { title, extendedProps } = eventInfo.event;
+    const { service, staff, status } = extendedProps;
+    const timeText = eventInfo.timeText;
+
+    if (currentView === 'timeGridDay') {
+      return (
+        <div>
+          <strong>{timeText}</strong>
+          <br />
+          <span>{`${title} - ${service} - ${staff} - ${status}`}</span>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <strong>{timeText}</strong>
+        <br />
+        <span>{title}</span>
+      </div>
+    );
+  };
 
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-        <Button variant="contained" onClick={() => setCurrentView('dayGridMonth')}>Month</Button>
-        <Button variant="contained" onClick={() => setCurrentView('timeGridWeek')} sx={{ mx: 1 }}>Week</Button>
-        <Button variant="contained" onClick={() => setCurrentView('timeGridDay')}>Day</Button>
+        <Button variant="contained" onClick={() => handleViewChange('dayGridMonth')}>Month</Button>
+        <Button variant="contained" onClick={() => handleViewChange('timeGridWeek')} sx={{ mx: 1 }}>Week</Button>
+        <Button variant="contained" onClick={() => handleViewChange('timeGridDay')}>Day</Button>
       </Box>
       <FullCalendar
         ref={calendarRef}
@@ -39,6 +72,7 @@ const FullCalendarComponent = ({ events }) => {
         events={events}
         height="auto"
         dateClick={handleDateClick}
+        eventContent={renderEventContent} // Custom rendering
       />
     </Box>
   );

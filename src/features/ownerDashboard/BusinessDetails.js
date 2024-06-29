@@ -20,7 +20,7 @@ import { fetchStaff, addStaff, deleteStaff } from '../../lib/apiClient';
 import FullCalendarComponent from '../calendar/FullCalendarComponent';
 import '../../styles/css/OwnerDashboard.css';
 
-const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
+const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments }) => {
   const [staff, setStaff] = useState([]);
   const [staffOpen, setStaffOpen] = useState(false);
   const [newStaff, setNewStaff] = useState({
@@ -29,6 +29,9 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
     phone: '',
     password: ''
   });
+
+  
+
   const [alert, setAlert] = useState({ message: '', severity: '' });
 
   const fetchStaffData = useCallback(async () => {
@@ -97,6 +100,12 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
     }
   };
 
+  const parseDuration = (duration) => {
+    const [hours, minutes, seconds] = duration.split(':').map(Number);
+    return hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000;
+  };
+  
+
   return (
     <Box>
       <Typography variant="h5" gutterBottom className="text-center">
@@ -115,13 +124,22 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
         <strong>Staffs:</strong> {staff.length}
       </Typography>
       <Typography variant="body1" gutterBottom>
-        <strong>Appointments:</strong> {selectedBusiness.appointments?.length || 0}
+        <strong>Appointments:</strong> {appointments.length}
       </Typography>
       <Typography variant="body1" gutterBottom>
         <strong>Services:</strong> {selectedBusiness.services?.length || 0}
       </Typography>
       <Box className="calendar-container" style={{ marginBottom: '10px' }}>
-        <FullCalendarComponent events={selectedBusiness.events} />
+        <FullCalendarComponent events={appointments.map(appt => ({
+          title: `${appt.customerName}`,
+          start: appt.appointmentTime,
+          end: new Date(new Date(appt.appointmentTime).getTime() + parseDuration(appt.duration)).toISOString(),
+          extendedProps: {
+            service: appt.serviceName,
+            staff: appt.staffName,
+            status: appt.status,
+          }
+        }))} />
       </Box>
       <Button
         variant="contained"
