@@ -17,10 +17,7 @@ import {
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { fetchStaff, addStaff, deleteStaff } from '../../lib/apiClient';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import FullCalendarComponent from '../calendar/FullCalendarComponent';
 import '../../styles/css/OwnerDashboard.css';
 
 const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
@@ -124,12 +121,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
         <strong>Services:</strong> {selectedBusiness.services?.length || 0}
       </Typography>
       <Box className="calendar-container" style={{ marginBottom: '10px' }}>
-        <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          events={selectedBusiness.events}
-          height="auto"
-        />
+        <FullCalendarComponent events={selectedBusiness.events} />
       </Box>
       <Button
         variant="contained"
