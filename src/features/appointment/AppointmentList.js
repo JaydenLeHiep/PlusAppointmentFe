@@ -3,7 +3,7 @@ import { List, ListItem, Typography, Paper, Stack } from '@mui/material';
 
 const AppointmentList = ({ appointments }) => {
 
-  console.log("appointment list" + appointments);
+  
 
   return (
     <div>

@@ -105,7 +105,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments }
     return hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000;
   };
   
-  console.log(appointments)
+  
 
   return (
     <Box>
