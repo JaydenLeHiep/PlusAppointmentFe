@@ -9,8 +9,7 @@ import { useAuth } from './hooks/useAuth';
 
 const App = () => {
   const { isAuthenticated, user } = useAuth();
-  console.log(user)
-
+  
   const getDashboardPath = () => {
     if (user?.role === 'Owner') {
       return '/owner-dashboard';
