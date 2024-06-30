@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Typography,
+  
   Box,
   Button,
   List,
@@ -19,6 +19,7 @@ import { Delete } from '@mui/icons-material';
 import { fetchStaff, addStaff, deleteStaff } from '../../lib/apiClient';
 import FullCalendarComponent from '../calendar/FullCalendarComponent';
 import '../../styles/css/OwnerDashboard.css';
+import BusinessInfo from './BusinessInfor';
 
 const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments }) => {
   const [staff, setStaff] = useState([]);
@@ -107,27 +108,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments }
 
   return (
     <Box>
-      <Typography variant="h5" gutterBottom className="text-center">
-        {selectedBusiness.name}
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        <strong>Address:</strong> {selectedBusiness.address}
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        <strong>Phone:</strong> {selectedBusiness.phone}
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        <strong>Email:</strong> {selectedBusiness.email}
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        <strong>Staffs:</strong> {staff.length}
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        <strong>Appointments:</strong> {appointments.length}
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        <strong>Services:</strong> {selectedBusiness.services?.length || 0}
-      </Typography>
+      <BusinessInfo selectedBusiness={selectedBusiness} staff={staff} appointments={appointments} />
       <Box className="calendar-container" style={{ marginBottom: '10px' }}>
       <FullCalendarComponent events={appointments.map(appt => ({
           title: `${appt.customerName}`,
