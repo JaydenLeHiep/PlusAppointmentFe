@@ -30,8 +30,6 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments }
     password: ''
   });
 
-  
-
   const [alert, setAlert] = useState({ message: '', severity: '' });
 
   const fetchStaffData = useCallback(async () => {
