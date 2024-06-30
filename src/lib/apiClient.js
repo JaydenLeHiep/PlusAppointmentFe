@@ -2,7 +2,7 @@ import { apiBaseUrl } from '../config/apiConfig';
 
 const businessApiUrl = `${apiBaseUrl}/api/business/byUser`;
 const userApiUrl = `${apiBaseUrl}/api/users`;
-const staffApiUrl = `${apiBaseUrl}/api/staff/business_id`;
+const staffApiUrl = `${apiBaseUrl}/api/staff`;
 const appointmentApiUrl = `${apiBaseUrl}/api/appointments`;
 
 //API client function for Ownerdashboard
@@ -17,7 +17,7 @@ export const fetchBusinesses = async () => {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
-    },
+    }, 
   });
 
   if (!response.ok) {
@@ -108,7 +108,7 @@ export const addStaff = async (businessId, staffDetails) => {
   if (!token) {
     throw new Error('User not authenticated');
   }
-  const response = await fetch(`${staffApiUrl}/${businessId}/add`, {
+  const response = await fetch(`${staffApiUrl}/business_id=${businessId}/add`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
