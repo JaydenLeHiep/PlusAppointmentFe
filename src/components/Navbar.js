@@ -5,7 +5,7 @@ import '../styles/css/Navbar.css';
 import { useAuth } from '../hooks/useAuth';
 
 const Navbar = () => {
-  const { isAuthenticated, logout, user } = useAuth();
+  const { isAuthenticated, logout} = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -16,7 +16,13 @@ const Navbar = () => {
   return (
     <AppBar position="static" className="navbar">
       <Toolbar>
-        <Typography variant="h6" className="navbar-title">
+        <Typography
+          variant="h6"
+          className="navbar-title"
+          component={RouterLink}
+          to="/"
+          style={{ textDecoration: 'none'}}
+        >
           Plus Appointment
         </Typography>
         {!isAuthenticated && (
@@ -27,9 +33,7 @@ const Navbar = () => {
         {isAuthenticated ? (
           <>
             {/* remove this welcome */}
-            <Typography variant="h6" className="navbar-title">
-              Welcome, {user.username || 'Owner'}
-            </Typography>
+
             <Button color="primary" onClick={handleLogout}>
               Logout
             </Button>
