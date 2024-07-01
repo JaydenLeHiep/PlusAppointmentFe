@@ -81,7 +81,12 @@ const OwnerDashboard = () => {
               <Alert severity="error">{error}</Alert>
             ) : selectedBusiness ? (
               <>
-                <BusinessDetails selectedBusiness={selectedBusiness} setSelectedBusiness={setSelectedBusiness} appointments={appointments} />
+                <BusinessDetails 
+                  selectedBusiness={selectedBusiness} 
+                  setSelectedBusiness={setSelectedBusiness} 
+                  appointments={appointments} 
+                  setAppointments={setAppointments} 
+                />
                 <AppointmentList appointments={appointments} />
               </>
             ) : (
