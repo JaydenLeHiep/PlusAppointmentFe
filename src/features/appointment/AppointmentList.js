@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { List, ListItem, Typography, Paper, Stack } from '@mui/material';
 
 const AppointmentList = ({ appointments }) => {
-
-  
+  useEffect(() => {
+    // This effect will run whenever appointments prop changes
+  }, [appointments]);
 
   return (
     <div>
@@ -17,7 +18,7 @@ const AppointmentList = ({ appointments }) => {
                 <Typography>Customer Phone: {appointment.customerPhone}</Typography>
                 <Typography>Service: {appointment.serviceName}</Typography>
                 <Typography>Staff: {appointment.staffName}</Typography>
-                <Typography>Time: {new Date(appointment.appointmentTime).toISOString()}</Typography>
+                <Typography>Time: {new Date(appointment.appointmentTime).toLocaleString()}</Typography>
                 <Typography>Duration: {appointment.duration}</Typography>
                 <Typography>Status: {appointment.status}</Typography>
               </Stack>

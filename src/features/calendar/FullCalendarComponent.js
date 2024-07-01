@@ -9,22 +9,6 @@ const FullCalendarComponent = ({ events }) => {
   const [currentView, setCurrentView] = useState('dayGridMonth');
   const calendarRef = useRef(null);
 
-  const handleDateClick = (arg) => {
-    if (calendarRef.current) {
-      const calendarApi = calendarRef.current.getApi();
-      calendarApi.changeView('timeGridDay', arg.dateStr);
-      setCurrentView('timeGridDay'); // Update the state after changing the view
-    }
-  };
-
-  const handleViewChange = (view) => {
-    if (calendarRef.current) {
-      const calendarApi = calendarRef.current.getApi();
-      calendarApi.changeView(view);
-      setCurrentView(view); // Update the state after changing the view
-    }
-  };
-
   useEffect(() => {
     if (calendarRef.current) {
       const calendarApi = calendarRef.current.getApi();
@@ -33,6 +17,22 @@ const FullCalendarComponent = ({ events }) => {
       });
     }
   }, []);
+
+  const handleDateClick = (arg) => {
+    if (calendarRef.current) {
+      const calendarApi = calendarRef.current.getApi();
+      calendarApi.changeView('timeGridDay', arg.dateStr);
+      setCurrentView('timeGridDay');
+    }
+  };
+
+  const handleViewChange = (view) => {
+    if (calendarRef.current) {
+      const calendarApi = calendarRef.current.getApi();
+      calendarApi.changeView(view);
+      setCurrentView(view);
+    }
+  };
 
   const renderEventContent = (eventInfo) => {
     const { title, extendedProps } = eventInfo.event;
