@@ -37,7 +37,9 @@ const FullCalendarComponent = ({ events }) => {
   const renderEventContent = (eventInfo) => {
     const { title, extendedProps } = eventInfo.event;
     const { service, staff, status } = extendedProps;
-    const timeText = eventInfo.timeText;
+    const startTime = eventInfo.event.start;
+    const endTime = eventInfo.event.end;
+    const timeText = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
     if (currentView === 'timeGridDay') {
       return (
