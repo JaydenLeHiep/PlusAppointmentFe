@@ -1,0 +1,37 @@
+.customer-dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center vertically */
+  padding: 20px;
+  box-sizing: border-box;
+  margin-top: 0; /* Ensure no additional margin at the top */
+  max-width: 600px; /* Adjust max-width as needed */
+  margin-left: auto; /* Push to the left */
+  margin-right: auto; /* Push to the right */
+}
+
+.business-info {
+  text-align: center;
+  margin-bottom: 20px; /* Reduced margin for business info */
+}
+
+.button-group {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px; /* Reduced margin bottom for button group */
+}
+
+.dashboard-button {
+  /* Keep the existing styles for the outlined Staffs button */
+  border: 2px solid #1976d2; /* Adjust the color as needed */
+  color: #1976d2; /* Adjust the color as needed */
+  background: none;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.search-box {
+  margin-top: 20px; /* Add margin top for spacing */
+  margin-bottom: 20px; /* Add margin bottom for spacing */
+}

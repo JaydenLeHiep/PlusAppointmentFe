@@ -3,7 +3,9 @@ import {
   Box,
   Button
 } from '@mui/material';
-import { fetchAppointments, fetchStaff } from '../../lib/apiClient';
+import { Delete } from '@mui/icons-material';
+import {  fetchAppointments , addAppointment } from '../../lib/apiClient';
+import {fetchStaff, addStaff, deleteStaff} from '../../lib/apiClientStaff';
 import FullCalendarComponent from '../calendar/FullCalendarComponent';
 import '../../styles/css/OwnerDashboard.css';
 import BusinessInfo from './BusinessInfor';

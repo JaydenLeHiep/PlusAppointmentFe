@@ -20,13 +20,13 @@ const Navbar = () => {
           variant="h6"
           className="navbar-title"
           component={RouterLink}
-          to="/"
+          to="/business-home"
           style={{ textDecoration: 'none'}}
         >
           Plus Appointment
         </Typography>
         {!isAuthenticated && (
-          <Button color="primary" component={RouterLink} to="/">
+          <Button color="primary" component={RouterLink} to="/business-home">
             Home
           </Button>
         )}
