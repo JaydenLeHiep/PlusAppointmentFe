@@ -14,7 +14,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
-import { fetchStaff, addStaff, deleteStaff } from '../../lib/apiClient';
+import { fetchStaff, addStaff, deleteStaff } from '../../lib/apiClientStaff';
 
 const ShowStaffDialog = ({ open, onClose, businessId }) => {
   const [staff, setStaff] = useState([]);
