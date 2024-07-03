@@ -1,12 +1,28 @@
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Button} from '@mui/material';
+import SearchCustomer from './SearchCustomer';
+import '../../styles/css/CustomerDashboard.css';
 
 const CustomerDashboard = () => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <Typography variant="h4">
-        Hello, Hi customer
-      </Typography>
+    <Box className="customer-dashboard">
+      <Box className="business-info">
+        <Typography variant="h5">Business Name</Typography>
+        <Typography variant="body1">Address: 1234 Business St.</Typography>
+        <Typography variant="body1">Phone: (123) 456-7890</Typography>
+        {/* Add logo or other business info here */}
+      </Box>
+      <Box className="button-group">
+        <Button variant="contained" color="primary" size="large">
+          Services
+        </Button>
+        <Button variant="outlined" size="large" className="dashboard-button">
+          Staffs
+        </Button>
+      </Box>
+      <Box className="search-box">
+        <SearchCustomer />
+      </Box>
     </Box>
   );
 };
