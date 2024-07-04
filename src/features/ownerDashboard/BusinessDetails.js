@@ -103,14 +103,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
       >
         Back to list
       </Button>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleStaffOpen}
-        style={{ marginTop: '10px', marginLeft: '10px' }}
-      >
-        Show Staff
-      </Button>
+     
       <Button
         variant="contained"
         color="secondary"

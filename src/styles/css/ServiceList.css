@@ -1,0 +1,27 @@
+.service-item {
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.service-container {
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.service-info {
+  flex: 1;
+}
+
+.service-details {
+  text-align: right;
+  margin-left: 24px; /* Adjust the margin to increase the gap */
+}
+
+.bold-text {
+  font-weight: bold;
+}

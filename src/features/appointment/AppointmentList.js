@@ -1,27 +1,82 @@
-import React, { useEffect } from 'react';
-import { List, ListItem, Typography, Paper, Stack } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { List, ListItem, Typography, Paper, Button, CircularProgress } from '@mui/material';
+import '../../styles/css/AppointmentList.css';
+import { changeStatusAppointments } from '../../lib/apiClientAppointment';
 
-const AppointmentList = ({ appointments }) => {
+const AppointmentList = ({ appointments, onUpdateStatus }) => {
+  const [localAppointments, setLocalAppointments] = useState([]);
+  const [loading, setLoading] = useState(true); // State to track loading status
+
   useEffect(() => {
-    // This effect will run whenever appointments prop changes
+    if (appointments) {
+      // Filter out appointments with status 'Delete'
+      const filteredAppointments = appointments.filter(appt => appt.status !== 'Delete');
+      setLocalAppointments(filteredAppointments);
+      setLoading(false); // Mark loading as complete
+    }
   }, [appointments]);
+
+  const handleChangeStatus = async (appointmentId, status) => {
+    try {
+      const updatedStatus = status === 'delete' ? 'Delete' : 'Confirm';
+      await changeStatusAppointments(appointmentId, { status: updatedStatus });
+      onUpdateStatus(appointmentId, updatedStatus); // Update parent state
+    } catch (error) {
+      console.error('Failed to change appointment status:', error);
+    }
+  };
+
+  if (loading) {
+    return <CircularProgress />; // Display loading indicator while fetching data
+  }
+
+  if (!localAppointments || localAppointments.length === 0) {
+    return <Typography variant="h6">No appointments available.</Typography>;
+  }
 
   return (
     <div>
-      <Typography variant="h6">Appointments</Typography>
       <List>
-        {appointments.map((appointment) => (
+        {localAppointments.map((appointment) => (
           <ListItem key={appointment.appointmentId}>
             <Paper style={{ width: '100%', padding: '16px', marginBottom: '8px' }}>
-              <Stack spacing={1}>
-                <Typography variant="h6">{appointment.customerName}</Typography>
-                <Typography>Customer Phone: {appointment.customerPhone}</Typography>
-                <Typography>Service: {appointment.serviceName}</Typography>
-                <Typography>Staff: {appointment.staffName}</Typography>
-                <Typography>Time: {new Date(appointment.appointmentTime).toLocaleString()}</Typography>
-                <Typography>Duration: {appointment.duration}</Typography>
-                <Typography>Status: {appointment.status}</Typography>
-              </Stack>
+              <div className="appointment-container">
+                <div className="info-container">
+                  <div className="appointment-time">
+                    <Typography variant="h6" className="bold-text">
+                      {new Date(appointment.appointmentTime).toLocaleTimeString()}
+                    </Typography>
+                    <Typography variant="body2">
+                      {new Date(appointment.appointmentTime).toLocaleDateString()}
+                    </Typography>
+                  </div>
+                  <div className="customer-info">
+                    <Typography variant="h6" className="bold-text">{appointment.customerName}</Typography>
+                    <Typography variant="body2">{appointment.customerPhone}</Typography>
+                  </div>
+                  <Typography className={`status ${appointment.status.toLowerCase()}`}>
+                    {appointment.status}
+                  </Typography>
+                </div>
+                <div className="button-container">
+                  <Button
+                    variant="contained"
+                    color="error"
+                    className="button-red"
+                    onClick={() => handleChangeStatus(appointment.appointmentId, 'delete')}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    className="button-green"
+                    onClick={() => handleChangeStatus(appointment.appointmentId, 'confirm')}
+                  >
+                    Confirm
+                  </Button>
+                </div>
+              </div>
             </Paper>
           </ListItem>
         ))}

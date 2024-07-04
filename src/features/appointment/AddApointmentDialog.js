@@ -8,7 +8,7 @@ import {
   TextField,
   Button
 } from '@mui/material';
-import { addAppointment, fetchAppointments } from '../../lib/apiClient';
+import { addAppointment, fetchAppointments } from '../../lib/apiClientAppointment';
 
 const AddAppointmentDialog = ({ open, onClose, businessId, setAppointments }) => {
   const [newAppointment, setNewAppointment] = useState({

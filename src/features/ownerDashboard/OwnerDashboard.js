@@ -5,7 +5,8 @@ import Footer from '../../components/Footer';
 import BusinessList from './BusinessList';
 import BusinessDetails from './BusinessDetails';
 import AppointmentList from '../appointment/AppointmentList';
-import { fetchBusinesses, fetchAppointments } from '../../lib/apiClient';
+import { fetchBusinesses } from '../../lib/apiClientBusiness';
+import { fetchAppointments } from '../../lib/apiClientAppointment';
 import '../../styles/css/OwnerDashboard.css';
 
 const OwnerDashboard = () => {
@@ -66,6 +67,16 @@ const OwnerDashboard = () => {
     setSelectedBusiness(business);
   };
 
+  const updateAppointmentStatus = (appointmentId, status) => {
+    setAppointments((prevAppointments) =>
+      prevAppointments.map((appointment) =>
+        appointment.appointmentId === appointmentId
+          ? { ...appointment, status }
+          : appointment
+      ).filter(appt => appt.status !== 'Delete')
+    );
+  };
+
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar />
@@ -87,7 +98,10 @@ const OwnerDashboard = () => {
                   appointments={appointments} 
                   setAppointments={setAppointments} 
                 />
-                <AppointmentList appointments={appointments} />
+                <AppointmentList 
+                  appointments={appointments} 
+                  onUpdateStatus={updateAppointmentStatus}
+                />
               </>
             ) : (
               <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />
