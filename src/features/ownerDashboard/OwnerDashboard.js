@@ -5,7 +5,8 @@ import Footer from '../../components/Footer';
 import BusinessList from './BusinessList';
 import BusinessDetails from './BusinessDetails';
 import AppointmentList from '../appointment/AppointmentList';
-import { fetchBusinesses, fetchAppointments } from '../../lib/apiClient';
+import { fetchBusinesses} from '../../lib/apiClient';
+import { fetchAppointments } from '../../lib/apiClientAppointment';
 import '../../styles/css/OwnerDashboard.css';
 
 const OwnerDashboard = () => {
