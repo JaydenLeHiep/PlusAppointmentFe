@@ -47,6 +47,12 @@ const AddAppointmentDialog = ({ open, onClose, businessId, setAppointments }) =>
     }
   };
 
+  const handleDurationChange = (e) => {
+    const value = e.target.value;
+    const [hours, minutes] = value.split(':');
+    setNewAppointment({ ...newAppointment, duration: `${hours}:${minutes}:00` });
+  };
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Add Appointment</DialogTitle>
@@ -88,11 +94,17 @@ const AddAppointmentDialog = ({ open, onClose, businessId, setAppointments }) =>
         />
         <TextField
           margin="dense"
-          label="Duration (HH:MM:SS)"
-          type="text"
+          label="Duration"
+          type="time"
           fullWidth
-          value={newAppointment.duration}
-          onChange={(e) => setNewAppointment({ ...newAppointment, duration: e.target.value })}
+          value={newAppointment.duration.substring(0, 5)} 
+          InputLabelProps={{
+            shrink: true,
+          }}
+          inputProps={{
+            step: 300, 
+          }}
+          onChange={handleDurationChange}
         />
         <TextField
           margin="dense"

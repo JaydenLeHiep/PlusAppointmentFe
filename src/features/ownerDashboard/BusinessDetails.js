@@ -3,18 +3,20 @@ import {
   Box,
   Button
 } from '@mui/material';
-import { fetchAppointments } from '../../lib/apiClientAppointment';
-import {fetchStaff} from '../../lib/apiClientStaff';
+import { fetchAppointments } from '../../lib/apiClient';
+import { fetchStaff } from '../../lib/apiClientStaff';
 import FullCalendarComponent from '../calendar/FullCalendarComponent';
 import '../../styles/css/OwnerDashboard.css';
 import BusinessInfo from './BusinessInfor';
 import ShowStaffDialog from '../showStaffDialog/showStaffDialog';
 import AddAppointmentDialog from '../appointment/AddApointmentDialog';
+import ShowServicesDialog from '../servicecomponent/showServiceDialog';
 
 const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments = [], setAppointments }) => {
   const [staff, setStaff] = useState([]);
   const [staffOpen, setStaffOpen] = useState(false);
   const [appointmentOpen, setAppointmentOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
 
   const fetchStaffData = useCallback(async () => {
     if (selectedBusiness) {
@@ -59,6 +61,14 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
     setAppointmentOpen(false);
   };
 
+  const handleServicesOpen = () => {
+    setServicesOpen(true);
+  };
+
+  const handleServicesClose = () => {
+    setServicesOpen(false);
+  };
+
   const parseDuration = (duration) => {
     const [hours, minutes, seconds] = duration.split(':').map(Number);
     return hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000;
@@ -71,6 +81,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
         staff={staff}
         appointments={appointments}
         handleStaffOpen={handleStaffOpen}
+        handleServiceOpen={handleServicesOpen} // Pass handleServiceOpen to BusinessInfo
       />
       <Box className="calendar-container" style={{ marginBottom: '10px' }}>
         <FullCalendarComponent events={appointments.map(appt => ({
@@ -104,6 +115,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
 
       <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} />
       <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={setAppointments} />
+      <ShowServicesDialog open={servicesOpen} onClose={handleServicesClose} businessId={selectedBusiness.businessId} /> {/* Add ShowServicesDialog */}
     </Box>
   );
 };
