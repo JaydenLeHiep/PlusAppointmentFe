@@ -1,0 +1,16 @@
+.staff-item {
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.staff-info {
+  flex: 1;
+}
+
+.bold-text {
+  font-weight: bold;
+}

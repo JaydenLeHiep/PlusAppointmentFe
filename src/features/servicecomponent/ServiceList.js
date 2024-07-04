@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { List, ListItem, Typography, Paper, Stack } from '@mui/material';
+import { List, ListItem, Typography, Paper } from '@mui/material';
 import { fetchService } from '../../lib/apiClientServices'; // Adjust the path as per your project structure
+import '../../styles/css/ServiceList.css'; // Ensure correct path to your CSS file
 
 const ServiceList = ({ businessId }) => {
   const [services, setServices] = useState([]);
@@ -24,15 +25,17 @@ const ServiceList = ({ businessId }) => {
       <List>
         {services.map((service) => (
           <ListItem key={service.serviceId}>
-            <Paper style={{ width: '100%', padding: '16px', marginBottom: '8px' }}>
-              <Stack spacing={1}>
-                <Typography variant="h6">{service.name}</Typography>
-                
-                <Typography>Description: {service.description}</Typography>
-                <Typography>Duration: {service.duration}</Typography>
-                <Typography>Price: ${service.price}</Typography>
-                {/* Add more details as needed */}
-              </Stack>
+            <Paper className="service-item">
+              <div className="service-container">
+                <div className="service-info">
+                  <Typography variant="body1" className="bold-text">{service.name}</Typography>
+                  <Typography variant="body1">{service.description}</Typography>
+                </div>
+                <div className="service-details">
+                  <Typography variant="body1" className="bold-text">{service.duration}</Typography>
+                  <Typography variant="body1">${service.price}</Typography>
+                </div>
+              </div>
             </Paper>
           </ListItem>
         ))}
