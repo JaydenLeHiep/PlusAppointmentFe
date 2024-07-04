@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { List, ListItem, Typography, Paper } from '@mui/material';
+import { List, ListItem, Typography, Paper, CircularProgress } from '@mui/material';
 import { fetchStaff } from '../../lib/apiClientStaff'; // Adjust the path as per your project structure
 import '../../styles/css/StaffList.css'; // Ensure correct path to your CSS file
 
 const StaffList = ({ businessId }) => {
   const [staff, setStaff] = useState([]);
+  const [loading, setLoading] = useState(true); // State to track loading status
 
   useEffect(() => {
     const fetchStaffData = async () => {
       try {
         const data = await fetchStaff(businessId);
         setStaff(data);
+        setLoading(false); // Mark loading as complete
       } catch (error) {
         console.error('Error fetching staff:', error.message);
       }
@@ -18,6 +20,10 @@ const StaffList = ({ businessId }) => {
 
     fetchStaffData();
   }, [businessId]);
+
+  if (loading) {
+    return <CircularProgress />; // Display loading indicator while fetching data
+  }
 
   return (
     <div>

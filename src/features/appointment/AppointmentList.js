@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { List, ListItem, Typography, Paper, Button } from '@mui/material';
+import { List, ListItem, Typography, Paper, Button, CircularProgress } from '@mui/material';
 import '../../styles/css/AppointmentList.css';
 import { changeStatusAppointments } from '../../lib/apiClientAppointment';
 
 const AppointmentList = ({ appointments, onUpdateStatus }) => {
   const [localAppointments, setLocalAppointments] = useState([]);
+  const [loading, setLoading] = useState(true); // State to track loading status
 
   useEffect(() => {
     if (appointments) {
       // Filter out appointments with status 'Delete'
       const filteredAppointments = appointments.filter(appt => appt.status !== 'Delete');
       setLocalAppointments(filteredAppointments);
+      setLoading(false); // Mark loading as complete
     }
   }, [appointments]);
 
@@ -23,6 +25,10 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
       console.error('Failed to change appointment status:', error);
     }
   };
+
+  if (loading) {
+    return <CircularProgress />; // Display loading indicator while fetching data
+  }
 
   if (!localAppointments || localAppointments.length === 0) {
     return <Typography variant="h6">No appointments available.</Typography>;
