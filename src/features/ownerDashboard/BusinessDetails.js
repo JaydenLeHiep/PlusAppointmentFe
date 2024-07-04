@@ -3,7 +3,7 @@ import {
   Box,
   Button
 } from '@mui/material';
-import {  fetchAppointments } from '../../lib/apiClient';
+import { fetchAppointments } from '../../lib/apiClientAppointment';
 import {fetchStaff} from '../../lib/apiClientStaff';
 import FullCalendarComponent from '../calendar/FullCalendarComponent';
 import '../../styles/css/OwnerDashboard.css';
