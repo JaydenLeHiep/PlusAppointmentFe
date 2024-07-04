@@ -66,6 +66,16 @@ const OwnerDashboard = () => {
     setSelectedBusiness(business);
   };
 
+  const updateAppointmentStatus = (appointmentId, status) => {
+    setAppointments((prevAppointments) =>
+      prevAppointments.map((appointment) =>
+        appointment.appointmentId === appointmentId
+          ? { ...appointment, status }
+          : appointment
+      ).filter(appt => appt.status !== 'Delete')
+    );
+  };
+
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar />
@@ -87,7 +97,10 @@ const OwnerDashboard = () => {
                   appointments={appointments} 
                   setAppointments={setAppointments} 
                 />
-                <AppointmentList appointments={appointments} />
+                <AppointmentList 
+                  appointments={appointments} 
+                  onUpdateStatus={updateAppointmentStatus}
+                />
               </>
             ) : (
               <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />
