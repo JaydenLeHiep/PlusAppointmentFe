@@ -14,7 +14,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
-import { fetchServices, addService, deleteService } from '../../lib/apiClientSerciesOwnerDashboard';
+import { fetchServices, addService, deleteService } from '../../lib/apiClientServicesOwnerDashboard';
 
 const ShowServicesDialog = ({ open, onClose, businessId }) => {
   const [services, setServices] = useState([]);
