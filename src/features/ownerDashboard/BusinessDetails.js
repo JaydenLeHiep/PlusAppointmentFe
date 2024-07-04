@@ -3,8 +3,9 @@ import {
   Box,
   Button
 } from '@mui/material';
-import { fetchAppointments } from '../../lib/apiClientAppointment';
+import {  fetchAppointments } from '../../lib/apiClientAppointment';
 import { fetchStaff } from '../../lib/apiClientStaff';
+import { fetchServices } from '../../lib/apiClientServicesOwnerDashboard';
 import FullCalendarComponent from '../calendar/FullCalendarComponent';
 import '../../styles/css/OwnerDashboard.css';
 import BusinessInfo from './BusinessInfor';
@@ -14,6 +15,7 @@ import ShowServicesDialog from '../servicecomponent/showServiceDialog';
 
 const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments = [], setAppointments }) => {
   const [staff, setStaff] = useState([]);
+  const [services, setServices] = useState([]);
   const [staffOpen, setStaffOpen] = useState(false);
   const [appointmentOpen, setAppointmentOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -25,6 +27,17 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
         setStaff(staffData);
       } catch (error) {
         console.error('Failed to fetch staff:', error);
+      }
+    }
+  }, [selectedBusiness]);
+
+  const fetchServiceData = useCallback(async () => {
+    if (selectedBusiness) {
+      try {
+        const serviceData = await fetchServices(selectedBusiness.businessId);
+        setServices(serviceData);
+      } catch (error) {
+        console.error('Failed to fetch services:', error);
       }
     }
   }, [selectedBusiness]);
@@ -42,8 +55,9 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
 
   useEffect(() => {
     fetchStaffData();
+    fetchServiceData();
     fetchAppointmentData();
-  }, [selectedBusiness, fetchStaffData, fetchAppointmentData]);
+  }, [selectedBusiness, fetchStaffData, fetchServiceData, fetchAppointmentData]);
 
   const handleStaffOpen = () => {
     setStaffOpen(true);
@@ -77,7 +91,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
   return (
     <Box>
       <BusinessInfo
-        selectedBusiness={selectedBusiness}
+        selectedBusiness={{ ...selectedBusiness, services }}
         staff={staff}
         appointments={appointments}
         handleStaffOpen={handleStaffOpen}
@@ -103,7 +117,14 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
       >
         Back to list
       </Button>
-     
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={handleStaffOpen}
+        style={{ marginTop: '10px', marginLeft: '10px' }}
+      >
+        Show Staff
+      </Button>
       <Button
         variant="contained"
         color="secondary"
