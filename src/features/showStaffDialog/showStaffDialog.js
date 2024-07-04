@@ -68,8 +68,8 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
 
   const handleDeleteStaff = async (staffId) => {
     try {
-      await deleteStaff(staffId);
-      await fetchStaffData();  // Fetch the updated staff list
+      await deleteStaff(businessId, staffId); 
+      await fetchStaffData(); 
       setAlert({ message: 'Staff deleted successfully!', severity: 'success' });
     } catch (error) {
       console.error('Failed to delete staff:', error);

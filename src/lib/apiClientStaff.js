@@ -52,13 +52,13 @@ export const addStaff = async (businessId, staffDetails) => {
 };
 
 // API client function for deleting a staff member
-export const deleteStaff = async (staffId) => {
+export const deleteStaff = async (businessId, staffId) => {
     const token = localStorage.getItem('token');
     if (!token) {
         throw new Error('User not authenticated');
     }
 
-    const response = await fetch(`${staffApiUrl}/${staffId}`, {
+    const response = await fetch(`${staffApiUrl}/business_id=${businessId}/staff_id=${staffId}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
