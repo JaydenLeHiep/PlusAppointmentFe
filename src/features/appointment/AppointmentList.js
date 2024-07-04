@@ -3,12 +3,14 @@ import { List, ListItem, Typography, Paper, Button } from '@mui/material';
 import '../../styles/css/AppointmentList.css';
 import { changeStatusAppointments } from '../../lib/apiClientAppointment';
 
-const AppointmentList = ({ appointments }) => {
+const AppointmentList = ({ appointments, onUpdateStatus }) => {
   const [localAppointments, setLocalAppointments] = useState([]);
 
   useEffect(() => {
     if (appointments) {
-      setLocalAppointments(appointments);
+      // Filter out appointments with status 'Delete'
+      const filteredAppointments = appointments.filter(appt => appt.status !== 'Delete');
+      setLocalAppointments(filteredAppointments);
     }
   }, [appointments]);
 
@@ -16,13 +18,7 @@ const AppointmentList = ({ appointments }) => {
     try {
       const updatedStatus = status === 'delete' ? 'Delete' : 'Confirm';
       await changeStatusAppointments(appointmentId, { status: updatedStatus });
-      setLocalAppointments((prevAppointments) =>
-        prevAppointments.map((appointment) =>
-          appointment.appointmentId === appointmentId
-            ? { ...appointment, status: updatedStatus }
-            : appointment
-        )
-      );
+      onUpdateStatus(appointmentId, updatedStatus); // Update parent state
     } catch (error) {
       console.error('Failed to change appointment status:', error);
     }
@@ -34,7 +30,6 @@ const AppointmentList = ({ appointments }) => {
 
   return (
     <div>
-      
       <List>
         {localAppointments.map((appointment) => (
           <ListItem key={appointment.appointmentId}>
