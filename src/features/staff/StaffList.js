@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { List, ListItem, Typography, Paper, Stack } from '@mui/material';
+import { List, ListItem, Typography, Paper } from '@mui/material';
 import { fetchStaff } from '../../lib/apiClientStaff'; // Adjust the path as per your project structure
+import '../../styles/css/StaffList.css'; // Ensure correct path to your CSS file
 
 const StaffList = ({ businessId }) => {
   const [staff, setStaff] = useState([]);
@@ -24,12 +25,11 @@ const StaffList = ({ businessId }) => {
       <List>
         {staff.map((staffMember) => (
           <ListItem key={staffMember.staffId}>
-            <Paper style={{ width: '100%', padding: '16px', marginBottom: '8px' }}>
-              <Stack spacing={1}>
-                <Typography variant="h6">{staffMember.name}</Typography>
-                <Typography>Email: {staffMember.email}</Typography>
-                <Typography>Phone: {staffMember.phone}</Typography>
-              </Stack>
+            <Paper className="staff-item">
+              <div className="staff-info">
+                <Typography variant="body1" className="bold-text">{staffMember.name}</Typography>
+                <Typography variant="body1">Phone: {staffMember.phone}</Typography>
+              </div>
             </Paper>
           </ListItem>
         ))}
