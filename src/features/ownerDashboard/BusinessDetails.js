@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Button } from '@mui/material';
+import { Box} from '@mui/material';
 import { fetchAppointments } from '../../lib/apiClientAppointment';
 import { fetchStaff } from '../../lib/apiClientStaff';
 import { fetchServices } from '../../lib/apiClientServicesOwnerDashboard';
@@ -110,6 +110,8 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
         servicesCount={servicesCount} // Pass servicesCount to BusinessInfo
         staffCount={staffCount} // Pass staffCount to BusinessInfo
         appointmentsCount={appointmentsCount} // Pass appointmentsCount to BusinessInfo
+        onBack={() => setSelectedBusiness(null)} // Pass onBack handler to BusinessInfo
+        onAddAppointment={handleAppointmentOpen} // Pass onAddAppointment handler to BusinessInfo
       />
       <Box className="calendar-container" style={{ marginBottom: '10px' }}>
         <FullCalendarComponent events={appointments.map(appt => ({
@@ -123,30 +125,6 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
           }
         }))} />
       </Box>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setSelectedBusiness(null)}
-        style={{ marginTop: '10px' }}
-      >
-        Back to list
-      </Button>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleStaffOpen}
-        style={{ marginTop: '10px', marginLeft: '10px' }}
-      >
-        Show Staff
-      </Button>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleAppointmentOpen}
-        style={{ marginTop: '10px', marginLeft: '10px' }}
-      >
-        Add Appointment
-      </Button>
 
       <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} />
       <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={setAppointments} />
