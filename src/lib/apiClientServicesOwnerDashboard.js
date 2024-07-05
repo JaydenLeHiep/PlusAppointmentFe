@@ -1,5 +1,3 @@
-// src/lib/apiClientServices.js
-
 import { apiBaseUrl } from '../config/apiConfig';
 
 const serviceApiUrl = `${apiBaseUrl}/api/service`;

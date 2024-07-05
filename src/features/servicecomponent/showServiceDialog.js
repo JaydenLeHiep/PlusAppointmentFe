@@ -16,7 +16,7 @@ import {
 import { Delete } from '@mui/icons-material';
 import { fetchServices, addService, deleteService } from '../../lib/apiClientServicesOwnerDashboard';
 
-const ShowServicesDialog = ({ open, onClose, businessId }) => {
+const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
   const [services, setServices] = useState([]);
   const [newService, setNewService] = useState({
     name: '',
@@ -30,10 +30,11 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
     try {
       const serviceData = await fetchServices(businessId);
       setServices(serviceData);
+      onServiceChange(serviceData); // Update services count
     } catch (error) {
       console.error('Failed to fetch services:', error);
     }
-  }, [businessId]);
+  }, [businessId, onServiceChange]);
 
   useEffect(() => {
     if (open) {
@@ -45,11 +46,12 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
     try {
       const serviceDetails = {
         ...newService,
-        BusinessId: businessId
+        BusinessId: businessId,
+        duration: newService.duration + ':00'
       };
 
       await addService(businessId, serviceDetails);
-      await fetchServiceData();  // Fetch the updated service list
+      await fetchServiceData(); 
       setNewService({
         name: '',
         description: '',
@@ -76,8 +78,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
 
   const handleDurationChange = (e) => {
     const value = e.target.value;
-    const [hours, minutes] = value.split(':');
-    setNewService({ ...newService, duration: `${hours}:${minutes}:00` });
+    setNewService({ ...newService, duration: value });
   };
 
   return (
@@ -124,7 +125,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
           label="Duration"
           type="time"
           fullWidth
-          value={newService.duration.substring(0, 5)} // Display only HH:MM
+          value={newService.duration} // Display only HH:MM
           InputLabelProps={{
             shrink: true,
           }}

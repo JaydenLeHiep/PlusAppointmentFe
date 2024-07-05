@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-  Box,
-  Button
-} from '@mui/material';
-import {  fetchAppointments } from '../../lib/apiClientAppointment';
+import { Box, Button } from '@mui/material';
+import { fetchAppointments } from '../../lib/apiClientAppointment';
 import { fetchStaff } from '../../lib/apiClientStaff';
 import { fetchServices } from '../../lib/apiClientServicesOwnerDashboard';
 import FullCalendarComponent from '../calendar/FullCalendarComponent';
@@ -16,6 +13,9 @@ import ShowServicesDialog from '../servicecomponent/showServiceDialog';
 const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments = [], setAppointments }) => {
   const [staff, setStaff] = useState([]);
   const [services, setServices] = useState([]);
+  const [servicesCount, setServicesCount] = useState(0); // New state for services count
+  const [staffCount, setStaffCount] = useState(0); // New state for staff count
+  const [appointmentsCount, setAppointmentsCount] = useState(0); // New state for appointments count
   const [staffOpen, setStaffOpen] = useState(false);
   const [appointmentOpen, setAppointmentOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -25,6 +25,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
       try {
         const staffData = await fetchStaff(selectedBusiness.businessId);
         setStaff(staffData);
+        setStaffCount(staffData.length); // Update staff count
       } catch (error) {
         console.error('Failed to fetch staff:', error);
       }
@@ -36,6 +37,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
       try {
         const serviceData = await fetchServices(selectedBusiness.businessId);
         setServices(serviceData);
+        setServicesCount(serviceData.length); // Update services count
       } catch (error) {
         console.error('Failed to fetch services:', error);
       }
@@ -47,6 +49,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
       try {
         const appointmentData = await fetchAppointments(selectedBusiness.businessId);
         setAppointments(appointmentData);
+        setAppointmentsCount(appointmentData.length); // Update appointments count
       } catch (error) {
         console.error('Failed to fetch appointments:', error);
       }
@@ -65,6 +68,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
 
   const handleStaffClose = () => {
     setStaffOpen(false);
+    fetchStaffData(); // Fetch updated staff data
   };
 
   const handleAppointmentOpen = () => {
@@ -73,6 +77,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
 
   const handleAppointmentClose = () => {
     setAppointmentOpen(false);
+    fetchAppointmentData(); // Fetch updated appointment data
   };
 
   const handleServicesOpen = () => {
@@ -81,6 +86,12 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
 
   const handleServicesClose = () => {
     setServicesOpen(false);
+    fetchServiceData(); // Fetch updated service data
+  };
+
+  const handleServiceChange = (newServices) => {
+    setServices(newServices);
+    setServicesCount(newServices.length); // Update services count
   };
 
   const parseDuration = (duration) => {
@@ -96,6 +107,9 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
         appointments={appointments}
         handleStaffOpen={handleStaffOpen}
         handleServiceOpen={handleServicesOpen} // Pass handleServiceOpen to BusinessInfo
+        servicesCount={servicesCount} // Pass servicesCount to BusinessInfo
+        staffCount={staffCount} // Pass staffCount to BusinessInfo
+        appointmentsCount={appointmentsCount} // Pass appointmentsCount to BusinessInfo
       />
       <Box className="calendar-container" style={{ marginBottom: '10px' }}>
         <FullCalendarComponent events={appointments.map(appt => ({
@@ -136,7 +150,12 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
 
       <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} />
       <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={setAppointments} />
-      <ShowServicesDialog open={servicesOpen} onClose={handleServicesClose} businessId={selectedBusiness.businessId} /> {/* Add ShowServicesDialog */}
+      <ShowServicesDialog 
+        open={servicesOpen} 
+        onClose={handleServicesClose} 
+        businessId={selectedBusiness.businessId} 
+        onServiceChange={handleServiceChange} // Pass handleServiceChange to ShowServicesDialog
+      />
     </Box>
   );
 };

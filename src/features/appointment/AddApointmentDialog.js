@@ -16,7 +16,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId, setAppointments }) =>
     serviceId: '',
     staffId: '',
     appointmentTime: '',
-    duration: '',
+    duration: '00:30', // Default to 30 minutes
     status: 'Scheduled'
   });
 
@@ -27,6 +27,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId, setAppointments }) =>
       const appointmentDetails = {
         ...newAppointment,
         businessId,
+        duration: newAppointment.duration + ':00' // Add seconds part
       };
 
       await addAppointment(appointmentDetails);
@@ -38,7 +39,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId, setAppointments }) =>
         serviceId: '',
         staffId: '',
         appointmentTime: '',
-        duration: '',
+        duration: '00:30',
         status: 'Scheduled'
       });
     } catch (error) {
@@ -49,8 +50,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId, setAppointments }) =>
 
   const handleDurationChange = (e) => {
     const value = e.target.value;
-    const [hours, minutes] = value.split(':');
-    setNewAppointment({ ...newAppointment, duration: `${hours}:${minutes}:00` });
+    setNewAppointment({ ...newAppointment, duration: value });
   };
 
   return (
@@ -88,7 +88,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId, setAppointments }) =>
           fullWidth
           value={newAppointment.appointmentTime}
           InputLabelProps={{
-            shrink: true,
+            shrink: true
           }}
           onChange={(e) => setNewAppointment({ ...newAppointment, appointmentTime: e.target.value })}
         />
@@ -97,12 +97,12 @@ const AddAppointmentDialog = ({ open, onClose, businessId, setAppointments }) =>
           label="Duration"
           type="time"
           fullWidth
-          value={newAppointment.duration.substring(0, 5)} 
+          value={newAppointment.duration}
           InputLabelProps={{
-            shrink: true,
+            shrink: true
           }}
           inputProps={{
-            step: 300, 
+            step: 300 // 5 min steps
           }}
           onChange={handleDurationChange}
         />
