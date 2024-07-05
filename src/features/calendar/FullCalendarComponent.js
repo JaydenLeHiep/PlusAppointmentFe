@@ -3,35 +3,38 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { Button, Box } from '@mui/material';
+import '../../styles/css/FullCalendarComponent.css';
+import { Box, Typography, IconButton } from '@mui/material';
+import ArrowBackIosTwoToneIcon from '@mui/icons-material/ArrowBackIosTwoTone';
+import ArrowForwardIosTwoToneIcon from '@mui/icons-material/ArrowForwardIosTwoTone';
+
+const views = ['dayGridMonth', 'timeGridWeek', 'timeGridDay'];
+const viewLabels = ['Month', 'Week', 'Day'];
 
 const FullCalendarComponent = ({ events }) => {
-  const [currentView, setCurrentView] = useState('dayGridMonth');
+  const [currentViewIndex, setCurrentViewIndex] = useState(0);
   const calendarRef = useRef(null);
 
   useEffect(() => {
     if (calendarRef.current) {
       const calendarApi = calendarRef.current.getApi();
-      calendarApi.on('datesSet', () => {
-        setCurrentView(calendarApi.view.type);
-      });
+      calendarApi.changeView(views[currentViewIndex]);
     }
-  }, []);
+  }, [currentViewIndex]);
 
   const handleDateClick = (arg) => {
     if (calendarRef.current) {
       const calendarApi = calendarRef.current.getApi();
       calendarApi.changeView('timeGridDay', arg.dateStr);
-      setCurrentView('timeGridDay');
+      setCurrentViewIndex(2); // Set to 'Day' view
     }
   };
 
-  const handleViewChange = (view) => {
-    if (calendarRef.current) {
-      const calendarApi = calendarRef.current.getApi();
-      calendarApi.changeView(view);
-      setCurrentView(view);
-    }
+  const handleViewChange = (direction) => {
+    setCurrentViewIndex((prevIndex) => {
+      const newIndex = (prevIndex + direction + views.length) % views.length;
+      return newIndex;
+    });
   };
 
   const renderEventContent = (eventInfo) => {
@@ -41,7 +44,7 @@ const FullCalendarComponent = ({ events }) => {
     const endTime = eventInfo.event.end;
     const timeText = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-    if (currentView === 'timeGridDay') {
+    if (views[currentViewIndex] === 'timeGridDay') {
       return (
         <div>
           <strong>{timeText}</strong>
@@ -61,16 +64,20 @@ const FullCalendarComponent = ({ events }) => {
   };
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-        <Button variant="contained" onClick={() => handleViewChange('dayGridMonth')}>Month</Button>
-        <Button variant="contained" onClick={() => handleViewChange('timeGridWeek')} sx={{ mx: 1 }}>Week</Button>
-        <Button variant="contained" onClick={() => handleViewChange('timeGridDay')}>Day</Button>
+    <Box className="carousel-container">
+      <Box className="carousel-controls">
+        <IconButton onClick={() => handleViewChange(-1)}>
+          <ArrowBackIosTwoToneIcon />
+        </IconButton>
+        <Typography variant="h6" className="carousel-label">{viewLabels[currentViewIndex]}</Typography>
+        <IconButton onClick={() => handleViewChange(1)}>
+          <ArrowForwardIosTwoToneIcon />
+        </IconButton>
       </Box>
       <FullCalendar
         ref={calendarRef}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView={currentView}
+        initialView={views[currentViewIndex]}
         events={events}
         height="auto"
         dateClick={handleDateClick}

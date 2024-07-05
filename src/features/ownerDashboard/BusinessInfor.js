@@ -1,17 +1,27 @@
 import React from 'react';
-import { Typography, Box, Badge } from '@mui/material';
+import { Typography, Box, Badge, IconButton } from '@mui/material';
 import AutoAwesomeTwoToneIcon from '@mui/icons-material/AutoAwesomeTwoTone';
 import NotificationsTwoToneIcon from '@mui/icons-material/NotificationsTwoTone';
 import InsertEmoticonTwoToneIcon from '@mui/icons-material/InsertEmoticonTwoTone';
+import ArrowCircleLeftTwoToneIcon from '@mui/icons-material/ArrowCircleLeftTwoTone';
+import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 
-const BusinessInfo = ({ selectedBusiness, staff = [], appointments = [], handleStaffOpen, handleServiceOpen, servicesCount, staffCount, appointmentsCount }) => {
+const BusinessInfo = ({ selectedBusiness, staff = [], appointments = [], handleStaffOpen, handleServiceOpen, servicesCount, staffCount, appointmentsCount, onBack, onAddAppointment }) => {
   return (
     <Box textAlign="center" mb={4}>
-      <Box display="flex" justifyContent="center" alignItems="center" mb={2} position="relative">
-        <Typography variant="h5" gutterBottom className="business-title" flexGrow={1}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Box display="flex" alignItems="center">
+          <IconButton color="primary" onClick={onBack}>
+            <ArrowCircleLeftTwoToneIcon />
+          </IconButton>
+          <IconButton color="secondary" onClick={onAddAppointment}>
+            <AddCircleTwoToneIcon />
+          </IconButton>
+        </Box>
+        <Typography variant="h5" gutterBottom className="business-title" style={{ flexGrow: 1 }}>
           {selectedBusiness.name}
         </Typography>
-        <Box display="flex" alignItems="center" position="absolute" right={0}>
+        <Box display="flex" alignItems="center">
           <Badge badgeContent={staffCount} color="primary" sx={{ marginRight: 2 }}>
             <InsertEmoticonTwoToneIcon className="material-symbols-outlined" onClick={handleStaffOpen} style={{ cursor: 'pointer' }} />
           </Badge>

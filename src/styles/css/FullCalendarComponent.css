@@ -1,0 +1,21 @@
+.carousel-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .carousel-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid lightblue;
+    background-color: lightblue;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .carousel-label {
+    margin: 0 16px;
+  }
+  
