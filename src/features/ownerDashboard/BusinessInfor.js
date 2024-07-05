@@ -4,7 +4,7 @@ import AutoAwesomeTwoToneIcon from '@mui/icons-material/AutoAwesomeTwoTone';
 import NotificationsTwoToneIcon from '@mui/icons-material/NotificationsTwoTone';
 import InsertEmoticonTwoToneIcon from '@mui/icons-material/InsertEmoticonTwoTone';
 
-const BusinessInfo = ({ selectedBusiness, staff = [], appointments = [], handleStaffOpen, handleServiceOpen }) => {
+const BusinessInfo = ({ selectedBusiness, staff = [], appointments = [], handleStaffOpen, handleServiceOpen, servicesCount, staffCount, appointmentsCount }) => {
   return (
     <Box textAlign="center" mb={4}>
       <Box display="flex" justifyContent="center" alignItems="center" mb={2} position="relative">
@@ -12,13 +12,13 @@ const BusinessInfo = ({ selectedBusiness, staff = [], appointments = [], handleS
           {selectedBusiness.name}
         </Typography>
         <Box display="flex" alignItems="center" position="absolute" right={0}>
-          <Badge badgeContent={staff.length} color="primary" sx={{ marginRight: 2 }}>
+          <Badge badgeContent={staffCount} color="primary" sx={{ marginRight: 2 }}>
             <InsertEmoticonTwoToneIcon className="material-symbols-outlined" onClick={handleStaffOpen} style={{ cursor: 'pointer' }} />
           </Badge>
-          <Badge badgeContent={appointments.length} color="error" sx={{ marginRight: 2 }}>
+          <Badge badgeContent={appointmentsCount} color="error" sx={{ marginRight: 2 }}>
             <NotificationsTwoToneIcon className="material-symbols-outlined" />
           </Badge>
-          <Badge badgeContent={selectedBusiness.services?.length || 0} sx={{ "& .MuiBadge-badge": { backgroundColor: "green", color: "white" } }}>
+          <Badge badgeContent={servicesCount} sx={{ "& .MuiBadge-badge": { backgroundColor: "green", color: "white" } }}>
             <AutoAwesomeTwoToneIcon className="material-symbols-outlined" onClick={handleServiceOpen} style={{ cursor: 'pointer' }} />
           </Badge>
         </Box>
