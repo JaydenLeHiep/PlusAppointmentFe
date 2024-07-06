@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { List, ListItem, Typography, Paper, Button, CircularProgress } from '@mui/material';
 import '../../styles/css/AppointmentList.css';
-import { changeStatusAppointments } from '../../lib/apiClientAppointment';
+import { changeStatusAppointments, deleteAppointment } from '../../lib/apiClientAppointment';
 
 const AppointmentList = ({ appointments, onUpdateStatus }) => {
   const [localAppointments, setLocalAppointments] = useState([]);
@@ -16,13 +16,22 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
     }
   }, [appointments]);
 
-  const handleChangeStatus = async (appointmentId, status) => {
+  const handleConfirmStatus = async (appointmentId) => {
     try {
-      const updatedStatus = status === 'delete' ? 'Delete' : 'Confirm';
+      const updatedStatus = 'Confirm';
       await changeStatusAppointments(appointmentId, { status: updatedStatus });
       onUpdateStatus(appointmentId, updatedStatus); // Update parent state
     } catch (error) {
       console.error('Failed to change appointment status:', error);
+    }
+  };
+
+  const handleDeleteAppointment = async (appointmentId) => {
+    try {
+      await deleteAppointment(appointmentId);
+      onUpdateStatus(appointmentId, 'Delete'); // Update parent state
+    } catch (error) {
+      console.error('Failed to delete appointment:', error);
     }
   };
 
@@ -33,6 +42,8 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
   if (!localAppointments || localAppointments.length === 0) {
     return <Typography variant="h6">No appointments available.</Typography>;
   }
+
+  console.log(appointments)
 
   return (
     <div>
@@ -49,7 +60,6 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
                     <Typography variant="body2">
                       {new Date(appointment.appointmentTime).toLocaleDateString([], { day: '2-digit', month: '2-digit' })}
                     </Typography>
-
                   </div>
                   <div className="customer-info">
                     <Typography variant="h6" className="bold-text">{appointment.customerName}</Typography>
@@ -64,7 +74,7 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
                     variant="contained"
                     color="error"
                     className="button-red"
-                    onClick={() => handleChangeStatus(appointment.appointmentId, 'delete')}
+                    onClick={() => handleDeleteAppointment(appointment.appointmentId)}
                   >
                     Delete
                   </Button>
@@ -72,7 +82,7 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
                     variant="contained"
                     color="success"
                     className="button-green"
-                    onClick={() => handleChangeStatus(appointment.appointmentId, 'confirm')}
+                    onClick={() => handleConfirmStatus(appointment.appointmentId)}
                   >
                     Confirm
                   </Button>
