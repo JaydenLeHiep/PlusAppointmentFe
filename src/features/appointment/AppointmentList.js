@@ -44,11 +44,12 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
                 <div className="info-container">
                   <div className="appointment-time">
                     <Typography variant="h6" className="bold-text">
-                      {new Date(appointment.appointmentTime).toLocaleTimeString()}
+                      {new Date(appointment.appointmentTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </Typography>
                     <Typography variant="body2">
-                      {new Date(appointment.appointmentTime).toLocaleDateString()}
+                      {new Date(appointment.appointmentTime).toLocaleDateString([], { day: '2-digit', month: '2-digit' })}
                     </Typography>
+
                   </div>
                   <div className="customer-info">
                     <Typography variant="h6" className="bold-text">{appointment.customerName}</Typography>
