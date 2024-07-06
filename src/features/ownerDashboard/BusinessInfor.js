@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box, Badge, IconButton } from '@mui/material';
 import AutoAwesomeTwoToneIcon from '@mui/icons-material/AutoAwesomeTwoTone';
-import NotificationsTwoToneIcon from '@mui/icons-material/NotificationsTwoTone';
+// import NotificationsTwoToneIcon from '@mui/icons-material/NotificationsTwoTone';
 import InsertEmoticonTwoToneIcon from '@mui/icons-material/InsertEmoticonTwoTone';
 import ArrowCircleLeftTwoToneIcon from '@mui/icons-material/ArrowCircleLeftTwoTone';
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
@@ -25,9 +25,12 @@ const BusinessInfo = ({ selectedBusiness, staff = [], appointments = [], handleS
           <Badge badgeContent={staffCount} color="primary" sx={{ marginRight: 2 }}>
             <InsertEmoticonTwoToneIcon className="material-symbols-outlined" onClick={handleStaffOpen} style={{ cursor: 'pointer' }} />
           </Badge>
-          <Badge badgeContent={appointmentsCount} color="error" sx={{ marginRight: 2 }}>
+          
+          {/* Need to fix this shit */}
+
+          {/* <Badge badgeContent={appointmentsCount} color="error" sx={{ marginRight: 2 }}>
             <NotificationsTwoToneIcon className="material-symbols-outlined" />
-          </Badge>
+          </Badge> */}
           <Badge badgeContent={servicesCount} sx={{ "& .MuiBadge-badge": { backgroundColor: "green", color: "white" } }}>
             <AutoAwesomeTwoToneIcon className="material-symbols-outlined" onClick={handleServiceOpen} style={{ cursor: 'pointer' }} />
           </Badge>

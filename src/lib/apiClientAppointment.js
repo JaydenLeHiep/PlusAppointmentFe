@@ -86,3 +86,33 @@ export const changeStatusAppointments = async (appointmentId, status) => {
     //     throw new Error('Unexpected data format');
     // }
 };
+
+// delete the appointment
+export const deleteAppointment = async (appointmentId) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        throw new Error('User not authenticated');
+    }
+    const appointmentBusinessApiUrl = `${appointmentApiUrl}/appointment_id=${appointmentId}/`;
+    const response = await fetch(appointmentBusinessApiUrl, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch appointments');
+    }
+
+    // const data = await response.json();
+    // if (Array.isArray(data)) {
+    //     return data;
+    // } else if (data.$values) {
+    //     return data.$values;
+    // } else {
+    //     throw new Error('Unexpected data format');
+    // }
+};
