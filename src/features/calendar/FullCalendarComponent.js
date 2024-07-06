@@ -45,9 +45,9 @@ const FullCalendarComponent = ({ events }) => {
     if (currentView === 'timeGridDay') {
       return (
         <div>
-          <strong>{timeText}</strong>
-          <br />
-          <span>{`${title} - ${service} - ${staff} - ${status}`}</span>
+          <span><strong>{timeText}</strong> {`${title} - ${service} - ${staff} - ${status}`}</span>
+          
+          
         </div>
       );
     }
@@ -55,9 +55,9 @@ const FullCalendarComponent = ({ events }) => {
     if (currentView === 'timeGridWeek') {
       return (
         <div>
-          <strong>{timeText}</strong>
-          <br />
-          <span>{title}</span>
+          <span><strong>{timeText}</strong> {title}</span>
+          
+          
         </div>
       );
     }
