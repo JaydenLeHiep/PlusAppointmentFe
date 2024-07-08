@@ -16,12 +16,12 @@ export const fetchAppointments = async (businessId) => {
             'Authorization': `Bearer ${token}`,
         },
     });
-
+    const data = await response.json();
     if (!response.ok) {
-        throw new Error('Failed to fetch appointments');
+        throw new Error(data.message);
     }
 
-    const data = await response.json();
+    
     if (Array.isArray(data)) {
         return data;
     } else if (data.$values) {
@@ -49,8 +49,9 @@ export const addAppointment = async (appointmentDetails) => {
     });
 
     const data = await response.json();
+    console.log(data)
     if (!response.ok) {
-        throw new Error(data.message || 'Failed to add appointment');
+        throw new Error(data.message);
     }
     return data;
 };
@@ -72,9 +73,9 @@ export const changeStatusAppointments = async (appointmentId, status) => {
         },
         body: JSON.stringify(status),
     });
-
+    const data = await response.json();
     if (!response.ok) {
-        throw new Error('Failed to fetch appointments');
+        throw new Error(data.message);
     }
 
     // const data = await response.json();
@@ -102,9 +103,9 @@ export const deleteAppointment = async (appointmentId) => {
         },
         
     });
-
+    const data = await response.json();
     if (!response.ok) {
-        throw new Error('Failed to fetch appointments');
+        throw new Error(data.message);
     }
 
     // const data = await response.json();

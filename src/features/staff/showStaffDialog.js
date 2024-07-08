@@ -32,6 +32,8 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
       setStaff(staffData);
     } catch (error) {
       console.error('Failed to fetch staff:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to fetch staff. Please try again.';
+      setAlert({ message: errorMessage, severity: 'error' });
     }
   }, [businessId]);
 
@@ -62,20 +64,23 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
       setAlert({ message: 'Staff added successfully!', severity: 'success' });
     } catch (error) {
       console.error('Failed to add staff:', error);
-      setAlert({ message: 'Failed to add staff. Please try again.', severity: 'error' });
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to add staff. Please try again.';
+      setAlert({ message: errorMessage, severity: 'error' });
     }
   };
 
   const handleDeleteStaff = async (staffId) => {
     try {
-      await deleteStaff(businessId, staffId); 
-      await fetchStaffData(); 
+      await deleteStaff(businessId, staffId);
+      await fetchStaffData();
       setAlert({ message: 'Staff deleted successfully!', severity: 'success' });
     } catch (error) {
       console.error('Failed to delete staff:', error);
-      setAlert({ message: 'Failed to delete staff. Please try again.', severity: 'error' });
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to delete staff. Please try again.';
+      setAlert({ message: errorMessage, severity: 'error' });
     }
   };
+
 
   return (
     <Dialog open={open} onClose={onClose}>

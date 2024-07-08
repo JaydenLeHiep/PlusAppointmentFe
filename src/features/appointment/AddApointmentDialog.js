@@ -44,7 +44,8 @@ const AddAppointmentDialog = ({ open, onClose, businessId, setAppointments }) =>
       });
     } catch (error) {
       console.error('Failed to add appointment:', error);
-      setAlert({ message: 'Failed to add appointment. Please try again.', severity: 'error' });
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to add appointment. Please try again.';
+      setAlert({ message: errorMessage, severity: 'error' });
     }
   };
 

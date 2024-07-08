@@ -15,12 +15,12 @@ export const fetchStaff = async (businessId) => {
             // 'Authorization': `Bearer ${token}`,
         },
     });
-
+    const data = await response.json();
     if (!response.ok) {
-        throw new Error('Failed to fetch staff');
+        throw new Error(data.message);
     }
 
-    const data = await response.json();
+    
     if (Array.isArray(data)) {
         return data;
     } else if (data.$values) {
@@ -46,7 +46,7 @@ export const addStaff = async (businessId, staffDetails) => {
     });
     const data = await response.json();
     if (!response.ok) {
-        throw new Error(data.message || 'Failed to add staff');
+        throw new Error(data.message);
     }
     return data;
 };
@@ -68,7 +68,7 @@ export const deleteStaff = async (businessId, staffId) => {
 
     if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || 'Failed to delete staff');
+        throw new Error(data.message);
     }
 
     return response.json();

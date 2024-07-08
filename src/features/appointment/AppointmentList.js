@@ -43,7 +43,7 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
     return <Typography variant="h6">No appointments available.</Typography>;
   }
 
-  console.log(appointments)
+  
 
   return (
     <div>

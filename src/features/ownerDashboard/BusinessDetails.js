@@ -6,7 +6,7 @@ import { fetchServices } from '../../lib/apiClientServicesOwnerDashboard';
 import FullCalendarComponent from '../calendar/FullCalendarComponent';
 import '../../styles/css/OwnerDashboard.css';
 import BusinessInfo from './BusinessInfor';
-import ShowStaffDialog from '../showStaffDialog/showStaffDialog';
+import ShowStaffDialog from '../staff/showStaffDialog';
 import AddAppointmentDialog from '../appointment/AddApointmentDialog';
 import ShowServicesDialog from '../servicecomponent/showServiceDialog';
 

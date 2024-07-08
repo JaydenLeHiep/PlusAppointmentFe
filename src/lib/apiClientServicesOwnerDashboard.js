@@ -15,12 +15,12 @@ export const fetchServices = async (businessId) => {
       'Authorization': `Bearer ${token}`
     },
   });
-
+  const data = await response.json();
   if (!response.ok) {
-    throw new Error('Failed to fetch services');
+    throw new Error(data.message);
   }
 
-  const data = await response.json();
+  
   if (Array.isArray(data)) {
     return data;
   } else if (data.$values) {
@@ -47,7 +47,7 @@ export const addService = async (businessId, serviceDetails) => {
 
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.message || 'Failed to add service');
+    throw new Error(data.message);
   }
   return data;
 };
@@ -68,7 +68,7 @@ export const deleteService = async (businessId, serviceId) => {
 
   if (!response.ok) {
     const data = await response.json();
-    throw new Error(data.message || 'Failed to delete service');
+    throw new Error(data.message);
   }
 
   return response.json();
