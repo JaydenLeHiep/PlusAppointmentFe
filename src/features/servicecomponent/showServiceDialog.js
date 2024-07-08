@@ -33,6 +33,8 @@ const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
       onServiceChange(serviceData); // Update services count
     } catch (error) {
       console.error('Failed to fetch services:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to fetch services. Please try again.';
+      setAlert({ message: errorMessage, severity: 'error' });
     }
   }, [businessId, onServiceChange]);
 
@@ -51,7 +53,7 @@ const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
       };
 
       await addService(businessId, serviceDetails);
-      await fetchServiceData(); 
+      await fetchServiceData();
       setNewService({
         name: '',
         description: '',
@@ -61,7 +63,8 @@ const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
       setAlert({ message: 'Service added successfully!', severity: 'success' });
     } catch (error) {
       console.error('Failed to add service:', error);
-      setAlert({ message: 'Failed to add service. Please try again.', severity: 'error' });
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to add service. Please try again.';
+      setAlert({ message: errorMessage, severity: 'error' });
     }
   };
 
@@ -72,7 +75,8 @@ const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
       setAlert({ message: 'Service deleted successfully!', severity: 'success' });
     } catch (error) {
       console.error('Failed to delete service:', error);
-      setAlert({ message: 'Failed to delete service. Please try again.', severity: 'error' });
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to delete service. Please try again.';
+      setAlert({ message: errorMessage, severity: 'error' });
     }
   };
 
@@ -80,6 +84,7 @@ const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
     const value = e.target.value;
     setNewService({ ...newService, duration: value });
   };
+
 
   return (
     <Dialog open={open} onClose={onClose}>

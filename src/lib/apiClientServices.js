@@ -16,12 +16,12 @@ export const fetchService = async (businessId) => {
             
         },
     });
-
+    const data = await response.json();
     if (!response.ok) {
-        throw new Error('Failed to fetch service');
+        throw new Error(data.message);
     }
 
-    const data = await response.json();
+    
     if (Array.isArray(data)) {
         return data;
     } else if (data.$values) {
