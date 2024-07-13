@@ -3,7 +3,7 @@ import { List, ListItem, Typography, Paper, CircularProgress } from '@mui/materi
 import { fetchService } from '../../lib/apiClientServices'; // Adjust the path as per your project structure
 import '../../styles/css/ServiceList.css'; // Ensure correct path to your CSS file
 
-const ServiceList = ({ businessId }) => {
+const ServiceList = ({ businessId, onServiceSelect }) => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true); // State to track loading status
 
@@ -30,7 +30,7 @@ const ServiceList = ({ businessId }) => {
       <Typography variant="h6">Services</Typography>
       <List>
         {services.map((service) => (
-          <ListItem key={service.serviceId}>
+          <ListItem key={service.serviceId} button onClick={() => onServiceSelect(service)}>
             <Paper className="service-item">
               <div className="service-container">
                 <div className="service-info">

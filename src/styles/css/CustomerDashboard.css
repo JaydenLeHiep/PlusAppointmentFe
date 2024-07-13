@@ -29,10 +29,8 @@
 }
 
 .dashboard-button {
-  /* Keep the existing styles for the outlined Staffs button */
-  border: 2px solid #1976d2; /* Adjust the color as needed */
-  color: #1976d2; /* Adjust the color as needed */
-  background: none;
+  background-color: pink; /* Set button background color to pink */
+  color: white; /* Set button text color to white */
   padding: 12px 24px; /* Increase padding for bigger buttons */
   font-size: 18px; /* Increase font size for buttons */
   flex: 1; /* Ensure buttons expand to fill available space */
@@ -43,3 +41,13 @@
   margin-top: 20px; /* Increase margin top for more spacing */
   margin-bottom: 20px; /* Increase margin bottom for more spacing */
 }
+
+.list-container {
+  margin-bottom: 20px; /* Increase margin bottom for more spacing */
+}
+
+.booking-info {
+  padding: 20px;
+  margin-bottom: 20px; /* Increase margin bottom for more spacing */
+}
+

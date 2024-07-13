@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Typography, Box, Button, CircularProgress } from '@mui/material';
-import SearchCustomer from './SearchCustomer';
+import { Typography, Box, CircularProgress } from '@mui/material';
 import ServiceList from '../servicecomponent/ServiceList';
 import StaffList from '../staff/StaffList';
+import CustomerForm from './CustomerForm';
+import CustomButton from './CustomerButton';
+import SearchCustomer from './SearchCustomer'; // Import SearchCustomer component
 import '../../styles/css/CustomerDashboard.css';
 import { fetchBusinessesById } from '../../lib/apiClientBusiness'; // Adjust path as per your project
 
@@ -12,14 +14,15 @@ const CustomerDashboard = () => {
   const queryParams = new URLSearchParams(location.search);
   const businessId = queryParams.get('business_id');
 
-  // State to track business information, loading, and error states
   const [businessInfo, setBusinessInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [view, setView] = useState('services'); // Default view is 'services'
+  const [selectedService, setSelectedService] = useState(null); // State to track selected service
+  const [selectedStaff, setSelectedStaff] = useState(null); // State to track selected staff
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    // Fetch business details only if businessId is provided
     const fetchBusiness = async () => {
       if (!businessId) {
         setError('Business ID not provided');
@@ -27,14 +30,13 @@ const CustomerDashboard = () => {
         return;
       }
       try {
-        const data = await fetchBusinessesById(businessId); // Call the correct function here
+        const data = await fetchBusinessesById(businessId);
         setBusinessInfo({
           name: data.name,
           address: data.address,
           phone: data.phone,
-          // Add more fields as needed
         });
-        setLoading(false); // Mark loading as complete
+        setLoading(false);
       } catch (error) {
         setError('Error fetching business information');
         setLoading(false);
@@ -45,7 +47,6 @@ const CustomerDashboard = () => {
     fetchBusiness();
   }, [businessId]);
 
-  // If businessId is not provided, show error message
   if (!businessId) {
     return (
       <Box className="customer-dashboard">
@@ -54,7 +55,6 @@ const CustomerDashboard = () => {
     );
   }
 
-  // If there's an error fetching business info, display error message
   if (error) {
     return (
       <Box className="customer-dashboard">
@@ -63,7 +63,6 @@ const CustomerDashboard = () => {
     );
   }
 
-  // While loading, display a loading indicator
   if (loading) {
     return (
       <Box className="customer-dashboard">
@@ -72,41 +71,64 @@ const CustomerDashboard = () => {
     );
   }
 
-  // Render the dashboard with business information once fetched
+  const handleServiceSelect = (service) => {
+    setSelectedService(service);
+    setView('staffs'); // Switch to staff view
+  };
+
+  const handleStaffSelect = (staff) => {
+    setSelectedStaff(staff);
+    setView('form'); // Switch to form view if staff selected
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <Box className="customer-dashboard">
       <Box className="business-info">
         <Typography variant="h5">{businessInfo.name}</Typography>
         <Typography variant="body1">Address: {businessInfo.address}</Typography>
         <Typography variant="body1">Phone: {businessInfo.phone}</Typography>
-        {/* Add logo or other business info here */}
       </Box>
-      <Box className="button-group">
-        <Button
-          variant={view === 'services' ? 'contained' : 'outlined'}
-          color="primary"
-          size="large"
-          onClick={() => setView('services')} // Set view to 'services'
-        >
-          Services
-        </Button>
-        <Button
-          variant={view === 'staffs' ? 'contained' : 'outlined'}
-          color="primary"
-          size="large"
-          onClick={() => setView('staffs')} // Set view to 'staffs'
-        >
-          Staffs
-        </Button>
-      </Box>
-      <Box className="search-box">
-        <SearchCustomer />
-      </Box>
+      <SearchCustomer onChange={handleSearchChange} />
+      {!selectedService && !selectedStaff && (
+        <Box className="button-group">
+          <CustomButton
+            variant={view === 'services' ? 'contained' : 'outlined'}
+            color="primary"
+            size="large"
+            onClick={() => setView('services')}
+          >
+            Services
+          </CustomButton>
+          <CustomButton
+            variant={view === 'staffs' ? 'contained' : 'outlined'}
+            color="primary"
+            size="large"
+            onClick={() => setView('staffs')}
+          >
+            Staffs
+          </CustomButton>
+        </Box>
+      )}
       <Box className="list-container">
-        {/* Display ServiceList and StaffList components based on view */}
-        {view === 'services' && <ServiceList businessId={businessId} />}
-        {view === 'staffs' && <StaffList businessId={businessId} />}
+        {!selectedService && view === 'services' && (
+          <ServiceList businessId={businessId} searchQuery={searchQuery} onServiceSelect={handleServiceSelect} />
+        )}
+        {!selectedStaff && view === 'staffs' && (
+          <StaffList businessId={businessId} searchQuery={searchQuery} onStaffSelect={handleStaffSelect} />
+        )}
       </Box>
+      {selectedService && selectedStaff && (
+        <>
+          <Typography variant="h6">
+            You want to book a {selectedService.name} with {selectedStaff.name}.
+          </Typography>
+          <CustomerForm />
+        </>
+      )}
     </Box>
   );
 };
