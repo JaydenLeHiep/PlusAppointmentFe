@@ -1,9 +1,11 @@
+// StaffList.js
+
 import React, { useState, useEffect } from 'react';
 import { List, ListItem, Typography, Paper, CircularProgress } from '@mui/material';
 import { fetchStaff } from '../../lib/apiClientStaff'; // Adjust the path as per your project structure
 import '../../styles/css/StaffList.css'; // Ensure correct path to your CSS file
 
-const StaffList = ({ businessId, onStaffSelect }) => {
+const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
   const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(true); // State to track loading status
 
@@ -21,6 +23,11 @@ const StaffList = ({ businessId, onStaffSelect }) => {
     fetchStaffData();
   }, [businessId]);
 
+  // Filtering staff based on search query
+  const filteredStaff = staff.filter(staffMember =>
+    staffMember.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (loading) {
     return <CircularProgress />; // Display loading indicator while fetching data
   }
@@ -29,7 +36,7 @@ const StaffList = ({ businessId, onStaffSelect }) => {
     <div>
       <Typography variant="h6">Staff</Typography>
       <List>
-        {staff.map((staffMember) => (
+        {filteredStaff.map((staffMember) => (
           <ListItem key={staffMember.staffId} button onClick={() => onStaffSelect(staffMember)}>
             <Paper className="staff-item">
               <div className="staff-info">

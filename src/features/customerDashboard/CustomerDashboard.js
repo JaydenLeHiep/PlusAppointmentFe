@@ -20,7 +20,8 @@ const CustomerDashboard = () => {
   const [view, setView] = useState('services'); // Default view is 'services'
   const [selectedService, setSelectedService] = useState(null); // State to track selected service
   const [selectedStaff, setSelectedStaff] = useState(null); // State to track selected staff
-  const [searchQuery, setSearchQuery] = useState('');
+  const [serviceSearchQuery, setServiceSearchQuery] = useState(''); // State for service search
+  const [staffSearchQuery, setStaffSearchQuery] = useState(''); // State for staff search
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -81,8 +82,12 @@ const CustomerDashboard = () => {
     setView('form'); // Switch to form view if staff selected
   };
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+  const handleServiceSearchChange = (e) => {
+    setServiceSearchQuery(e.target.value); // Update service search query
+  };
+
+  const handleStaffSearchChange = (e) => {
+    setStaffSearchQuery(e.target.value); // Update staff search query
   };
 
   return (
@@ -92,7 +97,7 @@ const CustomerDashboard = () => {
         <Typography variant="body1">Address: {businessInfo.address}</Typography>
         <Typography variant="body1">Phone: {businessInfo.phone}</Typography>
       </Box>
-      <SearchCustomer onChange={handleSearchChange} />
+      <SearchCustomer onChange={view === 'services' ? handleServiceSearchChange : handleStaffSearchChange} />
       {!selectedService && !selectedStaff && (
         <Box className="button-group">
           <CustomButton
@@ -115,10 +120,18 @@ const CustomerDashboard = () => {
       )}
       <Box className="list-container">
         {!selectedService && view === 'services' && (
-          <ServiceList businessId={businessId} searchQuery={searchQuery} onServiceSelect={handleServiceSelect} />
+          <ServiceList
+            businessId={businessId}
+            searchQuery={serviceSearchQuery} // Pass service search query
+            onServiceSelect={handleServiceSelect}
+          />
         )}
         {!selectedStaff && view === 'staffs' && (
-          <StaffList businessId={businessId} searchQuery={searchQuery} onStaffSelect={handleStaffSelect} />
+          <StaffList
+            businessId={businessId}
+            searchQuery={staffSearchQuery} // Pass staff search query
+            onStaffSelect={handleStaffSelect}
+          />
         )}
       </Box>
       {selectedService && selectedStaff && (

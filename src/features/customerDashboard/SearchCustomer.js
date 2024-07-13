@@ -3,11 +3,12 @@ import React from 'react';
 import { TextField, InputAdornment, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-const SearchCustomer = () => {
+const SearchCustomer = ({ onChange }) => {
   return (
     <TextField
       variant="outlined"
       placeholder="Search..."
+      onChange={onChange} // Pass onChange handler from parent component
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
