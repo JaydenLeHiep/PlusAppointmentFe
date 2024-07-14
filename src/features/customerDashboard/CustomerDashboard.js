@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { Typography, Box, CircularProgress } from '@mui/material';
+import { useLocation } from 'react-router-dom';
+
 import ServiceList from '../servicecomponent/ServiceList';
 import StaffList from '../staff/StaffList';
 import CustomerForm from './CustomerForm';
@@ -14,6 +15,7 @@ const CustomerDashboard = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const businessId = queryParams.get('business_id');
+  //const { fetchAppointmentsForBusiness } = useAppointmentsContext();
 
   const [businessInfo, setBusinessInfo] = useState({});
   const [loading, setLoading] = useState(true);
@@ -25,7 +27,6 @@ const CustomerDashboard = () => {
   const [staffSearchQuery, setStaffSearchQuery] = useState('');
   const [customerId, setCustomerId] = useState(null);
   const [showAddAppointmentDialog, setShowAddAppointmentDialog] = useState(false);
-  const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -52,7 +53,7 @@ const CustomerDashboard = () => {
     fetchBusiness();
   }, [businessId]);
 
-  const handleCustomerIdReceived = (id) => {
+  const handleCustomerIdReceived = async (id) => {
     setCustomerId(id);
     setShowAddAppointmentDialog(true);
   };
@@ -169,8 +170,7 @@ const CustomerDashboard = () => {
           customerId={customerId}
           serviceId={selectedService?.serviceId}
           staffId={selectedStaff?.staffId}
-          appointments={appointments}
-          setAppointments={setAppointments}
+          
         />
       )}
     </Box>
