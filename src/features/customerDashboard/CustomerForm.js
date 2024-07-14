@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, FormControlLabel, Checkbox } from '@mui/material';
+import { Box, TextField, FormControlLabel, Checkbox } from '@mui/material';
 import CustomButton from './CustomerButton';
 import '../../styles/css/CustomerForm.css';
 import { fetchCustomerId } from '../../lib/apiClientCustomer';
@@ -43,9 +43,9 @@ const CustomerForm = ({ businessId, onCustomerIdReceived, selectedService, selec
 
   return (
     <Box className="customer-form">
-      <Typography variant="h6">
+      {/* <Typography variant="h6">
         {isNewCustomer ? 'New Customer' : 'Existing Customer'}
-      </Typography>
+      </Typography> */}
       <CustomButton
         variant="contained"
         color="primary"
