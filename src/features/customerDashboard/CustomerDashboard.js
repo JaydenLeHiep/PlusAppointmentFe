@@ -1,11 +1,13 @@
+// CustomerDashboard.js
 import React, { useState, useEffect } from 'react';
 import { Typography, Box, CircularProgress } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 
-import ServiceList from '../servicecomponent/ServiceList';
-import StaffList from '../staff/StaffList';
+import CustomerBusinessInfo from './CustomerBusinessInfo';
+import CustomerButtonDashboard from './CustomerButtonDashboard';
+import ListsServiceStaff from './ListsServiceStaff';
 import CustomerForm from './CustomerForm';
-import CustomButton from './CustomerButton';
+
 import SearchCustomer from './SearchCustomer';
 import AddAppointmentDialog from '../appointment/AddApointmentDialog';
 import '../../styles/css/CustomerDashboard.css';
@@ -15,7 +17,6 @@ const CustomerDashboard = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const businessId = queryParams.get('business_id');
-  //const { fetchAppointmentsForBusiness } = useAppointmentsContext();
 
   const [businessInfo, setBusinessInfo] = useState({});
   const [loading, setLoading] = useState(true);
@@ -114,46 +115,17 @@ const CustomerDashboard = () => {
 
   return (
     <Box className="customer-dashboard">
-      <Box className="business-info">
-        <Typography variant="h5">{businessInfo.name}</Typography>
-        <Typography variant="body1">Address: {businessInfo.address}</Typography>
-        <Typography variant="body1">Phone: {businessInfo.phone}</Typography>
-      </Box>
+      <CustomerBusinessInfo businessInfo={businessInfo} />
       <SearchCustomer onChange={view === 'services' ? handleServiceSearchChange : handleStaffSearchChange} />
-      <Box className="button-group">
-        <CustomButton
-          variant={view === 'services' ? 'contained' : 'outlined'}
-          color="primary"
-          size="large"
-          onClick={() => setView('services')}
-        >
-          Services
-        </CustomButton>
-        <CustomButton
-          variant={view === 'staffs' ? 'contained' : 'outlined'}
-          color="primary"
-          size="large"
-          onClick={() => setView('staffs')}
-        >
-          Staffs
-        </CustomButton>
-      </Box>
-      <Box className="list-container">
-        {view === 'services' && (
-          <ServiceList
-            businessId={businessId}
-            searchQuery={serviceSearchQuery}
-            onServiceSelect={handleServiceSelect}
-          />
-        )}
-        {view === 'staffs' && (
-          <StaffList
-            businessId={businessId}
-            searchQuery={staffSearchQuery}
-            onStaffSelect={handleStaffSelect}
-          />
-        )}
-      </Box>
+      <CustomerButtonDashboard view={view} onViewChange={setView} />
+      <ListsServiceStaff
+        view={view}
+        businessId={businessId}
+        serviceSearchQuery={serviceSearchQuery}
+        staffSearchQuery={staffSearchQuery}
+        onServiceSelect={handleServiceSelect}
+        onStaffSelect={handleStaffSelect}
+      />
       {view === 'form' && (
         <CustomerForm
           businessId={businessId}
@@ -170,7 +142,6 @@ const CustomerDashboard = () => {
           customerId={customerId}
           serviceId={selectedService?.serviceId}
           staffId={selectedStaff?.staffId}
-          
         />
       )}
     </Box>
