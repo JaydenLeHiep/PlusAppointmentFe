@@ -2,52 +2,63 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Center vertically */
-  padding: 30px; /* Increase padding for more spacing */
+  justify-content: center;
+  padding: 2rem; /* Use rem for padding */
   box-sizing: border-box;
-  margin: 0 auto; /* Center horizontally */
+  margin: 0 auto;
   max-width: 800px; /* Adjust max-width as needed */
 }
 
 .business-info {
   text-align: center;
-  margin-bottom: 20px; /* Increase margin for more spacing */
+  margin-bottom: 2rem; /* Use rem for spacing */
 }
 
 .business-info h5 {
-  font-size: 24px; /* Increase font size for Business Name */
+  font-size: 1.5rem; /* Use rem for font size */
 }
 
 .business-info body1 {
-  font-size: 18px; /* Increase font size for Address and Phone */
+  font-size: 1.125rem; /* Use rem for font size */
 }
 
 .button-group {
   display: flex;
-  gap: 15px; /* Increase gap between buttons */
-  margin-bottom: 20px; /* Increase margin bottom for button group */
+  gap: 1rem; /* Use rem for gap */
+  margin-bottom: 2rem;
+  justify-content: center; /* Center the button group */
+  width: 100%; /* Ensure it takes the full width */
+  max-width: 500px; /* Adjust the max-width as needed */
 }
 
 .dashboard-button {
-  background-color: pink; /* Set button background color to pink */
-  color: white; /* Set button text color to white */
-  padding: 12px 24px; /* Increase padding for bigger buttons */
-  font-size: 18px; /* Increase font size for buttons */
+  background-color: pink;
+  color: white;
+  padding: 0.75rem 1.5rem; /* Use rem for padding */
+  font-size: 1.125rem; /* Use rem for font size */
   flex: 1; /* Ensure buttons expand to fill available space */
   max-width: 250px; /* Limit the maximum width of the button */
+  box-sizing: border-box;
 }
 
 .search-box {
-  margin-top: 20px; /* Increase margin top for more spacing */
-  margin-bottom: 20px; /* Increase margin bottom for more spacing */
+  width: 100%; /* Ensure search box takes full width */
+  max-width: 500px; /* Adjust the max-width as needed */
+  margin: 2rem 0; /* Use rem for spacing */
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.625rem; /* Use rem for padding */
+  box-sizing: border-box;
+  font-size: 1.125rem; /* Use rem for font size */
 }
 
 .list-container {
-  margin-bottom: 20px; /* Increase margin bottom for more spacing */
+  margin-bottom: 2rem; /* Use rem for spacing */
 }
 
 .booking-info {
-  padding: 20px;
-  margin-bottom: 20px; /* Increase margin bottom for more spacing */
+  padding: 2rem; /* Use rem for padding */
+  margin-bottom: 2rem; /* Use rem for spacing */
 }
-

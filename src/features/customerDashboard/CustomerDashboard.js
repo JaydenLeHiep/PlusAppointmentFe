@@ -116,8 +116,12 @@ const CustomerDashboard = () => {
   return (
     <Box className="customer-dashboard">
       <CustomerBusinessInfo businessInfo={businessInfo} />
-      <SearchCustomer onChange={view === 'services' ? handleServiceSearchChange : handleStaffSearchChange} />
-      <CustomerButtonDashboard view={view} onViewChange={setView} />
+      {!showAddAppointmentDialog && view !== 'form' && (
+        <>
+          <SearchCustomer onChange={view === 'services' ? handleServiceSearchChange : handleStaffSearchChange} />
+          <CustomerButtonDashboard view={view} onViewChange={setView} />
+        </>
+      )}
       <ListsServiceStaff
         view={view}
         businessId={businessId}

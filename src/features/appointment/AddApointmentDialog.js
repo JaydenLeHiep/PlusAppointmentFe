@@ -32,7 +32,6 @@ const AddAppointmentDialog = ({ open, onClose, businessId, customerId, serviceId
 
       await addAppointment(appointmentDetails);
       setAlert({ message: 'Appointment added successfully!', severity: 'success' });
-      onClose(); // Close the dialog after successful submission
     } catch (error) {
       console.error('Failed to add appointment:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Failed to add appointment. Please try again.';
