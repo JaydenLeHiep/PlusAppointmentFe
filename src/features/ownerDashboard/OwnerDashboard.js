@@ -1,3 +1,4 @@
+// OwnerDashboard.js
 import React, { useState, useEffect } from 'react';
 import { Container, Card, Box, CircularProgress, Alert } from '@mui/material';
 import Navbar from '../../components/Navbar';
@@ -6,13 +7,13 @@ import BusinessList from './BusinessList';
 import BusinessDetails from './BusinessDetails';
 import AppointmentList from '../appointment/AppointmentList';
 import { fetchBusinesses } from '../../lib/apiClientBusiness';
-import { fetchAppointments } from '../../lib/apiClientAppointment';
+import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import '../../styles/css/OwnerDashboard.css';
 
 const OwnerDashboard = () => {
+  const { appointments, fetchAppointmentsForBusiness } = useAppointmentsContext();
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
-  const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -46,35 +47,16 @@ const OwnerDashboard = () => {
     if (selectedBusiness) {
       localStorage.setItem('selectedBusiness', JSON.stringify(selectedBusiness));
       localStorage.setItem('selectedBusinessId', selectedBusiness.businessId);
-      loadAppointments(selectedBusiness.businessId);
+      fetchAppointmentsForBusiness(selectedBusiness.businessId);
     } else {
       localStorage.removeItem('selectedBusiness');
       localStorage.removeItem('selectedBusinessId');
-      setAppointments([]);
+     //setAppointments([]);
     }
-  }, [selectedBusiness]);
-
-  const loadAppointments = async (businessId) => {
-    try {
-      const appointmentList = await fetchAppointments(businessId);
-      setAppointments(appointmentList);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
+  }, [selectedBusiness, fetchAppointmentsForBusiness]);
 
   const handleBusinessClick = (business) => {
     setSelectedBusiness(business);
-  };
-
-  const updateAppointmentStatus = (appointmentId, status) => {
-    setAppointments((prevAppointments) =>
-      prevAppointments.map((appointment) =>
-        appointment.appointmentId === appointmentId
-          ? { ...appointment, status }
-          : appointment
-      ).filter(appt => appt.status !== 'Delete')
-    );
   };
 
   return (
@@ -96,11 +78,9 @@ const OwnerDashboard = () => {
                   selectedBusiness={selectedBusiness} 
                   setSelectedBusiness={setSelectedBusiness} 
                   appointments={appointments} 
-                  setAppointments={setAppointments} 
                 />
                 <AppointmentList 
                   appointments={appointments} 
-                  onUpdateStatus={updateAppointmentStatus}
                 />
               </>
             ) : (

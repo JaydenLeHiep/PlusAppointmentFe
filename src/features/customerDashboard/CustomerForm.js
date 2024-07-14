@@ -26,13 +26,7 @@ const CustomerForm = ({ businessId, onCustomerIdReceived, selectedService, selec
       const customerId = await fetchCustomerId(formData.emailOrPhone);
       onCustomerIdReceived(customerId);
 
-      // Example: Log customer data for demonstration
-      if (isNewCustomer) {
-        console.log('New customer name:', formData.name);
-        console.log('Save data:', formData.saveData);
-      } else {
-        console.log('Existing customer ID:', customerId);
-      }
+
 
       // Reset form data after submission if needed
       setFormData({
