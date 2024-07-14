@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Box, Typography, TextField, FormControlLabel, Checkbox } from '@mui/material';
-import CustomButton from './CustomerButton';// Import CustomButton component
-import '../../styles/css/CustomerForm.css'; // Ensure correct path to your CSS file
+import CustomButton from './CustomerButton';
+import '../../styles/css/CustomerForm.css';
+import { fetchCustomerId } from '../../lib/apiClientCustomer';
 
-const CustomerForm = () => {
+const CustomerForm = ({ businessId, onCustomerIdReceived, selectedService, selectedStaff }) => {
   const [isNewCustomer, setIsNewCustomer] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
-    emailOrPhone: '', // Use a single field for email or phone
+    emailOrPhone: '',
     saveData: false,
   });
 
@@ -19,10 +20,31 @@ const CustomerForm = () => {
     }));
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form Data:', formData);
+    try {
+      const customerId = await fetchCustomerId(formData.emailOrPhone);
+      onCustomerIdReceived(customerId);
+
+      // Example: Log customer data for demonstration
+      if (isNewCustomer) {
+        console.log('New customer name:', formData.name);
+        console.log('Save data:', formData.saveData);
+      } else {
+        console.log('Existing customer ID:', customerId);
+      }
+
+      // Reset form data after submission if needed
+      setFormData({
+        name: '',
+        emailOrPhone: '',
+        saveData: false,
+      });
+
+      // No appointment creation logic here
+    } catch (error) {
+      console.error('Error fetching customer ID:', error.message);
+    }
   };
 
   return (
@@ -50,7 +72,7 @@ const CustomerForm = () => {
           />
         )}
         <TextField
-          label={isNewCustomer ? "Email" : "Email or Phone"} // Change label based on new/existing customer
+          label={isNewCustomer ? "Email" : "Email or Phone"}
           name="emailOrPhone"
           value={formData.emailOrPhone}
           onChange={handleInputChange}

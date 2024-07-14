@@ -5,9 +5,10 @@ import ServiceList from '../servicecomponent/ServiceList';
 import StaffList from '../staff/StaffList';
 import CustomerForm from './CustomerForm';
 import CustomButton from './CustomerButton';
-import SearchCustomer from './SearchCustomer'; // Import SearchCustomer component
+import SearchCustomer from './SearchCustomer';
+import AddAppointmentDialog from '../appointment/AddApointmentDialog';
 import '../../styles/css/CustomerDashboard.css';
-import { fetchBusinessesById } from '../../lib/apiClientBusiness'; // Adjust path as per your project
+import { fetchBusinessesById } from '../../lib/apiClientBusiness';
 
 const CustomerDashboard = () => {
   const location = useLocation();
@@ -17,11 +18,14 @@ const CustomerDashboard = () => {
   const [businessInfo, setBusinessInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [view, setView] = useState('services'); // Default view is 'services'
-  const [selectedService, setSelectedService] = useState(null); // State to track selected service
-  const [selectedStaff, setSelectedStaff] = useState(null); // State to track selected staff
-  const [serviceSearchQuery, setServiceSearchQuery] = useState(''); // State for service search
-  const [staffSearchQuery, setStaffSearchQuery] = useState(''); // State for staff search
+  const [view, setView] = useState('services');
+  const [selectedService, setSelectedService] = useState(null);
+  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [serviceSearchQuery, setServiceSearchQuery] = useState('');
+  const [staffSearchQuery, setStaffSearchQuery] = useState('');
+  const [customerId, setCustomerId] = useState(null);
+  const [showAddAppointmentDialog, setShowAddAppointmentDialog] = useState(false);
+  const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -48,6 +52,41 @@ const CustomerDashboard = () => {
     fetchBusiness();
   }, [businessId]);
 
+  const handleCustomerIdReceived = (id) => {
+    setCustomerId(id);
+    setShowAddAppointmentDialog(true);
+  };
+
+  const handleServiceSelect = (service) => {
+    setSelectedService(service);
+    if (selectedStaff) {
+      setView('form');
+    } else {
+      setView('staffs');
+    }
+  };
+
+  const handleStaffSelect = (staff) => {
+    setSelectedStaff(staff);
+    if (selectedService) {
+      setView('form');
+    } else {
+      setView('services');
+    }
+  };
+
+  const handleServiceSearchChange = (e) => {
+    setServiceSearchQuery(e.target.value);
+  };
+
+  const handleStaffSearchChange = (e) => {
+    setStaffSearchQuery(e.target.value);
+  };
+
+  const handleCloseAddAppointmentDialog = () => {
+    setShowAddAppointmentDialog(false);
+  };
+
   if (!businessId) {
     return (
       <Box className="customer-dashboard">
@@ -72,24 +111,6 @@ const CustomerDashboard = () => {
     );
   }
 
-  const handleServiceSelect = (service) => {
-    setSelectedService(service);
-    setView('staffs'); // Switch to staff view
-  };
-
-  const handleStaffSelect = (staff) => {
-    setSelectedStaff(staff);
-    setView('form'); // Switch to form view if staff selected
-  };
-
-  const handleServiceSearchChange = (e) => {
-    setServiceSearchQuery(e.target.value); // Update service search query
-  };
-
-  const handleStaffSearchChange = (e) => {
-    setStaffSearchQuery(e.target.value); // Update staff search query
-  };
-
   return (
     <Box className="customer-dashboard">
       <Box className="business-info">
@@ -98,49 +119,59 @@ const CustomerDashboard = () => {
         <Typography variant="body1">Phone: {businessInfo.phone}</Typography>
       </Box>
       <SearchCustomer onChange={view === 'services' ? handleServiceSearchChange : handleStaffSearchChange} />
-      {!selectedService && !selectedStaff && (
-        <Box className="button-group">
-          <CustomButton
-            variant={view === 'services' ? 'contained' : 'outlined'}
-            color="primary"
-            size="large"
-            onClick={() => setView('services')}
-          >
-            Services
-          </CustomButton>
-          <CustomButton
-            variant={view === 'staffs' ? 'contained' : 'outlined'}
-            color="primary"
-            size="large"
-            onClick={() => setView('staffs')}
-          >
-            Staffs
-          </CustomButton>
-        </Box>
-      )}
+      <Box className="button-group">
+        <CustomButton
+          variant={view === 'services' ? 'contained' : 'outlined'}
+          color="primary"
+          size="large"
+          onClick={() => setView('services')}
+        >
+          Services
+        </CustomButton>
+        <CustomButton
+          variant={view === 'staffs' ? 'contained' : 'outlined'}
+          color="primary"
+          size="large"
+          onClick={() => setView('staffs')}
+        >
+          Staffs
+        </CustomButton>
+      </Box>
       <Box className="list-container">
-        {!selectedService && view === 'services' && (
+        {view === 'services' && (
           <ServiceList
             businessId={businessId}
-            searchQuery={serviceSearchQuery} // Pass service search query
+            searchQuery={serviceSearchQuery}
             onServiceSelect={handleServiceSelect}
           />
         )}
-        {!selectedStaff && view === 'staffs' && (
+        {view === 'staffs' && (
           <StaffList
             businessId={businessId}
-            searchQuery={staffSearchQuery} // Pass staff search query
+            searchQuery={staffSearchQuery}
             onStaffSelect={handleStaffSelect}
           />
         )}
       </Box>
-      {selectedService && selectedStaff && (
-        <>
-          <Typography variant="h6">
-            You want to book a {selectedService.name} with {selectedStaff.name}.
-          </Typography>
-          <CustomerForm />
-        </>
+      {view === 'form' && (
+        <CustomerForm
+          businessId={businessId}
+          onCustomerIdReceived={handleCustomerIdReceived}
+          selectedService={selectedService}
+          selectedStaff={selectedStaff}
+        />
+      )}
+      {showAddAppointmentDialog && (
+        <AddAppointmentDialog
+          open={showAddAppointmentDialog}
+          onClose={handleCloseAddAppointmentDialog}
+          businessId={businessId}
+          customerId={customerId}
+          serviceId={selectedService?.serviceId}
+          staffId={selectedStaff?.staffId}
+          appointments={appointments}
+          setAppointments={setAppointments}
+        />
       )}
     </Box>
   );
