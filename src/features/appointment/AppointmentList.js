@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { List, ListItem, Typography, Paper, Button, CircularProgress } from '@mui/material';
+import { List, ListItem, Typography, Paper, Button, CircularProgress, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import '../../styles/css/AppointmentList.css';
 import { changeStatusAppointments, deleteAppointment } from '../../lib/apiClientAppointment';
 
 const AppointmentList = ({ appointments, onUpdateStatus }) => {
-  const [localAppointments, setLocalAppointments] = useState([]);
-  const [loading, setLoading] = useState(true); // State to track loading status
+  const [loading, setLoading] = useState(true);
+  const [sortCriteria, setSortCriteria] = useState('date');
 
   useEffect(() => {
     if (appointments) {
-      // Filter out appointments with status 'Delete'
-      const filteredAppointments = appointments.filter(appt => appt.status !== 'Delete');
-      setLocalAppointments(filteredAppointments);
-      setLoading(false); // Mark loading as complete
+      setLoading(false);
     }
   }, [appointments]);
 
@@ -20,7 +17,7 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
     try {
       const updatedStatus = 'Confirm';
       await changeStatusAppointments(appointmentId, { status: updatedStatus });
-      onUpdateStatus(appointmentId, updatedStatus); // Update parent state
+      onUpdateStatus(appointmentId, updatedStatus);
     } catch (error) {
       console.error('Failed to change appointment status:', error);
     }
@@ -29,26 +26,43 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
   const handleDeleteAppointment = async (appointmentId) => {
     try {
       await deleteAppointment(appointmentId);
-      onUpdateStatus(appointmentId, 'Delete'); // Update parent state
+      onUpdateStatus(appointmentId, 'Delete');
     } catch (error) {
       console.error('Failed to delete appointment:', error);
     }
   };
 
   if (loading) {
-    return <CircularProgress />; // Display loading indicator while fetching data
+    return <CircularProgress />;
   }
 
-  if (!localAppointments || localAppointments.length === 0) {
+  if (!appointments || appointments.length === 0) {
     return <Typography variant="h6">No appointments available.</Typography>;
   }
 
-  
+  const sortedAppointments = [...appointments].filter(appt => appt.status !== 'Delete');
+
+  if (sortCriteria === 'date') {
+    sortedAppointments.sort((a, b) => new Date(a.appointmentTime) - new Date(b.appointmentTime));
+  } else if (sortCriteria === 'status') {
+    sortedAppointments.sort((a, b) => a.status.localeCompare(b.status));
+  }
 
   return (
     <div>
+      <FormControl variant="outlined" style={{ marginBottom: '16px' }}>
+        <InputLabel>Sort By</InputLabel>
+        <Select
+          value={sortCriteria}
+          onChange={(e) => setSortCriteria(e.target.value)}
+          label="Sort By"
+        >
+          <MenuItem value="date">Date</MenuItem>
+          <MenuItem value="status">Status</MenuItem>
+        </Select>
+      </FormControl>
       <List>
-        {localAppointments.map((appointment) => (
+        {sortedAppointments.map((appointment) => (
           <ListItem key={appointment.appointmentId}>
             <Paper style={{ width: '100%', padding: '16px', marginBottom: '8px' }}>
               <div className="appointment-container">
