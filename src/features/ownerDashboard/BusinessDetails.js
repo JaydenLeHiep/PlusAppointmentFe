@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Box} from '@mui/material';
-import { fetchAppointments } from '../../lib/apiClientAppointment';
+
 import { fetchStaff } from '../../lib/apiClientStaff';
 import { fetchServices } from '../../lib/apiClientServicesOwnerDashboard';
 import FullCalendarComponent from '../calendar/FullCalendarComponent';
@@ -15,7 +15,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
   const [services, setServices] = useState([]);
   const [servicesCount, setServicesCount] = useState(0); // New state for services count
   const [staffCount, setStaffCount] = useState(0); // New state for staff count
-  const [appointmentsCount, setAppointmentsCount] = useState(0); // New state for appointments count
+  
   const [staffOpen, setStaffOpen] = useState(false);
   const [appointmentOpen, setAppointmentOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -44,23 +44,13 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
     }
   }, [selectedBusiness]);
 
-  const fetchAppointmentData = useCallback(async () => {
-    if (selectedBusiness) {
-      try {
-        const appointmentData = await fetchAppointments(selectedBusiness.businessId);
-        setAppointments(appointmentData);
-        setAppointmentsCount(appointmentData.length); // Update appointments count
-      } catch (error) {
-        console.error('Failed to fetch appointments:', error);
-      }
-    }
-  }, [selectedBusiness, setAppointments]);
+
 
   useEffect(() => {
     fetchStaffData();
     fetchServiceData();
-    fetchAppointmentData();
-  }, [selectedBusiness, fetchStaffData, fetchServiceData, fetchAppointmentData]);
+    // fetchAppointmentData();
+  }, [selectedBusiness, fetchStaffData, fetchServiceData]);
 
   const handleStaffOpen = () => {
     setStaffOpen(true);
@@ -77,7 +67,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
 
   const handleAppointmentClose = () => {
     setAppointmentOpen(false);
-    fetchAppointmentData(); // Fetch updated appointment data
+    // fetchAppointmentData(); // Fetch updated appointment data
   };
 
   const handleServicesOpen = () => {
@@ -109,7 +99,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
         handleServiceOpen={handleServicesOpen} // Pass handleServiceOpen to BusinessInfo
         servicesCount={servicesCount} // Pass servicesCount to BusinessInfo
         staffCount={staffCount} // Pass staffCount to BusinessInfo
-        appointmentsCount={appointmentsCount} // Pass appointmentsCount to BusinessInfo
+        appointmentsCount={appointments.length} // Pass appointmentsCount to BusinessInfo
         onBack={() => setSelectedBusiness(null)} // Pass onBack handler to BusinessInfo
         onAddAppointment={handleAppointmentOpen} // Pass onAddAppointment handler to BusinessInfo
       />
