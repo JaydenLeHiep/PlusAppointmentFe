@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box} from '@mui/material';
+import { Box } from '@mui/material';
 
 import { fetchStaff } from '../../lib/apiClientStaff';
 import { fetchServices } from '../../lib/apiClientServicesOwnerDashboard';
@@ -15,7 +15,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
   const [services, setServices] = useState([]);
   const [servicesCount, setServicesCount] = useState(0); // New state for services count
   const [staffCount, setStaffCount] = useState(0); // New state for staff count
-  
+
   const [staffOpen, setStaffOpen] = useState(false);
   const [appointmentOpen, setAppointmentOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -104,24 +104,28 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
         onAddAppointment={handleAppointmentOpen} // Pass onAddAppointment handler to BusinessInfo
       />
       <Box className="calendar-container" style={{ marginBottom: '10px' }}>
-        <FullCalendarComponent events={appointments.map(appt => ({
-          title: `${appt.customerName}`,
-          start: new Date(appt.appointmentTime).toISOString(),  // Ensure the correct date format
-          end: new Date(new Date(appt.appointmentTime).getTime() + parseDuration(appt.duration)).toISOString(),
-          extendedProps: {
+        <FullCalendarComponent
+          events={appointments.map(appt => ({
+            title: `${appt.customerName}`,
+            start: new Date(appt.appointmentTime).toISOString(),
+            end: new Date(new Date(appt.appointmentTime).getTime() + parseDuration(appt.duration)).toISOString(),
+            customerName: appt.customerName,
+            customerPhone: appt.customerPhone,
+            appointmentTime: appt.appointmentTime,
             service: appt.serviceName,
-            staff: appt.staffName,
-            status: appt.status
-          }
-        }))} />
+            staffName: appt.staffName,
+            status: appt.status,
+            appointmentId: appt.appointmentId,  // If needed for updates/deletes
+          }))} />
+
       </Box>
 
       <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} />
       <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={setAppointments} />
-      <ShowServicesDialog 
-        open={servicesOpen} 
-        onClose={handleServicesClose} 
-        businessId={selectedBusiness.businessId} 
+      <ShowServicesDialog
+        open={servicesOpen}
+        onClose={handleServicesClose}
+        businessId={selectedBusiness.businessId}
         onServiceChange={handleServiceChange} // Pass handleServiceChange to ShowServicesDialog
       />
     </Box>

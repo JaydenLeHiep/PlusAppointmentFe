@@ -7,24 +7,31 @@ import '../../styles/css/FullCalendarComponent.css';
 import { Box, Typography, IconButton } from '@mui/material';
 import ArrowBackIosTwoToneIcon from '@mui/icons-material/ArrowBackIosTwoTone';
 import ArrowForwardIosTwoToneIcon from '@mui/icons-material/ArrowForwardIosTwoTone';
+import AppointmentInfoModal from '../appointment/AppointmentInfoModal';
 
 const views = ['dayGridMonth', 'timeGridWeek', 'timeGridDay'];
 const viewLabels = ['Month', 'Week', 'Day'];
 
 const FullCalendarComponent = ({ events }) => {
-  const [currentView, setCurrentView] = useState(views[0]); // Track current view directly
+  const [currentView, setCurrentView] = useState(views[0]);
   const calendarRef = useRef(null);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Effect to handle view change
   useEffect(() => {
     if (calendarRef.current) {
       const calendarApi = calendarRef.current.getApi();
-      calendarApi.changeView(currentView); // Use currentView directly
+      calendarApi.changeView(currentView);
     }
-  }, [currentView]); // Trigger effect when currentView changes
+  }, [currentView]);
 
   const handleDateClick = (arg) => {
-    setCurrentView('timeGridDay'); // Update currentView directly
+    setCurrentView('timeGridDay');
+  };
+
+  const handleEventClick = (clickInfo) => {
+    setSelectedAppointment(clickInfo.event.extendedProps);
+    setIsModalOpen(true);
   };
 
   const handleViewChange = (direction) => {
@@ -42,27 +49,14 @@ const FullCalendarComponent = ({ events }) => {
     const endTime = eventInfo.event.end;
     const timeText = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-    if (currentView === 'timeGridDay') {
+    if (currentView === 'timeGridDay' || currentView === 'timeGridWeek') {
       return (
         <div>
           <span><strong>{timeText}</strong> {`${title} - ${service} - ${staff} - ${status}`}</span>
-          
-          
         </div>
       );
     }
 
-    if (currentView === 'timeGridWeek') {
-      return (
-        <div>
-          <span><strong>{timeText}</strong> {title}</span>
-          
-          
-        </div>
-      );
-    }
-
-    // Return null for dayGridMonth view to show nothing
     return null;
   };
 
@@ -89,6 +83,11 @@ const FullCalendarComponent = ({ events }) => {
     );
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedAppointment(null);
+  };
+
   return (
     <Box className="carousel-container">
       <Box className="carousel-controls">
@@ -103,13 +102,25 @@ const FullCalendarComponent = ({ events }) => {
       <FullCalendar
         ref={calendarRef}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView={currentView} // Use currentView directly
+        initialView={currentView}
         events={events}
         height="auto"
         dateClick={handleDateClick}
-        eventContent={renderEventContent} // Custom rendering
-        dayCellContent={renderDayCell} // Custom day cell rendering
+        eventClick={handleEventClick} // Handle event click
+        eventContent={renderEventContent}
+        dayCellContent={renderDayCell}
       />
+      {selectedAppointment && (
+        <AppointmentInfoModal
+          open={isModalOpen}
+          appointment={selectedAppointment}
+          onClose={handleCloseModal}
+          onUpdateStatus={(id, status) => {
+            // Update event status logic here if needed
+            console.log(`Updated appointment ${id} to status ${status}`);
+          }}
+        />
+      )}
     </Box>
   );
 };
