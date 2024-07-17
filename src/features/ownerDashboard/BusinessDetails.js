@@ -104,7 +104,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
         onAddAppointment={handleAppointmentOpen} // Pass onAddAppointment handler to BusinessInfo
       />
       <Box className="calendar-container" style={{ marginBottom: '10px' }}>
-        <FullCalendarComponent
+      <FullCalendarComponent
           events={appointments.map(appt => ({
             title: `${appt.customerName}`,
             start: new Date(appt.appointmentTime).toISOString(),
@@ -116,7 +116,9 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
             staffName: appt.staffName,
             status: appt.status,
             appointmentId: appt.appointmentId,  // If needed for updates/deletes
-          }))} />
+          }))}
+          staff={staff}
+        />
 
       </Box>
 

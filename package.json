@@ -9,6 +9,7 @@
     "@fullcalendar/interaction": "^6.1.13",
     "@fullcalendar/react": "^6.1.13",
     "@fullcalendar/timegrid": "^6.1.13",
+    "@fullcalendar/resource-timeline": "^6.1.13",
     "@mui/icons-material": "^5.15.18",
     "@mui/material": "^5.15.18",
     "@testing-library/jest-dom": "^5.17.0",
