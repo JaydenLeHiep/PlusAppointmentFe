@@ -25,9 +25,6 @@ const BusinessInfo = ({ selectedBusiness, staff = [], appointments = [], handleS
           <Badge badgeContent={staffCount} color="primary" sx={{ marginRight: 2 }}>
             <InsertEmoticonTwoToneIcon className="material-symbols-outlined" onClick={handleStaffOpen} style={{ cursor: 'pointer' }} />
           </Badge>
-          
-          {/* Need to fix this shit */}
-
           <Badge badgeContent={appointmentsCount} color="error" sx={{ marginRight: 2 }}>
             <NotificationsTwoToneIcon className="material-symbols-outlined" />
           </Badge>

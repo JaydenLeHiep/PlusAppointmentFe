@@ -73,3 +73,26 @@ export const deleteStaff = async (businessId, staffId) => {
 
     return response.json();
 };
+
+// API client function for updating a staff member
+export const updateStaff = async (businessId, staffId, staffDetails) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('User not authenticated');
+    }
+  
+    const response = await fetch(`${staffApiUrl}/business_id=${businessId}/staff_id=${staffId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(staffDetails)
+    });
+  
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to update staff');
+    }
+    return data;
+  };
