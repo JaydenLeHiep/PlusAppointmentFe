@@ -3,21 +3,24 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  Alert,
   DialogContentText,
   DialogTitle,
-  TextField,
   Button,
   IconButton,
   List,
   ListItem,
   ListItemText,
+  Collapse,
+  Box,
+  Alert
 } from '@mui/material';
-import { Delete } from '@mui/icons-material';
-import { fetchStaff, addStaff, deleteStaff } from '../../lib/apiClientStaff';
+import { Delete, Edit, Add } from '@mui/icons-material';
+import { fetchStaff, addStaff, deleteStaff, updateStaff } from '../../lib/apiClientStaff';
+import StaffForm from './StaffForm';
 
 const ShowStaffDialog = ({ open, onClose, businessId }) => {
   const [staff, setStaff] = useState([]);
+  const [selectedStaffId, setSelectedStaffId] = useState(null);
   const [newStaff, setNewStaff] = useState({
     name: '',
     email: '',
@@ -25,6 +28,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
     password: ''
   });
   const [alert, setAlert] = useState({ message: '', severity: '' });
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const fetchStaffData = useCallback(async () => {
     try {
@@ -54,17 +58,49 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
       };
 
       await addStaff(businessId, staffDetails);
-      await fetchStaffData();  // Fetch the updated staff list
+      setAlert({ message: 'Staff added successfully!', severity: 'success' });
+
+      await fetchStaffData();
       setNewStaff({
         name: '',
         email: '',
         phone: '',
         password: ''
       });
-      setAlert({ message: 'Staff added successfully!', severity: 'success' });
+      setSelectedStaffId(null);
+      setIsFormOpen(false);
     } catch (error) {
       console.error('Failed to add staff:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Failed to add staff. Please try again.';
+      setAlert({ message: errorMessage, severity: 'error' });
+    }
+  };
+
+  const handleUpdateStaff = async () => {
+    try {
+      const staffDetails = {
+        name: newStaff.name,
+        email: newStaff.email,
+        phone: newStaff.phone,
+        password: newStaff.password,
+        BusinessId: businessId
+      };
+
+      await updateStaff(businessId, selectedStaffId, staffDetails);
+      setAlert({ message: 'Staff updated successfully!', severity: 'success' });
+
+      await fetchStaffData();
+      setNewStaff({
+        name: '',
+        email: '',
+        phone: '',
+        password: ''
+      });
+      setSelectedStaffId(null);
+      setIsFormOpen(false);
+    } catch (error) {
+      console.error('Failed to update staff:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to update staff. Please try again.';
       setAlert({ message: errorMessage, severity: 'error' });
     }
   };
@@ -81,20 +117,68 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
     }
   };
 
+  const handleEditStaff = (staff) => {
+    setSelectedStaffId(staff.staffId);
+    setNewStaff({
+      name: staff.name,
+      email: staff.email,
+      phone: staff.phone,
+      password: '' // Do not prefill password for security reasons
+    });
+    setIsFormOpen(true);
+  };
+
+  const handleAddNewStaffClick = () => {
+    setIsFormOpen(!isFormOpen);
+    setNewStaff({
+      name: '',
+      email: '',
+      phone: '',
+      password: ''
+    });
+    setSelectedStaffId(null);
+    setAlert({ message: '', severity: '' });
+  };
+
+  const handleCancelForm = () => {
+    setIsFormOpen(false);
+    setSelectedStaffId(null);
+    setNewStaff({
+      name: '',
+      email: '',
+      phone: '',
+      password: ''
+    });
+  };
+
+  const handleCloseDialog = () => {
+    setAlert({ message: '', severity: '' });
+    handleCancelForm();
+    onClose();
+  };
+
+  const handleClickAnywhere = () => {
+    setAlert({ message: '', severity: '' });
+  };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={handleCloseDialog}>
       <DialogTitle>Staff List</DialogTitle>
-      <DialogContent>
+      <DialogContent onClick={handleClickAnywhere}>
         {staff.length > 0 ? (
           <List>
             {staff.map((member) => (
               <ListItem
                 key={member.staffId}
                 secondaryAction={
-                  <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteStaff(member.staffId)}>
-                    <Delete />
-                  </IconButton>
+                  <>
+                    <IconButton edge="end" aria-label="edit" onClick={() => handleEditStaff(member)}>
+                      <Edit />
+                    </IconButton>
+                    <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteStaff(member.staffId)}>
+                      <Delete />
+                    </IconButton>
+                  </>
                 }
               >
                 <ListItemText primary={member.name} secondary={member.email} />
@@ -104,51 +188,39 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
         ) : (
           <DialogContentText>No staff found for this business.</DialogContentText>
         )}
-        <DialogContentText>Add New Staff</DialogContentText>
-        <TextField
-          margin="dense"
-          label="Name"
-          type="text"
-          fullWidth
-          value={newStaff.name}
-          onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
-        />
-        <TextField
-          margin="dense"
-          label="Email"
-          type="email"
-          fullWidth
-          value={newStaff.email}
-          onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
-        />
-        <TextField
-          margin="dense"
-          label="Phone"
-          type="text"
-          fullWidth
-          value={newStaff.phone}
-          onChange={(e) => setNewStaff({ ...newStaff, phone: e.target.value })}
-        />
-        <TextField
-          margin="dense"
-          label="Password"
-          type="password"
-          fullWidth
-          value={newStaff.password}
-          onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
-        />
+
+        <Box mt={2} display="flex" justifyContent="center">
+          <Button
+            startIcon={<Add />}
+            onClick={handleAddNewStaffClick}
+          >
+            Add New Staff
+          </Button>
+        </Box>
+
+        <Collapse in={isFormOpen || selectedStaffId !== null}>
+          <StaffForm
+            title={selectedStaffId ? 'Update Staff' : 'Add New Staff'}
+            newStaff={newStaff}
+            setNewStaff={setNewStaff}
+            handleCancelForm={handleCancelForm}
+          />
+        </Collapse>
         {alert.message && (
-          <Alert severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} sx={{ mt: 2 }}>
+          <Alert severity={alert.severity} sx={{ mt: 2 }}>
             {alert.message}
           </Alert>
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
-          Cancel
+        <Button onClick={handleCloseDialog} color="primary">
+          Close
         </Button>
-        <Button onClick={handleAddStaff} color="primary">
+        <Button onClick={handleAddStaff} color="primary" disabled={!isFormOpen || !!selectedStaffId}>
           Add Staff
+        </Button>
+        <Button onClick={handleUpdateStaff} color="primary" disabled={!selectedStaffId}>
+          Update Staff
         </Button>
       </DialogActions>
     </Dialog>
