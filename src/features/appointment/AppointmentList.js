@@ -1,36 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { List, ListItem, Typography, Paper, Button, CircularProgress, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import { List, ListItem, Typography, Paper, CircularProgress, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import AppointmentInfoModal from './AppointmentInfoModal'; // import the modal component
 import '../../styles/css/AppointmentList.css';
-import { changeStatusAppointments, deleteAppointment } from '../../lib/apiClientAppointment';
 
 const AppointmentList = ({ appointments, onUpdateStatus }) => {
   const [loading, setLoading] = useState(true);
   const [sortCriteria, setSortCriteria] = useState('date');
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     if (appointments) {
       setLoading(false);
     }
   }, [appointments]);
-
-  const handleConfirmStatus = async (appointmentId) => {
-    try {
-      const updatedStatus = 'Confirm';
-      await changeStatusAppointments(appointmentId, { status: updatedStatus });
-      onUpdateStatus(appointmentId, updatedStatus);
-    } catch (error) {
-      console.error('Failed to change appointment status:', error);
-    }
-  };
-
-  const handleDeleteAppointment = async (appointmentId) => {
-    try {
-      await deleteAppointment(appointmentId);
-      onUpdateStatus(appointmentId, 'Delete');
-    } catch (error) {
-      console.error('Failed to delete appointment:', error);
-    }
-  };
 
   if (loading) {
     return <CircularProgress />;
@@ -48,6 +31,16 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
     sortedAppointments.sort((a, b) => a.status.localeCompare(b.status));
   }
 
+  const handleAppointmentClick = (appointment) => {
+    setSelectedAppointment(appointment);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedAppointment(null);
+  };
+
   return (
     <div>
       <FormControl variant="outlined" style={{ marginBottom: '16px' }}>
@@ -61,9 +54,15 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
           <MenuItem value="status">Status</MenuItem>
         </Select>
       </FormControl>
+      <AppointmentInfoModal
+        open={modalOpen}
+        appointment={selectedAppointment}
+        onClose={handleCloseModal}
+        onUpdateStatus={onUpdateStatus}
+      />
       <List>
         {sortedAppointments.map((appointment) => (
-          <ListItem key={appointment.appointmentId}>
+          <ListItem key={appointment.appointmentId} onClick={() => handleAppointmentClick(appointment)}>
             <Paper style={{ width: '100%', padding: '16px', marginBottom: '8px' }}>
               <div className="appointment-container">
                 <div className="info-container">
@@ -82,24 +81,6 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
                   <Typography className={`status ${appointment.status.toLowerCase()}`}>
                     {appointment.status}
                   </Typography>
-                </div>
-                <div className="button-container">
-                  <Button
-                    variant="contained"
-                    color="error"
-                    className="button-red"
-                    onClick={() => handleDeleteAppointment(appointment.appointmentId)}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    className="button-green"
-                    onClick={() => handleConfirmStatus(appointment.appointmentId)}
-                  >
-                    Confirm
-                  </Button>
                 </div>
               </div>
             </Paper>
