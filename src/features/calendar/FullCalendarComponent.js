@@ -3,16 +3,17 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import '../../styles/css/FullCalendarComponent.css';
 import { Box, Typography, IconButton } from '@mui/material';
 import ArrowBackIosTwoToneIcon from '@mui/icons-material/ArrowBackIosTwoTone';
 import ArrowForwardIosTwoToneIcon from '@mui/icons-material/ArrowForwardIosTwoTone';
 import AppointmentInfoModal from '../appointment/AppointmentInfoModal';
 
-const views = ['dayGridMonth', 'timeGridWeek', 'timeGridDay'];
-const viewLabels = ['Month', 'Week', 'Day'];
+const views = ['dayGridMonth', 'timeGridWeek', 'timeGridDay', 'resourceTimelineDay'];
+const viewLabels = ['Month', 'Week', 'Day', 'Staff'];
 
-const FullCalendarComponent = ({ events }) => {
+const FullCalendarComponent = ({ events, staff }) => {
   const [currentView, setCurrentView] = useState(views[0]);
   const calendarRef = useRef(null);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
@@ -25,7 +26,7 @@ const FullCalendarComponent = ({ events }) => {
     }
   }, [currentView]);
 
-  const handleDateClick = (arg) => {
+  const handleDateClick = () => {
     setCurrentView('timeGridDay');
   };
 
@@ -42,17 +43,26 @@ const FullCalendarComponent = ({ events }) => {
     });
   };
 
+  // const handleDateNav = (direction) => {
+  //   const calendarApi = calendarRef.current.getApi();
+  //   if (direction === -1) {
+  //     calendarApi.prev();
+  //   } else {
+  //     calendarApi.next();
+  //   }
+  // };
+
   const renderEventContent = (eventInfo) => {
     const { title, extendedProps } = eventInfo.event;
-    const { service, staff, status } = extendedProps;
+    const { service, staffName, status } = extendedProps;
     const startTime = eventInfo.event.start;
     const endTime = eventInfo.event.end;
     const timeText = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-    if (currentView === 'timeGridDay' || currentView === 'timeGridWeek') {
+    if (currentView === 'timeGridDay' || currentView === 'timeGridWeek' || currentView === 'resourceTimelineDay') {
       return (
         <div>
-          <span><strong>{timeText}</strong> {`${title} - ${service} - ${staff} - ${status}`}</span>
+          <span><strong>{timeText}</strong> {`${title} - ${service} - ${staffName} - ${status}`}</span>
         </div>
       );
     }
@@ -88,6 +98,21 @@ const FullCalendarComponent = ({ events }) => {
     setSelectedAppointment(null);
   };
 
+  // Create resources from staff names
+  const resources = staff.map((staffMember, index) => ({
+    id: index.toString(),
+    title: staffMember.name
+  }));
+
+  // Add resourceIds to events
+  const updatedEvents = events.map(event => {
+    const resource = resources.find(res => res.title === event.staffName);
+    return {
+      ...event,
+      resourceIds: [resource?.id]
+    };
+  });
+
   return (
     <Box className="carousel-container">
       <Box className="carousel-controls">
@@ -101,14 +126,35 @@ const FullCalendarComponent = ({ events }) => {
       </Box>
       <FullCalendar
         ref={calendarRef}
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, resourceTimelinePlugin]}
         initialView={currentView}
-        events={events}
+        events={updatedEvents}
+        resources={resources}
         height="auto"
         dateClick={handleDateClick}
-        eventClick={handleEventClick} // Handle event click
+        eventClick={handleEventClick}
         eventContent={renderEventContent}
         dayCellContent={renderDayCell}
+        headerToolbar={{
+          left: 'prev,next today',
+          center: 'title',
+          right: ''
+        }}
+        views={{
+          timeGridDay: {
+            type: 'timeGrid',
+            duration: { days: 1 },
+            buttonText: 'day',
+            slotDuration: '00:30:00',
+            resources: true, // Ensures resources are displayed in timeGridDay view
+          },
+          resourceTimelineDay: {
+            type: 'resourceTimeline',
+            duration: { days: 1 },
+            buttonText: 'staff',
+          }
+        }}
       />
       {selectedAppointment && (
         <AppointmentInfoModal
