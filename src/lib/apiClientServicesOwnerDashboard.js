@@ -73,3 +73,25 @@ export const deleteService = async (businessId, serviceId) => {
 
   return response.json();
 };
+
+export const updateService = async (businessId, serviceId, serviceDetails) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('User not authenticated');
+  }
+
+  const response = await fetch(`${serviceApiUrl}/business_id=${businessId}/service_id=${serviceId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(serviceDetails)
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to update service');
+  }
+  return data;
+};
