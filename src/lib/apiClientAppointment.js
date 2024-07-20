@@ -58,44 +58,44 @@ export const addAppointment = async (appointmentDetails) => {
 
 
 // change the status of an appointment 
-
 export const changeStatusAppointments = async (appointmentId, status) => {
     const token = localStorage.getItem('token');
     if (!token) {
-        throw new Error('User not authenticated');
+      throw new Error('User not authenticated');
     }
     const appointmentBusinessApiUrl = `${appointmentApiUrl}/appointment_id=${appointmentId}/status`;
     const response = await fetch(appointmentBusinessApiUrl, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(status),
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(status),
     });
     const data = await response.json();
     if (!response.ok) {
-        throw new Error(data.message);
+      throw new Error(data.message);
     }
-};
+    return data;
+  };
 
 // delete the appointment
 export const deleteAppointment = async (appointmentId) => {
     const token = localStorage.getItem('token');
     if (!token) {
-        throw new Error('User not authenticated');
+      throw new Error('User not authenticated');
     }
-    const appointmentBusinessApiUrl = `${appointmentApiUrl}/appointment_id=${appointmentId}/`;
+    const appointmentBusinessApiUrl = `${appointmentApiUrl}/appointment_id=${appointmentId}`;
     const response = await fetch(appointmentBusinessApiUrl, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
-        
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
     });
-    const data = await response.json();
     if (!response.ok) {
-        throw new Error(data.message);
+      const data = await response.json();
+      throw new Error(data.message);
     }
-};
+    return response.json();
+  };

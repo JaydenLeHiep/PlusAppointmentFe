@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogActions,
@@ -13,17 +13,16 @@ import {
   Select,
   InputLabel,
   FormControl,
-  Grid,
-  Typography
+  Grid
 } from '@mui/material';
 import { Add, Remove, Close as CloseIcon } from '@mui/icons-material';
 import { addAppointment } from '../../lib/apiClientAppointment';
 import { fetchService } from '../../lib/apiClientServices';
 import { fetchCustomers } from '../../lib/apiClientCustomer';
-import { fetchStaff } from '../../lib/apiClientStaff'
+import { fetchStaff } from '../../lib/apiClientStaff';
 
 const AddAppointmentDialog = ({ open, onClose, businessId }) => {
-  const [newAppointment, setNewAppointment] = useState({
+  const initialAppointmentState = useRef({
     appointmentTime: '',
     status: 'Pending',
     customerId: '',
@@ -33,6 +32,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
     services: [{ serviceId: '', duration: '', price: '' }]
   });
 
+  const [newAppointment, setNewAppointment] = useState(initialAppointmentState.current);
   const [alert, setAlert] = useState({ message: '', severity: '' });
   const [availableServices, setAvailableServices] = useState([]);
   const [customers, setCustomers] = useState([]);
@@ -71,6 +71,13 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
     loadStaff();
   }, [businessId]);
 
+  useEffect(() => {
+    if (!open) {
+      setNewAppointment(initialAppointmentState.current);
+      setAlert({ message: '', severity: '' });
+    }
+  }, [open]);
+
   const handleAddAppointment = async () => {
     try {
       const serviceIds = newAppointment.services.map(service => service.serviceId);
@@ -86,7 +93,6 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
 
       await addAppointment(appointmentDetails);
       setAlert({ message: 'Appointment added successfully!', severity: 'success' });
-      // onClose();
     } catch (error) {
       console.error('Failed to add appointment:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Failed to add appointment. Please try again.';
@@ -124,15 +130,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
   };
 
   const handleCancel = () => {
-    setNewAppointment({
-      appointmentTime: '',
-      status: 'Pending',
-      customerId: '',
-      staffId: '',
-      businessId,
-      comment: '',
-      services: [{ serviceId: '', duration: '', price: '' }]
-    });
+    setNewAppointment(initialAppointmentState.current);
     setAlert({ message: '', severity: '' });
   };
 
