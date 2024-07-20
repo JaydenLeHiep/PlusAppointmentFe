@@ -13,18 +13,21 @@ import {
   Select,
   InputLabel,
   FormControl,
-  Grid
+  Grid,
+  Typography
 } from '@mui/material';
-import { Add, Remove } from '@mui/icons-material';
+import { Add, Remove, Close as CloseIcon } from '@mui/icons-material';
 import { addAppointment } from '../../lib/apiClientAppointment';
 import { fetchService } from '../../lib/apiClientServices';
+import { fetchCustomers } from '../../lib/apiClientCustomer';
+import { fetchStaff } from '../../lib/apiClientStaff'
 
-const AddAppointmentDialog = ({ open, onClose, businessId, customerId, staffId }) => {
+const AddAppointmentDialog = ({ open, onClose, businessId }) => {
   const [newAppointment, setNewAppointment] = useState({
     appointmentTime: '',
     status: 'Pending',
-    customerId: customerId || '',
-    staffId: staffId || '',
+    customerId: '',
+    staffId: '',
     businessId,
     comment: '',
     services: [{ serviceId: '', duration: '', price: '' }]
@@ -32,6 +35,8 @@ const AddAppointmentDialog = ({ open, onClose, businessId, customerId, staffId }
 
   const [alert, setAlert] = useState({ message: '', severity: '' });
   const [availableServices, setAvailableServices] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [staff, setStaff] = useState([]);
 
   useEffect(() => {
     const loadServices = async () => {
@@ -43,7 +48,27 @@ const AddAppointmentDialog = ({ open, onClose, businessId, customerId, staffId }
       }
     };
 
+    const loadCustomers = async () => {
+      try {
+        const customers = await fetchCustomers(businessId);
+        setCustomers(customers);
+      } catch (error) {
+        console.error('Failed to fetch customers:', error);
+      }
+    };
+
+    const loadStaff = async () => {
+      try {
+        const staff = await fetchStaff(businessId);
+        setStaff(staff);
+      } catch (error) {
+        console.error('Failed to fetch staff:', error);
+      }
+    };
+
     loadServices();
+    loadCustomers();
+    loadStaff();
   }, [businessId]);
 
   const handleAddAppointment = async () => {
@@ -61,7 +86,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId, customerId, staffId }
 
       await addAppointment(appointmentDetails);
       setAlert({ message: 'Appointment added successfully!', severity: 'success' });
-      onClose();
+      // onClose();
     } catch (error) {
       console.error('Failed to add appointment:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Failed to add appointment. Please try again.';
@@ -75,9 +100,12 @@ const AddAppointmentDialog = ({ open, onClose, businessId, customerId, staffId }
   };
 
   const handleServiceChange = (index, field, value) => {
+    const selectedService = availableServices.find(service => service.serviceId === value);
+
     const updatedServices = newAppointment.services.map((service, i) =>
-      i === index ? { ...service, [field]: value } : service
+      i === index ? { ...service, [field]: value, duration: selectedService.duration, price: selectedService.price } : service
     );
+
     setNewAppointment({ ...newAppointment, services: updatedServices });
   };
 
@@ -95,26 +123,65 @@ const AddAppointmentDialog = ({ open, onClose, businessId, customerId, staffId }
     });
   };
 
+  const handleCancel = () => {
+    setNewAppointment({
+      appointmentTime: '',
+      status: 'Pending',
+      customerId: '',
+      staffId: '',
+      businessId,
+      comment: '',
+      services: [{ serviceId: '', duration: '', price: '' }]
+    });
+    setAlert({ message: '', severity: '' });
+  };
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Add Appointment</DialogTitle>
+      <DialogTitle>
+        Add Appointment
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
-        <TextField
-          margin="dense"
-          label="Customer ID"
-          type="number"
-          fullWidth
-          value={newAppointment.customerId}
-          onChange={(e) => handleInputChange(e, 'customerId')}
-        />
-        <TextField
-          margin="dense"
-          label="Staff ID"
-          type="number"
-          fullWidth
-          value={newAppointment.staffId}
-          onChange={(e) => handleInputChange(e, 'staffId')}
-        />
+        <FormControl fullWidth margin="dense">
+          <InputLabel>Customer</InputLabel>
+          <Select
+            value={newAppointment.customerId}
+            onChange={(e) => handleInputChange(e, 'customerId')}
+            label="Customer"
+          >
+            {customers.map((customer) => (
+              <MenuItem key={customer.customerId} value={customer.customerId}>
+                <Box component="span" fontWeight="fontWeightBold">{customer.name}</Box> - {customer.phone}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl fullWidth margin="dense">
+          <InputLabel>Staff</InputLabel>
+          <Select
+            value={newAppointment.staffId}
+            onChange={(e) => handleInputChange(e, 'staffId')}
+            label="Staff"
+          >
+            {staff.map((staffMember) => (
+              <MenuItem key={staffMember.staffId} value={staffMember.staffId}>
+                <Box component="span" fontWeight="fontWeightBold">{staffMember.name}</Box> - {staffMember.phone}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <TextField
           margin="dense"
           label="Appointment Time"
@@ -133,6 +200,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId, customerId, staffId }
           fullWidth
           value={newAppointment.status}
           onChange={(e) => handleInputChange(e, 'status')}
+          disabled
         />
         <TextField
           margin="dense"
@@ -174,7 +242,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId, customerId, staffId }
                   inputProps={{
                     step: 300 // 5 min steps
                   }}
-                  onChange={(e) => handleServiceChange(index, 'duration', e.target.value)}
+                  disabled
                 />
               </Grid>
               <Grid item xs={3}>
@@ -185,6 +253,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId, customerId, staffId }
                   fullWidth
                   value={service.price}
                   onChange={(e) => handleServiceChange(index, 'price', e.target.value)}
+                  disabled
                 />
               </Grid>
               <Grid item xs={2} style={{ display: 'flex', justifyContent: 'center' }}>
@@ -206,6 +275,9 @@ const AddAppointmentDialog = ({ open, onClose, businessId, customerId, staffId }
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
+          Close
+        </Button>
+        <Button onClick={handleCancel} color="primary">
           Cancel
         </Button>
         <Button onClick={handleAddAppointment} color="primary">

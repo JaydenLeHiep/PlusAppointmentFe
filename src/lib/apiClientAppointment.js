@@ -77,15 +77,6 @@ export const changeStatusAppointments = async (appointmentId, status) => {
     if (!response.ok) {
         throw new Error(data.message);
     }
-
-    // const data = await response.json();
-    // if (Array.isArray(data)) {
-    //     return data;
-    // } else if (data.$values) {
-    //     return data.$values;
-    // } else {
-    //     throw new Error('Unexpected data format');
-    // }
 };
 
 // delete the appointment
@@ -107,13 +98,4 @@ export const deleteAppointment = async (appointmentId) => {
     if (!response.ok) {
         throw new Error(data.message);
     }
-
-    // const data = await response.json();
-    // if (Array.isArray(data)) {
-    //     return data;
-    // } else if (data.$values) {
-    //     return data.$values;
-    // } else {
-    //     throw new Error('Unexpected data format');
-    // }
 };
