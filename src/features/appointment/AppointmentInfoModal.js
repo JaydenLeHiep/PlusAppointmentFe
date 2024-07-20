@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, IconButton } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, IconButton, Alert } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import '../../styles/css/AppointmentInfoModal.css';
 import { changeStatusAppointments, deleteAppointment } from '../../lib/apiClientAppointment';
 
 const AppointmentInfoModal = ({ open, appointment, onClose, onUpdateStatus }) => {
+  const [alert, setAlert] = useState({ message: '', severity: '' });
+
   useEffect(() => {
     if (appointment) {
       console.log(appointment);
@@ -15,12 +17,14 @@ const AppointmentInfoModal = ({ open, appointment, onClose, onUpdateStatus }) =>
 
   const handleConfirmStatus = async () => {
     try {
-      const updatedStatus = 'Confirm';
+      const updatedStatus = 'Confirmed';
       await changeStatusAppointments(appointment.appointmentId, { status: updatedStatus });
       onUpdateStatus(appointment.appointmentId, updatedStatus);
-      onClose();
+      setAlert({ message: 'Appointment confirmed successfully!', severity: 'success' });
     } catch (error) {
       console.error('Failed to change appointment status:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to confirm appointment. Please try again.';
+      setAlert({ message: errorMessage, severity: 'error' });
     }
   };
 
@@ -28,21 +32,35 @@ const AppointmentInfoModal = ({ open, appointment, onClose, onUpdateStatus }) =>
     try {
       await deleteAppointment(appointment.appointmentId);
       onUpdateStatus(appointment.appointmentId, 'Delete');
-      onClose();
+      onClose(); // Close the dialog after deleting the appointment
     } catch (error) {
       console.error('Failed to delete appointment:', error);
     }
   };
 
+  const handleClearAlert = () => {
+    setAlert({ message: '', severity: '' });
+  };
+
+  const handleCloseDialog = () => {
+    onClose();
+    setAlert({ message: '', severity: '' });
+  };
+
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
       <div className="modal-header">
-        <IconButton edge="start" color="inherit" onClick={onClose} aria-label="close">
+        <IconButton edge="start" color="inherit" onClick={handleCloseDialog} aria-label="close">
           <ClearIcon />
         </IconButton>
-        <DialogTitle>New Appointment</DialogTitle>
+        <DialogTitle>Appointment Details</DialogTitle>
       </div>
       <DialogContent dividers>
+        {alert.message && (
+          <Alert severity={alert.severity} onClose={handleClearAlert} sx={{ mb: 2 }}>
+            {alert.message}
+          </Alert>
+        )}
         <Typography variant="body1" gutterBottom>
           Client: {appointment.customerName}
         </Typography>
@@ -60,14 +78,14 @@ const AppointmentInfoModal = ({ open, appointment, onClose, onUpdateStatus }) =>
         </Typography>
       </DialogContent>
       <DialogActions>
+        <Button variant="contained" onClick={handleCloseDialog}>
+          Close
+        </Button>
         <Button variant="contained" color="error" onClick={handleDeleteAppointment}>
-          Cancel
+          Delete
         </Button>
         <Button variant="contained" color="success" className="button-large" onClick={handleConfirmStatus}>
           Confirm
-        </Button>
-        <Button variant="contained" color="primary">
-          Update
         </Button>
       </DialogActions>
     </Dialog>

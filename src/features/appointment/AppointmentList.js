@@ -3,7 +3,7 @@ import { List, ListItem, Typography, Paper, CircularProgress, MenuItem, Select, 
 import AppointmentInfoModal from './AppointmentInfoModal'; // import the modal component
 import '../../styles/css/AppointmentList.css';
 
-const AppointmentList = ({ appointments, onUpdateStatus }) => {
+const AppointmentList = ({ appointments }) => {
   const [loading, setLoading] = useState(true);
   const [sortCriteria, setSortCriteria] = useState('date');
   const [selectedAppointment, setSelectedAppointment] = useState(null);
@@ -41,6 +41,13 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
     setSelectedAppointment(null);
   };
 
+  const handleUpdateStatus = (appointmentId, status) => {
+    const updatedAppointments = appointments.map(appt => 
+      appt.appointmentId === appointmentId ? { ...appt, status } : appt
+    );
+    // Update the state with the new appointments array
+  };
+
   return (
     <div>
       <FormControl variant="outlined" style={{ marginBottom: '16px' }}>
@@ -58,7 +65,7 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
         open={modalOpen}
         appointment={selectedAppointment}
         onClose={handleCloseModal}
-        onUpdateStatus={onUpdateStatus}
+        onUpdateStatus={handleUpdateStatus}
       />
       <List>
         {sortedAppointments.map((appointment) => (
