@@ -1,13 +1,7 @@
 import { apiBaseUrl } from '../config/apiConfig';
 
-
 const userApiUrl = `${apiBaseUrl}/api/users`;
 
-
-
-
-
-//API client function for registering a user
 export const registerUser = async (userDetails) => {
   const response = await fetch(`${userApiUrl}/register`, {
     method: 'POST',
@@ -26,7 +20,6 @@ export const registerUser = async (userDetails) => {
   return data;
 };
 
-//API client function for Login
 export const loginUser = async (loginDetails) => {
   const response = await fetch(`${userApiUrl}/login`, {
     method: 'POST',
@@ -34,6 +27,7 @@ export const loginUser = async (loginDetails) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(loginDetails),
+    credentials: 'include'
   });
 
   const data = await response.json();
@@ -45,5 +39,30 @@ export const loginUser = async (loginDetails) => {
   return data;
 };
 
+export const refreshToken = async () => {
+  const token = localStorage.getItem('token');
 
+  if (!token) {
+    throw new Error('No token found');
+  }
 
+  
+
+  const response = await fetch(`${userApiUrl}/refresh`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token }),
+    credentials: 'include' // Ensure cookies are sent with the request
+  });
+
+  if (!response.ok) {
+    console.log('Error refreshing token:', await response.text());
+    throw new Error('Failed to refresh token');
+  }
+
+  const data = await response.json();
+  
+  return data;
+};

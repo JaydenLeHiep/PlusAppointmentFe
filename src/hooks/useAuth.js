@@ -1,11 +1,40 @@
-import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
+import React, { useState, useEffect, createContext, useContext, useCallback, useRef } from 'react';
 import {jwtDecode} from 'jwt-decode';
+import { refreshToken as fetchNewToken } from '../lib/apiClient';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const refreshTimeout = useRef(null); // Use useRef to keep track of the timeout
+
+  const setAuthTimeout = useCallback((expirationTime) => {
+    const currentTime = Date.now();
+    const delay = expirationTime - currentTime - 30 * 1000; // Refresh 30 seconds before expiration
+
+    if (delay > 0) {
+      refreshTimeout.current = setTimeout(async () => {
+        try {
+          
+          const data = await fetchNewToken();
+          localStorage.setItem('token', data.token); // Ensure 'token' matches the key in your response
+          const newDecodedToken = jwtDecode(data.token); // Ensure 'token' matches the key in your response
+          
+          setIsAuthenticated(true);
+          setUser({ username: newDecodedToken.name, role: newDecodedToken.role });
+          setAuthTimeout(newDecodedToken.exp * 1000);
+        } catch (error) {
+          console.error('Token refresh failed', error);
+          localStorage.removeItem('token');
+          localStorage.removeItem('role');
+          localStorage.removeItem('username');
+          setIsAuthenticated(false);
+          setUser(null);
+        }
+      }, delay);
+    }
+  }, []);
 
   const checkTokenExpiration = useCallback(() => {
     const token = localStorage.getItem('token');
@@ -14,35 +43,33 @@ export const AuthProvider = ({ children }) => {
       const isExpired = decodedToken.exp * 1000 < Date.now();
 
       if (isExpired) {
-        // If the token has expired, remove it and update the authentication state
+        console.log('Token expired');
         localStorage.removeItem('token');
         localStorage.removeItem('role');
         localStorage.removeItem('username');
         setIsAuthenticated(false);
         setUser(null);
       } else {
-        // Token is not expired, ensure user is marked as authenticated
         const role = localStorage.getItem('role');
         const username = localStorage.getItem('username');
         setIsAuthenticated(true);
         setUser({ username, role });
+        setAuthTimeout(decodedToken.exp * 1000);
       }
     } else {
-      // No token, user is not authenticated
       setIsAuthenticated(false);
       setUser(null);
     }
-  }, []);
+  }, [setAuthTimeout]);
 
   useEffect(() => {
-    // Immediate check on load
     checkTokenExpiration();
 
-    // Set up an interval for periodic checks
-    const intervalId = setInterval(checkTokenExpiration, 60000); // Check every 60 seconds
-
-    // Clean up interval on component unmount
-    return () => clearInterval(intervalId);
+    return () => {
+      if (refreshTimeout.current) {
+        clearTimeout(refreshTimeout.current);
+      }
+    };
   }, [checkTokenExpiration]);
 
   const login = (token, user) => {
@@ -51,6 +78,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('username', user.username);
     setIsAuthenticated(true);
     setUser(user);
+    const decodedToken = jwtDecode(token);
+    setAuthTimeout(decodedToken.exp * 1000);
   };
 
   const logout = () => {
@@ -59,6 +88,9 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('username');
     setIsAuthenticated(false);
     setUser(null);
+    if (refreshTimeout.current) {
+      clearTimeout(refreshTimeout.current);
+    }
   };
 
   return (
