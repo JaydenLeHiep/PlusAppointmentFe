@@ -16,7 +16,7 @@ import {
   Grid
 } from '@mui/material';
 import { Add, Remove, Close as CloseIcon } from '@mui/icons-material';
-import { addAppointment } from '../../lib/apiClientAppointment';
+import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { fetchService } from '../../lib/apiClientServices';
 import { fetchCustomers } from '../../lib/apiClientCustomer';
 import { fetchStaff } from '../../lib/apiClientStaff';
@@ -37,6 +37,8 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
   const [availableServices, setAvailableServices] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [staff, setStaff] = useState([]);
+
+  const { addAppointmentAndUpdateList } = useAppointmentsContext();
 
   useEffect(() => {
     const loadServices = async () => {
@@ -91,8 +93,9 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
         comment: newAppointment.comment // Add comment here
       };
 
-      await addAppointment(appointmentDetails);
+      await addAppointmentAndUpdateList(appointmentDetails);
       setAlert({ message: 'Appointment added successfully!', severity: 'success' });
+      onClose(); // Close the dialog after successfully adding the appointment
     } catch (error) {
       console.error('Failed to add appointment:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Failed to add appointment. Please try again.';

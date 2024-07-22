@@ -1,4 +1,3 @@
-// OwnerDashboard.js
 import React, { useState, useEffect } from 'react';
 import { Container, Card, Box, CircularProgress, Alert } from '@mui/material';
 import Navbar from '../../components/Navbar';
@@ -51,7 +50,6 @@ const OwnerDashboard = () => {
     } else {
       localStorage.removeItem('selectedBusiness');
       localStorage.removeItem('selectedBusinessId');
-     //setAppointments([]);
     }
   }, [selectedBusiness, fetchAppointmentsForBusiness]);
 

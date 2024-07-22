@@ -1,5 +1,4 @@
-// AppointmentsContext.js
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import {
   fetchAppointments as apiFetchAppointments,
   addAppointment as apiAddAppointment,
@@ -14,18 +13,16 @@ export const useAppointmentsContext = () => useContext(AppointmentsContext);
 export const AppointmentsProvider = ({ children }) => {
   const [appointments, setAppointments] = useState([]);
 
-  // Fetch appointments for a specific business
-  const fetchAppointmentsForBusiness = async (businessId) => {
+  const fetchAppointmentsForBusiness = useCallback(async (businessId) => {
     try {
       const appointmentList = await apiFetchAppointments(businessId);
       setAppointments(appointmentList);
     } catch (error) {
       console.error('Error fetching appointments:', error);
     }
-  };
+  }, []);
 
-  // Add a new appointment and update the list
-  const addAppointmentAndUpdateList = async (appointmentData) => {
+  const addAppointmentAndUpdateList = useCallback(async (appointmentData) => {
     try {
       await apiAddAppointment(appointmentData);
       await fetchAppointmentsForBusiness(appointmentData.businessId);
@@ -33,32 +30,28 @@ export const AppointmentsProvider = ({ children }) => {
       console.error('Error adding appointment:', error);
       throw error;
     }
-  };
+  }, [fetchAppointmentsForBusiness]);
 
-  // Change status of an existing appointment
-  const changeStatusAppointments = async (appointmentId, status) => {
+  const changeStatusAppointments = useCallback(async (appointmentId, status, businessId) => {
     try {
       await apiChangeStatusAppointments(appointmentId, status);
-      // Optionally fetch appointments again after status change
-      // await fetchAppointmentsForBusiness(appointmentData.businessId);
+      await fetchAppointmentsForBusiness(businessId);
     } catch (error) {
       console.error('Error changing appointment status:', error);
       throw error;
     }
-  };
+  }, [fetchAppointmentsForBusiness]);
 
-  // Delete an appointment and update the list
-  const deleteAppointmentAndUpdateList = async (appointmentId) => {
+  const deleteAppointmentAndUpdateList = useCallback(async (appointmentId, businessId) => {
     try {
       await apiDeleteAppointment(appointmentId);
-      await fetchAppointmentsForBusiness(); // Optionally fetch appointments after deletion
+      await fetchAppointmentsForBusiness(businessId);
     } catch (error) {
       console.error('Error deleting appointment:', error);
       throw error;
     }
-  };
+  }, [fetchAppointmentsForBusiness]);
 
-  // Context provider value
   const contextValue = {
     appointments,
     fetchAppointmentsForBusiness,

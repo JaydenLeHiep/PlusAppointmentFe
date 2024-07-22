@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, IconButton, Alert } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import '../../styles/css/AppointmentInfoModal.css';
-import { changeStatusAppointments, deleteAppointment } from '../../lib/apiClientAppointment';
+import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 
 const AppointmentInfoModal = ({ open, appointment, onClose, onUpdateStatus }) => {
+  const { changeStatusAppointments, deleteAppointmentAndUpdateList } = useAppointmentsContext();
   const [alert, setAlert] = useState({ message: '', severity: '' });
 
   useEffect(() => {
@@ -18,7 +19,8 @@ const AppointmentInfoModal = ({ open, appointment, onClose, onUpdateStatus }) =>
   const handleConfirmStatus = async () => {
     try {
       const updatedStatus = 'Confirmed';
-      await changeStatusAppointments(appointment.appointmentId, { status: updatedStatus });
+      const selectedBusinessId = localStorage.getItem('selectedBusinessId');
+      await changeStatusAppointments(appointment.appointmentId, updatedStatus, selectedBusinessId);
       onUpdateStatus(appointment.appointmentId, updatedStatus);
       setAlert({ message: 'Appointment confirmed successfully!', severity: 'success' });
     } catch (error) {
@@ -30,8 +32,8 @@ const AppointmentInfoModal = ({ open, appointment, onClose, onUpdateStatus }) =>
 
   const handleDeleteAppointment = async () => {
     try {
-      await deleteAppointment(appointment.appointmentId);
-      onUpdateStatus(appointment.appointmentId, 'Delete');
+      const selectedBusinessId = localStorage.getItem('selectedBusinessId');
+      await deleteAppointmentAndUpdateList(appointment.appointmentId, selectedBusinessId);
       onClose(); // Close the dialog after deleting the appointment
     } catch (error) {
       console.error('Failed to delete appointment:', error);
@@ -45,6 +47,26 @@ const AppointmentInfoModal = ({ open, appointment, onClose, onUpdateStatus }) =>
   const handleCloseDialog = () => {
     onClose();
     setAlert({ message: '', severity: '' });
+  };
+
+  const formatAppointmentTime = (appointmentTime, duration) => {
+    if (!appointmentTime || !duration) {
+      return 'Invalid Date';
+    }
+
+    const startTime = new Date(appointmentTime);
+    if (isNaN(startTime)) {
+      return 'Invalid Date';
+    }
+
+    const [hours, minutes, seconds] = duration.split(':').map(Number);
+    const durationInMinutes = hours * 60 + minutes + seconds / 60;
+
+    const endTime = new Date(startTime.getTime() + durationInMinutes * 60000);
+
+    const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    return `${formatTime(startTime)} - ${formatTime(endTime)}`;
   };
 
   return (
@@ -68,7 +90,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose, onUpdateStatus }) =>
           {appointment.customerPhone}
         </Typography>
         <Typography variant="body1" gutterBottom>
-          {new Date(appointment.appointmentTime).toLocaleString()}
+          {formatAppointmentTime(appointment.appointmentTime, appointment.duration)}
         </Typography>
         <Typography variant="body1" gutterBottom>
           {appointment.service}
@@ -78,9 +100,6 @@ const AppointmentInfoModal = ({ open, appointment, onClose, onUpdateStatus }) =>
         </Typography>
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={handleCloseDialog}>
-          Close
-        </Button>
         <Button variant="contained" color="error" onClick={handleDeleteAppointment}>
           Delete
         </Button>

@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { List, ListItem, Typography, Paper, CircularProgress, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import AppointmentInfoModal from './AppointmentInfoModal'; // import the modal component
 import '../../styles/css/AppointmentList.css';
+import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 
 const AppointmentList = ({ appointments }) => {
   const [loading, setLoading] = useState(true);
   const [sortCriteria, setSortCriteria] = useState('date');
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const { changeStatusAppointments, deleteAppointmentAndUpdateList } = useAppointmentsContext();
 
   useEffect(() => {
     if (appointments) {
@@ -41,12 +43,15 @@ const AppointmentList = ({ appointments }) => {
     setSelectedAppointment(null);
   };
 
-  const handleUpdateStatus = (appointmentId, status) => {
-    const updatedAppointments = appointments.map(appt => 
-      appt.appointmentId === appointmentId ? { ...appt, status } : appt
-    );
-    // Update the state with the new appointments array
+  const handleUpdateStatus = async (appointmentId, status) => {
+    const selectedBusinessId = localStorage.getItem('selectedBusinessId');
+    await changeStatusAppointments(appointmentId, status, selectedBusinessId);
   };
+
+  // const handleDeleteAppointment = async (appointmentId) => {
+  //   const selectedBusinessId = localStorage.getItem('selectedBusinessId');
+  //   await deleteAppointmentAndUpdateList(appointmentId, selectedBusinessId);
+  // };
 
   return (
     <div>
