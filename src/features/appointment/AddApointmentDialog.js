@@ -95,7 +95,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
 
       await addAppointmentAndUpdateList(appointmentDetails);
       setAlert({ message: 'Appointment added successfully!', severity: 'success' });
-      onClose(); // Close the dialog after successfully adding the appointment
+      // Do not close the dialog here
     } catch (error) {
       console.error('Failed to add appointment:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Failed to add appointment. Please try again.';
@@ -275,9 +275,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
-          Close
-        </Button>
+
         <Button onClick={handleCancel} color="primary">
           Cancel
         </Button>
