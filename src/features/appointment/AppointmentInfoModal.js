@@ -4,7 +4,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import '../../styles/css/AppointmentInfoModal.css';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 
-const AppointmentInfoModal = ({ open, appointment, onClose, onUpdateStatus }) => {
+const AppointmentInfoModal = ({ open, appointment, onClose }) => {
   const { changeStatusAppointments, deleteAppointmentAndUpdateList } = useAppointmentsContext();
   const [alert, setAlert] = useState({ message: '', severity: '' });
 
@@ -18,10 +18,9 @@ const AppointmentInfoModal = ({ open, appointment, onClose, onUpdateStatus }) =>
 
   const handleConfirmStatus = async () => {
     try {
-      const updatedStatus = 'Confirmed';
+      const updatedStatus = 'Confirm';
       const selectedBusinessId = localStorage.getItem('selectedBusinessId');
       await changeStatusAppointments(appointment.appointmentId, updatedStatus, selectedBusinessId);
-      onUpdateStatus(appointment.appointmentId, updatedStatus);
       setAlert({ message: 'Appointment confirmed successfully!', severity: 'success' });
     } catch (error) {
       console.error('Failed to change appointment status:', error);
