@@ -100,3 +100,44 @@ export const deleteAppointment = async (appointmentId) => {
   }
   return response.json();
 };
+
+// Function to fetch appointment details by ID
+export const fetchAppointmentById = async (appointmentId) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('User not authenticated');
+  }
+  const response = await fetch(`${appointmentApiUrl}/appointment_id=${appointmentId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
+  return data;
+};
+
+// Function to update an appointment
+export const updateAppointment = async (appointmentId, updateData) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('User not authenticated');
+  }
+  const response = await fetch(`${appointmentApiUrl}/appointment_id=${appointmentId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(updateData)
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to update appointment');
+  }
+  return response.json();
+};
