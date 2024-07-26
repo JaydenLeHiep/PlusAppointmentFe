@@ -1,3 +1,5 @@
+// AppointmentsContext.js
+
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import {
   fetchAppointments as apiFetchAppointments,
@@ -5,11 +7,12 @@ import {
   changeStatusAppointments as apiChangeStatusAppointments,
   deleteAppointment as apiDeleteAppointment,
   fetchAppointmentById as apiFetchAppointmentById,
-  updateAppointment as apiUpdateAppointment,
+  updateAppointment as apiUpdateAppointment, // Import the updateAppointment method
 } from '../../lib/apiClientAppointment';
 import { fetchService as apiFetchServices, fetchServiceById as apiFetchServiceById }  from '../../lib/apiClientServices';
 import { fetchCustomers as apiFetchAllCustomers } from '../../lib/apiClientCustomer';
 import { fetchStaff as apiFetchAllStaff } from '../../lib/apiClientStaff';
+
 const AppointmentsContext = createContext();
 
 export const useAppointmentsContext = () => useContext(AppointmentsContext);
@@ -68,6 +71,16 @@ export const AppointmentsProvider = ({ children }) => {
     }
   }, [fetchAppointmentsForBusiness]);
 
+  const updateAppointmentAndRefresh = useCallback(async (appointmentId, updateData, businessId) => {
+    try {
+      await apiUpdateAppointment(appointmentId, updateData);
+      await fetchAppointmentsForBusiness(businessId);
+    } catch (error) {
+      console.error('Error updating appointment:', error);
+      throw error;
+    }
+  }, [fetchAppointmentsForBusiness]);
+
   const fetchServices = useCallback(async (businessId) => {
     try {
       const servicesList = await apiFetchServices(businessId);
@@ -114,6 +127,7 @@ export const AppointmentsProvider = ({ children }) => {
     addAppointmentAndUpdateList,
     changeStatusAppointments,
     deleteAppointmentAndUpdateList,
+    updateAppointmentAndRefresh,
     fetchServices,
     fetchAllCustomers,
     fetchAllStaff,
