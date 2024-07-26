@@ -9,7 +9,7 @@ import { fetchStaff } from '../../lib/apiClientStaff';
 import { updateAppointment } from '../../lib/apiClientAppointment';
 
 const AppointmentInfoModal = ({ open, appointment, onClose }) => {
-  const { changeStatusAppointments, deleteAppointmentAndUpdateList, fetchAppointmentById, fetchAppointmentsForBusiness } = useAppointmentsContext();
+  const { changeStatusAppointments, deleteAppointmentAndUpdateList, fetchAppointmentById } = useAppointmentsContext();
   const [alert, setAlert] = useState({ message: '', severity: '' });
   const [editMode, setEditMode] = useState(false);
   const [availableServices, setAvailableServices] = useState([]);
@@ -36,27 +36,25 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
         setStaff(staff);
 
         const appointmentDetails = await fetchAppointmentById(appointment.appointmentId);
+        if (appointmentDetails && appointmentDetails.serviceIds && appointmentDetails.serviceIds.$values) {
+          const updatedServices = appointmentDetails.serviceIds.$values.map(serviceId => {
+            const service = services.find(s => s.serviceId === serviceId);
+            return {
+              serviceId: service ? service.serviceId : '',
+              duration: service ? service.duration : '',
+              price: service ? service.price : ''
+            };
+          });
 
-        // Check if serviceIds.$values is defined and is an array
-        const serviceIds = appointmentDetails.serviceIds && Array.isArray(appointmentDetails.serviceIds.$values) ? appointmentDetails.serviceIds.$values : [];
-
-        const updatedServices = serviceIds.map(serviceId => {
-          const service = services.find(s => s.serviceId === serviceId);
-          return {
-            serviceId: service ? service.serviceId : '',
-            duration: service ? service.duration : '',
-            price: service ? service.price : ''
-          };
-        });
-
-        setUpdatedAppointment({
-          customerId: appointmentDetails.customerId || '',
-          staffId: appointmentDetails.staffId || '',
-          appointmentTime: appointmentDetails.appointmentTime ? new Date(appointmentDetails.appointmentTime).toISOString().slice(0, 16) : '',
-          status: appointmentDetails.status || '',
-          comment: appointmentDetails.comment || '',
-          services: updatedServices
-        });
+          setUpdatedAppointment({
+            customerId: appointmentDetails.customerId || '',
+            staffId: appointmentDetails.staffId || '',
+            appointmentTime: appointmentDetails.appointmentTime ? new Date(appointmentDetails.appointmentTime).toISOString().slice(0, 16) : '',
+            status: appointmentDetails.status || '',
+            comment: appointmentDetails.comment || '',
+            services: updatedServices
+          });
+        }
       } catch (error) {
         console.error('Failed to fetch appointment details:', error);
         setAlert({ message: 'Failed to fetch appointment details', severity: 'error' });
@@ -66,7 +64,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
     if (appointment) {
       loadAppointmentDetails();
     }
-  }, [appointment]);
+  }, [appointment, fetchAppointmentById]);
 
   if (!appointment) return null;
 
@@ -147,7 +145,6 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
       console.log('Updating appointment with data:', updateData);
       await updateAppointment(appointment.appointmentId, updateData);
       setAlert({ message: 'Appointment updated successfully!', severity: 'success' });
-      await fetchAppointmentsForBusiness(appointment.businessId);
       onClose();
     } catch (error) {
       console.error('Failed to update appointment:', error);
@@ -160,19 +157,19 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
     if (!appointmentTime || !duration) {
       return 'Invalid Date';
     }
-
+  
     const startTime = new Date(appointmentTime);
     if (isNaN(startTime)) {
       return 'Invalid Date';
     }
-
+  
     const [hours, minutes, seconds] = duration.split(':').map(Number);
     const durationInMinutes = hours * 60 + minutes + seconds / 60;
-
+  
     const endTime = new Date(startTime.getTime() + durationInMinutes * 60000);
-
+  
     const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
+  
     return `${formatTime(startTime)} - ${formatTime(endTime)}`;
   };
 
@@ -193,19 +190,19 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
         {!editMode ? (
           <>
             <Typography variant="body1" gutterBottom>
-              Client: {appointment.customerName || 'Unknown'}
+              Client: {appointment.customerName}
             </Typography>
             <Typography variant="body1" gutterBottom>
-              {appointment.customerPhone || 'Unknown'}
+              {appointment.customerPhone}
             </Typography>
             <Typography variant="body1" gutterBottom>
               {formatAppointmentTime(appointment.appointmentTime, appointment.duration)}
             </Typography>
             <Typography variant="body1" gutterBottom>
-              {appointment.service || 'Unknown'}
+              {appointment.service}
             </Typography>
             <Typography variant="body1" gutterBottom>
-              By {appointment.staffName || 'Unknown'}
+              By {appointment.staffName}
             </Typography>
           </>
         ) : (
