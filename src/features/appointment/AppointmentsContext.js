@@ -3,15 +3,22 @@ import {
   fetchAppointments as apiFetchAppointments,
   addAppointment as apiAddAppointment,
   changeStatusAppointments as apiChangeStatusAppointments,
-  deleteAppointment as apiDeleteAppointment
+  deleteAppointment as apiDeleteAppointment,
+  fetchAppointmentById as apiFetchAppointmentById,
+  updateAppointment as apiUpdateAppointment,
 } from '../../lib/apiClientAppointment';
-
+import { fetchService as apiFetchServices, fetchServiceById as apiFetchServiceById }  from '../../lib/apiClientServices';
+import { fetchCustomers as apiFetchAllCustomers } from '../../lib/apiClientCustomer';
+import { fetchStaff as apiFetchAllStaff } from '../../lib/apiClientStaff';
 const AppointmentsContext = createContext();
 
 export const useAppointmentsContext = () => useContext(AppointmentsContext);
 
 export const AppointmentsProvider = ({ children }) => {
   const [appointments, setAppointments] = useState([]);
+  const [services, setServices] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [staff, setStaff] = useState([]);
 
   const fetchAppointmentsForBusiness = useCallback(async (businessId) => {
     try {
@@ -19,6 +26,15 @@ export const AppointmentsProvider = ({ children }) => {
       setAppointments(appointmentList);
     } catch (error) {
       console.error('Error fetching appointments:', error);
+    }
+  }, []);
+
+  const fetchAppointmentById = useCallback(async (appointmentId) => {
+    try {
+      return await apiFetchAppointmentById(appointmentId);
+    } catch (error) {
+      console.error('Error fetching appointment:', error);
+      throw error;
     }
   }, []);
 
@@ -52,12 +68,56 @@ export const AppointmentsProvider = ({ children }) => {
     }
   }, [fetchAppointmentsForBusiness]);
 
+  const fetchServices = useCallback(async (businessId) => {
+    try {
+      const servicesList = await apiFetchServices(businessId);
+      setServices(servicesList);
+    } catch (error) {
+      console.error('Error fetching services:', error);
+    }
+  }, []);
+
+  const fetchAllCustomers = useCallback(async (businessId) => {
+    try {
+      const customersList = await apiFetchAllCustomers(businessId);
+      setCustomers(customersList);
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+    }
+  }, []);
+
+  const fetchAllStaff = useCallback(async (businessId) => {
+    try {
+      const staffList = await apiFetchAllStaff(businessId);
+      setStaff(staffList);
+    } catch (error) {
+      console.error('Error fetching staff:', error);
+    }
+  }, []);
+
+  const fetchServiceById = useCallback(async (serviceId) => {
+    try {
+      return await apiFetchServiceById(serviceId);
+    } catch (error) {
+      console.error('Error fetching service:', error);
+      throw error;
+    }
+  }, []);
+
   const contextValue = {
     appointments,
+    services,
+    customers,
+    staff,
     fetchAppointmentsForBusiness,
+    fetchAppointmentById,
     addAppointmentAndUpdateList,
     changeStatusAppointments,
-    deleteAppointmentAndUpdateList
+    deleteAppointmentAndUpdateList,
+    fetchServices,
+    fetchAllCustomers,
+    fetchAllStaff,
+    fetchServiceById,
   };
 
   return (
