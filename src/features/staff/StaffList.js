@@ -1,19 +1,16 @@
-// StaffList.js
-
 import React, { useState, useEffect } from 'react';
 import { List, ListItem, Typography, Paper, CircularProgress } from '@mui/material';
-import { fetchStaff } from '../../lib/apiClientStaff'; // Adjust the path as per your project structure
-import '../../styles/css/StaffList.css'; // Ensure correct path to your CSS file
+import { useStaffsContext } from '../staff/StaffsContext'; 
+import '../../styles/css/StaffList.css'; 
 
 const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
-  const [staff, setStaff] = useState([]);
+  const { staff, fetchAllStaff } = useStaffsContext(); // Use the context
   const [loading, setLoading] = useState(true); // State to track loading status
 
   useEffect(() => {
     const fetchStaffData = async () => {
       try {
-        const data = await fetchStaff(businessId);
-        setStaff(data);
+        await fetchAllStaff(businessId); // Fetch staff using the context
         setLoading(false); // Mark loading as complete
       } catch (error) {
         console.error('Error fetching staff:', error.message);
@@ -21,7 +18,7 @@ const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
     };
 
     fetchStaffData();
-  }, [businessId]);
+  }, [businessId, fetchAllStaff]);
 
   // Filtering staff based on search query
   const filteredStaff = staff.filter(staffMember =>
