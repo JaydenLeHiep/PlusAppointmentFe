@@ -1,25 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogActions,
   DialogContent,
-  Alert,
   DialogContentText,
   DialogTitle,
-  TextField,
   Button,
   IconButton,
   List,
   ListItem,
   ListItemText,
   Collapse,
-  Box
+  Box,
+  TextField,
+  Alert
 } from '@mui/material';
 import { Delete, Edit, Add } from '@mui/icons-material';
-import { fetchServices, addService, deleteService, updateService } from '../../lib/apiClientServicesOwnerDashboard';
+import { useServicesContext } from '../servicecomponent/ServicesContext'; 
 
 const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
-  const [services, setServices] = useState([]);
+  const { services, fetchServices, addService, updateService, deleteService } = useServicesContext();
+
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [newService, setNewService] = useState({
     name: '',
@@ -30,86 +31,99 @@ const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
   const [alert, setAlert] = useState({ message: '', severity: '' });
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const fetchServiceData = useCallback(async () => {
-    try {
-      const serviceData = await fetchServices(businessId);
-      setServices(serviceData);
-      onServiceChange(serviceData); // Update services count
-    } catch (error) {
-      console.error('Failed to fetch services:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to fetch services. Please try again.';
-      setAlert({ message: errorMessage, severity: 'error' });
-    }
-  }, [businessId, onServiceChange]);
-
   useEffect(() => {
     if (open) {
-      fetchServiceData();
+      fetchServices(String(businessId));
+      onServiceChange(services);
     }
-  }, [open, fetchServiceData]);
+  }, [open, fetchServices, businessId, onServiceChange, services]);
 
-  const handleAddService = async () => {
-    try {
-      const serviceDetails = {
-        ...newService,
-        BusinessId: businessId,
-        duration: newService.duration + ':00'
-      };
+  useEffect(() => {
+    if (alert.message) {
+      const timer = setTimeout(() => {
+        setAlert({ message: '', severity: '' });
+      }, 5000); // 5 seconds
 
-      await addService(businessId, serviceDetails);
-      await fetchServiceData();
-      setNewService({
-        name: '',
-        description: '',
-        duration: '00:30',
-        price: ''
-      });
-      setAlert({ message: 'Service added successfully!', severity: 'success' });
-    } catch (error) {
-      console.error('Failed to add service:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to add service. Please try again.';
-      setAlert({ message: errorMessage, severity: 'error' });
+      return () => clearTimeout(timer);
     }
-  };
+  }, [alert]);
 
-  const handleUpdateService = async () => {
-    try {
-      const serviceDetails = {
-        name: newService.name,
-        description: newService.description,
-        duration: newService.duration + ':00',
-        price: newService.price,
-        BusinessId: businessId
-      };
-
-      await updateService(businessId, selectedServiceId, serviceDetails);
-      await fetchServiceData();
-      setNewService({
-        name: '',
-        description: '',
-        duration: '00:30',
-        price: ''
-      });
-      setSelectedServiceId(null);
-      setIsFormOpen(false);
-      setAlert({ message: 'Service updated successfully!', severity: 'success' });
-    } catch (error) {
-      console.error('Failed to update service:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to update service. Please try again.';
-      setAlert({ message: errorMessage, severity: 'error' });
+  const closeFormAndExecuteAction = async (action) => {
+    if (isFormOpen) {
+      setIsFormOpen(false); 
+      setTimeout(() => {
+        action(); 
+        setTimeout(() => setSelectedServiceId(null), 300);
+      }, 300);
+    } else {
+      action();
+      setTimeout(() => setSelectedServiceId(null), 300);
     }
   };
 
-  const handleDeleteService = async (serviceId) => {
-    try {
-      await deleteService(businessId, serviceId);
-      await fetchServiceData();  // Fetch the updated service list
-      setAlert({ message: 'Service deleted successfully!', severity: 'success' });
-    } catch (error) {
-      console.error('Failed to delete service:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to delete service. Please try again.';
-      setAlert({ message: errorMessage, severity: 'error' });
-    }
+  const handleAddService = () => {
+    closeFormAndExecuteAction(async () => {
+      try {
+        const serviceDetails = {
+          ...newService,
+          BusinessId: String(businessId),
+          duration: newService.duration + ':00'
+        };
+
+        await addService(String(businessId), serviceDetails);
+        setAlert({ message: 'Service added successfully!', severity: 'success' });
+
+        setNewService({
+          name: '',
+          description: '',
+          duration: '00:30',
+          price: ''
+        });
+      } catch (error) {
+        console.error('Failed to add service:', error);
+        const errorMessage = error.response?.data?.message || error.message || 'Failed to add service. Please try again.';
+        setAlert({ message: errorMessage, severity: 'error' });
+      }
+    });
+  };
+
+  const handleUpdateService = () => {
+    closeFormAndExecuteAction(async () => {
+      try {
+        const serviceDetails = {
+          ...newService,
+          duration: newService.duration + ':00',
+          BusinessId: String(businessId)
+        };
+
+        await updateService(String(businessId), selectedServiceId, serviceDetails);
+        setAlert({ message: 'Service updated successfully!', severity: 'success' });
+
+        setNewService({
+          name: '',
+          description: '',
+          duration: '00:30',
+          price: ''
+        });
+      } catch (error) {
+        console.error('Failed to update service:', error);
+        const errorMessage = error.response?.data?.message || error.message || 'Failed to update service. Please try again.';
+        setAlert({ message: errorMessage, severity: 'error' });
+      }
+    });
+  };
+
+  const handleDeleteService = (serviceId) => {
+    closeFormAndExecuteAction(async () => {
+      try {
+        await deleteService(String(businessId), serviceId);
+        setAlert({ message: 'Service deleted successfully!', severity: 'success' });
+      } catch (error) {
+        console.error('Failed to delete service:', error);
+        const errorMessage = error.response?.data?.message || error.message || 'Failed to delete service. Please try again.';
+        setAlert({ message: errorMessage, severity: 'error' });
+      }
+    });
   };
 
   const handleEditService = (service) => {
@@ -117,15 +131,10 @@ const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
     setNewService({
       name: service.name,
       description: service.description,
-      duration: service.duration.substring(0, 5), // Display only HH:MM
+      duration: service.duration.substring(0, 5),
       price: service.price
     });
     setIsFormOpen(true);
-  };
-
-  const handleDurationChange = (e) => {
-    const value = e.target.value;
-    setNewService({ ...newService, duration: value });
   };
 
   const handleAddNewServiceClick = () => {
@@ -157,14 +166,10 @@ const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
     onClose();
   };
 
-  const handleClickAnywhere = () => {
-    setAlert({ message: '', severity: '' });
-  };
-
   return (
     <Dialog open={open} onClose={handleCloseDialog}>
       <DialogTitle>Service List</DialogTitle>
-      <DialogContent onClick={handleClickAnywhere}>
+      <DialogContent>
         {services.length > 0 ? (
           <List>
             {services.map((service) => (
@@ -199,7 +204,7 @@ const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
         </Box>
 
         <Collapse in={isFormOpen || selectedServiceId !== null}>
-          <Box mt={2}>
+          <Box mt={2} className="service-form">
             <TextField
               margin="dense"
               label="Name"
@@ -221,14 +226,14 @@ const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
               label="Duration"
               type="time"
               fullWidth
-              value={newService.duration} // Display only HH:MM
+              value={newService.duration}
               InputLabelProps={{
                 shrink: true,
               }}
               inputProps={{
                 step: 300, // 5 min steps
               }}
-              onChange={handleDurationChange}
+              onChange={(e) => setNewService({ ...newService, duration: e.target.value })}
             />
             <TextField
               margin="dense"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogActions,
@@ -15,11 +15,12 @@ import {
   Alert
 } from '@mui/material';
 import { Delete, Edit, Add } from '@mui/icons-material';
-import { fetchStaff, addStaff, deleteStaff, updateStaff } from '../../lib/apiClientStaff';
+import { useStaffsContext } from '../staff/StaffsContext'; 
 import StaffForm from './StaffForm';
 
 const ShowStaffDialog = ({ open, onClose, businessId }) => {
-  const [staff, setStaff] = useState([]);
+  const { staff, fetchAllStaff, addStaff, updateStaff, deleteStaff } = useStaffsContext(); // Use the context
+
   const [selectedStaffId, setSelectedStaffId] = useState(null);
   const [newStaff, setNewStaff] = useState({
     name: '',
@@ -27,94 +28,105 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
     phone: '',
     password: ''
   });
-  const [alert, setAlert] = useState({ message: '', severity: '' });
   const [isFormOpen, setIsFormOpen] = useState(false);
-
-  const fetchStaffData = useCallback(async () => {
-    try {
-      const staffData = await fetchStaff(businessId);
-      setStaff(staffData);
-    } catch (error) {
-      console.error('Failed to fetch staff:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to fetch staff. Please try again.';
-      setAlert({ message: errorMessage, severity: 'error' });
-    }
-  }, [businessId]);
+  const [alert, setAlert] = useState({ message: '', severity: '' });  // Define the alert state here
 
   useEffect(() => {
     if (open) {
-      fetchStaffData();
+      fetchAllStaff(String(businessId)); // Fetch staff using the context, ensuring businessId is passed as a string
     }
-  }, [open, fetchStaffData]);
+  }, [open, fetchAllStaff, businessId]);
 
-  const handleAddStaff = async () => {
-    try {
-      const staffDetails = {
-        name: newStaff.name,
-        email: newStaff.email,
-        phone: newStaff.phone,
-        password: newStaff.password,
-        BusinessId: businessId
-      };
+  useEffect(() => {
+    if (alert.message) {
+      const timer = setTimeout(() => {
+        setAlert({ message: '', severity: '' });
+      }, 5000); // 5 seconds
 
-      await addStaff(businessId, staffDetails);
-      setAlert({ message: 'Staff added successfully!', severity: 'success' });
+      return () => clearTimeout(timer);
+    }
+  }, [alert]);
 
-      await fetchStaffData();
-      setNewStaff({
-        name: '',
-        email: '',
-        phone: '',
-        password: ''
-      });
-      setSelectedStaffId(null);
-      setIsFormOpen(false);
-    } catch (error) {
-      console.error('Failed to add staff:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to add staff. Please try again.';
-      setAlert({ message: errorMessage, severity: 'error' });
+  const closeFormAndExecuteAction = async (action) => {
+    if (isFormOpen) {
+      setIsFormOpen(false); 
+      setTimeout(() => {
+        action(); 
+        setTimeout(() => setSelectedStaffId(null), 300);
+      }, 300);
+    } else {
+      action();
+      setTimeout(() => setSelectedStaffId(null), 300);
     }
   };
 
-  const handleUpdateStaff = async () => {
-    try {
-      const staffDetails = {
-        name: newStaff.name,
-        email: newStaff.email,
-        phone: newStaff.phone,
-        password: newStaff.password,
-        BusinessId: businessId
-      };
+  const handleAddStaff = () => {
+    closeFormAndExecuteAction(async () => {
+      try {
+        const staffDetails = {
+          name: newStaff.name,
+          email: newStaff.email,
+          phone: newStaff.phone,
+          password: newStaff.password,
+          BusinessId: String(businessId)
+        };
 
-      await updateStaff(businessId, selectedStaffId, staffDetails);
-      setAlert({ message: 'Staff updated successfully!', severity: 'success' });
+        await addStaff(String(businessId), staffDetails);
+        setAlert({ message: 'Staff added successfully!', severity: 'success' });
 
-      await fetchStaffData();
-      setNewStaff({
-        name: '',
-        email: '',
-        phone: '',
-        password: ''
-      });
-      setSelectedStaffId(null);
-      setIsFormOpen(false);
-    } catch (error) {
-      console.error('Failed to update staff:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to update staff. Please try again.';
-      setAlert({ message: errorMessage, severity: 'error' });
-    }
+        setNewStaff({
+          name: '',
+          email: '',
+          phone: '',
+          password: ''
+        });
+      } catch (error) {
+        console.error('Failed to add staff:', error);
+        const errorMessage = error.response?.data?.message || error.message || 'Failed to add staff. Please try again.';
+        setAlert({ message: errorMessage, severity: 'error' });
+      }
+    });
   };
 
-  const handleDeleteStaff = async (staffId) => {
-    try {
-      await deleteStaff(businessId, staffId);
-      await fetchStaffData();
-      setAlert({ message: 'Staff deleted successfully!', severity: 'success' });
-    } catch (error) {
-      console.error('Failed to delete staff:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to delete staff. Please try again.';
-      setAlert({ message: errorMessage, severity: 'error' });
-    }
+  const handleUpdateStaff = () => {
+    closeFormAndExecuteAction(async () => {
+      try {
+        const staffDetails = {
+          name: newStaff.name,
+          email: newStaff.email,
+          phone: newStaff.phone,
+          password: newStaff.password,
+          BusinessId: String(businessId)
+        };
+
+        await updateStaff(String(businessId), selectedStaffId, staffDetails);
+        setAlert({ message: 'Staff updated successfully!', severity: 'success' });
+
+        setNewStaff({
+          name: '',
+          email: '',
+          phone: '',
+          password: ''
+        });
+      } catch (error) {
+        console.error('Failed to update staff:', error);
+        const errorMessage = error.response?.data?.message || error.message || 'Failed to update staff. Please try again.';
+        setAlert({ message: errorMessage, severity: 'error' });
+      }
+    });
+  };
+
+  const handleDeleteStaff = (staffId) => {
+    closeFormAndExecuteAction(async () => {
+      try {
+        await deleteStaff(String(businessId), staffId);
+        setAlert({ message: 'Staff deleted successfully!', severity: 'success' });
+      } catch (error) {
+        console.error('Failed to delete staff:', error);
+        const errorMessage = error.response?.data?.message || error.message || 'Failed to delete staff. Please try again.';
+        setAlert({ message: errorMessage, severity: 'error' });
+      }
+    });
   };
 
   const handleEditStaff = (staff) => {
@@ -157,14 +169,10 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
     onClose();
   };
 
-  const handleClickAnywhere = () => {
-    setAlert({ message: '', severity: '' });
-  };
-
   return (
     <Dialog open={open} onClose={handleCloseDialog}>
       <DialogTitle>Staff List</DialogTitle>
-      <DialogContent onClick={handleClickAnywhere}>
+      <DialogContent>
         {staff.length > 0 ? (
           <List>
             {staff.map((member) => (
@@ -199,12 +207,14 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
         </Box>
 
         <Collapse in={isFormOpen || selectedStaffId !== null}>
-          <StaffForm
-            title={selectedStaffId ? 'Update Staff' : 'Add New Staff'}
-            newStaff={newStaff}
-            setNewStaff={setNewStaff}
-            handleCancelForm={handleCancelForm}
-          />
+          <Box mt={2} className="staff-form">
+            <StaffForm
+              title={selectedStaffId ? 'Update Staff' : 'Add New Staff'}
+              newStaff={newStaff}
+              setNewStaff={setNewStaff}
+              handleCancelForm={handleCancelForm}
+            />
+          </Box>
         </Collapse>
         {alert.message && (
           <Alert severity={alert.severity} sx={{ mt: 2 }}>

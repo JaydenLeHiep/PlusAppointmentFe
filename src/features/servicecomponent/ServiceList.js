@@ -1,29 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, List, ListItem, Paper, CircularProgress } from '@mui/material';
-import { fetchService } from '../../lib/apiClientServices'; // Adjust path as per your project structure
-import '../../styles/css/ServiceList.css'; // Ensure correct path to your CSS file
+import { useServicesContext } from '../servicecomponent/ServicesContext'; 
+import '../../styles/css/ServiceList.css'; 
 
 const ServiceList = ({ businessId, onServiceSelect, searchQuery }) => {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true); // State to track loading status
+  const { services, fetchServices } = useServicesContext();  // Use the context
+  const [loading, setLoading] = useState(true);  // State to track loading status
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchServiceData = async () => {
       try {
-        const data = await fetchService(businessId);
-        setServices(data);
-        setLoading(false); // Mark loading as complete
+        await fetchServices(businessId);  // Fetch services using the context
+        setLoading(false);  // Mark loading as complete
       } catch (error) {
         console.error('Error fetching services:', error.message);
       }
     };
 
-    fetchServices();
-  }, [businessId]);
+    fetchServiceData();
+  }, [businessId, fetchServices]);
 
   if (loading) {
-    return <CircularProgress />; // Display loading indicator while fetching data
+    return <CircularProgress />;  // Display loading indicator while fetching data
   }
 
   // Filter services based on search query
