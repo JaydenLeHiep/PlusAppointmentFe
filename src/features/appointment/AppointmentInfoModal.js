@@ -1,20 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, IconButton, Alert, FormControl, InputLabel, Select, MenuItem, TextField, Box, Grid } from '@mui/material';
-import ClearIcon from '@mui/icons-material/Clear';
-import { Add, Remove } from '@mui/icons-material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+  IconButton,
+  Alert,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+  Box,
+  Grid
+} from '@mui/material';
+import { Add, Remove, Close as CloseIcon } from '@mui/icons-material';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
-import { fetchService } from '../../lib/apiClientServices';
-import { fetchCustomers } from '../../lib/apiClientCustomer';
-import { fetchStaff } from '../../lib/apiClientStaff';
-import { updateAppointment } from '../../lib/apiClientAppointment';
+import { useStaffsContext } from '../staff/StaffsContext';
+import { useServicesContext } from '../servicecomponent/ServicesContext';
 
-const AppointmentInfoModal = ({ open, appointment, onClose }) => {
-  const { changeStatusAppointments, deleteAppointmentAndUpdateList, fetchAppointmentById } = useAppointmentsContext();
+const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
+  const { changeStatusAppointments, deleteAppointmentAndUpdateList, fetchAppointmentById, updateAppointmentAndRefresh, customers, fetchAllCustomers, getAppointmentById } = useAppointmentsContext();
+  const { staff } = useStaffsContext();
+  const { services } = useServicesContext();
+
   const [alert, setAlert] = useState({ message: '', severity: '' });
   const [editMode, setEditMode] = useState(false);
-  const [availableServices, setAvailableServices] = useState([]);
-  const [customers, setCustomers] = useState([]);
-  const [staff, setStaff] = useState([]);
+  const [appointment, setAppointment] = useState(null);
   const [updatedAppointment, setUpdatedAppointment] = useState({
     customerId: '',
     staffId: '',
@@ -26,47 +40,68 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
 
   useEffect(() => {
     const loadAppointmentDetails = async () => {
-      try {
-        const services = await fetchService(appointment.businessId);
-        const customers = await fetchCustomers(appointment.businessId);
-        const staff = await fetchStaff(appointment.businessId);
+        try {
+            // Attempt to get appointment details from the context by ID
+            let appointmentDetails = getAppointmentById(appointmentId);
 
-        setAvailableServices(services);
-        setCustomers(customers);
-        setStaff(staff);
+            // If the appointment is not found in the context, fetch it from the backend
+            if (!appointmentDetails && appointmentId) {
+                await fetchAllCustomers();  // Fetch customers if not already fetched
+                appointmentDetails = await fetchAppointmentById(appointmentId);
+            }
 
-        const appointmentDetails = await fetchAppointmentById(appointment.appointmentId);
-        if (appointmentDetails && appointmentDetails.serviceIds && appointmentDetails.serviceIds.$values) {
-          const updatedServices = appointmentDetails.serviceIds.$values.map(serviceId => {
-            const service = services.find(s => s.serviceId === serviceId);
-            return {
-              serviceId: service ? service.serviceId : '',
-              duration: service ? service.duration : '',
-              price: service ? service.price : ''
-            };
-          });
+            if (appointmentDetails) {
+                console.log('Using appointment details:', appointmentDetails);  // Log appointment details
+                setAppointment(appointmentDetails);
 
-          setUpdatedAppointment({
-            customerId: appointmentDetails.customerId || '',
-            staffId: appointmentDetails.staffId || '',
-            appointmentTime: appointmentDetails.appointmentTime ? new Date(appointmentDetails.appointmentTime).toISOString().slice(0, 16) : '',
-            status: appointmentDetails.status || '',
-            comment: appointmentDetails.comment || '',
-            services: updatedServices
-          });
+                // Ensure that customers are available and find the correct customer
+                let customer = customers.find(c => c.customerId === appointmentDetails.customerId);
+                if (!customer) {
+                    // If customers aren't loaded yet, re-fetch them
+                    await fetchAllCustomers();
+                    customer = customers.find(c => c.customerId === appointmentDetails.customerId);
+                }
+
+                // Ensure services are available and correctly map them
+                const updatedServices = appointmentDetails.services.$values.map(serviceDetails => {
+                    const service = services.find(s => s.serviceId === serviceDetails.serviceId);
+                    if (service) {
+                        return {
+                            serviceId: service.serviceId,
+                            duration: service.duration,
+                            price: service.price
+                        };
+                    }
+                    return { serviceId: '', duration: '', price: '' };
+                });
+
+                // Update the appointment state with loaded details
+                setUpdatedAppointment({
+                    customerId: customer ? customer.customerId : '',
+                    staffId: appointmentDetails.staffId || '',
+                    appointmentTime: appointmentDetails.appointmentTime 
+                        ? new Date(appointmentDetails.appointmentTime).toISOString().slice(0, 16) 
+                        : '',
+                    status: appointmentDetails.status || '',
+                    comment: appointmentDetails.comment || '',
+                    services: updatedServices.length ? updatedServices : [{ serviceId: '', duration: '', price: '' }]
+                });
+            }
+        } catch (error) {
+            console.error('Failed to load appointment details:', error);
+            setAlert({ message: 'Failed to load appointment details', severity: 'error' });
         }
-      } catch (error) {
-        console.error('Failed to fetch appointment details:', error);
-        setAlert({ message: 'Failed to fetch appointment details', severity: 'error' });
-      }
     };
 
-    if (appointment) {
-      loadAppointmentDetails();
+    if (open) {
+        loadAppointmentDetails();
     }
-  }, [appointment, fetchAppointmentById]);
+}, [appointmentId, open, fetchAppointmentById, services, fetchAllCustomers, getAppointmentById, customers]);
 
-  if (!appointment) return null;
+// Ensure appointment and staff lists are properly loaded before rendering form controls
+if (!appointment || staff.length === 0) return null;
+
+
 
   const handleConfirmStatus = async () => {
     try {
@@ -88,6 +123,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
       onClose(); // Close the dialog after deleting the appointment
     } catch (error) {
       console.error('Failed to delete appointment:', error);
+      setAlert({ message: 'Failed to delete appointment', severity: 'error' });
     }
   };
 
@@ -102,6 +138,22 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
   };
 
   const handleToggleEditMode = () => {
+    if (!editMode) {
+      setUpdatedAppointment({
+        customerId: appointment.customerId || '',
+        staffId: appointment.staffId || '',
+        appointmentTime: appointment.appointmentTime || '',
+        status: appointment.status || '',
+        comment: appointment.comment || '',
+        services: Array.isArray(appointment.services)
+          ? appointment.services.map(service => ({
+            serviceId: service.serviceId,
+            duration: service.duration,
+            price: service.price,
+          }))
+          : [], // Handle the case where services might not be an array
+      });
+    }
     setEditMode(!editMode);
   };
 
@@ -111,7 +163,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
   };
 
   const handleServiceChange = (index, field, value) => {
-    const selectedService = availableServices.find(service => service.serviceId === value);
+    const selectedService = services.find(service => service.serviceId === value);
 
     const updatedServices = updatedAppointment.services.map((service, i) =>
       i === index ? { ...service, [field]: value, duration: selectedService?.duration || '', price: selectedService?.price || '' } : service
@@ -142,8 +194,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
         appointmentTime: updatedAppointment.appointmentTime,
         comment: updatedAppointment.comment
       };
-      console.log('Updating appointment with data:', updateData);
-      await updateAppointment(appointment.appointmentId, updateData);
+      await updateAppointmentAndRefresh(appointment.appointmentId, updateData, appointment.businessId);
       setAlert({ message: 'Appointment updated successfully!', severity: 'success' });
       onClose();
     } catch (error) {
@@ -157,30 +208,39 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
     if (!appointmentTime || !duration) {
       return 'Invalid Date';
     }
-  
+
     const startTime = new Date(appointmentTime);
     if (isNaN(startTime)) {
       return 'Invalid Date';
     }
-  
+
     const [hours, minutes, seconds] = duration.split(':').map(Number);
     const durationInMinutes = hours * 60 + minutes + seconds / 60;
-  
+
     const endTime = new Date(startTime.getTime() + durationInMinutes * 60000);
-  
+
     const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  
+
     return `${formatTime(startTime)} - ${formatTime(endTime)}`;
   };
 
   return (
     <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-      <div className="modal-header">
-        <IconButton edge="start" color="inherit" onClick={handleCloseDialog} aria-label="close">
-          <ClearIcon />
+      <DialogTitle>
+        Appointment Details
+        <IconButton
+          aria-label="close"
+          onClick={handleCloseDialog}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
         </IconButton>
-        <DialogTitle>Appointment Details</DialogTitle>
-      </div>
+      </DialogTitle>
       <DialogContent dividers>
         {alert.message && (
           <Alert severity={alert.severity} onClose={handleClearAlert} sx={{ mb: 2 }}>
@@ -208,19 +268,26 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
         ) : (
           <>
             <FormControl fullWidth margin="dense">
-              <InputLabel>Customer</InputLabel>
-              <Select
-                value={updatedAppointment.customerId}
-                onChange={(e) => handleInputChange(e, 'customerId')}
-                label="Customer"
-              >
-                {customers.map((customer) => (
-                  <MenuItem key={customer.customerId} value={customer.customerId}>
-                    <Box component="span" fontWeight="fontWeightBold">{customer.name}</Box> - {customer.phone}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+  <InputLabel>Customer</InputLabel>
+  <Select
+    value={updatedAppointment.customerId || ''}
+    onChange={(e) => handleInputChange(e, 'customerId')}
+    label="Customer"
+    disabled
+  >
+    {customers.length > 0 ? (
+      customers.map((customer) => (
+        <MenuItem key={customer.customerId} value={customer.customerId}>
+          <Box component="span" fontWeight="fontWeightBold">{customer.name}</Box> - {customer.phone}
+        </MenuItem>
+      ))
+    ) : (
+      <MenuItem value="">
+        <em>No Customers Available</em>
+      </MenuItem>
+    )}
+  </Select>
+</FormControl>
             <FormControl fullWidth margin="dense">
               <InputLabel>Staff</InputLabel>
               <Select
@@ -275,7 +342,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
                         onChange={(e) => handleServiceChange(index, 'serviceId', e.target.value)}
                         label="Service"
                       >
-                        {availableServices.map((availableService) => (
+                        {services.map((availableService) => (
                           <MenuItem key={availableService.serviceId} value={availableService.serviceId}>
                             {availableService.name}
                           </MenuItem>
@@ -294,7 +361,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
                         shrink: true
                       }}
                       inputProps={{
-                        step: 300 // 5 min steps
+                        step: 300
                       }}
                       disabled
                     />
@@ -331,7 +398,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose }) => {
         <Button variant="contained" color="primary" disabled={!editMode} onClick={handleUpdateAppointment}>
           Update
         </Button>
-        <Button variant="contained" color="success" className="button-large" onClick={handleConfirmStatus}>
+        <Button variant="contained" color="success" onClick={handleConfirmStatus}>
           Confirm
         </Button>
         <Button variant="contained" color="primary" onClick={handleToggleEditMode}>
