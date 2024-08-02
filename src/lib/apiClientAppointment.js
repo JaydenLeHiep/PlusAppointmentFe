@@ -21,7 +21,6 @@ export const fetchAppointments = async (businessId) => {
     throw new Error(data.message);
   }
 
-
   if (Array.isArray(data)) {
     return data;
   } else if (data.$values) {
@@ -30,7 +29,6 @@ export const fetchAppointments = async (businessId) => {
     throw new Error('Unexpected data format');
   }
 };
-
 
 // for add Appointment
 export const addAppointment = async (appointmentDetails) => {

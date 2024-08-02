@@ -1,5 +1,3 @@
-// AppointmentsContext.js
-
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import {
   fetchAppointments as apiFetchAppointments,
@@ -7,11 +5,11 @@ import {
   changeStatusAppointments as apiChangeStatusAppointments,
   deleteAppointment as apiDeleteAppointment,
   fetchAppointmentById as apiFetchAppointmentById,
-  updateAppointment as apiUpdateAppointment, // Import the updateAppointment method
+  updateAppointment as apiUpdateAppointment, 
 } from '../../lib/apiClientAppointment';
-import { fetchService as apiFetchServices, fetchServiceById as apiFetchServiceById }  from '../../lib/apiClientServices';
 import { fetchCustomers as apiFetchAllCustomers } from '../../lib/apiClientCustomer';
-import { fetchStaff as apiFetchAllStaff } from '../../lib/apiClientStaff';
+import { useServicesContext } from '../servicecomponent/ServicesContext';
+import { useStaffsContext } from '../staff/StaffsContext';
 
 const AppointmentsContext = createContext();
 
@@ -19,9 +17,11 @@ export const useAppointmentsContext = () => useContext(AppointmentsContext);
 
 export const AppointmentsProvider = ({ children }) => {
   const [appointments, setAppointments] = useState([]);
-  const [services, setServices] = useState([]);
   const [customers, setCustomers] = useState([]);
-  const [staff, setStaff] = useState([]);
+
+  // Use the services and staff contexts
+  const { services, fetchServices, fetchServiceById } = useServicesContext();
+  const { staff, fetchAllStaff } = useStaffsContext();
 
   const fetchAppointmentsForBusiness = useCallback(async (businessId) => {
     try {
@@ -81,15 +81,6 @@ export const AppointmentsProvider = ({ children }) => {
     }
   }, [fetchAppointmentsForBusiness]);
 
-  const fetchServices = useCallback(async (businessId) => {
-    try {
-      const servicesList = await apiFetchServices(businessId);
-      setServices(servicesList);
-    } catch (error) {
-      console.error('Error fetching services:', error);
-    }
-  }, []);
-
   const fetchAllCustomers = useCallback(async (businessId) => {
     try {
       const customersList = await apiFetchAllCustomers(businessId);
@@ -99,23 +90,9 @@ export const AppointmentsProvider = ({ children }) => {
     }
   }, []);
 
-  const fetchAllStaff = useCallback(async (businessId) => {
-    try {
-      const staffList = await apiFetchAllStaff(businessId);
-      setStaff(staffList);
-    } catch (error) {
-      console.error('Error fetching staff:', error);
-    }
-  }, []);
-
-  const fetchServiceById = useCallback(async (serviceId) => {
-    try {
-      return await apiFetchServiceById(serviceId);
-    } catch (error) {
-      console.error('Error fetching service:', error);
-      throw error;
-    }
-  }, []);
+  const getAppointmentById = (appointmentId) => {
+    return appointments.find(appt => appt.appointmentId === appointmentId);
+  };
 
   const contextValue = {
     appointments,
@@ -132,6 +109,7 @@ export const AppointmentsProvider = ({ children }) => {
     fetchAllCustomers,
     fetchAllStaff,
     fetchServiceById,
+    getAppointmentById
   };
 
   return (

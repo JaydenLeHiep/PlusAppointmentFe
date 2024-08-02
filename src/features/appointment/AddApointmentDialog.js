@@ -13,13 +13,13 @@ import {
   Select,
   InputLabel,
   FormControl,
-  Grid
+  Grid,
 } from '@mui/material';
-import { Add, Remove, Close as CloseIcon } from '@mui/icons-material';
+import { Add, Remove, Close as CloseIcon, Search as SearchIcon } from '@mui/icons-material';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
-import { fetchService } from '../../lib/apiClientServices';
-import { fetchCustomers } from '../../lib/apiClientCustomer';
-import { fetchStaff } from '../../lib/apiClientStaff';
+import { useStaffsContext } from '../staff/StaffsContext';
+import { useServicesContext } from '../servicecomponent/ServicesContext';
+import { searchCustomersByName } from '../../lib/apiClientCustomer';
 
 const AddAppointmentDialog = ({ open, onClose, businessId }) => {
   const initialAppointmentState = useRef({
@@ -34,51 +34,47 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
 
   const [newAppointment, setNewAppointment] = useState(initialAppointmentState.current);
   const [alert, setAlert] = useState({ message: '', severity: '' });
-  const [availableServices, setAvailableServices] = useState([]);
-  const [customers, setCustomers] = useState([]);
-  const [staff, setStaff] = useState([]);
+  const [filteredCustomers, setFilteredCustomers] = useState([]); // Ensure it starts as an empty array
+  const [customerSearch, setCustomerSearch] = useState(''); // For storing the search input
+  const [selectPlaceholder, setSelectPlaceholder] = useState('Select to choose Customer'); // Default placeholder text
 
   const { addAppointmentAndUpdateList } = useAppointmentsContext();
+  const { staff, fetchAllStaff } = useStaffsContext();
+  const { services, fetchServices } = useServicesContext();
 
   useEffect(() => {
-    const loadServices = async () => {
-      try {
-        const services = await fetchService(businessId);
-        setAvailableServices(services);
-      } catch (error) {
-        console.error('Failed to fetch services:', error);
-      }
-    };
-
-    const loadCustomers = async () => {
-      try {
-        const customers = await fetchCustomers(businessId);
-        setCustomers(customers);
-      } catch (error) {
-        console.error('Failed to fetch customers:', error);
-      }
-    };
-
-    const loadStaff = async () => {
-      try {
-        const staff = await fetchStaff(businessId);
-        setStaff(staff);
-      } catch (error) {
-        console.error('Failed to fetch staff:', error);
-      }
-    };
-
-    loadServices();
-    loadCustomers();
-    loadStaff();
-  }, [businessId]);
+    // Load services and staff when the dialog opens
+    if (open) {
+      fetchServices(businessId);
+      fetchAllStaff(businessId);
+    }
+  }, [open, businessId, fetchServices, fetchAllStaff]);
 
   useEffect(() => {
     if (!open) {
       setNewAppointment(initialAppointmentState.current);
       setAlert({ message: '', severity: '' });
+      setFilteredCustomers([]); // Reset customers on close
+      setCustomerSearch(''); // Reset search input
+      setSelectPlaceholder('Select to choose Customer'); // Reset placeholder
     }
   }, [open]);
+
+  const handleCustomerSearch = async () => {
+    try {
+      const customers = await searchCustomersByName(customerSearch);
+      if (customers.length === 0) {
+        setSelectPlaceholder('No Customer found');
+      } else {
+        setSelectPlaceholder('Click to show Customers');
+      }
+      setFilteredCustomers(customers);
+    } catch (error) {
+      console.error('Failed to search customers:', error);
+      setAlert({ message: 'Failed to search customers', severity: 'error' });
+      setSelectPlaceholder('No Customer found');
+    }
+  };
 
   const handleAddAppointment = async () => {
     try {
@@ -88,14 +84,14 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
         businessId: newAppointment.businessId,
         serviceIds: serviceIds,
         staffId: newAppointment.staffId,
-        appointmentTime: new Date(newAppointment.appointmentTime).toISOString(), // Convert to ISO format
+        appointmentTime: new Date(newAppointment.appointmentTime).toISOString(),
         status: newAppointment.status,
-        comment: newAppointment.comment // Add comment here
+        comment: newAppointment.comment
       };
 
       await addAppointmentAndUpdateList(appointmentDetails);
       setAlert({ message: 'Appointment added successfully!', severity: 'success' });
-      // Do not close the dialog here
+      onClose(); // Close dialog after successful addition
     } catch (error) {
       console.error('Failed to add appointment:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Failed to add appointment. Please try again.';
@@ -109,10 +105,10 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
   };
 
   const handleServiceChange = (index, field, value) => {
-    const selectedService = availableServices.find(service => service.serviceId === value);
+    const selectedService = services.find(service => service.serviceId === value);
 
     const updatedServices = newAppointment.services.map((service, i) =>
-      i === index ? { ...service, [field]: value, duration: selectedService.duration, price: selectedService.price } : service
+      i === index ? { ...service, [field]: value, duration: selectedService?.duration || '', price: selectedService?.price || '' } : service
     );
 
     setNewAppointment({ ...newAppointment, services: updatedServices });
@@ -156,13 +152,33 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
       </DialogTitle>
       <DialogContent>
         <FormControl fullWidth margin="dense">
-          <InputLabel>Customer</InputLabel>
+          <TextField
+            label="Search Customer by Name"
+            value={customerSearch}
+            onChange={(e) => setCustomerSearch(e.target.value)}
+            margin="dense"
+            fullWidth
+            InputProps={{
+              endAdornment: (
+                <IconButton onClick={handleCustomerSearch}>
+                  <SearchIcon />
+                </IconButton>
+              ),
+            }}
+          />
           <Select
             value={newAppointment.customerId}
             onChange={(e) => handleInputChange(e, 'customerId')}
-            label="Customer"
+            displayEmpty
+            renderValue={(selected) => {
+              if (selected === '') {
+                return <span>{selectPlaceholder}</span>;
+              }
+              const selectedCustomer = filteredCustomers.find(c => c.customerId === selected);
+              return <span>{selectedCustomer ? `${selectedCustomer.name} - ${selectedCustomer.phone}` : selectPlaceholder}</span>;
+            }}
           >
-            {customers.map((customer) => (
+            {filteredCustomers.map((customer) => (
               <MenuItem key={customer.customerId} value={customer.customerId}>
                 <Box component="span" fontWeight="fontWeightBold">{customer.name}</Box> - {customer.phone}
               </MenuItem>
@@ -222,7 +238,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
                     onChange={(e) => handleServiceChange(index, 'serviceId', e.target.value)}
                     label="Service"
                   >
-                    {availableServices.map((availableService) => (
+                    {services.map((availableService) => (
                       <MenuItem key={availableService.serviceId} value={availableService.serviceId}>
                         {availableService.name}
                       </MenuItem>
@@ -241,7 +257,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
                     shrink: true
                   }}
                   inputProps={{
-                    step: 300 // 5 min steps
+                    step: 300
                   }}
                   disabled
                 />
@@ -275,7 +291,6 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
         )}
       </DialogContent>
       <DialogActions>
-
         <Button onClick={handleCancel} color="primary">
           Cancel
         </Button>

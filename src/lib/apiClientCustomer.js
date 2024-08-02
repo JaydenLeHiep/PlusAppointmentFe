@@ -75,3 +75,26 @@ export const addCustomer = async (customerDetails) => {
   }
   return data;
 };
+
+export const searchCustomersByName = async (name) => {
+  const searchApiUrl = `${customerApiUrl}/search?name=${encodeURIComponent(name)}`;
+  const response = await fetch(searchApiUrl, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to search customers');
+  }
+
+  // Extract the customers from the response
+  const customers = data.customers?.$values || [];
+
+  // Return the customers array directly
+  return customers;
+};
+
