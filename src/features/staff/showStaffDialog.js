@@ -14,7 +14,7 @@ import {
   Box,
   Alert
 } from '@mui/material';
-import { Delete, Edit, Add } from '@mui/icons-material';
+import { Delete, Edit, Add, Close as CloseIcon } from '@mui/icons-material';
 import { useStaffsContext } from '../staff/StaffsContext'; 
 import StaffForm from './StaffForm';
 
@@ -171,7 +171,21 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
 
   return (
     <Dialog open={open} onClose={handleCloseDialog}>
-      <DialogTitle>Staff List</DialogTitle>
+      <DialogTitle>
+        Staff List
+        <IconButton
+          aria-label="close"
+          onClick={handleCloseDialog}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
         {staff.length > 0 ? (
           <List>
