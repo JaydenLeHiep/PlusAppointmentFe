@@ -24,13 +24,17 @@ export const AppointmentsProvider = ({ children }) => {
   const { staff, fetchAllStaff } = useStaffsContext();
 
   const fetchAppointmentsForBusiness = useCallback(async (businessId) => {
+    if (!businessId) {
+      console.error('No business ID provided');
+      return;
+    }
     try {
       const appointmentList = await apiFetchAppointments(businessId);
       setAppointments(appointmentList);
     } catch (error) {
       console.error('Error fetching appointments:', error);
     }
-  }, []);
+  }, []);  
 
   const fetchAppointmentById = useCallback(async (appointmentId) => {
     try {

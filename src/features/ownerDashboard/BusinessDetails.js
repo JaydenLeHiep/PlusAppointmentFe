@@ -1,93 +1,79 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Box } from '@mui/material';
+import { Typography } from '@mui/material';
 
-import { fetchStaff } from '../../lib/apiClientStaff';
-import { fetchServices } from '../../lib/apiClientServicesOwnerDashboard';
 import FullCalendarComponent from '../calendar/FullCalendarComponent';
 import '../../styles/css/OwnerDashboard.css';
 import BusinessInfo from './BusinessInfor';
 import ShowStaffDialog from '../staff/showStaffDialog';
 import AddAppointmentDialog from '../appointment/AddApointmentDialog';
 import ShowServicesDialog from '../servicecomponent/showServiceDialog';
+import { useStaffsContext } from '../staff/StaffsContext';
+import { useServicesContext } from '../servicecomponent/ServicesContext';
+import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 
-const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments = [], setAppointments }) => {
-  const [staff, setStaff] = useState([]);
-  const [services, setServices] = useState([]);
-  const [servicesCount, setServicesCount] = useState(0); // New state for services count
-  const [staffCount, setStaffCount] = useState(0); // New state for staff count
+const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
+  const { staff, fetchAllStaff } = useStaffsContext();
+  const { services, fetchServices } = useServicesContext();
+  const { appointments, fetchAppointmentsForBusiness } = useAppointmentsContext();
 
   const [staffOpen, setStaffOpen] = useState(false);
   const [appointmentOpen, setAppointmentOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
 
-  const fetchStaffData = useCallback(async () => {
-    if (selectedBusiness) {
-      try {
-        const staffData = await fetchStaff(selectedBusiness.businessId);
-        setStaff(staffData);
-        setStaffCount(staffData.length); // Update staff count
-      } catch (error) {
-        console.error('Failed to fetch staff:', error);
-      }
+  const fetchAllData = useCallback(async () => {
+    if (selectedBusiness && selectedBusiness.businessId) {
+        await fetchAllStaff(selectedBusiness.businessId);
+        await fetchServices(selectedBusiness.businessId);
+        await fetchAppointmentsForBusiness(selectedBusiness.businessId);
+    } else {
+        console.warn("No valid business selected or businessId is undefined.");
     }
-  }, [selectedBusiness]);
+}, [selectedBusiness, fetchAllStaff, fetchServices, fetchAppointmentsForBusiness]);
 
-  const fetchServiceData = useCallback(async () => {
-    if (selectedBusiness) {
-      try {
-        const serviceData = await fetchServices(selectedBusiness.businessId);
-        setServices(serviceData);
-        setServicesCount(serviceData.length); // Update services count
-      } catch (error) {
-        console.error('Failed to fetch services:', error);
-      }
-    }
-  }, [selectedBusiness]);
+useEffect(() => {
+  if (selectedBusiness && selectedBusiness.businessId) {
+    fetchAllData();
+  } else {
+    console.warn("No valid business selected or businessId is undefined.");
+  }
+}, [selectedBusiness, fetchAllData]);
 
+  const handleStaffOpen = () => setStaffOpen(true);
 
-
-  useEffect(() => {
-    fetchStaffData();
-    fetchServiceData();
-    // fetchAppointmentData();
-  }, [selectedBusiness, fetchStaffData, fetchServiceData]);
-
-  const handleStaffOpen = () => {
-    setStaffOpen(true);
-  };
-
-  const handleStaffClose = () => {
+  const handleStaffClose = async () => {
     setStaffOpen(false);
-    fetchStaffData(); // Fetch updated staff data
+    if (selectedBusiness && selectedBusiness.businessId) {
+      await fetchAllStaff(selectedBusiness.businessId);
+    }
   };
 
-  const handleAppointmentOpen = () => {
-    setAppointmentOpen(true);
-  };
+  const handleAppointmentOpen = () => setAppointmentOpen(true);
 
-  const handleAppointmentClose = () => {
+  const handleAppointmentClose = async () => {
     setAppointmentOpen(false);
-    // fetchAppointmentData(); // Fetch updated appointment data
+    if (selectedBusiness && selectedBusiness.businessId) {
+      await fetchAppointmentsForBusiness(selectedBusiness.businessId);
+    }
   };
 
-  const handleServicesOpen = () => {
-    setServicesOpen(true);
-  };
+  const handleServicesOpen = () => setServicesOpen(true);
 
-  const handleServicesClose = () => {
+  const handleServicesClose = async () => {
     setServicesOpen(false);
-    fetchServiceData(); // Fetch updated service data
-  };
-
-  const handleServiceChange = (newServices) => {
-    setServices(newServices);
-    setServicesCount(newServices.length); // Update services count
+    if (selectedBusiness && selectedBusiness.businessId) {
+      await fetchServices(selectedBusiness.businessId);
+    }
   };
 
   const parseDuration = (duration) => {
     const [hours, minutes, seconds] = duration.split(':').map(Number);
     return hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000;
   };
+
+  if (!selectedBusiness || !selectedBusiness.businessId) {
+    return <Typography variant="h6">No business selected or business ID is missing.</Typography>;
+  }
 
   return (
     <Box>
@@ -96,15 +82,16 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
         staff={staff}
         appointments={appointments}
         handleStaffOpen={handleStaffOpen}
-        handleServiceOpen={handleServicesOpen} // Pass handleServiceOpen to BusinessInfo
-        servicesCount={servicesCount} // Pass servicesCount to BusinessInfo
-        staffCount={staffCount} // Pass staffCount to BusinessInfo
-        appointmentsCount={appointments.length} // Pass appointmentsCount to BusinessInfo
-        onBack={() => setSelectedBusiness(null)} // Pass onBack handler to BusinessInfo
-        onAddAppointment={handleAppointmentOpen} // Pass onAddAppointment handler to BusinessInfo
+        handleServiceOpen={handleServicesOpen}
+        servicesCount={services.length}
+        staffCount={staff.length}
+        appointmentsCount={appointments.length}
+        onBack={() => setSelectedBusiness(null)}
+        onAddAppointment={handleAppointmentOpen}
       />
+
       <Box className="calendar-container" style={{ marginBottom: '10px' }}>
-      <FullCalendarComponent
+        <FullCalendarComponent
           events={appointments.map(appt => ({
             title: `${appt.customerName}`,
             start: new Date(appt.appointmentTime).toISOString(),
@@ -115,20 +102,18 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, appointments =
             service: appt.serviceName,
             staffName: appt.staffName,
             status: appt.status,
-            appointmentId: appt.appointmentId,  // If needed for updates/deletes
+            appointmentId: appt.appointmentId,
           }))}
           staff={staff}
         />
-
       </Box>
 
       <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} />
-      <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={setAppointments} />
+      <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={fetchAppointmentsForBusiness} />
       <ShowServicesDialog
         open={servicesOpen}
         onClose={handleServicesClose}
         businessId={selectedBusiness.businessId}
-        onServiceChange={handleServiceChange} // Pass handleServiceChange to ShowServicesDialog
       />
     </Box>
   );

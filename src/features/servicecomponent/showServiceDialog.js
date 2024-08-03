@@ -18,7 +18,7 @@ import {
 import { Delete, Edit, Add } from '@mui/icons-material';
 import { useServicesContext } from '../servicecomponent/ServicesContext'; 
 
-const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
+const ShowServicesDialog = ({ open, onClose, businessId }) => {  // Removed onServiceChange from props
   const { services, fetchServices, addService, updateService, deleteService } = useServicesContext();
 
   const [selectedServiceId, setSelectedServiceId] = useState(null);
@@ -34,9 +34,8 @@ const ShowServicesDialog = ({ open, onClose, businessId, onServiceChange }) => {
   useEffect(() => {
     if (open) {
       fetchServices(String(businessId));
-      onServiceChange(services);
     }
-  }, [open, fetchServices, businessId, onServiceChange, services]);
+  }, [open, fetchServices, businessId]);
 
   useEffect(() => {
     if (alert.message) {
