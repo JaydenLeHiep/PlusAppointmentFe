@@ -1,44 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { List, ListItem, Typography, Paper, CircularProgress, MenuItem, Select, FormControl, InputLabel, ButtonBase } from '@mui/material';
+import { List, ListItem, Typography, Paper, MenuItem, Select, FormControl, InputLabel, ButtonBase } from '@mui/material';
 import AppointmentInfoModal from './AppointmentInfoModal';
 import '../../styles/css/AppointmentList.css';
 
-const AppointmentList = ({ appointments }) => {
-  const [loading, setLoading] = useState(true);
+const AppointmentList = ({ appointments, businessId }) => {
   const [sortCriteria, setSortCriteria] = useState('date');
-  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);  // Store only the appointmentId
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    if (appointments) {
-      setLoading(false);
-    }
-  }, [appointments]);
-
-  useEffect(() => {
     if (selectedAppointmentId !== null) {
-        setModalOpen(true);
+      setModalOpen(true);
     }
   }, [selectedAppointmentId]);
 
-  if (loading) {
-    return <CircularProgress />;
-  }
-
-  if (!appointments || appointments.length === 0) {
-    return <Typography variant="h6">No appointments available.</Typography>;
-  }
-
-  const sortedAppointments = [...appointments].filter(appt => appt.status !== 'Delete');
-
-  if (sortCriteria === 'date') {
-    sortedAppointments.sort((a, b) => new Date(a.appointmentTime) - new Date(b.appointmentTime));
-  } else if (sortCriteria === 'status') {
-    sortedAppointments.sort((a, b) => a.status.localeCompare(b.status));
-  }
-
   const handleAppointmentClick = (appointmentId) => {
-    console.log('Clicked appointmentId:', appointmentId);  // Log the selected appointment ID
     setSelectedAppointmentId(appointmentId);
   };
 
@@ -46,6 +22,18 @@ const AppointmentList = ({ appointments }) => {
     setModalOpen(false);
     setSelectedAppointmentId(null);
   };
+
+  const sortedAppointments = appointments?.filter(appt => appt.status !== 'Delete') || [];
+
+  if (sortCriteria === 'date') {
+    sortedAppointments.sort((a, b) => new Date(a.appointmentTime) - new Date(b.appointmentTime));
+  } else if (sortCriteria === 'status') {
+    sortedAppointments.sort((a, b) => a.status.localeCompare(b.status));
+  }
+
+  if (!appointments || appointments.length === 0) {
+    return <Typography variant="h6">No appointments available.</Typography>;
+  }
 
   return (
     <div>
@@ -62,7 +50,7 @@ const AppointmentList = ({ appointments }) => {
       </FormControl>
       <AppointmentInfoModal
         open={modalOpen}
-        appointmentId={selectedAppointmentId}  // Pass appointmentId
+        appointmentId={selectedAppointmentId} 
         onClose={handleCloseModal}
       />
       <List>

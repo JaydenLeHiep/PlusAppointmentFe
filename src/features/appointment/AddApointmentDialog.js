@@ -43,12 +43,15 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
   const { services, fetchServices } = useServicesContext();
 
   useEffect(() => {
-    // Load services and staff when the dialog opens
     if (open) {
-      fetchServices(businessId);
-      fetchAllStaff(businessId);
+      if (services.length === 0) {
+        fetchServices(businessId);
+      }
+      if (staff.length === 0) {
+        fetchAllStaff(businessId);
+      }
     }
-  }, [open, businessId, fetchServices, fetchAllStaff]);
+  }, [open, businessId, services.length, staff.length, fetchServices, fetchAllStaff]);  
 
   useEffect(() => {
     if (!open) {

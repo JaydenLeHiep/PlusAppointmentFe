@@ -4,10 +4,15 @@ const appointmentApiUrl = `${apiBaseUrl}/api/appointments`;
 //Api appointments
 
 export const fetchAppointments = async (businessId) => {
+  if (!businessId) {
+    throw new Error('Business ID is required');
+  }
+
   const token = localStorage.getItem('token');
   if (!token) {
     throw new Error('User not authenticated');
   }
+  
   const appointmentBusinessApiUrl = `${appointmentApiUrl}/business/business_id=${businessId}`;
   const response = await fetch(appointmentBusinessApiUrl, {
     method: 'GET',
@@ -16,19 +21,16 @@ export const fetchAppointments = async (businessId) => {
       'Authorization': `Bearer ${token}`,
     },
   });
-  const data = await response.json();
+  
   if (!response.ok) {
-    throw new Error(data.message);
+    const data = await response.json();
+    throw new Error(data.message || 'Failed to fetch appointments');
   }
-
-  if (Array.isArray(data)) {
-    return data;
-  } else if (data.$values) {
-    return data.$values;
-  } else {
-    throw new Error('Unexpected data format');
-  }
+  
+  const data = await response.json();
+  return data.$values || data;
 };
+
 
 // for add Appointment
 export const addAppointment = async (appointmentDetails) => {
@@ -109,14 +111,14 @@ export const fetchAppointmentById = async (appointmentId) => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
+      'Authorization': `Bearer ${token}`,
+    },
   });
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.message);
   }
-  return data;
+  return data;  
 };
 
 // Function to update an appointment

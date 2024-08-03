@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { List, ListItem, Typography, Paper, CircularProgress } from '@mui/material';
+import { List, ListItem, Typography, Paper, CircularProgress, Box, Alert } from '@mui/material';
 import { useStaffsContext } from '../staff/StaffsContext'; 
 import '../../styles/css/StaffList.css'; 
 
 const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
   const { staff, fetchAllStaff } = useStaffsContext(); // Use the context
   const [loading, setLoading] = useState(true); // State to track loading status
+  const [error, setError] = useState(''); // State to track any errors
 
   useEffect(() => {
     const fetchStaffData = async () => {
@@ -14,6 +15,8 @@ const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
         setLoading(false); // Mark loading as complete
       } catch (error) {
         console.error('Error fetching staff:', error.message);
+        setError('Failed to fetch staff. Please try again.'); // Set error message
+        setLoading(false);
       }
     };
 
@@ -26,23 +29,39 @@ const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
   );
 
   if (loading) {
-    return <CircularProgress />; // Display loading indicator while fetching data
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+        <CircularProgress />
+      </Box>
+    ); // Display loading indicator while fetching data
+  }
+
+  if (error) {
+    return (
+      <Box mt={2}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    ); // Display an error message if there's an error
   }
 
   return (
     <div>
       <Typography variant="h6">Staff</Typography>
       <List>
-        {filteredStaff.map((staffMember) => (
-          <ListItem key={staffMember.staffId} button onClick={() => onStaffSelect(staffMember)}>
-            <Paper className="staff-item">
-              <div className="staff-info">
-                <Typography variant="body1" className="bold-text">{staffMember.name}</Typography>
-                <Typography variant="body1">Phone: {staffMember.phone}</Typography>
-              </div>
-            </Paper>
-          </ListItem>
-        ))}
+        {filteredStaff.length > 0 ? (
+          filteredStaff.map((staffMember) => (
+            <ListItem key={staffMember.staffId} button onClick={() => onStaffSelect(staffMember)}>
+              <Paper className="staff-item">
+                <div className="staff-info">
+                  <Typography variant="body1" className="bold-text">{staffMember.name}</Typography>
+                  <Typography variant="body1">Phone: {staffMember.phone}</Typography>
+                </div>
+              </Paper>
+            </ListItem>
+          ))
+        ) : (
+          <Typography variant="body2">No staff members match your search.</Typography>
+        )}
       </List>
     </div>
   );

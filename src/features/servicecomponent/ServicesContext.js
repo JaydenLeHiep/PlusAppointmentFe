@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { fetchServices as apiFetchServices, addService as apiAddService, updateService as apiUpdateService, deleteService as apiDeleteService } from '../../lib/apiClientServicesOwnerDashboard';
+import {
+  fetchServices as apiFetchServices,
+  addService as apiAddService,
+  updateService as apiUpdateService,
+  deleteService as apiDeleteService
+} from '../../lib/apiClientServicesOwnerDashboard';
 
 const ServicesContext = createContext();
 

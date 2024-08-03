@@ -16,15 +16,15 @@ import {
   Box,
   Grid
 } from '@mui/material';
-import { Add, Remove, Close as CloseIcon } from '@mui/icons-material';
+import { Add, Close as CloseIcon } from '@mui/icons-material';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { useStaffsContext } from '../staff/StaffsContext';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
 
 const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
   const { changeStatusAppointments, deleteAppointmentAndUpdateList, fetchAppointmentById, updateAppointmentAndRefresh, customers, fetchAllCustomers, getAppointmentById } = useAppointmentsContext();
-  const { staff } = useStaffsContext();
-  const { services } = useServicesContext();
+  const { staff, fetchAllStaff } = useStaffsContext();
+  const { services, fetchServices } = useServicesContext();
 
   const [alert, setAlert] = useState({ message: '', severity: '' });
   const [editMode, setEditMode] = useState(false);
@@ -35,79 +35,70 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     appointmentTime: '',
     status: '',
     comment: '',
-    services: [{ serviceId: '', duration: '', price: '' }]
+    services: [{ serviceId: '', duration: '', price: '', name: '' }]
   });
 
   useEffect(() => {
     const loadAppointmentDetails = async () => {
-        try {
-            // Attempt to get appointment details from the context by ID
-            let appointmentDetails = getAppointmentById(appointmentId);
-
-            // If the appointment is not found in the context, fetch it from the backend
-            if (!appointmentDetails && appointmentId) {
-                await fetchAllCustomers();  // Fetch customers if not already fetched
-                appointmentDetails = await fetchAppointmentById(appointmentId);
-            }
-
-            if (appointmentDetails) {
-                console.log('Using appointment details:', appointmentDetails);  // Log appointment details
-                setAppointment(appointmentDetails);
-
-                // Ensure that customers are available and find the correct customer
-                let customer = customers.find(c => c.customerId === appointmentDetails.customerId);
-                if (!customer) {
-                    // If customers aren't loaded yet, re-fetch them
-                    await fetchAllCustomers();
-                    customer = customers.find(c => c.customerId === appointmentDetails.customerId);
-                }
-
-                // Ensure services are available and correctly map them
-                const updatedServices = appointmentDetails.services.$values.map(serviceDetails => {
-                    const service = services.find(s => s.serviceId === serviceDetails.serviceId);
-                    if (service) {
-                        return {
-                            serviceId: service.serviceId,
-                            duration: service.duration,
-                            price: service.price
-                        };
-                    }
-                    return { serviceId: '', duration: '', price: '' };
-                });
-
-                // Update the appointment state with loaded details
-                setUpdatedAppointment({
-                    customerId: customer ? customer.customerId : '',
-                    staffId: appointmentDetails.staffId || '',
-                    appointmentTime: appointmentDetails.appointmentTime 
-                        ? new Date(appointmentDetails.appointmentTime).toISOString().slice(0, 16) 
-                        : '',
-                    status: appointmentDetails.status || '',
-                    comment: appointmentDetails.comment || '',
-                    services: updatedServices.length ? updatedServices : [{ serviceId: '', duration: '', price: '' }]
-                });
-            }
-        } catch (error) {
-            console.error('Failed to load appointment details:', error);
-            setAlert({ message: 'Failed to load appointment details', severity: 'error' });
+      try {
+        let appointmentDetails = getAppointmentById(appointmentId);
+  
+        if (!appointmentDetails && appointmentId) {
+          appointmentDetails = await fetchAppointmentById(appointmentId);
         }
+  
+        if (appointmentDetails) {
+          setAppointment(appointmentDetails);
+  
+          // Fetch only if not already loaded
+          if (!services.length) {
+            await fetchServices(appointmentDetails.businessId);
+          }
+          if (!customers.length) {
+            await fetchAllCustomers(appointmentDetails.businessId);
+          }
+          if (!staff.length) {
+            await fetchAllStaff(appointmentDetails.businessId);
+          }
+  
+          const updatedServices = appointmentDetails.services.$values.map(serviceDetails => {
+            const service = services.find(s => s.serviceId === serviceDetails.serviceId);
+            return {
+              serviceId: service?.serviceId || '',
+              duration: service?.duration || '',
+              price: service?.price || '',
+              name: service?.name || ''
+            };
+          });
+  
+          setUpdatedAppointment({
+            customerId: appointmentDetails.customerId || '',
+            staffId: appointmentDetails.staffId || '',
+            appointmentTime: appointmentDetails.appointmentTime
+              ? new Date(appointmentDetails.appointmentTime).toISOString().slice(0, 16)
+              : '',
+            status: appointmentDetails.status || '',
+            comment: appointmentDetails.comment || '',
+            services: updatedServices.length ? updatedServices : [{ serviceId: '', duration: '', price: '', name: '' }]
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load appointment details:', error);
+        setAlert({ message: 'Failed to load appointment details', severity: 'error' });
+      }
     };
-
+  
     if (open) {
-        loadAppointmentDetails();
+      loadAppointmentDetails();
     }
-}, [appointmentId, open, fetchAppointmentById, services, fetchAllCustomers, getAppointmentById, customers]);
+  }, [appointmentId, open, fetchAppointmentById, services, fetchAllCustomers, getAppointmentById, customers, fetchServices, staff, fetchAllStaff]);
 
-// Ensure appointment and staff lists are properly loaded before rendering form controls
-if (!appointment || staff.length === 0) return null;
-
-
+  if (!appointment || staff.length === 0 || services.length === 0 || customers.length === 0) return null;
 
   const handleConfirmStatus = async () => {
     try {
       const updatedStatus = 'Confirm';
-      const selectedBusinessId = localStorage.getItem('selectedBusinessId');
-      await changeStatusAppointments(appointment.appointmentId, updatedStatus, selectedBusinessId);
+      await changeStatusAppointments(appointment.appointmentId, updatedStatus, appointment.businessId);
       setAlert({ message: 'Appointment confirmed successfully!', severity: 'success' });
     } catch (error) {
       console.error('Failed to change appointment status:', error);
@@ -118,9 +109,8 @@ if (!appointment || staff.length === 0) return null;
 
   const handleDeleteAppointment = async () => {
     try {
-      const selectedBusinessId = localStorage.getItem('selectedBusinessId');
-      await deleteAppointmentAndUpdateList(appointment.appointmentId, selectedBusinessId);
-      onClose(); // Close the dialog after deleting the appointment
+      await deleteAppointmentAndUpdateList(appointment.appointmentId, appointment.businessId);
+      onClose();
     } catch (error) {
       console.error('Failed to delete appointment:', error);
       setAlert({ message: 'Failed to delete appointment', severity: 'error' });
@@ -134,7 +124,7 @@ if (!appointment || staff.length === 0) return null;
   const handleCloseDialog = () => {
     onClose();
     setAlert({ message: '', severity: '' });
-    setEditMode(false); // Reset edit mode
+    setEditMode(false);
   };
 
   const handleToggleEditMode = () => {
@@ -142,16 +132,17 @@ if (!appointment || staff.length === 0) return null;
       setUpdatedAppointment({
         customerId: appointment.customerId || '',
         staffId: appointment.staffId || '',
-        appointmentTime: appointment.appointmentTime || '',
+        appointmentTime: appointment.appointmentTime
+          ? new Date(appointment.appointmentTime).toISOString().slice(0, 16)
+          : '',
         status: appointment.status || '',
         comment: appointment.comment || '',
-        services: Array.isArray(appointment.services)
-          ? appointment.services.map(service => ({
-            serviceId: service.serviceId,
-            duration: service.duration,
-            price: service.price,
-          }))
-          : [], // Handle the case where services might not be an array
+        services: appointment.services.$values.map(service => ({
+          serviceId: service.serviceId,
+          duration: service.duration,
+          price: service.price,
+          name: service.name,
+        }))
       });
     }
     setEditMode(!editMode);
@@ -175,14 +166,7 @@ if (!appointment || staff.length === 0) return null;
   const handleAddService = () => {
     setUpdatedAppointment({
       ...updatedAppointment,
-      services: [...updatedAppointment.services, { serviceId: '', duration: '', price: '' }]
-    });
-  };
-
-  const handleRemoveService = (index) => {
-    setUpdatedAppointment({
-      ...updatedAppointment,
-      services: updatedAppointment.services.filter((_, i) => i !== index)
+      services: [...updatedAppointment.services, { serviceId: '', duration: '', price: '', name: '' }]
     });
   };
 
@@ -262,32 +246,35 @@ if (!appointment || staff.length === 0) return null;
               {appointment.service}
             </Typography>
             <Typography variant="body1" gutterBottom>
+              Comment: {appointment.comment}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
               By {appointment.staffName}
             </Typography>
           </>
         ) : (
           <>
             <FormControl fullWidth margin="dense">
-  <InputLabel>Customer</InputLabel>
-  <Select
-    value={updatedAppointment.customerId || ''}
-    onChange={(e) => handleInputChange(e, 'customerId')}
-    label="Customer"
-    disabled
-  >
-    {customers.length > 0 ? (
-      customers.map((customer) => (
-        <MenuItem key={customer.customerId} value={customer.customerId}>
-          <Box component="span" fontWeight="fontWeightBold">{customer.name}</Box> - {customer.phone}
-        </MenuItem>
-      ))
-    ) : (
-      <MenuItem value="">
-        <em>No Customers Available</em>
-      </MenuItem>
-    )}
-  </Select>
-</FormControl>
+              <InputLabel>Customer</InputLabel>
+              <Select
+                value={updatedAppointment.customerId || ''}
+                onChange={(e) => handleInputChange(e, 'customerId')}
+                label="Customer"
+                disabled
+              >
+                {customers.length > 0 ? (
+                  customers.map((customer) => (
+                    <MenuItem key={customer.customerId} value={customer.customerId}>
+                      <Box component="span" fontWeight="fontWeightBold">{customer.name}</Box> - {customer.phone}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value="">
+                    <em>No Customers Available</em>
+                  </MenuItem>
+                )}
+              </Select>
+            </FormControl>
             <FormControl fullWidth margin="dense">
               <InputLabel>Staff</InputLabel>
               <Select
@@ -328,7 +315,7 @@ if (!appointment || staff.length === 0) return null;
               type="text"
               fullWidth
               multiline
-              value={updatedAppointment.comment}
+              value={updatedAppointment.comment}  // This should be the correct state value
               onChange={(e) => handleInputChange(e, 'comment')}
             />
             {updatedAppointment.services.map((service, index) => (
@@ -341,6 +328,7 @@ if (!appointment || staff.length === 0) return null;
                         value={service.serviceId}
                         onChange={(e) => handleServiceChange(index, 'serviceId', e.target.value)}
                         label="Service"
+                        disabled={!editMode}
                       >
                         {services.map((availableService) => (
                           <MenuItem key={availableService.serviceId} value={availableService.serviceId}>
@@ -376,11 +364,6 @@ if (!appointment || staff.length === 0) return null;
                       onChange={(e) => handleServiceChange(index, 'price', e.target.value)}
                       disabled
                     />
-                  </Grid>
-                  <Grid item xs={2} style={{ display: 'flex', justifyContent: 'center' }}>
-                    <IconButton onClick={() => handleRemoveService(index)}>
-                      <Remove />
-                    </IconButton>
                   </Grid>
                 </Grid>
               </Box>
