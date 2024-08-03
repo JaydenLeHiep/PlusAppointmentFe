@@ -15,7 +15,7 @@ import {
   TextField,
   Alert
 } from '@mui/material';
-import { Delete, Edit, Add } from '@mui/icons-material';
+import { Delete, Edit, Add, Close as CloseIcon } from '@mui/icons-material';
 import { useServicesContext } from '../servicecomponent/ServicesContext'; 
 
 const ShowServicesDialog = ({ open, onClose, businessId }) => {  // Removed onServiceChange from props
@@ -167,7 +167,21 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {  // Removed onSe
 
   return (
     <Dialog open={open} onClose={handleCloseDialog}>
-      <DialogTitle>Service List</DialogTitle>
+      <DialogTitle>
+        Service List
+        <IconButton
+          aria-label="close"
+          onClick={handleCloseDialog}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
         {services.length > 0 ? (
           <List>

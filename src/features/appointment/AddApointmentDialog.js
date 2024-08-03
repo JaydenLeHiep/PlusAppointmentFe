@@ -51,7 +51,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
         fetchAllStaff(businessId);
       }
     }
-  }, [open, businessId, services.length, staff.length, fetchServices, fetchAllStaff]);  
+  }, [open, businessId, services.length, staff.length, fetchServices, fetchAllStaff]);
 
   useEffect(() => {
     if (!open) {
@@ -294,8 +294,11 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
         )}
       </DialogContent>
       <DialogActions>
+        <Button onClick={onClose} color="primary">
+          Close
+        </Button>
         <Button onClick={handleCancel} color="primary">
-          Cancel
+          Clear
         </Button>
         <Button onClick={handleAddAppointment} color="primary">
           Add Appointment
