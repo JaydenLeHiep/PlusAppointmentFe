@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
@@ -13,12 +12,13 @@ import {
   Collapse,
   Box,
   TextField,
-  Alert
+  Alert,
+  Typography,
 } from '@mui/material';
 import { Delete, Edit, Add, Close as CloseIcon } from '@mui/icons-material';
-import { useServicesContext } from '../servicecomponent/ServicesContext'; 
+import { useServicesContext } from '../servicecomponent/ServicesContext';
 
-const ShowServicesDialog = ({ open, onClose, businessId }) => {  // Removed onServiceChange from props
+const ShowServicesDialog = ({ open, onClose, businessId }) => {
   const { services, fetchServices, addService, updateService, deleteService } = useServicesContext();
 
   const [selectedServiceId, setSelectedServiceId] = useState(null);
@@ -49,9 +49,9 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {  // Removed onSe
 
   const closeFormAndExecuteAction = async (action) => {
     if (isFormOpen) {
-      setIsFormOpen(false); 
+      setIsFormOpen(false);
       setTimeout(() => {
-        action(); 
+        action();
         setTimeout(() => setSelectedServiceId(null), 300);
       }, 300);
     } else {
@@ -166,28 +166,32 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {  // Removed onSe
   };
 
   return (
-    <Dialog open={open} onClose={handleCloseDialog}>
-      <DialogTitle>
-        Service List
-        <IconButton
-          aria-label="close"
-          onClick={handleCloseDialog}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
+    <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
+      <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+          Service List
+        </Typography>
+        <IconButton aria-label="close" onClick={handleCloseDialog} sx={{ color: (theme) => theme.palette.grey[500] }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent dividers>
         {services.length > 0 ? (
           <List>
             {services.map((service) => (
               <ListItem
                 key={service.serviceId}
+                sx={{
+                  borderRadius: '8px',
+                  backgroundColor: '#f0f8ff', // Light background color
+                  mb: 2,
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', // Elevated shadow
+                  border: '1px solid #1976d2', // Border color to make it pop
+                  '&:hover': {
+                    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+                    backgroundColor: '#e6f1ff', // Slightly darker background on hover
+                  }
+                }}
                 secondaryAction={
                   <>
                     <IconButton edge="end" aria-label="edit" onClick={() => handleEditService(service)}>
@@ -199,25 +203,42 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {  // Removed onSe
                   </>
                 }
               >
-                <ListItemText primary={service.name} secondary={`${service.description} - ${service.duration} - $${service.price}`} />
+                <ListItemText
+                  primary={<Typography variant="body1" sx={{ fontWeight: 'bold', color: '#1976d2' }}>{service.name}</Typography>}
+                  secondary={
+                    <>
+                      <Typography variant="body2">{service.description}</Typography>
+                      <Typography variant="body2">{service.duration} - ${service.price}</Typography>
+                    </>
+                  }
+                />
               </ListItem>
             ))}
           </List>
         ) : (
           <DialogContentText>No services found for this business.</DialogContentText>
         )}
-
-        <Box mt={2} display="flex" justifyContent="center">
-          <Button
-            startIcon={<Add />}
+        <Box mt={2} mb={2} display="flex" justifyContent="center">
+          <Typography
+            variant="h7"
             onClick={handleAddNewServiceClick}
+            sx={{
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              color: '#1976d2',
+              '&:hover': {
+                color: '#115293',
+              },
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+            }}
           >
-            Add New Service
-          </Button>
+            <Add sx={{ fontSize: '40px' }} /> Add New Servie
+          </Typography>
         </Box>
-
         <Collapse in={isFormOpen || selectedServiceId !== null}>
-          <Box mt={2} className="service-form">
+          <Box mt={2} p={2} sx={{ borderRadius: '12px', backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)' }}>
             <TextField
               margin="dense"
               label="Name"
@@ -225,6 +246,17 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {  // Removed onSe
               fullWidth
               value={newService.name}
               onChange={(e) => setNewService({ ...newService, name: e.target.value })}
+              sx={{
+                backgroundColor: '#f9f9f9',
+                borderRadius: '12px',
+                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    border: 'none', // Removing the default border
+                  },
+                },
+                mb: 2,
+              }}
             />
             <TextField
               margin="dense"
@@ -233,6 +265,17 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {  // Removed onSe
               fullWidth
               value={newService.description}
               onChange={(e) => setNewService({ ...newService, description: e.target.value })}
+              sx={{
+                backgroundColor: '#f9f9f9',
+                borderRadius: '12px',
+                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    border: 'none', // Removing the default border
+                  },
+                },
+                mb: 2,
+              }}
             />
             <TextField
               margin="dense"
@@ -240,13 +283,20 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {  // Removed onSe
               type="time"
               fullWidth
               value={newService.duration}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              inputProps={{
-                step: 300, // 5 min steps
-              }}
+              InputLabelProps={{ shrink: true }}
+              inputProps={{ step: 300 }} // 5 min steps
               onChange={(e) => setNewService({ ...newService, duration: e.target.value })}
+              sx={{
+                backgroundColor: '#f9f9f9',
+                borderRadius: '12px',
+                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    border: 'none', // Removing the default border
+                  },
+                },
+                mb: 2,
+              }}
             />
             <TextField
               margin="dense"
@@ -255,31 +305,54 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {  // Removed onSe
               fullWidth
               value={newService.price}
               onChange={(e) => setNewService({ ...newService, price: e.target.value })}
+              sx={{
+                backgroundColor: '#f9f9f9',
+                borderRadius: '12px',
+                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    border: 'none', // Removing the default border
+                  },
+                },
+                mb: 2,
+              }}
             />
             <Box mt={2} display="flex" justifyContent="space-between">
-              <Button onClick={handleCancelForm} color="primary">
+              <Button
+                onClick={handleCancelForm}
+                sx={{
+                  backgroundColor: '#6c757d',
+                  color: '#fff',
+                  '&:hover': { backgroundColor: '#5a6268' },
+                  fontWeight: 'bold',
+                  borderRadius: '8px',
+                  padding: '8px 16px',
+                }}
+              >
                 Cancel
+              </Button>
+              <Button
+                onClick={selectedServiceId ? handleUpdateService : handleAddService}
+                sx={{
+                  backgroundColor: selectedServiceId ? '#007bff' : '#28a745',
+                  color: '#fff',
+                  '&:hover': { backgroundColor: selectedServiceId ? '#0056b3' : '#218838' },
+                  fontWeight: 'bold',
+                  borderRadius: '8px',
+                  padding: '8px 16px',
+                }}
+              >
+                {selectedServiceId ? 'Update Service' : 'Add Service'}
               </Button>
             </Box>
           </Box>
         </Collapse>
         {alert.message && (
-          <Alert severity={alert.severity} sx={{ mt: 2 }}>
+          <Alert severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} sx={{ mt: 2 }}>
             {alert.message}
           </Alert>
         )}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleCloseDialog} color="primary">
-          Close
-        </Button>
-        <Button onClick={handleAddService} color="primary" disabled={!isFormOpen || !!selectedServiceId}>
-          Add Service
-        </Button>
-        <Button onClick={handleUpdateService} color="primary" disabled={!selectedServiceId}>
-          Update Service
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };

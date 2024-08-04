@@ -9,7 +9,8 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleCancelForm }) => {
 
   return (
     <Box mt={2}>
-      <Typography variant="h6">{title}</Typography>
+      <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>{title}</Typography>
+      
       <TextField
         margin="dense"
         label="Name"
@@ -18,7 +19,18 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleCancelForm }) => {
         name="name"
         value={newStaff.name}
         onChange={handleChange}
+        sx={{
+          backgroundColor: '#ffffff',
+          borderRadius: '12px',
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              border: 'none', // Removing the default border
+            },
+          },
+        }}
       />
+      
       <TextField
         margin="dense"
         label="Email"
@@ -27,7 +39,18 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleCancelForm }) => {
         name="email"
         value={newStaff.email}
         onChange={handleChange}
+        sx={{
+          backgroundColor: '#ffffff',
+          borderRadius: '12px',
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              border: 'none', // Removing the default border
+            },
+          },
+        }}
       />
+      
       <TextField
         margin="dense"
         label="Phone"
@@ -36,7 +59,18 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleCancelForm }) => {
         name="phone"
         value={newStaff.phone}
         onChange={handleChange}
+        sx={{
+          backgroundColor: '#ffffff',
+          borderRadius: '12px',
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              border: 'none', // Removing the default border
+            },
+          },
+        }}
       />
+      
       <TextField
         margin="dense"
         label="Password"
@@ -45,9 +79,32 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleCancelForm }) => {
         name="password"
         value={newStaff.password}
         onChange={handleChange}
+        sx={{
+          backgroundColor: '#ffffff',
+          borderRadius: '12px',
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              border: 'none', // Removing the default border
+            },
+          },
+        }}
       />
-      <Box mt={2} display="flex" justifyContent="space-between">
-        <Button onClick={handleCancelForm} color="primary">
+      
+      <Box mt={3} display="flex" justifyContent="space-between">
+        <Button
+          onClick={handleCancelForm}
+          sx={{
+            width: '120px',
+            height: '40px',
+            fontSize: '0.875rem',
+            fontWeight: 'bold',
+            borderRadius: '8px',
+            backgroundColor: '#6c757d',
+            color: '#fff',
+            '&:hover': { backgroundColor: '#5a6268' },
+          }}
+        >
           Cancel
         </Button>
       </Box>
