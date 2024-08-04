@@ -12,14 +12,15 @@ import {
   ListItemText,
   Collapse,
   Box,
-  Alert
+  Alert,
+  Typography,
 } from '@mui/material';
 import { Delete, Edit, Add, Close as CloseIcon } from '@mui/icons-material';
 import { useStaffsContext } from '../staff/StaffsContext'; 
 import StaffForm from './StaffForm';
 
 const ShowStaffDialog = ({ open, onClose, businessId }) => {
-  const { staff, fetchAllStaff, addStaff, updateStaff, deleteStaff } = useStaffsContext(); // Use the context
+  const { staff, fetchAllStaff, addStaff, updateStaff, deleteStaff } = useStaffsContext();
 
   const [selectedStaffId, setSelectedStaffId] = useState(null);
   const [newStaff, setNewStaff] = useState({
@@ -29,11 +30,11 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
     password: ''
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [alert, setAlert] = useState({ message: '', severity: '' });  // Define the alert state here
+  const [alert, setAlert] = useState({ message: '', severity: '' });
 
   useEffect(() => {
     if (open) {
-      fetchAllStaff(String(businessId)); // Fetch staff using the context, ensuring businessId is passed as a string
+      fetchAllStaff(String(businessId));
     }
   }, [open, fetchAllStaff, businessId]);
 
@@ -41,7 +42,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
     if (alert.message) {
       const timer = setTimeout(() => {
         setAlert({ message: '', severity: '' });
-      }, 5000); // 5 seconds
+      }, 5000);
 
       return () => clearTimeout(timer);
     }
@@ -49,9 +50,9 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
 
   const closeFormAndExecuteAction = async (action) => {
     if (isFormOpen) {
-      setIsFormOpen(false); 
+      setIsFormOpen(false);
       setTimeout(() => {
-        action(); 
+        action();
         setTimeout(() => setSelectedStaffId(null), 300);
       }, 300);
     } else {
@@ -135,7 +136,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
       name: staff.name,
       email: staff.email,
       phone: staff.phone,
-      password: '' // Do not prefill password for security reasons
+      password: ''
     });
     setIsFormOpen(true);
   };
@@ -170,28 +171,32 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleCloseDialog}>
-      <DialogTitle>
-        Staff List
-        <IconButton
-          aria-label="close"
-          onClick={handleCloseDialog}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
+    <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
+      <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+          Staff List
+        </Typography>
+        <IconButton aria-label="close" onClick={handleCloseDialog} sx={{ color: (theme) => theme.palette.grey[500] }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent dividers>
         {staff.length > 0 ? (
           <List>
             {staff.map((member) => (
               <ListItem
                 key={member.staffId}
+                sx={{ 
+                  borderRadius: '8px', 
+                  backgroundColor: '#f0f8ff', // Light background color
+                  mb: 2, 
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', // Elevated shadow
+                  border: '1px solid #1976d2', // Border color to make it pop
+                  '&:hover': {
+                    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+                    backgroundColor: '#e6f1ff', // Slightly darker background on hover
+                  } 
+                }}
                 secondaryAction={
                   <>
                     <IconButton edge="end" aria-label="edit" onClick={() => handleEditStaff(member)}>
@@ -203,25 +208,42 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
                   </>
                 }
               >
-                <ListItemText primary={member.name} secondary={member.email} />
+                <ListItemText
+                  primary={<Typography variant="body1" sx={{ fontWeight: 'bold', color: '#1976d2' }}>{member.name}</Typography>}
+                  secondary={
+                    <>
+                      <Typography variant="body2">{member.email}</Typography>
+                      <Typography variant="body2">{member.phone}</Typography>
+                    </>
+                  }
+                />
               </ListItem>
             ))}
           </List>
         ) : (
           <DialogContentText>No staff found for this business.</DialogContentText>
         )}
-
-        <Box mt={2} display="flex" justifyContent="center">
-          <Button
-            startIcon={<Add />}
-            onClick={handleAddNewStaffClick}
-          >
-            Add New Staff
-          </Button>
+        <Box mt={2} mb={2} display="flex" justifyContent="center">
+        <Typography
+          variant="h7"
+          onClick={handleAddNewStaffClick}
+          sx={{
+            cursor: 'pointer',
+            textDecoration: 'underline',
+            color: '#1976d2',
+            '&:hover': {
+              color: '#115293',
+            },
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+          }}
+        >
+          <Add sx={{ fontSize: '40px' }} /> Add New Staff
+        </Typography>
         </Box>
-
         <Collapse in={isFormOpen || selectedStaffId !== null}>
-          <Box mt={2} className="staff-form">
+          <Box mt={2} p={2} sx={{ borderRadius: '8px', backgroundColor: '#f9f9f9', boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.2)' }}>
             <StaffForm
               title={selectedStaffId ? 'Update Staff' : 'Add New Staff'}
               newStaff={newStaff}
@@ -231,19 +253,45 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
           </Box>
         </Collapse>
         {alert.message && (
-          <Alert severity={alert.severity} sx={{ mt: 2 }}>
+          <Alert severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} sx={{ mt: 2 }}>
             {alert.message}
           </Alert>
         )}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleCloseDialog} color="primary">
-          Close
-        </Button>
-        <Button onClick={handleAddStaff} color="primary" disabled={!isFormOpen || !!selectedStaffId}>
+      <DialogActions sx={{ justifyContent: 'space-between', padding: '16px 24px' }}>      
+        <Button
+          variant="contained"
+          onClick={handleAddStaff}
+          disabled={!isFormOpen || !!selectedStaffId}
+          sx={{
+            width: '120px',
+            height: '40px',
+            fontSize: '0.875rem',
+            fontWeight: 'bold',
+            borderRadius: '8px',
+            backgroundColor: '#007bff',
+            color: '#fff',
+            '&:hover': { backgroundColor: '#0056b3' }
+          }}
+        >
           Add Staff
         </Button>
-        <Button onClick={handleUpdateStaff} color="primary" disabled={!selectedStaffId}>
+        <Button
+          variant="contained"
+          onClick={handleUpdateStaff}
+          disabled={!selectedStaffId}
+          sx={{
+            width: '150px',
+            height: '40px',
+            fontSize: '0.875rem',
+            fontWeight: 'bold',
+            borderRadius: '8px',
+            boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
+            backgroundColor: '#28a745',
+            color: '#fff',
+            '&:hover': { backgroundColor: '#218838' }
+          }}
+        >
           Update Staff
         </Button>
       </DialogActions>

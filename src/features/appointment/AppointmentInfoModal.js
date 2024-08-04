@@ -16,10 +16,11 @@ import {
   Box,
   Grid
 } from '@mui/material';
-import { Add, Close as CloseIcon, Remove as RemoveIcon } from '@mui/icons-material';
+import { Add, Close as CloseIcon, Remove as RemoveIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { useStaffsContext } from '../staff/StaffsContext';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
+import '../../styles/css/AppointmentInfoModal.css';
 
 const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
   const { changeStatusAppointments, deleteAppointmentAndUpdateList, fetchAppointmentById, updateAppointmentAndRefresh, customers, fetchAllCustomers, getAppointmentById } = useAppointmentsContext();
@@ -211,22 +212,21 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
 
   return (
     <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-      <DialogTitle>
+      <DialogTitle sx={{
+        fontWeight: '550',
+        fontSize: '1.75rem',
+        color: '#1a1a1a',
+        textAlign: 'center',
+        padding: '16px 24px',
+        justifyContent: 'space-between',
+      }}
+        className="modal-title">
         Appointment Details
-        <IconButton
-          aria-label="close"
-          onClick={handleCloseDialog}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
+        <IconButton aria-label="close" onClick={handleCloseDialog} className="close-icon">
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent dividers>
+      <DialogContent dividers className="modal-content">
         <Grid container spacing={2}>
           <Grid item xs={editMode ? 12 : 8}>
             {alert.message && (
@@ -236,7 +236,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
             )}
             {!editMode ? (
               <>
-                <Typography variant="body1" gutterBottom>
+                <Typography variant="body1" gutterBottom className="bold-text">
                   Client: {appointment.customerName}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
@@ -257,7 +257,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
               </>
             ) : (
               <>
-                <FormControl fullWidth margin="dense">
+                <FormControl fullWidth margin="dense" className="form-control" sx={{ mb: 2.5 }}>
                   <InputLabel>Customer</InputLabel>
                   <Select
                     value={updatedAppointment.customerId || ''}
@@ -278,7 +278,8 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                     )}
                   </Select>
                 </FormControl>
-                <FormControl fullWidth margin="dense">
+
+                <FormControl fullWidth margin="dense" className="form-control" sx={{ mb: 2.5 }}>
                   <InputLabel>Staff</InputLabel>
                   <Select
                     value={updatedAppointment.staffId}
@@ -292,6 +293,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                     ))}
                   </Select>
                 </FormControl>
+
                 <TextField
                   margin="dense"
                   label="Appointment Time"
@@ -302,7 +304,10 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                     shrink: true
                   }}
                   onChange={(e) => handleInputChange(e, 'appointmentTime')}
+                  className="input-field"
+                  sx={{ mb: 2.5 }}
                 />
+
                 <TextField
                   margin="dense"
                   label="Status"
@@ -311,7 +316,10 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                   value={updatedAppointment.status}
                   onChange={(e) => handleInputChange(e, 'status')}
                   disabled
+                  className="input-field"
+                  sx={{ mb: 2.5 }} // Added margin-bottom
                 />
+
                 <TextField
                   margin="dense"
                   label="Comment"
@@ -320,12 +328,15 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                   multiline
                   value={updatedAppointment.comment}
                   onChange={(e) => handleInputChange(e, 'comment')}
+                  className="input-field"
+                  sx={{ mb: 1 }}
                 />
+
                 {updatedAppointment.services.map((service, index) => (
-                  <Box key={index} mb={2}>
+                  <Box key={index} mb={2} mt={2}>
                     <Grid container spacing={2} alignItems="center">
                       <Grid item xs={4}>
-                        <FormControl fullWidth margin="dense">
+                        <FormControl fullWidth margin="dense" className="form-control">
                           <InputLabel>Service</InputLabel>
                           <Select
                             value={service.serviceId}
@@ -355,6 +366,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                             step: 300
                           }}
                           disabled
+                          className="input-field"
                         />
                       </Grid>
                       <Grid item xs={3}>
@@ -366,85 +378,68 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                           value={service.price}
                           onChange={(e) => handleServiceChange(index, 'price', e.target.value)}
                           disabled
+                          className="input-field"
                         />
                       </Grid>
-                      <Grid item xs={2} style={{ display: 'flex', justifyContent: 'center' }}>
-                        <IconButton onClick={() => handleRemoveService(index)}>
+                      <Grid item xs={2} className="remove-button-container">
+                        <IconButton onClick={() => handleRemoveService(index)} sx={{ color: 'red' }}>
                           <RemoveIcon />
                         </IconButton>
                       </Grid>
                     </Grid>
                   </Box>
                 ))}
-                <Button startIcon={<Add />} onClick={handleAddService}>
-                  Add Service
-                </Button>
-
-                {/* Buttons under "Add Service" when in edit mode */}
-                <Box sx={{ mt: 2, display: editMode ? 'flex' : 'none', justifyContent: 'flex-start' }}>
+                <Box mt={2} mb={3}>
+                  <Typography
+                    variant="h7"
+                    onClick={handleAddService}
+                    className="add-service"
+                  >
+                    <Add sx={{ fontSize: '40px' }} /> Add Service
+                  </Typography>
+                </Box>
+                <Box sx={{ mt: 2, display: editMode ? 'flex' : 'none', justifyContent: 'space-between' }}>
                   <Button
                     variant="contained"
                     color="error"
                     onClick={handleToggleEditMode}
-                    sx={{
-                      width: '100px',
-                      height: '40px',
-                      marginRight: '10px'
-                    }}>
+                    className="action-button close-edit-button"
+                  >
                     Close Edit
                   </Button>
                   <Button
                     variant="contained"
                     color="primary"
                     onClick={handleUpdateAppointment}
-                    sx={{
-                      width: '100px',
-                      height: '40px',
-                      marginRight: '10px'
-                    }}>
+                    className="action-button update-button"
+                  >
                     Update
-                  </Button>              
+                  </Button>
                 </Box>
               </>
             )}
           </Grid>
           {!editMode && (
             <Grid item xs={4} container alignItems="flex-start" justifyContent="flex-end">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleToggleEditMode}
-              sx={{
-                width: '100px',
-                height: '40px',
-                marginTop: '20px', 
-                marginBottom: '5px'
-              }}>
-              UPDATE
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={handleDeleteAppointment}
-              sx={{
-                width: '100px',
-                height: '40px',
-                marginBottom: '10px'
-              }}>
-              Delete
-            </Button>
-          </Grid>         
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <IconButton aria-label="edit" onClick={handleToggleEditMode} className="icon-button edit-icon">
+                  <EditIcon />
+                </IconButton>
+                <IconButton aria-label="delete" onClick={handleDeleteAppointment} className="icon-button delete-icon">
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
+            </Grid>
           )}
         </Grid>
       </DialogContent>
-      <DialogActions>
-        <Button variant="contained" color="primary" onClick={handleCloseDialog}>
-          Close
-        </Button>
-        <Button variant="contained" color="success" onClick={handleConfirmStatus}>
-          Confirm
-        </Button>
-      </DialogActions>
+      {!editMode && (
+        <DialogActions className="modal-actions">
+          <Button variant="contained" color="success" onClick={handleConfirmStatus} className="action-button confirm-button">
+            Confirm
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 };

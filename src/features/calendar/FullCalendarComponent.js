@@ -137,9 +137,9 @@ const FullCalendarComponent = ({ events, staff }) => {
         eventContent={renderEventContent}
         dayCellContent={renderDayCell}
         headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: ''
+          left: 'title',
+          center: '',
+          right: 'prev,next today'
         }}
         views={{
           timeGridDay: {

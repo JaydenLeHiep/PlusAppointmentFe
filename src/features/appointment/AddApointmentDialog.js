@@ -14,12 +14,17 @@ import {
   InputLabel,
   FormControl,
   Grid,
+  Typography,
+  List,
+  ListItem,
+  ListItemText
 } from '@mui/material';
 import { Add, Remove, Close as CloseIcon, Search as SearchIcon } from '@mui/icons-material';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { useStaffsContext } from '../staff/StaffsContext';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
 import { searchCustomersByName } from '../../lib/apiClientCustomer';
+import '../../styles/css/AddAppointmentsDialog.css';
 
 const AddAppointmentDialog = ({ open, onClose, businessId }) => {
   const initialAppointmentState = useRef({
@@ -34,9 +39,9 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
 
   const [newAppointment, setNewAppointment] = useState(initialAppointmentState.current);
   const [alert, setAlert] = useState({ message: '', severity: '' });
-  const [filteredCustomers, setFilteredCustomers] = useState([]); // Ensure it starts as an empty array
-  const [customerSearch, setCustomerSearch] = useState(''); // For storing the search input
-  const [selectPlaceholder, setSelectPlaceholder] = useState('Select to choose Customer'); // Default placeholder text
+  const [filteredCustomers, setFilteredCustomers] = useState([]);
+  const [customerSearch, setCustomerSearch] = useState('');
+  const [searchPerformed, setSearchPerformed] = useState(false);
 
   const { addAppointmentAndUpdateList } = useAppointmentsContext();
   const { staff, fetchAllStaff } = useStaffsContext();
@@ -57,26 +62,27 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
     if (!open) {
       setNewAppointment(initialAppointmentState.current);
       setAlert({ message: '', severity: '' });
-      setFilteredCustomers([]); // Reset customers on close
-      setCustomerSearch(''); // Reset search input
-      setSelectPlaceholder('Select to choose Customer'); // Reset placeholder
+      setFilteredCustomers([]);
+      setCustomerSearch('');
+      setSearchPerformed(false);
     }
   }, [open]);
 
   const handleCustomerSearch = async () => {
+    setSearchPerformed(true);
     try {
       const customers = await searchCustomersByName(customerSearch);
-      if (customers.length === 0) {
-        setSelectPlaceholder('No Customer found');
-      } else {
-        setSelectPlaceholder('Click to show Customers');
-      }
       setFilteredCustomers(customers);
     } catch (error) {
       console.error('Failed to search customers:', error);
       setAlert({ message: 'Failed to search customers', severity: 'error' });
-      setSelectPlaceholder('No Customer found');
     }
+  };
+
+  const handleSelectCustomer = (customer) => {
+    setNewAppointment({ ...newAppointment, customerId: customer.customerId });
+    setCustomerSearch(`${customer.name} - ${customer.phone}`);
+    setSearchPerformed(false); // Hide the customer list after selection
   };
 
   const handleAddAppointment = async () => {
@@ -138,100 +144,122 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>
+      <DialogTitle
+        sx={{
+          fontWeight: '550',
+          fontSize: '1.75rem', // Increased font size
+          color: '#1a1a1a', // Darker color for better contrast
+          textAlign: 'center', // Center align the text
+          padding: '16px 24px', // Added padding for better spacing
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginLeft: '4px'
+        }}
+      >
         Add Appointment
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
+        <IconButton aria-label="close" onClick={onClose} sx={{ color: '#808080', fontSize: '1.5rem' }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent>
-        <FormControl fullWidth margin="dense">
-          <TextField
-            label="Search Customer by Name"
-            value={customerSearch}
-            onChange={(e) => setCustomerSearch(e.target.value)}
-            margin="dense"
-            fullWidth
-            InputProps={{
-              endAdornment: (
-                <IconButton onClick={handleCustomerSearch}>
-                  <SearchIcon />
-                </IconButton>
-              ),
-            }}
-          />
-          <Select
-            value={newAppointment.customerId}
-            onChange={(e) => handleInputChange(e, 'customerId')}
-            displayEmpty
-            renderValue={(selected) => {
-              if (selected === '') {
-                return <span>{selectPlaceholder}</span>;
-              }
-              const selectedCustomer = filteredCustomers.find(c => c.customerId === selected);
-              return <span>{selectedCustomer ? `${selectedCustomer.name} - ${selectedCustomer.phone}` : selectPlaceholder}</span>;
-            }}
-          >
-            {filteredCustomers.map((customer) => (
-              <MenuItem key={customer.customerId} value={customer.customerId}>
-                <Box component="span" fontWeight="fontWeightBold">{customer.name}</Box> - {customer.phone}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth margin="dense">
-          <InputLabel>Staff</InputLabel>
-          <Select
-            value={newAppointment.staffId}
-            onChange={(e) => handleInputChange(e, 'staffId')}
-            label="Staff"
-          >
-            {staff.map((staffMember) => (
-              <MenuItem key={staffMember.staffId} value={staffMember.staffId}>
-                <Box component="span" fontWeight="fontWeightBold">{staffMember.name}</Box> - {staffMember.phone}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <TextField
-          margin="dense"
-          label="Appointment Time"
-          type="datetime-local"
-          fullWidth
-          value={newAppointment.appointmentTime}
-          InputLabelProps={{
-            shrink: true
-          }}
-          onChange={(e) => handleInputChange(e, 'appointmentTime')}
-        />
-        <TextField
-          margin="dense"
-          label="Status"
-          type="text"
-          fullWidth
-          value={newAppointment.status}
-          onChange={(e) => handleInputChange(e, 'status')}
-          disabled
-        />
-        <TextField
-          margin="dense"
-          label="Comment"
-          type="text"
-          fullWidth
-          value={newAppointment.comment}
-          onChange={(e) => handleInputChange(e, 'comment')}
-        />
+      <DialogContent dividers className="dialog-content">
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <FormControl fullWidth margin="dense">
+              <TextField
+                label="Search Customer by Name or Phone number"
+                value={customerSearch}
+                onChange={(e) => setCustomerSearch(e.target.value)}
+                margin="dense"
+                fullWidth
+                className="input-field"
+                InputProps={{
+                  endAdornment: (
+                    <IconButton onClick={handleCustomerSearch}>
+                      <SearchIcon />
+                    </IconButton>
+                  ),
+                }}
+              />
+              {searchPerformed && (
+                <Box className="customer-list-box">
+                  {filteredCustomers.length === 0 ? (
+                    <Typography>No Customer found</Typography>
+                  ) : (
+                    <List>
+                      {filteredCustomers.slice(0, 3).map((customer) => (
+                        <ListItem
+                          key={customer.customerId}
+                          button
+                          onClick={() => handleSelectCustomer(customer)}
+                        >
+                          <ListItemText primary={`${customer.name} - ${customer.phone}`} />
+                        </ListItem>
+                      ))}
+                    </List>
+                  )}
+                </Box>
+              )}
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth margin="dense">
+              <InputLabel className="input-label">Staff</InputLabel>
+              <Select
+                value={newAppointment.staffId}
+                onChange={(e) => handleInputChange(e, 'staffId')}
+                label="Staff"
+                className="input-field"
+              >
+                {staff.map((staffMember) => (
+                  <MenuItem key={staffMember.staffId} value={staffMember.staffId}>
+                    <Box component="span" fontWeight="fontWeightBold">{staffMember.name}</Box> - {staffMember.phone}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              margin="dense"
+              label="Appointment Time"
+              type="datetime-local"
+              fullWidth
+              value={newAppointment.appointmentTime}
+              InputLabelProps={{
+                shrink: true
+              }}
+              className="input-field"
+              onChange={(e) => handleInputChange(e, 'appointmentTime')}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              margin="dense"
+              label="Status"
+              type="text"
+              fullWidth
+              value={newAppointment.status}
+              onChange={(e) => handleInputChange(e, 'status')}
+              disabled
+              className="input-field"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              margin="dense"
+              label="Comment"
+              type="text"
+              fullWidth
+              multiline
+              value={newAppointment.comment}
+              onChange={(e) => handleInputChange(e, 'comment')}
+              className="input-field"
+            />
+          </Grid>
+        </Grid>
         {newAppointment.services.map((service, index) => (
-          <Box key={index} mb={2}>
+          <Box key={index} mb={2} mt={2}>
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={4}>
                 <FormControl fullWidth margin="dense">
@@ -240,6 +268,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
                     value={service.serviceId}
                     onChange={(e) => handleServiceChange(index, 'serviceId', e.target.value)}
                     label="Service"
+                    className="input-field"
                   >
                     {services.map((availableService) => (
                       <MenuItem key={availableService.serviceId} value={availableService.serviceId}>
@@ -263,6 +292,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
                     step: 300
                   }}
                   disabled
+                  className="input-field"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -274,34 +304,46 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
                   value={service.price}
                   onChange={(e) => handleServiceChange(index, 'price', e.target.value)}
                   disabled
+                  className="input-field"
                 />
               </Grid>
-              <Grid item xs={2} style={{ display: 'flex', justifyContent: 'center' }}>
-                <IconButton onClick={() => handleRemoveService(index)}>
+              <Grid item xs={2} className="remove-button-container">
+                <IconButton onClick={() => handleRemoveService(index)} color="error">
                   <Remove />
                 </IconButton>
               </Grid>
             </Grid>
           </Box>
         ))}
-        <Button startIcon={<Add />} onClick={handleAddService}>
-          Add Service
-        </Button>
+        <Typography
+          variant="h7"
+          onClick={handleAddService}
+          className="add-service"
+        >
+          <Add sx={{ fontSize: '35px' }} /> Add Service
+        </Typography>
         {alert.message && (
-          <Alert severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} sx={{ mt: 2 }}>
+          <Alert severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} className="alert">
             {alert.message}
           </Alert>
         )}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary">
-          Close
-        </Button>
-        <Button onClick={handleCancel} color="primary">
+      <DialogActions className="dialog-actions">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleCancel}
+          className="action-button clear-button"
+        >
           Clear
         </Button>
-        <Button onClick={handleAddAppointment} color="primary">
-          Add Appointment
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleAddAppointment}
+          className="action-button add-button"
+        >
+          Add
         </Button>
       </DialogActions>
     </Dialog>

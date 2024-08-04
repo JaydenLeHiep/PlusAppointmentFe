@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { List, ListItem, Typography, Paper, MenuItem, Select, FormControl, InputLabel, ButtonBase } from '@mui/material';
+import { List, ListItem, Typography, Paper, MenuItem, Select, FormControl, InputLabel, ButtonBase, Box, Badge } from '@mui/material';
 import AppointmentInfoModal from './AppointmentInfoModal';
 import '../../styles/css/AppointmentList.css';
 
@@ -37,7 +37,7 @@ const AppointmentList = ({ appointments, businessId }) => {
 
   return (
     <div>
-      <FormControl variant="outlined" style={{ marginBottom: '16px' }}>
+      <FormControl variant="outlined" style={{ marginBottom: '16px', minWidth: '200px' }}>
         <InputLabel>Sort By</InputLabel>
         <Select
           value={sortCriteria}
@@ -55,28 +55,61 @@ const AppointmentList = ({ appointments, businessId }) => {
       />
       <List>
         {sortedAppointments.map((appointment) => (
-          <ListItem key={appointment.appointmentId}>
-            <ButtonBase onClick={() => handleAppointmentClick(appointment.appointmentId)} style={{ width: '100%' }}>
-              <Paper style={{ width: '100%', padding: '16px', marginBottom: '8px' }}>
-                <div className="appointment-container">
-                  <div className="info-container">
-                    <div className="appointment-time">
-                      <Typography variant="h6" className="bold-text">
+          <ListItem key={appointment.appointmentId} sx={{ p: 0 }}>
+            <ButtonBase onClick={() => handleAppointmentClick(appointment.appointmentId)} sx={{ width: '100%' }}>
+              <Paper 
+                elevation={3} 
+                sx={{ 
+                  width: '100%', 
+                  padding: '16px', 
+                  marginBottom: '8px', 
+                  borderRadius: '12px', 
+                  backgroundColor: '#f0f8ff', // Light background color to make it stand out
+                  border: '1px solid #1976d2', // Border color to make it pop
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                  '&:hover': {
+                    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+                    backgroundColor: '#e6f1ff', // Slightly darker background on hover
+                  }
+                }}
+              >
+                <Box className="appointment-container" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Box className="info-container" sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+                    <Box className="appointment-time" sx={{ minWidth: '120px', textAlign: 'center' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
                         {new Date(appointment.appointmentTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </Typography>
-                      <Typography variant="body2">
+                      <Typography variant="body2" color="textSecondary">
                         {new Date(appointment.appointmentTime).toLocaleDateString([], { day: '2-digit', month: '2-digit' })}
                       </Typography>
-                    </div>
-                    <div className="customer-info">
-                      <Typography variant="h6" className="bold-text">{appointment.customerName}</Typography>
-                      <Typography variant="body2">{appointment.customerPhone}</Typography>
-                    </div>
-                    <Typography className={`status ${appointment.status.toLowerCase()}`}>
-                      {appointment.status}
-                    </Typography>
-                  </div>
-                </div>
+                    </Box>
+                    <Box className="customer-info" sx={{ flexGrow: 1, ml: 2 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+                        {appointment.customerName}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {appointment.customerPhone}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Badge
+                    badgeContent={appointment.status}
+                    color={appointment.status.toLowerCase() === 'confirmed' ? 'success' : appointment.status.toLowerCase() === 'pending' ? 'warning' : 'error'}
+                    sx={{
+                      '& .MuiBadge-badge': {
+                        fontSize: '0.75rem',
+                        padding: '0 8px',
+                        borderRadius: '8px',
+                        height: '24px',
+                        lineHeight: '24px',
+                        minWidth: '60px',
+                        textAlign: 'center',
+                        backgroundColor: appointment.status.toLowerCase() === 'confirmed' ? '#4caf50' : appointment.status.toLowerCase() === 'pending' ? '#ff9800' : '#f44336',
+                        color: '#fff'
+                      }
+                    }}
+                  />
+                </Box>
               </Paper>
             </ButtonBase>
           </ListItem>
