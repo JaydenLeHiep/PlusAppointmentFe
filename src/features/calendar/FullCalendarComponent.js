@@ -16,7 +16,7 @@ const viewLabels = ['Month', 'Day', 'Staff'];
 const FullCalendarComponent = ({ events, staff }) => {
   const [currentView, setCurrentView] = useState(views[0]);
   const calendarRef = useRef(null);
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -31,7 +31,8 @@ const FullCalendarComponent = ({ events, staff }) => {
   };
 
   const handleEventClick = (clickInfo) => {
-    setSelectedAppointment(clickInfo.event.extendedProps);
+    console.log(clickInfo.event.extendedProps);
+    setSelectedAppointmentId(clickInfo.event.extendedProps.appointmentId);
     setIsModalOpen(true);
   };
 
@@ -86,7 +87,7 @@ const FullCalendarComponent = ({ events, staff }) => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedAppointment(null);
+    setSelectedAppointmentId(null);
   };
 
   // Create resources from staff names
@@ -103,6 +104,8 @@ const FullCalendarComponent = ({ events, staff }) => {
       resourceIds: [resource?.id]
     };
   });
+
+  
 
   return (
     <Box className="carousel-container">
@@ -155,10 +158,10 @@ const FullCalendarComponent = ({ events, staff }) => {
         }}
         slotLabelFormat={{ hour: 'numeric', minute: '2-digit', omitZeroMinute: false }}
       />
-      {selectedAppointment && (
+      {selectedAppointmentId && (
         <AppointmentInfoModal
           open={isModalOpen}
-          appointment={selectedAppointment}
+          appointmentId={selectedAppointmentId}
           onClose={handleCloseModal}
           onUpdateStatus={(id, status) => {
             // Update event status logic here if needed
