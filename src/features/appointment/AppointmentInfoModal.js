@@ -16,7 +16,7 @@ import {
   Box,
   Grid
 } from '@mui/material';
-import { Close as CloseIcon, Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
+import { Add, Close as CloseIcon, Remove as RemoveIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { useStaffsContext } from '../staff/StaffsContext';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
@@ -39,8 +39,8 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     services: [{ serviceId: '', duration: '', price: '', name: '' }]
   });
 
-  const alertRef = useRef();
-  const dialogContentRef = useRef();
+  const alertRef = useRef(null);
+  const dialogContentRef = useRef(null);
 
   useEffect(() => {
     if (appointmentId) {
@@ -73,19 +73,12 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
   }, [appointmentId, appointments, services]);
 
   useEffect(() => {
-    if (alert.message) {
-      const handleClickOutside = (event) => {
-        if (alertRef.current && !alertRef.current.contains(event.target)) {
-          setAlert({ message: '', severity: '' });
-        }
-      };
-
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
+    if (open && appointment) {
+      if (!services.length) fetchServices(appointment.businessId);
+      if (!customers.length) fetchAllCustomers(appointment.businessId);
+      if (!staff.length) fetchAllStaff(appointment.businessId);
     }
-  }, [alert.message]);
+  }, [open, services.length, customers.length, staff.length, fetchServices, fetchAllCustomers, fetchAllStaff, appointment]);
 
   useEffect(() => {
     if (alert.message && alertRef.current) {
@@ -93,7 +86,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     }
   }, [alert.message]);
 
-  if (!appointment || staff.length === 0 || services.length === 0 || customers.length === 0) return null;
+  if (!appointment) return null;
 
   const handleConfirmStatus = async () => {
     try {
@@ -157,7 +150,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
           : '',
         status: appointment.status || '',
         comment: appointment.comment || '',
-        services: (appointment.services.$values || []).map(service => ({
+        services: appointment.services.$values.map(service => ({
           serviceId: service.serviceId,
           duration: service.duration,
           price: service.price,
@@ -253,15 +246,14 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
 
   return (
     <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-      <DialogTitle
-        sx={{
-          fontWeight: '550',
-          fontSize: '1.75rem',
-          color: '#1a1a1a',
-          textAlign: 'center',
-          padding: '16px 24px',
-          justifyContent: 'space-between',
-        }}
+      <DialogTitle sx={{
+        fontWeight: '550',
+        fontSize: '1.75rem',
+        color: '#1a1a1a',
+        textAlign: 'center',
+        padding: '16px 24px',
+        justifyContent: 'space-between',
+      }}
         className="modal-title">
         Appointment Details
         <IconButton aria-label="close" onClick={handleCloseDialog} className="close-icon">
@@ -311,7 +303,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                       customers.map((customer) => (
                         <MenuItem key={customer.customerId} value={customer.customerId}>
                           <Box component="span" fontWeight="fontWeightBold">{customer.name}</Box> - {customer.phone}
-                          </MenuItem>
+                        </MenuItem>
                       ))
                     ) : (
                       <MenuItem value="">
@@ -437,7 +429,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                     onClick={handleAddService}
                     className="add-service"
                   >
-                    <AddIcon sx={{ fontSize: '40px' }} /> Add Service
+                    <Add sx={{ fontSize: '40px' }} /> Add Service
                   </Typography>
                 </Box>
                 <Box sx={{ mt: 2, display: editMode ? 'flex' : 'none', justifyContent: 'space-between' }}>
