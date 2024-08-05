@@ -42,6 +42,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
   const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [customerSearch, setCustomerSearch] = useState('');
   const [searchPerformed, setSearchPerformed] = useState(false);
+  const alertRef = useRef();
 
   const { addAppointmentAndUpdateList } = useAppointmentsContext();
   const { staff, fetchAllStaff } = useStaffsContext();
@@ -67,6 +68,21 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
       setSearchPerformed(false);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (alert.message) {
+      const handleClickOutside = (event) => {
+        if (alertRef.current && !alertRef.current.contains(event.target)) {
+          setAlert({ message: '', severity: '' });
+        }
+      };
+
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [alert.message]);
 
   const handleCustomerSearch = async () => {
     setSearchPerformed(true);
@@ -100,7 +116,11 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
 
       await addAppointmentAndUpdateList(appointmentDetails);
       setAlert({ message: 'Appointment added successfully!', severity: 'success' });
-      onClose(); // Close dialog after successful addition
+
+      // Clear the alert after 5 seconds
+      setTimeout(() => {
+        setAlert({ message: '', severity: '' });
+      }, 5000);
     } catch (error) {
       console.error('Failed to add appointment:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Failed to add appointment. Please try again.';
@@ -323,7 +343,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
           <Add sx={{ fontSize: '35px' }} /> Add Service
         </Typography>
         {alert.message && (
-          <Alert severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} className="alert">
+          <Alert ref={alertRef} severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} className="alert">
             {alert.message}
           </Alert>
         )}

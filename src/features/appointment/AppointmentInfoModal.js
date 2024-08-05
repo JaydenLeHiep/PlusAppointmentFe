@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -39,6 +39,9 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     services: [{ serviceId: '', duration: '', price: '', name: '' }]
   });
 
+  const alertRef = useRef();
+  const dialogContentRef = useRef();
+
   useEffect(() => {
     if (appointmentId) {
       const selectedAppointment = appointments.find(appt => appt.appointmentId === appointmentId);
@@ -70,24 +73,48 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
   }, [appointmentId, appointments, services]);
 
   useEffect(() => {
-    if (open && appointment) {
-      if (!services.length) fetchServices(appointment.businessId);
-      if (!customers.length) fetchAllCustomers(appointment.businessId);
-      if (!staff.length) fetchAllStaff(appointment.businessId);
-    }
-  }, [open, services.length, customers.length, staff.length, fetchServices, fetchAllCustomers, fetchAllStaff, appointment]);
+    if (alert.message) {
+      const handleClickOutside = (event) => {
+        if (alertRef.current && !alertRef.current.contains(event.target)) {
+          setAlert({ message: '', severity: '' });
+        }
+      };
 
-  if (!appointment) return null;
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [alert.message]);
+
+  useEffect(() => {
+    if (alert.message && alertRef.current) {
+      alertRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [alert.message]);
+
+  if (!appointment || staff.length === 0 || services.length === 0 || customers.length === 0) return null;
 
   const handleConfirmStatus = async () => {
     try {
       const updatedStatus = 'Confirm';
       await changeStatusAppointments(appointment.appointmentId, updatedStatus, appointment.businessId);
       setAlert({ message: 'Appointment confirmed successfully!', severity: 'success' });
+
+      // Clear the alert after 5 seconds
+      setTimeout(() => {
+        setAlert({ message: '', severity: '' });
+      }, 5000);
+
     } catch (error) {
       console.error('Failed to change appointment status:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Failed to confirm appointment. Please try again.';
       setAlert({ message: errorMessage, severity: 'error' });
+
+      // Clear the alert after 5 seconds
+      setTimeout(() => {
+        setAlert({ message: '', severity: '' });
+      }, 5000);
     }
   };
 
@@ -95,14 +122,23 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     try {
       await deleteAppointmentAndUpdateList(appointment.appointmentId, appointment.businessId);
       onClose();
+      setAlert({ message: 'Appointment deleted successfully!', severity: 'success' });
+
+      // Clear the alert after 5 seconds
+      setTimeout(() => {
+        setAlert({ message: '', severity: '' });
+      }, 5000);
+
     } catch (error) {
       console.error('Failed to delete appointment:', error);
-      setAlert({ message: 'Failed to delete appointment', severity: 'error' });
-    }
-  };
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to delete appointment. Please try again.';
+      setAlert({ message: errorMessage, severity: 'error' });
 
-  const handleClearAlert = () => {
-    setAlert({ message: '', severity: '' });
+      // Clear the alert after 5 seconds
+      setTimeout(() => {
+        setAlert({ message: '', severity: '' });
+      }, 5000);
+    }
   };
 
   const handleCloseDialog = () => {
@@ -171,11 +207,21 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
       };
       await updateAppointmentAndRefresh(appointment.appointmentId, updateData, appointment.businessId);
       setAlert({ message: 'Appointment updated successfully!', severity: 'success' });
-      onClose();
+
+      // Clear the alert after 5 seconds
+      setTimeout(() => {
+        setAlert({ message: '', severity: '' });
+      }, 5000);
+
     } catch (error) {
       console.error('Failed to update appointment:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Failed to update appointment. Please try again.';
       setAlert({ message: errorMessage, severity: 'error' });
+
+      // Clear the alert after 5 seconds
+      setTimeout(() => {
+        setAlert({ message: '', severity: '' });
+      }, 5000);
     }
   };
 
@@ -185,16 +231,22 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     }
 
     const startTime = new Date(appointmentTime);
-    if (isNaN(startTime)) {
+    if (isNaN(startTime.getTime())) {
       return 'Invalid Date';
     }
 
     const [hours, minutes, seconds] = duration.split(':').map(Number);
-    const durationInMinutes = hours * 60 + minutes + seconds / 60;
+    const durationInMinutes = hours * 60 + minutes + (seconds || 0) / 60;
 
     const endTime = new Date(startTime.getTime() + durationInMinutes * 60000);
 
-    const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const formatTime = (date) => {
+      if (date && !isNaN(date.getTime())) {
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      } else {
+        return 'Invalid Time';
+      }
+    };
 
     return `${formatTime(startTime)} - ${formatTime(endTime)}`;
   };
@@ -216,11 +268,11 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent dividers className="modal-content">
+      <DialogContent ref={dialogContentRef} dividers className="modal-content">
         <Grid container spacing={2}>
           <Grid item xs={editMode ? 12 : 8}>
             {alert.message && (
-              <Alert severity={alert.severity} onClose={handleClearAlert} sx={{ mb: 2 }}>
+              <Alert ref={alertRef} severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} sx={{ mb: 2 }}>
                 {alert.message}
               </Alert>
             )}
@@ -259,7 +311,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                       customers.map((customer) => (
                         <MenuItem key={customer.customerId} value={customer.customerId}>
                           <Box component="span" fontWeight="fontWeightBold">{customer.name}</Box> - {customer.phone}
-                        </MenuItem>
+                          </MenuItem>
                       ))
                     ) : (
                       <MenuItem value="">
