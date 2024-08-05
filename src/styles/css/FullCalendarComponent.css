@@ -35,3 +35,7 @@
   top: 20px; /* Adjust this value to position the badge below the date */
   font-size: 0.75rem;
 }
+
+.fc .fc-timeGridSlot {
+  height: 100px !important; /* Adjust height as needed */
+}
