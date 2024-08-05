@@ -4,13 +4,18 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import BusinessList from './BusinessList';
 import BusinessDetails from './BusinessDetails';
-import AppointmentList from '../appointment/AppointmentList';
+import AppointmentList from '../appointment/AppointmentList'; // Ensure AppointmentList is imported
 import { fetchBusinesses } from '../../lib/apiClientBusiness';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
+import { useStaffsContext } from '../staff/StaffsContext';
+import { useServicesContext } from '../servicecomponent/ServicesContext';
 import '../../styles/css/OwnerDashboard.css';
 
 const OwnerDashboard = () => {
   const { appointments, fetchAppointmentsForBusiness } = useAppointmentsContext();
+  const { staff, fetchAllStaff } = useStaffsContext();
+  const { services, fetchServices } = useServicesContext();
+
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -43,15 +48,23 @@ const OwnerDashboard = () => {
   }, []);
 
   useEffect(() => {
+    const fetchAllData = async () => {
+      if (selectedBusiness && selectedBusiness.businessId) {
+        await fetchAppointmentsForBusiness(selectedBusiness.businessId);
+        await fetchAllStaff(selectedBusiness.businessId);
+        await fetchServices(selectedBusiness.businessId);
+      }
+    };
+
     if (selectedBusiness) {
       localStorage.setItem('selectedBusiness', JSON.stringify(selectedBusiness));
       localStorage.setItem('selectedBusinessId', selectedBusiness.businessId);
-      fetchAppointmentsForBusiness(selectedBusiness.businessId);
+      fetchAllData();
     } else {
       localStorage.removeItem('selectedBusiness');
       localStorage.removeItem('selectedBusinessId');
     }
-  }, [selectedBusiness, fetchAppointmentsForBusiness]);
+  }, [selectedBusiness, fetchAppointmentsForBusiness, fetchAllStaff, fetchServices]);
 
   const handleBusinessClick = (business) => {
     setSelectedBusiness(business);
@@ -72,14 +85,14 @@ const OwnerDashboard = () => {
               <Alert severity="error">{error}</Alert>
             ) : selectedBusiness ? (
               <>
-                <BusinessDetails 
-                  selectedBusiness={selectedBusiness} 
-                  setSelectedBusiness={setSelectedBusiness} 
-                  appointments={appointments} 
+                <BusinessDetails
+                  selectedBusiness={selectedBusiness}
+                  setSelectedBusiness={setSelectedBusiness}
+                  staff={staff}
+                  services={services}
+                  appointments={appointments}
                 />
-                <AppointmentList 
-                  appointments={appointments} 
-                />
+                <AppointmentList appointments={appointments} /> {/* Added AppointmentList here */}
               </>
             ) : (
               <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />

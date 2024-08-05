@@ -1,51 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Box } from '@mui/material';
-import { Typography } from '@mui/material';
-
+import React, { useState } from 'react';
+import { Box, Typography } from '@mui/material';
 import FullCalendarComponent from '../calendar/FullCalendarComponent';
 import '../../styles/css/OwnerDashboard.css';
 import BusinessInfo from './BusinessInfor';
 import ShowStaffDialog from '../staff/showStaffDialog';
 import AddAppointmentDialog from '../appointment/AddApointmentDialog';
 import ShowServicesDialog from '../servicecomponent/showServiceDialog';
-import { useStaffsContext } from '../staff/StaffsContext';
-import { useServicesContext } from '../servicecomponent/ServicesContext';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 
-const BusinessDetails = ({ selectedBusiness, setSelectedBusiness }) => {
-  const { staff, fetchAllStaff } = useStaffsContext();
-  const { services, fetchServices } = useServicesContext();
-  const { appointments, fetchAppointmentsForBusiness } = useAppointmentsContext();
+const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments }) => {
+  const { fetchAppointmentsForBusiness } = useAppointmentsContext();
 
   const [staffOpen, setStaffOpen] = useState(false);
   const [appointmentOpen, setAppointmentOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
 
-  const fetchAllData = useCallback(async () => {
-    if (selectedBusiness && selectedBusiness.businessId) {
-        await fetchAllStaff(selectedBusiness.businessId);
-        await fetchServices(selectedBusiness.businessId);
-        await fetchAppointmentsForBusiness(selectedBusiness.businessId);
-    } else {
-        console.warn("No valid business selected or businessId is undefined.");
-    }
-}, [selectedBusiness, fetchAllStaff, fetchServices, fetchAppointmentsForBusiness]);
-
-useEffect(() => {
-  if (selectedBusiness && selectedBusiness.businessId) {
-    fetchAllData();
-  } else {
-    console.warn("No valid business selected or businessId is undefined.");
-  }
-}, [selectedBusiness, fetchAllData]);
-
   const handleStaffOpen = () => setStaffOpen(true);
 
-  const handleStaffClose = async () => {
+  const handleStaffClose = () => {
     setStaffOpen(false);
-    if (selectedBusiness && selectedBusiness.businessId) {
-      await fetchAllStaff(selectedBusiness.businessId);
-    }
+    // You can choose to refresh staff data here if necessary
   };
 
   const handleAppointmentOpen = () => setAppointmentOpen(true);
@@ -59,11 +33,9 @@ useEffect(() => {
 
   const handleServicesOpen = () => setServicesOpen(true);
 
-  const handleServicesClose = async () => {
+  const handleServicesClose = () => {
     setServicesOpen(false);
-    if (selectedBusiness && selectedBusiness.businessId) {
-      await fetchServices(selectedBusiness.businessId);
-    }
+    // You can choose to refresh services data here if necessary
   };
 
   const parseDuration = (duration) => {
@@ -110,11 +82,7 @@ useEffect(() => {
 
       <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} />
       <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={fetchAppointmentsForBusiness} />
-      <ShowServicesDialog
-        open={servicesOpen}
-        onClose={handleServicesClose}
-        businessId={selectedBusiness.businessId}
-      />
+      <ShowServicesDialog open={servicesOpen} onClose={handleServicesClose} businessId={selectedBusiness.businessId} />
     </Box>
   );
 };
