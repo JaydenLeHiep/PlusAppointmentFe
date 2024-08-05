@@ -32,10 +32,10 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   useEffect(() => {
-    if (open) {
+    if (open && services.length === 0) {  // Fetch only if services are not already loaded
       fetchServices(String(businessId));
     }
-  }, [open, fetchServices, businessId]);
+  }, [open, fetchServices, businessId, services.length]);
 
   useEffect(() => {
     if (alert.message) {

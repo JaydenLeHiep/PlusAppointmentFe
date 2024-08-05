@@ -2,23 +2,22 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, List, ListItem, Paper, CircularProgress, Alert } from '@mui/material';
 import { useServicesContext } from '../servicecomponent/ServicesContext'; 
-import '../../styles/css/ServiceList.css'; 
 
 const ServiceList = ({ businessId, onServiceSelect, searchQuery }) => {
-  const { services, fetchServices, loading, error } = useServicesContext();  // Access state and actions from context
+  const { services, fetchServices, loading, error } = useServicesContext();
 
   useEffect(() => {
-    if (businessId) {
-      fetchServices(businessId);  // Fetch services using the context when businessId is provided
+    if (businessId && services.length === 0) { // Only fetch if no services are loaded
+      fetchServices(businessId);
     }
-  }, [businessId, fetchServices]);
+  }, [businessId, fetchServices, services.length]);
 
   if (loading) {
-    return <CircularProgress />;  // Display loading indicator while fetching data
+    return <CircularProgress />;
   }
 
   if (error) {
-    return <Alert severity="error">{error}</Alert>;  // Display error message if there's an error
+    return <Alert severity="error">{error}</Alert>; 
   }
 
   // Filter services based on search query
