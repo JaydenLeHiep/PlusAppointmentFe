@@ -16,14 +16,14 @@ import {
   Box,
   Grid
 } from '@mui/material';
-import { Add, Close as CloseIcon, Remove as RemoveIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Close as CloseIcon, Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { useStaffsContext } from '../staff/StaffsContext';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
 import '../../styles/css/AppointmentInfoModal.css';
 
 const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
-  const { changeStatusAppointments, deleteAppointmentAndUpdateList, fetchAppointmentById, updateAppointmentAndRefresh, customers, fetchAllCustomers, getAppointmentById } = useAppointmentsContext();
+  const { appointments, changeStatusAppointments, deleteAppointmentAndUpdateList, updateAppointmentAndRefresh, customers, fetchAllCustomers } = useAppointmentsContext();
   const { staff, fetchAllStaff } = useStaffsContext();
   const { services, fetchServices } = useServicesContext();
 
@@ -43,23 +43,12 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
   const dialogContentRef = useRef();
 
   useEffect(() => {
-    const loadAppointmentDetails = async () => {
-      try {
-        const appointmentDetails = await fetchAppointmentById(appointmentId);
+    if (appointmentId) {
+      const selectedAppointment = appointments.find(appt => appt.appointmentId === appointmentId);
+      if (selectedAppointment) {
+        setAppointment(selectedAppointment);
 
-        if (!services.length) {
-          await fetchServices(appointmentDetails.businessId);
-        }
-        if (!customers.length) {
-          await fetchAllCustomers(appointmentDetails.businessId);
-        }
-        if (!staff.length) {
-          await fetchAllStaff(appointmentDetails.businessId);
-        }
-
-        setAppointment(appointmentDetails);
-
-        const updatedServices = appointmentDetails.services.$values.map(serviceDetails => {
+        const updatedServices = (selectedAppointment.services?.$values || []).map(serviceDetails => {
           const service = services.find(s => s.serviceId === serviceDetails.serviceId);
           return {
             serviceId: service?.serviceId || '',
@@ -70,26 +59,18 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
         });
 
         setUpdatedAppointment({
-          customerId: appointmentDetails.customerId || '',
-          staffId: appointmentDetails.staffId || '',
-          appointmentTime: appointmentDetails.appointmentTime
-            ? new Date(appointmentDetails.appointmentTime).toISOString().slice(0, 16)
+          customerId: selectedAppointment.customerId || '',
+          staffId: selectedAppointment.staffId || '',
+          appointmentTime: selectedAppointment.appointmentTime
+            ? new Date(selectedAppointment.appointmentTime).toISOString().slice(0, 16)
             : '',
-          status: appointmentDetails.status || '',
-          comment: appointmentDetails.comment || '',
+          status: selectedAppointment.status || '',
+          comment: selectedAppointment.comment || '',
           services: updatedServices.length ? updatedServices : [{ serviceId: '', duration: '', price: '', name: '' }]
         });
-
-      } catch (error) {
-        console.error('Failed to load appointment details:', error);
-        setAlert({ message: 'Failed to load appointment details', severity: 'error' });
       }
-    };
-
-    if (open) {
-      loadAppointmentDetails();
     }
-  }, [appointmentId, open, fetchAppointmentById, services, fetchAllCustomers, getAppointmentById, customers, fetchServices, staff, fetchAllStaff]);
+  }, [appointmentId, appointments, services]);
 
   useEffect(() => {
     if (alert.message) {
@@ -176,7 +157,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
           : '',
         status: appointment.status || '',
         comment: appointment.comment || '',
-        services: appointment.services.$values.map(service => ({
+        services: (appointment.services.$values || []).map(service => ({
           serviceId: service.serviceId,
           duration: service.duration,
           price: service.price,
@@ -272,14 +253,15 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
 
   return (
     <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-      <DialogTitle sx={{
-        fontWeight: '550',
-        fontSize: '1.75rem',
-        color: '#1a1a1a',
-        textAlign: 'center',
-        padding: '16px 24px',
-        justifyContent: 'space-between',
-      }}
+      <DialogTitle
+        sx={{
+          fontWeight: '550',
+          fontSize: '1.75rem',
+          color: '#1a1a1a',
+          textAlign: 'center',
+          padding: '16px 24px',
+          justifyContent: 'space-between',
+        }}
         className="modal-title">
         Appointment Details
         <IconButton aria-label="close" onClick={handleCloseDialog} className="close-icon">
@@ -455,7 +437,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                     onClick={handleAddService}
                     className="add-service"
                   >
-                    <Add sx={{ fontSize: '40px' }} /> Add Service
+                    <AddIcon sx={{ fontSize: '40px' }} /> Add Service
                   </Typography>
                 </Box>
                 <Box sx={{ mt: 2, display: editMode ? 'flex' : 'none', justifyContent: 'space-between' }}>

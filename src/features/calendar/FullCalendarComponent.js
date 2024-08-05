@@ -10,13 +10,13 @@ import ArrowBackIosTwoToneIcon from '@mui/icons-material/ArrowBackIosTwoTone';
 import ArrowForwardIosTwoToneIcon from '@mui/icons-material/ArrowForwardIosTwoTone';
 import AppointmentInfoModal from '../appointment/AppointmentInfoModal';
 
-const views = ['dayGridMonth', 'timeGridWeek', 'timeGridDay', 'resourceTimelineDay'];
-const viewLabels = ['Month', 'Week', 'Day', 'Staff'];
+const views = ['dayGridMonth', 'timeGridDay', 'resourceTimelineDay'];
+const viewLabels = ['Month', 'Day', 'Staff'];
 
 const FullCalendarComponent = ({ events, staff }) => {
   const [currentView, setCurrentView] = useState(views[0]);
   const calendarRef = useRef(null);
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -31,7 +31,8 @@ const FullCalendarComponent = ({ events, staff }) => {
   };
 
   const handleEventClick = (clickInfo) => {
-    setSelectedAppointment(clickInfo.event.extendedProps);
+    console.log(clickInfo.event.extendedProps);
+    setSelectedAppointmentId(clickInfo.event.extendedProps.appointmentId);
     setIsModalOpen(true);
   };
 
@@ -45,7 +46,7 @@ const FullCalendarComponent = ({ events, staff }) => {
 
   const renderEventContent = (eventInfo) => {
     const { title, extendedProps } = eventInfo.event;
-    const { service, staffName, status } = extendedProps;
+    const { staffName } = extendedProps;
     const startTime = eventInfo.event.start;
     const endTime = eventInfo.event.end;
 
@@ -55,10 +56,10 @@ const FullCalendarComponent = ({ events, staff }) => {
     }
     const timeText = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-    if (currentView === 'timeGridDay' || currentView === 'timeGridWeek' || currentView === 'resourceTimelineDay') {
+    if (currentView === 'timeGridDay' || currentView === 'resourceTimelineDay') {
       return (
         <div>
-          <span><strong>{timeText}</strong> {`${title} - ${service} - ${staffName} - ${status}`}</span>
+          <span><strong>{timeText}</strong> {`${title} - ${staffName}`}</span>
         </div>
       );
     }
@@ -90,7 +91,7 @@ const FullCalendarComponent = ({ events, staff }) => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedAppointment(null);
+    setSelectedAppointmentId(null);
   };
 
   // Create resources from staff names
@@ -107,6 +108,8 @@ const FullCalendarComponent = ({ events, staff }) => {
       resourceIds: [resource?.id]
     };
   });
+
+  
 
   return (
     <Box className="carousel-container">
@@ -131,6 +134,13 @@ const FullCalendarComponent = ({ events, staff }) => {
         eventClick={handleEventClick}
         eventContent={renderEventContent}
         dayCellContent={renderDayCell}
+        businessHours={{
+          daysOfWeek: [1, 2, 3, 4, 5, 6], // Monday - Saturday
+          startTime: '08:00', // Start time
+          endTime: '19:00' // End time
+        }}
+        slotMinTime="08:00:00"
+        slotMaxTime="19:00:00"
         headerToolbar={{
           left: 'title',
           center: '',
@@ -141,7 +151,7 @@ const FullCalendarComponent = ({ events, staff }) => {
             type: 'timeGrid',
             duration: { days: 1 },
             buttonText: 'day',
-            slotDuration: '00:30:00',
+            slotDuration: '01:00:00', // Set slot duration to 1 hour
             resources: true, // Ensures resources are displayed in timeGridDay view
           },
           resourceTimelineDay: {
@@ -150,11 +160,12 @@ const FullCalendarComponent = ({ events, staff }) => {
             buttonText: 'staff',
           }
         }}
+        slotLabelFormat={{ hour: 'numeric', minute: '2-digit', omitZeroMinute: false }}
       />
-      {selectedAppointment && (
+      {selectedAppointmentId && (
         <AppointmentInfoModal
           open={isModalOpen}
-          appointment={selectedAppointment}
+          appointmentId={selectedAppointmentId}
           onClose={handleCloseModal}
           onUpdateStatus={(id, status) => {
             // Update event status logic here if needed
