@@ -43,20 +43,16 @@ const FullCalendarComponent = ({ events, staff }) => {
     });
   };
 
-  // const handleDateNav = (direction) => {
-  //   const calendarApi = calendarRef.current.getApi();
-  //   if (direction === -1) {
-  //     calendarApi.prev();
-  //   } else {
-  //     calendarApi.next();
-  //   }
-  // };
-
   const renderEventContent = (eventInfo) => {
     const { title, extendedProps } = eventInfo.event;
     const { service, staffName, status } = extendedProps;
     const startTime = eventInfo.event.start;
     const endTime = eventInfo.event.end;
+
+    // Null check for start and end times
+    if (!startTime || !endTime) {
+      return <div><span>Invalid Time</span></div>;
+    }
     const timeText = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
     if (currentView === 'timeGridDay' || currentView === 'timeGridWeek' || currentView === 'resourceTimelineDay') {
@@ -66,7 +62,6 @@ const FullCalendarComponent = ({ events, staff }) => {
         </div>
       );
     }
-
     return null;
   };
 
