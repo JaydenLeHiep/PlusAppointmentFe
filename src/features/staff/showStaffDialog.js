@@ -16,7 +16,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Delete, Edit, Add, Close as CloseIcon } from '@mui/icons-material';
-import { useStaffsContext } from '../staff/StaffsContext'; 
+import { useStaffsContext } from '../staff/StaffsContext';
 import StaffForm from './StaffForm';
 
 const ShowStaffDialog = ({ open, onClose, businessId }) => {
@@ -33,10 +33,10 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
   const [alert, setAlert] = useState({ message: '', severity: '' });
 
   useEffect(() => {
-    if (open) {
+    if (open && staff.length === 0) {
       fetchAllStaff(String(businessId));
     }
-  }, [open, fetchAllStaff, businessId]);
+  }, [open, fetchAllStaff, businessId, staff.length]);
 
   useEffect(() => {
     if (alert.message) {
@@ -173,7 +173,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
   return (
     <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
           Staff List
         </Typography>
         <IconButton aria-label="close" onClick={handleCloseDialog} sx={{ color: (theme) => theme.palette.grey[500] }}>
@@ -186,16 +186,16 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
             {staff.map((member) => (
               <ListItem
                 key={member.staffId}
-                sx={{ 
-                  borderRadius: '8px', 
+                sx={{
+                  borderRadius: '8px',
                   backgroundColor: '#f0f8ff', // Light background color
-                  mb: 2, 
+                  mb: 2,
                   boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', // Elevated shadow
                   border: '1px solid #1976d2', // Border color to make it pop
                   '&:hover': {
                     boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
                     backgroundColor: '#e6f1ff', // Slightly darker background on hover
-                  } 
+                  }
                 }}
                 secondaryAction={
                   <>
@@ -209,11 +209,11 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
                 }
               >
                 <ListItemText
-                  primary={<Typography variant="body1" sx={{ fontWeight: 'bold', color: '#1976d2' }}>{member.name}</Typography>}
+                  primary={<Typography variant="body1" component="span" sx={{ fontWeight: 'bold', color: '#1976d2' }}>{member.name}</Typography>}
                   secondary={
                     <>
-                      <Typography variant="body2">{member.email}</Typography>
-                      <Typography variant="body2">{member.phone}</Typography>
+                      <Typography variant="body2" component="span">{member.email}</Typography>
+                      <Typography variant="body2" component="span">{member.phone}</Typography>
                     </>
                   }
                 />
@@ -224,23 +224,23 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
           <DialogContentText>No staff found for this business.</DialogContentText>
         )}
         <Box mt={2} mb={2} display="flex" justifyContent="center">
-        <Typography
-          variant="h7"
-          onClick={handleAddNewStaffClick}
-          sx={{
-            cursor: 'pointer',
-            textDecoration: 'underline',
-            color: '#1976d2',
-            '&:hover': {
-              color: '#115293',
-            },
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-          }}
-        >
-          <Add sx={{ fontSize: '40px' }} /> Add New Staff
-        </Typography>
+          <Typography
+            variant="h7"
+            onClick={handleAddNewStaffClick}
+            sx={{
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              color: '#1976d2',
+              '&:hover': {
+                color: '#115293',
+              },
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+            }}
+          >
+            <Add sx={{ fontSize: '40px' }} /> Add New Staff
+          </Typography>
         </Box>
         <Collapse in={isFormOpen || selectedStaffId !== null}>
           <Box mt={2} p={2} sx={{ borderRadius: '8px', backgroundColor: '#f9f9f9', boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.2)' }}>
@@ -258,7 +258,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
           </Alert>
         )}
       </DialogContent>
-      <DialogActions sx={{ justifyContent: 'space-between', padding: '16px 24px' }}>      
+      <DialogActions sx={{ justifyContent: 'space-between', padding: '16px 24px' }}>
         <Button
           variant="contained"
           onClick={handleAddStaff}
