@@ -7,6 +7,7 @@ export const registerUser = async (userDetails) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Origin': 'http://18.159.214.207',
     },
     body: JSON.stringify(userDetails),
   });
@@ -25,6 +26,7 @@ export const loginUser = async (loginDetails) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Origin': 'http://18.159.214.207',
     },
     body: JSON.stringify(loginDetails),
     credentials: 'include'
