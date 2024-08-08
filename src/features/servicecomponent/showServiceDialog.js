@@ -168,7 +168,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
   return (
     <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
           Service List
         </Typography>
         <IconButton aria-label="close" onClick={handleCloseDialog} sx={{ color: (theme) => theme.palette.grey[500] }}>
@@ -204,11 +204,20 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
                 }
               >
                 <ListItemText
-                  primary={<Typography variant="body1" sx={{ fontWeight: 'bold', color: '#1976d2' }}>{service.name}</Typography>}
+                  primary={
+                    <Typography variant="body1" component="span" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+                      {service.name}
+                    </Typography>
+                  }
                   secondary={
                     <>
-                      <Typography variant="body2">{service.description}</Typography>
-                      <Typography variant="body2">{service.duration} - ${service.price}</Typography>
+                      <Typography variant="body2" component="span">
+                        {service.description}
+                      </Typography>
+                      <br />
+                      <Typography variant="body2" component="span">
+                        {service.duration} - ${service.price}
+                      </Typography>
                     </>
                   }
                 />
