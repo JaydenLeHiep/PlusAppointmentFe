@@ -1,8 +1,8 @@
-import { apiBaseUrl } from '../config/apiConfig';
+//import { apiBaseUrl } from '../config/apiConfig';
 
-const userApiUrl = `${apiBaseUrl}/api/users`;
+// const userApiUrl = `${apiBaseUrl}/api/users`;
 // use this for production
-//const userApiUrl = `https://plus-appointment.com/api/users`;
+const userApiUrl = `https://plus-appointment.com/api/users`;
 
 
 export const registerUser = async (userDetails) => {
