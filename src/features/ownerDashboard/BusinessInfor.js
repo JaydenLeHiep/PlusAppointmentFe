@@ -5,8 +5,9 @@ import NotificationsTwoToneIcon from '@mui/icons-material/NotificationsTwoTone';
 import InsertEmoticonTwoToneIcon from '@mui/icons-material/InsertEmoticonTwoTone';
 import ArrowCircleLeftTwoToneIcon from '@mui/icons-material/ArrowCircleLeftTwoTone';
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
+import Face2Icon from '@mui/icons-material/Face2';
 
-const BusinessInfo = ({ selectedBusiness, staff = [], appointments = [], handleStaffOpen, handleServiceOpen, servicesCount, staffCount, appointmentsCount, onBack, onAddAppointment }) => {
+const BusinessInfo = ({ selectedBusiness, staff = [], appointments = [], handleStaffOpen, handleServiceOpen, handleCustomerOpen, servicesCount, staffCount, appointmentsCount, onBack, onAddAppointment }) => {
   return (
     <Box textAlign="center" mb={4}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -16,6 +17,9 @@ const BusinessInfo = ({ selectedBusiness, staff = [], appointments = [], handleS
           </IconButton>
           <IconButton color="secondary" onClick={onAddAppointment}>
             <AddCircleTwoToneIcon />
+          </IconButton>
+          <IconButton color="primary" onClick={handleCustomerOpen}>
+            <Face2Icon />
           </IconButton>
         </Box>
         <Typography variant="h5" gutterBottom className="business-title" style={{ flexGrow: 1 }}>
@@ -31,6 +35,7 @@ const BusinessInfo = ({ selectedBusiness, staff = [], appointments = [], handleS
           <Badge badgeContent={servicesCount} sx={{ "& .MuiBadge-badge": { backgroundColor: "green", color: "white" } }}>
             <AutoAwesomeTwoToneIcon className="material-symbols-outlined" onClick={handleServiceOpen} style={{ cursor: 'pointer' }} />
           </Badge>
+
         </Box>
       </Box>
       <Typography variant="body1" gutterBottom className="business-detail">
