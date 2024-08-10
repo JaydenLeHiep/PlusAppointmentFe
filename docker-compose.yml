@@ -1,0 +1,7 @@
+services:
+  react_app:
+    image: hieplecoding/plus_appointment_react
+    environment:
+      - REACT_APP_API_BASE_URL=http://plus-appointment-alb-274756742.eu-central-1.elb.amazonaws.com
+    ports:
+      - "80:3000"
