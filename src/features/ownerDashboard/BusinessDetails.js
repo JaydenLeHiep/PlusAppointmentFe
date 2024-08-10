@@ -7,6 +7,7 @@ import ShowStaffDialog from '../staff/showStaffDialog';
 import AddAppointmentDialog from '../appointment/AddApointmentDialog';
 import ShowServicesDialog from '../servicecomponent/showServiceDialog';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
+import ShowCustomerDialog from '../customer/ShowCustomerDialog'; // Import the customer dialog component
 
 const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments }) => {
   const { fetchAppointmentsForBusiness } = useAppointmentsContext();
@@ -14,7 +15,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
   const [staffOpen, setStaffOpen] = useState(false);
   const [appointmentOpen, setAppointmentOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
-
+  const [customerOpen, setCustomerOpen] = useState(false);
   const handleStaffOpen = () => setStaffOpen(true);
 
   const handleStaffClose = () => {
@@ -37,6 +38,8 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
     setServicesOpen(false);
     // You can choose to refresh services data here if necessary
   };
+  const handleCustomerOpen = () => setCustomerOpen(true); // Open customer dialog
+  const handleCustomerClose = () => setCustomerOpen(false); 
 
   const parseDuration = (duration) => {
     const [hours, minutes, seconds] = duration.split(':').map(Number);
@@ -55,6 +58,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
         appointments={appointments}
         handleStaffOpen={handleStaffOpen}
         handleServiceOpen={handleServicesOpen}
+        handleCustomerOpen={handleCustomerOpen}
         servicesCount={services.length}
         staffCount={staff.length}
         appointmentsCount={appointments.length}
@@ -83,6 +87,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
       <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} />
       <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={fetchAppointmentsForBusiness} />
       <ShowServicesDialog open={servicesOpen} onClose={handleServicesClose} businessId={selectedBusiness.businessId} />
+      <ShowCustomerDialog open={customerOpen} onClose={handleCustomerClose} />
     </Box>
   );
 };
