@@ -1,4 +1,3 @@
-// SearchCustomer.js
 import React from 'react';
 import { TextField, InputAdornment, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -17,9 +16,21 @@ const SearchCustomer = ({ onChange }) => {
             </IconButton>
           </InputAdornment>
         ),
+        style: {
+          backgroundColor: '#ffffff', // Set background color to white
+          borderRadius: '8px', // Rounded corners for a smooth look
+          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+        },
       }}
       fullWidth
-      style={{ marginBottom: 20 }} // Adding margin bottom to create a gap
+      sx={{
+        marginBottom: 2, // Add margin bottom to create space between elements
+        '& .MuiOutlinedInput-root': {
+          '& fieldset': {
+            border: 'none', // Remove the default border for a cleaner look
+          },
+        },
+      }}
     />
   );
 };

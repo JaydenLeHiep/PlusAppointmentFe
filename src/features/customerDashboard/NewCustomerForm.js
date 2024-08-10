@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, TextField, FormControlLabel, Checkbox, Snackbar, Alert } from '@mui/material';
 import CustomButton from './CustomerButton';
-import '../../styles/css/CustomerForm.css';
+import '../../styles/css/CustomerCss/CustomerForm.css';
 import { addCustomer } from '../../lib/apiClientCustomer';
 
 const NewCustomerForm = ({ onCustomerIdReceived, onSwitchForm }) => {
@@ -54,7 +54,18 @@ const NewCustomerForm = ({ onCustomerIdReceived, onSwitchForm }) => {
   };
 
   return (
-    <Box className="customer-form">
+    <Box 
+      className="customer-form"
+      sx={{
+        backgroundColor: '#f9f9f9',
+        padding: '24px',
+        borderRadius: '12px',
+        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+        marginBottom: '24px',
+        maxWidth: '500px',
+        margin: 'auto',
+      }}
+    >
       <form onSubmit={handleFormSubmit}>
         <TextField
           label="Name"
@@ -64,6 +75,17 @@ const NewCustomerForm = ({ onCustomerIdReceived, onSwitchForm }) => {
           fullWidth
           margin="normal"
           required
+          sx={{
+            backgroundColor: '#ffffff',
+            borderRadius: '8px',
+            mb: 2,
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                border: 'none',
+              },
+            },
+          }}
         />
         <TextField
           label="Email"
@@ -73,6 +95,17 @@ const NewCustomerForm = ({ onCustomerIdReceived, onSwitchForm }) => {
           fullWidth
           margin="normal"
           required
+          sx={{
+            backgroundColor: '#ffffff',
+            borderRadius: '8px',
+            mb: 2,
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                border: 'none',
+              },
+            },
+          }}
         />
         <TextField
           label="Phone"
@@ -82,6 +115,17 @@ const NewCustomerForm = ({ onCustomerIdReceived, onSwitchForm }) => {
           fullWidth
           margin="normal"
           required
+          sx={{
+            backgroundColor: '#ffffff',
+            borderRadius: '8px',
+            mb: 2,
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                border: 'none',
+              },
+            },
+          }}
         />
         <FormControlLabel
           control={
@@ -89,15 +133,36 @@ const NewCustomerForm = ({ onCustomerIdReceived, onSwitchForm }) => {
               name="saveData"
               checked={formData.saveData}
               onChange={handleInputChange}
+              sx={{
+                color: '#007bff',
+              }}
             />
           }
           label="Save my data for future bookings"
+          sx={{
+            mb: 2,
+            color: '#1976d2',
+            '& .MuiTypography-root': {
+              fontWeight: 'bold',
+            },
+          }}
         />
         <CustomButton
           type="submit"
           variant="contained"
           color="primary"
           disabled={!formData.saveData}
+          sx={{
+            width: '100%',
+            backgroundColor: '#007bff',
+            '&:hover': {
+              backgroundColor: '#0056b3',
+            },
+            padding: '12px 20px',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            borderRadius: '8px',
+          }}
         >
           Submit
         </CustomButton>

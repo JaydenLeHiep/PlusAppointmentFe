@@ -1,4 +1,3 @@
-// CustomerDashboard.js
 import React, { useState, useEffect } from 'react';
 import { Typography, Box, CircularProgress } from '@mui/material';
 import { useLocation } from 'react-router-dom';
@@ -7,10 +6,9 @@ import CustomerBusinessInfo from './CustomerBusinessInfo';
 import CustomerButtonDashboard from './CustomerButtonDashboard';
 import ListsServiceStaff from './ListsServiceStaff';
 import CustomerForm from './CustomerForm';
-
 import SearchCustomer from './SearchCustomer';
 import AddAppointmentDialog from '../appointment/AddApointmentDialog';
-import '../../styles/css/CustomerDashboard.css';
+import '../../styles/css/CustomerCss/CustomerDashboard.css';
 import { fetchBusinessesById } from '../../lib/apiClientBusiness';
 
 const CustomerDashboard = () => {
@@ -91,30 +89,40 @@ const CustomerDashboard = () => {
 
   if (!businessId) {
     return (
-      <Box className="customer-dashboard">
-        <Typography variant="h6">Error: Business ID not provided</Typography>
+      <Box className="customer-dashboard" sx={{ textAlign: 'center', padding: '20px' }}>
+        <Typography variant="h6" sx={{ color: '#ff1744' }}>Error: Business ID not provided</Typography>
       </Box>
     );
   }
 
   if (error) {
     return (
-      <Box className="customer-dashboard">
-        <Typography variant="h6">{error}</Typography>
+      <Box className="customer-dashboard" sx={{ textAlign: 'center', padding: '20px' }}>
+        <Typography variant="h6" sx={{ color: '#ff1744' }}>{error}</Typography>
       </Box>
     );
   }
 
   if (loading) {
     return (
-      <Box className="customer-dashboard">
-        <CircularProgress />
+      <Box className="customer-dashboard" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress color="primary" />
       </Box>
     );
   }
 
   return (
-    <Box className="customer-dashboard">
+    <Box 
+      className="customer-dashboard" 
+      sx={{ 
+        width: '100%', 
+        margin: '0 auto', 
+        padding: '20px',
+        '@media (max-width: 768px)': {
+          padding: '10px',
+        },
+      }}
+    >
       <CustomerBusinessInfo businessInfo={businessInfo} />
       {!showAddAppointmentDialog && view !== 'form' && (
         <>

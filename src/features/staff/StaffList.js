@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { List, ListItem, Typography, Paper, CircularProgress, Box, Alert } from '@mui/material';
 import { useStaffsContext } from '../staff/StaffsContext'; 
-import '../../styles/css/StaffList.css'; 
 
 const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
   const { staff, fetchAllStaff } = useStaffsContext(); // Use the context
@@ -54,7 +53,8 @@ const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
               <Paper className="staff-item">
                 <div className="staff-info">
                   <Typography variant="body1" className="bold-text">{staffMember.name}</Typography>
-                  <Typography variant="body1">Phone: {staffMember.phone}</Typography>
+                  <Typography variant="body2">{staffMember.email}</Typography>
+                  <Typography variant="body2">Phone: {staffMember.phone}</Typography>
                 </div>
               </Paper>
             </ListItem>

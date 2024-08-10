@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import FullCalendarComponent from '../calendar/FullCalendarComponent';
-import '../../styles/css/OwnerDashboard.css';
+import '../../styles/css/OwnerCss/OwnerDashboard.css';
 import BusinessInfo from './BusinessInfor';
 import ShowStaffDialog from '../staff/showStaffDialog';
 import AddAppointmentDialog from '../appointment/AddApointmentDialog';
