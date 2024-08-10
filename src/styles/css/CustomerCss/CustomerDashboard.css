@@ -3,63 +3,45 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%; /* Use full width */
+  width: 100%;
   padding: 2rem;
   box-sizing: border-box;
   margin: 0 auto;
-  background-color: #f4f6f9; /* Subtle background color */
+  background-color: #f4f6f9;
   border-radius: 8px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.business-info {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.business-info h5 {
-  font-size: 1.5rem;
-  color: #1976d2;
-  font-weight: bold;
-}
-
-.business-info body1 {
-  font-size: 1.125rem;
-  color: #444;
-}
-
-.button-group {
+.customer-dashboard-hero {
+  background-color: #F5F5F5;
   display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
   justify-content: center;
-  width: 100%;
-  max-width: 800px; /* Allow buttons to expand more */
-}
-
-.dashboard-button {
-  background-color: #1976d2;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  font-size: 1.125rem;
+  align-items: center;
   flex: 1;
-  max-width: 300px; /* Increase the button's max-width */
-  box-sizing: border-box;
-  border-radius: 4px;
-  transition: background-color 0.3s;
 }
 
-.dashboard-button:hover {
-  background-color: #115293;
-}
-
-.search-box {
+.customer-dashboard-container {
   width: 100%;
-  max-width: 800px; /* Increase max-width for search box */
+  max-width: 100%;
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  text-align: left;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.customer-dashboard .search-box {
+  width: 100%;
+  max-width: 800px;
   margin: 2rem 0;
 }
 
-.search-box input {
+.customer-dashboard .search-box input {
   width: 100%;
   padding: 0.625rem;
   box-sizing: border-box;
@@ -69,19 +51,34 @@
   transition: border-color 0.3s;
 }
 
-.search-box input:focus {
+.customer-dashboard .search-box input:focus {
   border-color: #1976d2;
 }
 
-.list-container {
-  width: 100%; /* Make sure the list container takes full width */
+.customer-dashboard .list-container {
+  width: 100%;
   margin-bottom: 2rem;
 }
 
-.booking-info {
+.customer-dashboard .booking-info {
   padding: 2rem;
   margin-bottom: 2rem;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .customer-dashboard-container {
+    padding: 1rem;
+  }
+  
+  .customer-dashboard-hero {
+    padding: 0;
+  }
+
+  .customer-dashboard-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Box, CircularProgress } from '@mui/material';
+import { Typography, Box, Container, Card, CircularProgress } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 
 import CustomerBusinessInfo from './CustomerBusinessInfo';
@@ -8,8 +8,8 @@ import ListsServiceStaff from './ListsServiceStaff';
 import CustomerForm from './CustomerForm';
 import SearchCustomer from './SearchCustomer';
 import AddAppointmentDialog from '../appointment/AddApointmentDialog';
-import '../../styles/css/CustomerCss/CustomerDashboard.css';
 import { fetchBusinessesById } from '../../lib/apiClientBusiness';
+import '../../styles/css/CustomerCss/CustomerDashboard.css';
 
 const CustomerDashboard = () => {
   const location = useLocation();
@@ -112,51 +112,54 @@ const CustomerDashboard = () => {
   }
 
   return (
-    <Box 
-      className="customer-dashboard" 
-      sx={{ 
-        width: '100%', 
-        margin: '0 auto', 
-        padding: '20px',
-        '@media (max-width: 768px)': {
-          padding: '10px',
-        },
-      }}
-    >
+    <Box display="flex" flexDirection="column" minHeight="100vh">
+  <Box className="customer-dashboard-hero">
+    <Container className="customer-business-info-container">
       <CustomerBusinessInfo businessInfo={businessInfo} />
-      {!showAddAppointmentDialog && view !== 'form' && (
-        <>
-          <SearchCustomer onChange={view === 'services' ? handleServiceSearchChange : handleStaffSearchChange} />
-          <CustomerButtonDashboard view={view} onViewChange={setView} />
-        </>
-      )}
-      <ListsServiceStaff
-        view={view}
-        businessId={businessId}
-        serviceSearchQuery={serviceSearchQuery}
-        staffSearchQuery={staffSearchQuery}
-        onServiceSelect={handleServiceSelect}
-        onStaffSelect={handleStaffSelect}
-      />
-      {view === 'form' && (
-        <CustomerForm
+    </Container>
+  </Box>
+  <Box className="customer-dashboard-hero">
+    <Container
+      className="d-flex align-items-center justify-content-center"
+      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '82vh', paddingTop: 0, marginTop: 0 }}
+    >
+      <Card className="customer-dashboard-container">
+        {!showAddAppointmentDialog && view !== 'form' && (
+          <>
+            <SearchCustomer onChange={view === 'services' ? handleServiceSearchChange : handleStaffSearchChange} />
+            <CustomerButtonDashboard view={view} onViewChange={setView} />
+          </>
+        )}
+        <ListsServiceStaff
+          view={view}
           businessId={businessId}
-          onCustomerIdReceived={handleCustomerIdReceived}
-          selectedService={selectedService}
-          selectedStaff={selectedStaff}
+          serviceSearchQuery={serviceSearchQuery}
+          staffSearchQuery={staffSearchQuery}
+          onServiceSelect={handleServiceSelect}
+          onStaffSelect={handleStaffSelect}
         />
-      )}
-      {showAddAppointmentDialog && (
-        <AddAppointmentDialog
-          open={showAddAppointmentDialog}
-          onClose={handleCloseAddAppointmentDialog}
-          businessId={businessId}
-          customerId={customerId}
-          serviceId={selectedService?.serviceId}
-          staffId={selectedStaff?.staffId}
-        />
-      )}
-    </Box>
+        {view === 'form' && (
+          <CustomerForm
+            businessId={businessId}
+            onCustomerIdReceived={handleCustomerIdReceived}
+            selectedService={selectedService}
+            selectedStaff={selectedStaff}
+          />
+        )}
+        {showAddAppointmentDialog && (
+          <AddAppointmentDialog
+            open={showAddAppointmentDialog}
+            onClose={handleCloseAddAppointmentDialog}
+            businessId={businessId}
+            customerId={customerId}
+            serviceId={selectedService?.serviceId}
+            staffId={selectedStaff?.staffId}
+          />
+        )}
+      </Card>
+    </Container>
+  </Box>
+</Box>
   );
 };
 
