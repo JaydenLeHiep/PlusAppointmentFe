@@ -1,6 +1,9 @@
 import { apiBaseUrl } from '../config/apiConfig';
 const appointmentApiUrl = `${apiBaseUrl}/api/appointments`;
 
+// use this for production
+//const userApiUrl = `https://plus-appointment.com/api/users`;
+
 //Api appointments
 
 export const fetchAppointments = async (businessId) => {
