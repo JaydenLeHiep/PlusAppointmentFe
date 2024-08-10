@@ -209,11 +209,11 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
                 }
               >
                 <ListItemText
-                  primary={<Typography variant="body1" component="span" sx={{ fontWeight: 'bold', color: '#1976d2' }}>{member.name}</Typography>}
+                  primary={<Typography variant="body1" component="div" sx={{ fontWeight: 'bold', color: '#1976d2' }}>{member.name}</Typography>}
                   secondary={
                     <>
-                      <Typography variant="body2" component="span">{member.email}</Typography>
-                      <Typography variant="body2" component="span">{member.phone}</Typography>
+                      <Typography variant="body2" component="div">{member.email}</Typography>
+                      <Typography variant="body2" component="div">{member.phone}</Typography>
                     </>
                   }
                 />
@@ -259,7 +259,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
         )}
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between', padding: '16px 24px' }}>
-        <Button
+      <Button
           variant="contained"
           onClick={handleAddStaff}
           disabled={!isFormOpen || !!selectedStaffId}

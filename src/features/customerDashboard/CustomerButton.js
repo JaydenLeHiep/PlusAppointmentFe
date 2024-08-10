@@ -1,14 +1,25 @@
-
 import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const CustomButton = styled(Button)({
-  backgroundColor: 'pink', // Set background color to pink
-  color: 'white', // Set text color to white
-  padding: '12px 24px', // Adjust padding as needed
-  fontSize: '18px', // Adjust font size as needed
+  backgroundColor: '#1976d2', // Primary blue color
+  color: '#fff', // Text color
+  padding: '12px 24px',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  borderRadius: '12px', // Increased border-radius for a more modern look
+  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+  textTransform: 'none',
+  transition: 'background-color 0.3s ease, transform 0.2s ease',
   '&:hover': {
-    backgroundColor: '#ff4081', // Darker pink on hover (optional)
+    backgroundColor: '#115293',
+    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+    transform: 'translateY(-2px)', // Slight lift effect on hover
+  },
+  '&:active': {
+    backgroundColor: '#0e3c71',
+    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+    transform: 'translateY(0)', // Reset lift effect
   },
 });
 

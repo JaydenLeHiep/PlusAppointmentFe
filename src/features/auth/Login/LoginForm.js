@@ -4,7 +4,7 @@ import { TextField, Button, InputAdornment, IconButton, Alert } from '@mui/mater
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useAuth } from '../../../hooks/useAuth';
 import { loginUser } from '../../../lib/apiClient';
-import '../../../styles/css/LoginPage.css';
+import '../../../styles/css/OwnerCss/LoginPage.css';
 
 const LoginForm = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');

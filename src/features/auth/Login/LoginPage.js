@@ -3,7 +3,7 @@ import { Box, Container, Card, Typography } from '@mui/material';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 import LoginForm from './LoginForm';
-import '../../../styles/css/LoginPage.css';
+import '../../../styles/css/OwnerCss/LoginPage.css';
 
 const LoginPage = () => {
   useEffect(() => {

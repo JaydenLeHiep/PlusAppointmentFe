@@ -24,7 +24,7 @@ import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { useStaffsContext } from '../staff/StaffsContext';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
 import { searchCustomersByName } from '../../lib/apiClientCustomer';
-import '../../styles/css/AddAppointmentsDialog.css';
+import '../../styles/css/OwnerCss/AddAppointmentsDialog.css';
 
 const AddAppointmentDialog = ({ open, onClose, businessId }) => {
   const initialAppointmentState = useRef({
