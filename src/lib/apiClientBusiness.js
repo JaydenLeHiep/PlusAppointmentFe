@@ -2,7 +2,8 @@ import { apiBaseUrl } from '../config/apiConfig';
 
 const businessApiUrl = `${apiBaseUrl}/api/business`;
 
-
+// use this for production
+//const userApiUrl = `https://plus-appointment.com/api/users`;
 
 //API client function for Ownerdashboard
 export const fetchBusinesses = async () => {

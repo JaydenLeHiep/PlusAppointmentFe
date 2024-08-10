@@ -1,7 +1,8 @@
 import { apiBaseUrl } from '../config/apiConfig';
 
 
-
+// use this for production
+//const userApiUrl = `https://plus-appointment.com/api/users`;
 
 export const fetchService = async (businessId) => {
     // const token = localStorage.getItem('token');

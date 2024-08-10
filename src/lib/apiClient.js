@@ -1,13 +1,16 @@
 import { apiBaseUrl } from '../config/apiConfig';
 
 const userApiUrl = `${apiBaseUrl}/api/users`;
+// use this for production
+//const userApiUrl = `https://plus-appointment.com/api/users`;
+
 
 export const registerUser = async (userDetails) => {
   const response = await fetch(`${userApiUrl}/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Origin': 'http://18.159.214.207',
+      
     },
     body: JSON.stringify(userDetails),
   });
@@ -26,7 +29,7 @@ export const loginUser = async (loginDetails) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Origin': 'http://18.159.214.207',
+      
     },
     body: JSON.stringify(loginDetails),
     credentials: 'include'
