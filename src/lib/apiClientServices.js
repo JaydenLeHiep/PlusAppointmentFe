@@ -1,15 +1,15 @@
-import { apiBaseUrl } from '../config/apiConfig';
+//import { apiBaseUrl } from '../config/apiConfig';
 
-
+//const serviceApiUrl = `${apiBaseUrl}/api/service`;
 // use this for production
-//const userApiUrl = `https://plus-appointment.com/api/users`;
+const serviceApiUrl = `https://plus-appointment.com/api/service`;
 
 export const fetchService = async (businessId) => {
     // const token = localStorage.getItem('token');
     // if (!token) {
     //     throw new Error('User not authenticated');
     // }
-    const serviceApiUrl = `${apiBaseUrl}/api/service/business_id=${businessId}`;
+    const serviceApiUrl = `${serviceApiUrl}/business_id=${businessId}`;
     const response = await fetch(serviceApiUrl, {
         method: 'GET',
         headers: {
@@ -39,7 +39,7 @@ export const fetchServiceById = async (serviceId) => {
       throw new Error('User not authenticated');
     }
   
-    const response = await fetch(`${apiBaseUrl}/api/service/service_id=${serviceId}`, {
+    const response = await fetch(`${serviceApiUrl}/service_id=${serviceId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
