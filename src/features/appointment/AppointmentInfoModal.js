@@ -20,6 +20,7 @@ import { Add, Close as CloseIcon, Remove as RemoveIcon, Edit as EditIcon, Delete
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { useStaffsContext } from '../staff/StaffsContext';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
+import ConfirmationDialog from '../../components/ConfirmationDialog';
 import '../../styles/css/OwnerDashboardCss/AppointmentInfoModal.css';
 
 const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
@@ -38,6 +39,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     comment: '',
     services: [{ serviceId: '', duration: '', price: '', name: '' }]
   });
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false); // State for confirmation dialog
 
   const alertRef = useRef(null);
   const dialogContentRef = useRef(null);
@@ -111,9 +113,14 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     }
   };
 
-  const handleDeleteAppointment = async () => {
+  const handleDeleteAppointment = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
       await deleteAppointmentAndUpdateList(appointment.appointmentId, appointment.businessId);
+      setShowConfirmDialog(false);
       onClose();
       setAlert({ message: 'Appointment deleted successfully!', severity: 'success' });
 
@@ -132,6 +139,10 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
         setAlert({ message: '', severity: '' });
       }, 5000);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setShowConfirmDialog(false);
   };
 
   const handleCloseDialog = () => {
@@ -246,28 +257,30 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
 
   return (
     <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-      <DialogTitle sx={{
-        fontWeight: '550',
-        fontSize: '1.75rem',
-        color: '#1a1a1a',
-        textAlign: 'center',
-        padding: '16px 24px',
-        justifyContent: 'space-between',
-      }}
-        className="modal-title">
+      <DialogTitle
+        sx={{
+          fontWeight: '550',
+          fontSize: '1.75rem',
+          color: '#1a1a1a',
+          textAlign: 'center',
+          padding: '16px 24px',
+          justifyContent: 'space-between',          
+        }}
+        className="modal-title"
+      >
         Appointment Details
         <IconButton aria-label="close" onClick={handleCloseDialog} className="close-icon">
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent ref={dialogContentRef} dividers className="modal-content">
-        <Grid container spacing={2}>
-          <Grid item xs={editMode ? 12 : 8}>
-            {alert.message && (
+      {alert.message && (
               <Alert ref={alertRef} severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} sx={{ mb: 2 }}>
                 {alert.message}
               </Alert>
             )}
+        <Grid container spacing={2}>
+          <Grid item xs={editMode ? 12 : 8}>          
             {!editMode ? (
               <>
                 <Typography variant="body1" gutterBottom className="bold-text">
@@ -482,6 +495,15 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
           </Button>
         </DialogActions>
       )}
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        open={showConfirmDialog}
+        title="Delete Appointment"
+        content="Are you sure you want to delete this appointment?"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </Dialog>
   );
 };

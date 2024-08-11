@@ -92,7 +92,7 @@ const OwnerDashboard = () => {
                   services={services}
                   appointments={appointments}
                 />
-                <AppointmentList appointments={appointments} /> {/* Added AppointmentList here */}
+                <AppointmentList appointments={appointments} />
               </>
             ) : (
               <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />

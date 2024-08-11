@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogActions,
@@ -18,6 +18,7 @@ import {
 import { Delete, Edit, Add, Close as CloseIcon } from '@mui/icons-material';
 import { useStaffsContext } from '../staff/StaffsContext';
 import StaffForm from './StaffForm';
+import ConfirmationDialog from '../../components/ConfirmationDialog'; // Importing the ConfirmationDialog component
 
 const ShowStaffDialog = ({ open, onClose, businessId }) => {
   const { staff, fetchAllStaff, addStaff, updateStaff, deleteStaff } = useStaffsContext();
@@ -31,6 +32,11 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [alert, setAlert] = useState({ message: '', severity: '' });
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false); // State for the confirmation dialog
+  const [staffToDelete, setStaffToDelete] = useState(null); // State to keep track of the staff to be deleted
+
+  const alertRef = useRef(null); // Ref for the alert message
+  const formRef = useRef(null);  // Ref for the expanding form
 
   useEffect(() => {
     if (open && staff.length === 0) {
@@ -40,10 +46,13 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
 
   useEffect(() => {
     if (alert.message) {
+      if (alertRef.current) {
+        alertRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       const timer = setTimeout(() => {
         setAlert({ message: '', severity: '' });
       }, 5000);
-
+  
       return () => clearTimeout(timer);
     }
   }, [alert]);
@@ -117,15 +126,23 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
     });
   };
 
-  const handleDeleteStaff = (staffId) => {
+  const confirmDeleteStaff = (staffId) => {
+    setStaffToDelete(staffId); // Set the staff to be deleted
+    setConfirmDialogOpen(true); // Open the confirmation dialog
+  };
+
+  const handleDeleteStaff = () => {
     closeFormAndExecuteAction(async () => {
       try {
-        await deleteStaff(String(businessId), staffId);
+        await deleteStaff(String(businessId), staffToDelete);
         setAlert({ message: 'Staff deleted successfully!', severity: 'success' });
       } catch (error) {
         console.error('Failed to delete staff:', error);
         const errorMessage = error.response?.data?.message || error.message || 'Failed to delete staff. Please try again.';
         setAlert({ message: errorMessage, severity: 'error' });
+      } finally {
+        setConfirmDialogOpen(false); // Close the confirmation dialog
+        setStaffToDelete(null); // Clear the staffToDelete state
       }
     });
   };
@@ -151,6 +168,12 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
     });
     setSelectedStaffId(null);
     setAlert({ message: '', severity: '' });
+
+    setTimeout(() => {
+      if (formRef.current) {
+        formRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 300); // Adjust delay to match animation time
   };
 
   const handleCancelForm = () => {
@@ -171,140 +194,171 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-      <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
+    <>
+      <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
+        <DialogTitle
+          sx={{
+            fontWeight: '550',
+            fontSize: '1.75rem',
+            color: '#1a1a1a',
+            textAlign: 'center',
+            padding: '16px 24px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginLeft: '3px'
+          }}
+        >
           Staff List
-        </Typography>
-        <IconButton aria-label="close" onClick={handleCloseDialog} sx={{ color: (theme) => theme.palette.grey[500] }}>
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent dividers>
-        {staff.length > 0 ? (
-          <List>
-            {staff.map((member) => (
-              <ListItem
-                key={member.staffId}
-                sx={{
-                  borderRadius: '8px',
-                  backgroundColor: '#f0f8ff', // Light background color
-                  mb: 2,
-                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', // Elevated shadow
-                  border: '1px solid #1976d2', // Border color to make it pop
-                  '&:hover': {
-                    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-                    backgroundColor: '#e6f1ff', // Slightly darker background on hover
-                  }
-                }}
-                secondaryAction={
-                  <>
-                    <IconButton edge="end" aria-label="edit" onClick={() => handleEditStaff(member)}>
-                      <Edit />
-                    </IconButton>
-                    <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteStaff(member.staffId)}>
-                      <Delete />
-                    </IconButton>
-                  </>
-                }
-              >
-                <ListItemText
-                  primary={
-                    <Typography variant="body1" component="span" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
-                      {member.name}
-                    </Typography>
-                  }
-                  secondary={
+          <IconButton aria-label="close" onClick={onClose} sx={{ color: '#808080', fontSize: '1.5rem' }}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          {staff.length > 0 ? (
+            <List>
+              {staff.map((member) => (
+                <ListItem
+                  key={member.staffId}
+                  sx={{
+                    borderRadius: '8px',
+                    backgroundColor: '#f0f8ff',
+                    mb: 2,
+                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                    border: '1px solid #1976d2',
+                    '&:hover': {
+                      boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+                      backgroundColor: '#e6f1ff',
+                    }
+                  }}
+                  secondaryAction={
                     <>
-                      <Typography variant="body2" component="span">
-                        {member.email}
-                      </Typography>
-                      <br />
-                      <Typography variant="body2" component="span">
-                        {member.phone}
-                      </Typography>
+                      <IconButton edge="end" aria-label="edit" onClick={() => handleEditStaff(member)}>
+                        <Edit />
+                      </IconButton>
+                      <IconButton edge="end" aria-label="delete" onClick={() => confirmDeleteStaff(member.staffId)}>
+                        <Delete />
+                      </IconButton>
                     </>
                   }
-                />
-              </ListItem>
-            ))}
-          </List>
-        ) : (
-          <DialogContentText>No staff found for this business.</DialogContentText>
-        )}
-        <Box mt={2} mb={2} display="flex" justifyContent="center">
-          <Typography
-            variant="h7"
-            onClick={handleAddNewStaffClick}
+                >
+                  <ListItemText
+                    primary={
+                      <Typography variant="body1" component="span" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+                        {member.name}
+                      </Typography>
+                    }
+                    secondary={
+                      <>
+                        <Typography variant="body2" component="span">
+                          {member.email}
+                        </Typography>
+                        <br />
+                        <Typography variant="body2" component="span">
+                          {member.phone}
+                        </Typography>
+                      </>
+                    }
+                  />
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <DialogContentText>No staff found for this business.</DialogContentText>
+          )}
+          <Box mt={2} mb={2} display="flex" justifyContent="center">
+            <Typography
+              variant="h7"
+              onClick={handleAddNewStaffClick}
+              sx={{
+                cursor: 'pointer',
+                textDecoration: 'underline',
+                color: '#1976d2',
+                '&:hover': {
+                  color: '#115293',
+                },
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+            >
+              <Add sx={{ fontSize: '40px' }} /> Add New Staff
+            </Typography>
+          </Box>
+          <Collapse in={isFormOpen || selectedStaffId !== null}>
+            <Box
+              mt={2}
+              p={2}
+              ref={formRef} // Reference for scrolling to the expanding box
+              sx={{ borderRadius: '8px', backgroundColor: '#f9f9f9', boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.2)' }}
+            >
+              <StaffForm
+                title={selectedStaffId ? 'Update Staff' : 'Add New Staff'}
+                newStaff={newStaff}
+                setNewStaff={setNewStaff}
+                handleCancelForm={handleCancelForm}
+              />
+            </Box>
+          </Collapse>
+          {alert.message && (
+            <Alert
+              severity={alert.severity}
+              onClose={() => setAlert({ message: '', severity: '' })}
+              ref={alertRef} // Reference for scrolling to the alert message
+              sx={{ mt: 2 }}
+            >
+              {alert.message}
+            </Alert>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'space-between', padding: '16px 24px' }}>
+          <Button
+            variant="contained"
+            onClick={handleAddStaff}
+            disabled={!isFormOpen || !!selectedStaffId}
             sx={{
-              cursor: 'pointer',
-              textDecoration: 'underline',
-              color: '#1976d2',
-              '&:hover': {
-                color: '#115293',
-              },
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
+              width: '120px',
+              height: '40px',
+              fontSize: '0.875rem',
+              fontWeight: 'bold',
+              borderRadius: '8px',
+              backgroundColor: '#007bff',
+              color: '#fff',
+              '&:hover': { backgroundColor: '#0056b3' }
             }}
           >
-            <Add sx={{ fontSize: '40px' }} /> Add New Staff
-          </Typography>
-        </Box>
-        <Collapse in={isFormOpen || selectedStaffId !== null}>
-          <Box mt={2} p={2} sx={{ borderRadius: '8px', backgroundColor: '#f9f9f9', boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.2)' }}>
-            <StaffForm
-              title={selectedStaffId ? 'Update Staff' : 'Add New Staff'}
-              newStaff={newStaff}
-              setNewStaff={setNewStaff}
-              handleCancelForm={handleCancelForm}
-            />
-          </Box>
-        </Collapse>
-        {alert.message && (
-          <Alert severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} sx={{ mt: 2 }}>
-            {alert.message}
-          </Alert>
-        )}
-      </DialogContent>
-      <DialogActions sx={{ justifyContent: 'space-between', padding: '16px 24px' }}>
-        <Button
-          variant="contained"
-          onClick={handleAddStaff}
-          disabled={!isFormOpen || !!selectedStaffId}
-          sx={{
-            width: '120px',
-            height: '40px',
-            fontSize: '0.875rem',
-            fontWeight: 'bold',
-            borderRadius: '8px',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            '&:hover': { backgroundColor: '#0056b3' }
-          }}
-        >
-          Add Staff
-        </Button>
-        <Button
-          variant="contained"
-          onClick={handleUpdateStaff}
-          disabled={!selectedStaffId}
-          sx={{
-            width: '150px',
-            height: '40px',
-            fontSize: '0.875rem',
-            fontWeight: 'bold',
-            borderRadius: '8px',
-            boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
-            backgroundColor: '#28a745',
-            color: '#fff',
-            '&:hover': { backgroundColor: '#218838' }
-          }}
-        >
-          Update Staff
-        </Button>
-      </DialogActions>
-    </Dialog>
+            Add Staff
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleUpdateStaff}
+            disabled={!selectedStaffId}
+            sx={{
+              width: '150px',
+              height: '40px',
+              fontSize: '0.875rem',
+              fontWeight: 'bold',
+              borderRadius: '8px',
+              boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
+              backgroundColor: '#28a745',
+              color: '#fff',
+              '&:hover': { backgroundColor: '#218838' }
+            }}
+          >
+            Update Staff
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Confirmation Dialog for Deleting Staff */}
+      <ConfirmationDialog
+        open={confirmDialogOpen}
+        title="Confirm Delete"
+        content="Are you sure you want to delete this staff member?"
+        onConfirm={handleDeleteStaff}
+        onCancel={() => setConfirmDialogOpen(false)}
+      />
+    </>
   );
 };
 

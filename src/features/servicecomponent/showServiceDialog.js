@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { Delete, Edit, Add, Close as CloseIcon } from '@mui/icons-material';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
+import ConfirmationDialog from '../../components/ConfirmationDialog';
 
 const ShowServicesDialog = ({ open, onClose, businessId }) => {
   const { services, fetchServices, addService, updateService, deleteService } = useServicesContext();
@@ -30,6 +31,11 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
   });
   const [alert, setAlert] = useState({ message: '', severity: '' });
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [serviceToDelete, setServiceToDelete] = useState(null); // For tracking the service to be deleted
+
+  const alertRef = useRef(null); // Ref for alert message
+  const formRef = useRef(null); // Ref for expanding form
 
   useEffect(() => {
     if (open && services.length === 0) {  // Fetch only if services are not already loaded
@@ -39,6 +45,9 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
 
   useEffect(() => {
     if (alert.message) {
+      if (alertRef.current) {
+        alertRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       const timer = setTimeout(() => {
         setAlert({ message: '', severity: '' });
       }, 5000); // 5 seconds
@@ -112,6 +121,11 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
     });
   };
 
+  const confirmDeleteService = (serviceId) => {
+    setServiceToDelete(serviceId); // Set the service to be deleted
+    setConfirmDialogOpen(true); // Open the confirmation dialog
+  };
+
   const handleDeleteService = (serviceId) => {
     closeFormAndExecuteAction(async () => {
       try {
@@ -146,6 +160,12 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
     });
     setSelectedServiceId(null);
     setAlert({ message: '', severity: '' });
+
+    setTimeout(() => {
+      if (formRef.current) {
+        formRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 300); // Adjust delay to match animation time
   };
 
   const handleCancelForm = () => {
@@ -167,11 +187,21 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
 
   return (
     <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-      <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
-          Service List
-        </Typography>
-        <IconButton aria-label="close" onClick={handleCloseDialog} sx={{ color: (theme) => theme.palette.grey[500] }}>
+      <DialogTitle
+        sx={{
+          fontWeight: '550',
+          fontSize: '1.75rem',
+          color: '#1a1a1a',
+          textAlign: 'center',
+          padding: '16px 24px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginLeft: '3px'
+        }}
+      >
+        Service List
+        <IconButton aria-label="close" onClick={onClose} sx={{ color: '#808080', fontSize: '1.5rem' }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -197,7 +227,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
                     <IconButton edge="end" aria-label="edit" onClick={() => handleEditService(service)}>
                       <Edit />
                     </IconButton>
-                    <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteService(service.serviceId)}>
+                    <IconButton edge="end" aria-label="delete" onClick={() => confirmDeleteService(service.serviceId)}>
                       <Delete />
                     </IconButton>
                   </>
@@ -216,7 +246,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
                       </Typography>
                       <br />
                       <Typography variant="body2" component="span">
-                        {service.duration} - {service.price}€
+                        {service.duration} - ${service.price}
                       </Typography>
                     </>
                   }
@@ -247,7 +277,12 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
           </Typography>
         </Box>
         <Collapse in={isFormOpen || selectedServiceId !== null}>
-          <Box mt={2} p={2} sx={{ borderRadius: '12px', backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)' }}>
+          <Box
+            mt={2}
+            p={2}
+            ref={formRef} // Reference for scrolling to the expanding form
+            sx={{ borderRadius: '12px', backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)' }}
+          >
             <TextField
               margin="dense"
               label="Name"
@@ -357,11 +392,25 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
           </Box>
         </Collapse>
         {alert.message && (
-          <Alert severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} sx={{ mt: 2 }}>
+          <Alert
+            severity={alert.severity}
+            onClose={() => setAlert({ message: '', severity: '' })}
+            ref={alertRef} // Reference for scrolling to the alert message
+            sx={{ mt: 2 }}
+          >
             {alert.message}
           </Alert>
         )}
       </DialogContent>
+
+      {/* Confirmation Dialog for Deleting Service */}
+      <ConfirmationDialog
+        open={confirmDialogOpen}
+        title="Confirm Delete"
+        content="Are you sure you want to delete this service?"
+        onConfirm={handleDeleteService}
+        onCancel={() => setConfirmDialogOpen(false)}
+      />
     </Dialog>
   );
 };

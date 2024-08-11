@@ -174,7 +174,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginLeft: '4px'
+          marginLeft: '5px'
         }}
       >
         Add Appointment
