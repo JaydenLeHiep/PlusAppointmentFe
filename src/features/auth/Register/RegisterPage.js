@@ -5,7 +5,7 @@ import Footer from '../../../components/Footer';
 import RegisterForm from './RegisterForm';
 import usePasswordValidation from '../../../hooks/usePasswordValidation';
 import { registerUser } from '../../../lib/apiClient';
-import '../../../styles/css/OwnerCss/Register.css';
+import '../../../styles/css/OwnerDashboardCss/Register.css';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
