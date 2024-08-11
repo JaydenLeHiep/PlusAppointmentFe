@@ -216,7 +216,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
                       </Typography>
                       <br />
                       <Typography variant="body2" component="span">
-                        {service.duration} - ${service.price}
+                        {service.duration} - {service.price}€
                       </Typography>
                     </>
                   }
@@ -243,7 +243,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
               gap: '4px',
             }}
           >
-            <Add sx={{ fontSize: '40px' }} /> Add New Servie
+            <Add sx={{ fontSize: '40px' }} /> Add New Service
           </Typography>
         </Box>
         <Collapse in={isFormOpen || selectedServiceId !== null}>

@@ -1,9 +1,9 @@
-//import { apiBaseUrl } from '../config/apiConfig';
+import { apiBaseUrl } from '../config/apiConfig';
 
-//const staffApiUrl = `${apiBaseUrl}/api/staff`;
+const staffApiUrl = `${apiBaseUrl}/api/staff`;
 
 // use this for production
-const staffApiUrl = `https://plus-appointment.com/api/staff`;
+//const staffApiUrl = `https://plus-appointment.com/api/staff`;
 // Utility function to get token and handle missing authentication
 const getToken = () => {
   const token = localStorage.getItem('token');
