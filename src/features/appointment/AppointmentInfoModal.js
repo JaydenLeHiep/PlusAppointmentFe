@@ -21,7 +21,6 @@ import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { useStaffsContext } from '../staff/StaffsContext';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
-import '../../styles/css/OwnerDashboardCss/AppointmentInfoModal.css';
 
 const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
   const { appointments, changeStatusAppointments, deleteAppointmentAndUpdateList, updateAppointmentAndRefresh, customers, fetchAllCustomers } = useAppointmentsContext();
@@ -39,10 +38,9 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     comment: '',
     services: [{ serviceId: '', duration: '', price: '', name: '' }]
   });
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false); // State for confirmation dialog
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const alertRef = useRef(null);
-  const dialogContentRef = useRef(null);
 
   useEffect(() => {
     if (appointmentId) {
@@ -259,14 +257,16 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
       <DialogTitle
         sx={{
-          fontWeight: '550',
-          fontSize: '1.75rem', // Increased font size
-          color: '#1a1a1a', // Darker color for better contrast
-          textAlign: 'center', // Center align the text
-          padding: '16px 24px', // Added padding for better spacing
+          fontWeight: 'bold',
+          fontSize: '1.75rem',
+          color: '#333', 
+          textAlign: 'center', 
+          padding: '16px 24px', 
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
+          textTransform: 'capitalize', 
+          textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)', 
         }}
       >
         Appointment Details
@@ -274,9 +274,20 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent ref={dialogContentRef} dividers className="modal-content">
+      <DialogContent
+        dividers
+        sx={{
+          padding: '24px',
+          backgroundColor: '#f4f6f8',
+        }}
+      >
         {alert.message && (
-          <Alert ref={alertRef} severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} sx={{ mb: 2 }}>
+          <Alert
+            ref={alertRef}
+            severity={alert.severity}
+            onClose={() => setAlert({ message: '', severity: '' })}
+            sx={{ mb: 2 }}
+          >
             {alert.message}
           </Alert>
         )}
@@ -289,73 +300,67 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                   gutterBottom
                   sx={{
                     fontWeight: 'bold',
-                    color: '#007bff', // Adding a blue color to the client name
+                    color: '#007bff',
                     marginBottom: '12px',
                   }}
                 >
                   Client: {appointment.customerName}
                 </Typography>
-
                 <Typography
                   variant="body1"
                   gutterBottom
                   sx={{
                     color: '#333',
-                    fontSize: '1.1rem', // Slightly larger font size
+                    fontSize: '1.1rem',
                     marginBottom: '10px',
                   }}
                 >
                   {appointment.customerPhone}
                 </Typography>
-
                 <Typography
                   variant="body1"
                   gutterBottom
                   sx={{
                     color: '#333',
-                    fontSize: '1.1rem', // Slightly larger font size
+                    fontSize: '1.1rem',
                     marginBottom: '10px',
                   }}
                 >
                   {formatAppointmentTime(appointment.appointmentTime, appointment.duration)}
                 </Typography>
-
                 <Typography
                   variant="body1"
                   gutterBottom
                   sx={{
                     color: '#333',
-                    fontSize: '1.1rem', // Slightly larger font size
+                    fontSize: '1.1rem',
                     marginBottom: '10px',
                   }}
                 >
                   {appointment.service}
                 </Typography>
-
                 <Typography
                   variant="body1"
                   gutterBottom
                   sx={{
                     color: '#333',
-                    fontSize: '1.1rem', // Slightly larger font size
+                    fontSize: '1.1rem',
                     marginBottom: '10px',
                   }}
                 >
                   Comment: {appointment.comment}
                 </Typography>
-
                 <Typography
                   variant="h5"
                   gutterBottom
                   sx={{
                     fontWeight: 'bold',
-                    color: '#28a745', // Adding a green color to the staff name
+                    color: '#28a745',
                     marginBottom: '12px',
                   }}
                 >
                   By {appointment.staffName}
                 </Typography>
-
                 <Typography
                   variant="h6"
                   gutterBottom
@@ -363,12 +368,11 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                     fontWeight: 'bold',
                     color: '#1a1a1a',
                     marginBottom: '12px',
-                    fontSize: '1.2rem', // Slightly larger font size for Services title
+                    fontSize: '1.2rem',
                   }}
                 >
                   Services:
                 </Typography>
-
                 {appointment.services.$values.map((service, index) => (
                   <Typography
                     key={index}
@@ -376,7 +380,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                     gutterBottom
                     sx={{
                       color: '#555',
-                      fontSize: '1rem', // Slightly larger font size for service items
+                      fontSize: '1rem',
                       marginLeft: '16px',
                       marginBottom: '6px',
                     }}
@@ -387,18 +391,26 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
               </>
             ) : (
               <>
-                <FormControl fullWidth margin="dense" className="form-control" sx={{ mb: 2.5 }}>
+                <FormControl fullWidth margin="dense" sx={{ mb: 2.5 }}>
                   <InputLabel>Customer</InputLabel>
                   <Select
                     value={updatedAppointment.customerId || ''}
                     onChange={(e) => handleInputChange(e, 'customerId')}
                     label="Customer"
                     disabled
+                    sx={{
+                      backgroundColor: '#ffffff',
+                      borderRadius: '8px',
+                      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                    }}
                   >
                     {customers.length > 0 ? (
                       customers.map((customer) => (
                         <MenuItem key={customer.customerId} value={customer.customerId}>
-                          <Box component="span" fontWeight="fontWeightBold">{customer.name}</Box> - {customer.phone}
+                          <Box component="span" fontWeight="bold">
+                            {customer.name}
+                          </Box>{' '}
+                          - {customer.phone}
                         </MenuItem>
                       ))
                     ) : (
@@ -409,16 +421,24 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                   </Select>
                 </FormControl>
 
-                <FormControl fullWidth margin="dense" className="form-control" sx={{ mb: 2.5 }}>
+                <FormControl fullWidth margin="dense" sx={{ mb: 2.5 }}>
                   <InputLabel>Staff</InputLabel>
                   <Select
                     value={updatedAppointment.staffId}
                     onChange={(e) => handleInputChange(e, 'staffId')}
                     label="Staff"
+                    sx={{
+                      backgroundColor: '#ffffff',
+                      borderRadius: '8px',
+                      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                    }}
                   >
                     {staff.map((staffMember) => (
                       <MenuItem key={staffMember.staffId} value={staffMember.staffId}>
-                        <Box component="span" fontWeight="fontWeightBold">{staffMember.name}</Box> - {staffMember.phone}
+                        <Box component="span" fontWeight="bold">
+                          {staffMember.name}
+                        </Box>{' '}
+                        - {staffMember.phone}
                       </MenuItem>
                     ))}
                   </Select>
@@ -431,11 +451,15 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                   fullWidth
                   value={updatedAppointment.appointmentTime}
                   InputLabelProps={{
-                    shrink: true
+                    shrink: true,
                   }}
                   onChange={(e) => handleInputChange(e, 'appointmentTime')}
-                  className="input-field"
-                  sx={{ mb: 2.5 }}
+                  sx={{
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                    mb: 2.5,
+                  }}
                 />
 
                 <TextField
@@ -446,8 +470,12 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                   value={updatedAppointment.status}
                   onChange={(e) => handleInputChange(e, 'status')}
                   disabled
-                  className="input-field"
-                  sx={{ mb: 2.5 }} // Added margin-bottom
+                  sx={{
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                    mb: 2.5,
+                  }}
                 />
 
                 <TextField
@@ -458,82 +486,124 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                   multiline
                   value={updatedAppointment.comment}
                   onChange={(e) => handleInputChange(e, 'comment')}
-                  className="input-field"
-                  sx={{ mb: 1 }}
+                  sx={{
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                    mb: 1,
+                  }}
                 />
 
-                {updatedAppointment.services.map((service, index) => (
-                  <Box key={index} mb={2} mt={2}>
-                    <Grid container spacing={2} alignItems="center">
-                      <Grid item xs={4}>
-                        <FormControl fullWidth margin="dense" className="form-control">
-                          <InputLabel>Service</InputLabel>
-                          <Select
-                            value={service.serviceId}
-                            onChange={(e) => handleServiceChange(index, 'serviceId', e.target.value)}
-                            label="Service"
-                            disabled={!editMode}
-                          >
-                            {services.map((availableService) => (
-                              <MenuItem key={availableService.serviceId} value={availableService.serviceId}>
-                                {availableService.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={3}>
-                        <TextField
-                          margin="dense"
-                          label="Duration"
-                          type="time"
-                          fullWidth
-                          value={service.duration}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          inputProps={{
-                            step: 300
-                          }}
-                          disabled
-                          className="input-field"
-                        />
-                      </Grid>
-                      <Grid item xs={3}>
-                        <TextField
-                          margin="dense"
-                          label="Price"
-                          type="number"
-                          fullWidth
-                          value={service.price}
-                          onChange={(e) => handleServiceChange(index, 'price', e.target.value)}
-                          disabled
-                          className="input-field"
-                        />
-                      </Grid>
-                      <Grid item xs={2} className="remove-button-container">
-                        <IconButton onClick={() => handleRemoveService(index)} sx={{ color: 'red' }}>
-                          <RemoveIcon />
-                        </IconButton>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                ))}
+{updatedAppointment.services.map((service, index) => (
+  <Box key={index} mb={2} mt={2}>
+    <Grid container spacing={2} alignItems="center">
+      <Grid item xs={4}>
+        <FormControl fullWidth margin="dense" sx={{ mb: 0 }}>
+          <InputLabel>Service</InputLabel>
+          <Select
+            value={service.serviceId}
+            onChange={(e) => handleServiceChange(index, 'serviceId', e.target.value)}
+            label="Service"
+            disabled={!editMode}
+            sx={{
+              backgroundColor: '#ffffff',
+              borderRadius: '8px',
+              boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+            }}
+          >
+            {services.map((availableService) => (
+              <MenuItem key={availableService.serviceId} value={availableService.serviceId}>
+                {availableService.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Grid>
+      <Grid item xs={3}>
+        <TextField
+          margin="dense"
+          label="Duration"
+          type="time"
+          fullWidth
+          value={service.duration}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          inputProps={{
+            step: 300,
+          }}
+          disabled
+          sx={{
+            backgroundColor: '#ffffff',
+            borderRadius: '8px',
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+            textAlign: 'center', // Center-align the text
+          }}
+        />
+      </Grid>
+      <Grid item xs={3}>
+        <TextField
+          margin="dense"
+          label="Price"
+          type="number"
+          fullWidth
+          value={service.price}
+          onChange={(e) => handleServiceChange(index, 'price', e.target.value)}
+          disabled
+          sx={{
+            backgroundColor: '#ffffff',
+            borderRadius: '8px',
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+            textAlign: 'center', // Center-align the text
+          }}
+        />
+      </Grid>
+      <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <IconButton onClick={() => handleRemoveService(index)} sx={{ color: 'red' }}>
+          <RemoveIcon />
+        </IconButton>
+      </Grid>
+    </Grid>
+  </Box>
+))}
                 <Box mt={2} mb={3}>
                   <Typography
                     variant="h7"
                     onClick={handleAddService}
-                    className="add-service"
+                    sx={{
+                      cursor: 'pointer',
+                      textDecoration: 'underline',
+                      color: '#1976d2',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      mt: '16px',
+                      '&:hover': {
+                        color: '#115293',
+                      },
+                    }}
                   >
                     <Add sx={{ fontSize: '40px' }} /> Add Service
                   </Typography>
                 </Box>
-                <Box sx={{ mt: 2, display: editMode ? 'flex' : 'none', justifyContent: 'space-between' }}>
+                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
                   <Button
                     variant="contained"
                     color="error"
                     onClick={handleToggleEditMode}
-                    className="action-button close-edit-button"
+                    sx={{
+                      backgroundColor: '#d32f2f',
+                      color: '#fff',
+                      width: '120px',
+                      height: '40px',
+                      fontSize: '0.875rem',
+                      fontWeight: 'bold',
+                      borderRadius: '8px',
+                      boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
+                      '&:hover': {
+                        backgroundColor: '#9a0007',
+                      },
+                    }}
                   >
                     Close Edit
                   </Button>
@@ -541,7 +611,19 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                     variant="contained"
                     color="primary"
                     onClick={handleUpdateAppointment}
-                    className="action-button update-button"
+                    sx={{
+                      backgroundColor: '#1976d2',
+                      color: '#fff',
+                      width: '120px',
+                      height: '40px',
+                      fontSize: '0.875rem',
+                      fontWeight: 'bold',
+                      borderRadius: '8px',
+                      boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
+                      '&:hover': {
+                        backgroundColor: '#115293',
+                      },
+                    }}
                   >
                     Update
                   </Button>
@@ -552,10 +634,10 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
           {!editMode && (
             <Grid item xs={4} container alignItems="flex-start" justifyContent="flex-end">
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <IconButton aria-label="edit" onClick={handleToggleEditMode} className="icon-button edit-icon">
+                <IconButton aria-label="edit" onClick={handleToggleEditMode} sx={{ transition: 'color 0.2s ease', color: '#1976d2', '&:hover': { color: '#115293' } }}>
                   <EditIcon />
                 </IconButton>
-                <IconButton aria-label="delete" onClick={handleDeleteAppointment} className="icon-button delete-icon">
+                <IconButton aria-label="delete" onClick={handleDeleteAppointment} sx={{ transition: 'color 0.2s ease', color: '#d32f2f', '&:hover': { color: '#9a0007' } }}>
                   <DeleteIcon />
                 </IconButton>
               </Box>
@@ -564,8 +646,25 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
         </Grid>
       </DialogContent>
       {!editMode && (
-        <DialogActions className="modal-actions">
-          <Button variant="contained" color="success" onClick={handleConfirmStatus} className="action-button confirm-button">
+        <DialogActions sx={{ justifyContent: 'flex-end', padding: '16px 24px' }}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handleConfirmStatus}
+            sx={{
+              backgroundColor: '#28a745',
+              color: '#fff',
+              width: '120px',
+              height: '40px',
+              fontSize: '0.875rem',
+              fontWeight: 'bold',
+              borderRadius: '8px',
+              boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
+              '&:hover': {
+                backgroundColor: '#218838',
+              },
+            }}
+          >
             Confirm
           </Button>
         </DialogActions>

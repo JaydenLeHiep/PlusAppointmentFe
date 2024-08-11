@@ -5,8 +5,8 @@ import Footer from '../../../components/Footer';
 import RegisterForm from './RegisterForm';
 import usePasswordValidation from '../../../hooks/usePasswordValidation';
 import { registerUser } from '../../../lib/apiClient';
-import '../../../styles/css/OwnerDashboardCss/Register.css';
 
+const heroImage = require('../../../assets/hero-image.jpg');
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -58,16 +58,50 @@ const RegisterPage = () => {
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar />
-      <Box className="register-hero">
-        <Container 
-          className="d-flex align-items-center justify-content-center" 
-          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: "82vh", paddingTop: 0, marginTop: 0 }}
+      <Box
+        sx={{
+          backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${heroImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: '#fff',
+          textAlign: 'center',
+          flex: 1,
+          minHeight: '82vh',
+        }}
+      >
+        <Container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '82vh',
+          }}
         >
-          <Card className="register-container" style={{ marginTop: '0 !important' }}>
-            <Typography variant="h4" component="h1" gutterBottom className="text-center">
+          <Card
+            sx={{
+              maxWidth: 400,
+              padding: '2rem',
+              backgroundColor: 'rgba(255, 255, 255, 0.9)', // Slightly transparent background
+              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+              borderRadius: '8px',
+              mt: 0,
+            }}
+          >
+            <Typography
+              variant="h4"
+              component="h1"
+              gutterBottom
+              sx={{
+                textAlign: 'center',
+                color: '#333',
+              }}
+            >
               Register
             </Typography>
-            <RegisterForm 
+            <RegisterForm
               username={username}
               setUsername={setUsername}
               email={email}

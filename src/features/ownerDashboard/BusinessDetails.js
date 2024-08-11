@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import FullCalendarComponent from '../calendar/FullCalendarComponent';
-import '../../styles/css/OwnerDashboardCss/OwnerDashboard.css';
 import BusinessInfo from './BusinessInfor';
 import ShowStaffDialog from '../staff/showStaffDialog';
 import AddAppointmentDialog from '../appointment/AddApointmentDialog';
 import ShowServicesDialog from '../servicecomponent/showServiceDialog';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
-import ShowCustomerDialog from '../customer/ShowCustomerDialog'; // Import the customer dialog component
+import ShowCustomerDialog from '../customer/ShowCustomerDialog'; 
 
 const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments }) => {
   const { fetchAppointmentsForBusiness } = useAppointmentsContext();
@@ -20,7 +19,6 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
 
   const handleStaffClose = () => {
     setStaffOpen(false);
-    // You can choose to refresh staff data here if necessary
   };
 
   const handleAppointmentOpen = () => setAppointmentOpen(true);
@@ -36,9 +34,8 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
 
   const handleServicesClose = () => {
     setServicesOpen(false);
-    // You can choose to refresh services data here if necessary
   };
-  const handleCustomerOpen = () => setCustomerOpen(true); // Open customer dialog
+  const handleCustomerOpen = () => setCustomerOpen(true); 
   const handleCustomerClose = () => setCustomerOpen(false); 
 
   const parseDuration = (duration) => {

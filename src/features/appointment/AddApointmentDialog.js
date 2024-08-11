@@ -24,7 +24,6 @@ import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { useStaffsContext } from '../staff/StaffsContext';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
 import { searchCustomersByName } from '../../lib/apiClientCustomer';
-import '../../styles/css/OwnerDashboardCss/AddAppointmentsDialog.css';
 
 const AddAppointmentDialog = ({ open, onClose, businessId }) => {
   const initialAppointmentState = useRef({
@@ -166,15 +165,17 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle
         sx={{
-          fontWeight: '550',
-          fontSize: '1.75rem', // Increased font size
-          color: '#1a1a1a', // Darker color for better contrast
-          textAlign: 'center', // Center align the text
-          padding: '16px 24px', // Added padding for better spacing
+          fontWeight: 'bold',
+          fontSize: '1.75rem',
+          color: '#333', 
+          textAlign: 'center', 
+          padding: '16px 24px', 
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginLeft: '5px'
+          textTransform: 'capitalize', 
+          textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)', 
+          marginLeft: '3px'
         }}
       >
         Add Appointment
@@ -182,7 +183,13 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent dividers className="dialog-content">
+      <DialogContent
+        dividers
+        sx={{
+          padding: '24px',
+          backgroundColor: '#f4f6f8',
+        }}
+      >
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <FormControl fullWidth margin="dense">
@@ -192,7 +199,11 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
                 onChange={(e) => setCustomerSearch(e.target.value)}
                 margin="dense"
                 fullWidth
-                className="input-field"
+                sx={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: '8px',
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                }}
                 InputProps={{
                   endAdornment: (
                     <IconButton onClick={handleCustomerSearch}>
@@ -202,7 +213,25 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
                 }}
               />
               {searchPerformed && (
-                <Box className="customer-list-box">
+                <Box
+                  sx={{
+                    maxHeight: '150px',
+                    overflowY: 'auto',
+                    marginTop: '8px',
+                    padding: '8px',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                    '&::-webkit-scrollbar': {
+                      width: '8px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: '#ccc',
+                      borderRadius: '8px',
+                    },
+                  }}
+                >
                   {filteredCustomers.length === 0 ? (
                     <Typography>No Customer found</Typography>
                   ) : (
@@ -224,16 +253,22 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
           </Grid>
           <Grid item xs={12}>
             <FormControl fullWidth margin="dense">
-              <InputLabel className="input-label">Staff</InputLabel>
+              <InputLabel>Staff</InputLabel>
               <Select
                 value={newAppointment.staffId}
                 onChange={(e) => handleInputChange(e, 'staffId')}
                 label="Staff"
-                className="input-field"
+                sx={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: '8px',
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',                
+                }}
               >
                 {staff.map((staffMember) => (
                   <MenuItem key={staffMember.staffId} value={staffMember.staffId}>
-                    <Box component="span" fontWeight="fontWeightBold">{staffMember.name}</Box> - {staffMember.phone}
+                    <Box component="span" fontWeight="fontWeightBold">
+                      {staffMember.name}
+                    </Box> - {staffMember.phone}
                   </MenuItem>
                 ))}
               </Select>
@@ -246,11 +281,15 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
               type="datetime-local"
               fullWidth
               value={newAppointment.appointmentTime}
-              InputLabelProps={{
-                shrink: true
-              }}
-              className="input-field"
               onChange={(e) => handleInputChange(e, 'appointmentTime')}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              sx={{
+                backgroundColor: '#ffffff',
+                borderRadius: '8px',
+                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -262,7 +301,11 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
               value={newAppointment.status}
               onChange={(e) => handleInputChange(e, 'status')}
               disabled
-              className="input-field"
+              sx={{
+                backgroundColor: '#ffffff',
+                borderRadius: '8px',
+                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -274,10 +317,15 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
               multiline
               value={newAppointment.comment}
               onChange={(e) => handleInputChange(e, 'comment')}
-              className="input-field"
+              sx={{
+                backgroundColor: '#ffffff',
+                borderRadius: '8px',
+                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+              }}
             />
           </Grid>
         </Grid>
+
         {newAppointment.services.map((service, index) => (
           <Box key={index} mb={2} mt={2}>
             <Grid container spacing={2} alignItems="center">
@@ -288,7 +336,11 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
                     value={service.serviceId}
                     onChange={(e) => handleServiceChange(index, 'serviceId', e.target.value)}
                     label="Service"
-                    className="input-field"
+                    sx={{
+                      backgroundColor: '#ffffff',
+                      borderRadius: '8px',
+                      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                    }}
                   >
                     {services.map((availableService) => (
                       <MenuItem key={availableService.serviceId} value={availableService.serviceId}>
@@ -306,13 +358,17 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
                   fullWidth
                   value={service.duration}
                   InputLabelProps={{
-                    shrink: true
+                    shrink: true,
                   }}
                   inputProps={{
-                    step: 300
+                    step: 300,
                   }}
                   disabled
-                  className="input-field"
+                  sx={{
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                  }}
                 />
               </Grid>
               <Grid item xs={3}>
@@ -324,10 +380,14 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
                   value={service.price}
                   onChange={(e) => handleServiceChange(index, 'price', e.target.value)}
                   disabled
-                  className="input-field"
+                  sx={{
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                  }}
                 />
               </Grid>
-              <Grid item xs={2} className="remove-button-container">
+              <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <IconButton onClick={() => handleRemoveService(index)} color="error">
                   <Remove />
                 </IconButton>
@@ -336,24 +396,52 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
           </Box>
         ))}
         <Typography
-          variant="h7"
+          variant="body1"
           onClick={handleAddService}
-          className="add-service"
+          sx={{
+            cursor: 'pointer',
+            textDecoration: 'underline',
+            color: '#1976d2',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            marginTop: '16px',
+            '&:hover': {
+              color: '#115293',
+            },
+          }}
         >
           <Add sx={{ fontSize: '35px' }} /> Add Service
         </Typography>
+
         {alert.message && (
-          <Alert ref={alertRef} severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} className="alert">
+          <Alert
+            ref={alertRef}
+            severity={alert.severity}
+            onClose={() => setAlert({ message: '', severity: '' })}
+            sx={{ marginTop: '16px' }}
+          >
             {alert.message}
           </Alert>
         )}
       </DialogContent>
-      <DialogActions className="dialog-actions">
+      <DialogActions sx={{ justifyContent: 'space-between', padding: '16px 24px' }}>
         <Button
           variant="contained"
           color="primary"
           onClick={handleCancel}
-          className="action-button clear-button"
+          sx={{
+            width: '120px',
+            height: '40px',
+            fontSize: '0.875rem',
+            fontWeight: 'bold',
+            borderRadius: '8px',
+            backgroundColor: '#007bff',
+            color: '#fff',
+            '&:hover': {
+              backgroundColor: '#0056b3',
+            },
+          }}
         >
           Clear
         </Button>
@@ -361,7 +449,15 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
           variant="contained"
           color="success"
           onClick={handleAddAppointment}
-          className="action-button add-button"
+          sx={{
+            width: '125px',
+            backgroundColor: '#28a745',
+            color: '#fff',
+            boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
+            '&:hover': {
+              backgroundColor: '#218838',
+            },
+          }}
         >
           Add
         </Button>

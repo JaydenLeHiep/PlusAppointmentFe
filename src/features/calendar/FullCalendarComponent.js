@@ -4,7 +4,6 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
-import '../../styles/css/OwnerDashboardCss/FullCalendarComponent.css';
 import { Box, Typography, IconButton } from '@mui/material';
 import ArrowBackIosTwoToneIcon from '@mui/icons-material/ArrowBackIosTwoTone';
 import ArrowForwardIosTwoToneIcon from '@mui/icons-material/ArrowForwardIosTwoTone';
@@ -31,7 +30,6 @@ const FullCalendarComponent = ({ events, staff }) => {
   };
 
   const handleEventClick = (clickInfo) => {
-    console.log(clickInfo.event.extendedProps);
     setSelectedAppointmentId(clickInfo.event.extendedProps.appointmentId);
     setIsModalOpen(true);
   };
@@ -50,7 +48,6 @@ const FullCalendarComponent = ({ events, staff }) => {
     const startTime = eventInfo.event.start;
     const endTime = eventInfo.event.end;
 
-    // Null check for start and end times
     if (!startTime || !endTime) {
       return <div><span>Invalid Time</span></div>;
     }
@@ -75,17 +72,44 @@ const FullCalendarComponent = ({ events, staff }) => {
 
     if (currentView === 'dayGridMonth') {
       return (
-        <div className="day-cell">
-          {eventCount > 0 && <span className="badge">{eventCount}</span>}
+        <Box
+          sx={{
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          {eventCount > 0 && (
+            <Box
+              sx={{
+                backgroundColor: 'red',
+                color: 'white',
+                borderRadius: '50%',
+                padding: '0.2rem 0.5rem',
+                position: 'absolute',
+                top: '20px',
+                fontSize: '0.75rem',
+              }}
+            >
+              {eventCount}
+            </Box>
+          )}
           <div>{date.getDate()}</div>
-        </div>
+        </Box>
       );
     }
 
     return (
-      <div className="day-cell">
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
         <div>{date.getDate()}</div>
-      </div>
+      </Box>
     );
   };
 
@@ -94,30 +118,45 @@ const FullCalendarComponent = ({ events, staff }) => {
     setSelectedAppointmentId(null);
   };
 
-  // Create resources from staff names
   const resources = staff.map((staffMember, index) => ({
     id: index.toString(),
-    title: staffMember.name
+    title: staffMember.name,
   }));
 
-  // Add resourceIds to events
   const updatedEvents = events.map(event => {
     const resource = resources.find(res => res.title === event.staffName);
     return {
       ...event,
-      resourceIds: [resource?.id]
+      resourceIds: [resource?.id],
     };
   });
 
-  
-
   return (
-    <Box className="carousel-container">
-      <Box className="carousel-controls">
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          border: '1px solid lightblue',
+          backgroundColor: 'lightblue',
+          padding: '8px',
+          borderRadius: '8px',
+          marginBottom: '16px',
+        }}
+      >
         <IconButton onClick={() => handleViewChange(-1)}>
           <ArrowBackIosTwoToneIcon />
         </IconButton>
-        <Typography variant="h6" className="carousel-label">{viewLabels[views.indexOf(currentView)]}</Typography>
+        <Typography variant="h6" sx={{ margin: '0 16px' }}>
+          {viewLabels[views.indexOf(currentView)]}
+        </Typography>
         <IconButton onClick={() => handleViewChange(1)}>
           <ArrowForwardIosTwoToneIcon />
         </IconButton>
@@ -135,30 +174,30 @@ const FullCalendarComponent = ({ events, staff }) => {
         eventContent={renderEventContent}
         dayCellContent={renderDayCell}
         businessHours={{
-          daysOfWeek: [1, 2, 3, 4, 5, 6], // Monday - Saturday
-          startTime: '08:00', // Start time
-          endTime: '19:00' // End time
+          daysOfWeek: [1, 2, 3, 4, 5, 6],
+          startTime: '08:00',
+          endTime: '19:00',
         }}
         slotMinTime="08:00:00"
         slotMaxTime="19:00:00"
         headerToolbar={{
           left: 'title',
           center: '',
-          right: 'prev,next today'
+          right: 'prev,next today',
         }}
         views={{
           timeGridDay: {
             type: 'timeGrid',
             duration: { days: 1 },
             buttonText: 'day',
-            slotDuration: '01:00:00', // Set slot duration to 1 hour
-            resources: true, // Ensures resources are displayed in timeGridDay view
+            slotDuration: '01:00:00',
+            resources: true,
           },
           resourceTimelineDay: {
             type: 'resourceTimeline',
             duration: { days: 1 },
             buttonText: 'staff',
-          }
+          },
         }}
         slotLabelFormat={{ hour: 'numeric', minute: '2-digit', omitZeroMinute: false }}
       />
@@ -168,7 +207,6 @@ const FullCalendarComponent = ({ events, staff }) => {
           appointmentId={selectedAppointmentId}
           onClose={handleCloseModal}
           onUpdateStatus={(id, status) => {
-            // Update event status logic here if needed
             console.log(`Updated appointment ${id} to status ${status}`);
           }}
         />

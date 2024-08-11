@@ -1,64 +1,92 @@
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { Typography, List, ListItem, Paper, CircularProgress, Alert } from '@mui/material';
-import { useServicesContext } from '../servicecomponent/ServicesContext'; 
+import React, { Fragment, useRef, useEffect } from 'react';
+import { List, ListItem, ListItemText, IconButton, Typography, Collapse, Box } from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
+import ServiceForm from './ServiceForm';
 
-const ServiceList = ({ businessId, onServiceSelect, searchQuery }) => {
-  const { services, fetchServices, loading, error } = useServicesContext();
+const ServiceList = ({
+  services,
+  editServiceId,
+  handleEditService,
+  confirmDeleteService,
+  newService,
+  setNewService,
+  handleUpdateService,
+  handleCancelForm
+}) => {
+  const formRef = useRef(null);
 
   useEffect(() => {
-    if (businessId && services.length === 0) { // Only fetch if no services are loaded
-      fetchServices(businessId);
+    if (editServiceId !== null && formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  }, [businessId, fetchServices, services.length]);
-
-  if (loading) {
-    return <CircularProgress />;
-  }
-
-  if (error) {
-    return <Alert severity="error">{error}</Alert>; 
-  }
-
-  // Filter services based on search query
-  const filteredServices = services.filter(service =>
-    service.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-  
+  }, [editServiceId]);
 
   return (
-    <div>
-      <Typography variant="h6">Services</Typography>
-      {filteredServices.length === 0 ? (
-        <Typography variant="body1">No services found</Typography>
-      ) : (
-        <List>
-          {filteredServices.map((service) => (
-            <ListItem key={service.serviceId} button onClick={() => onServiceSelect(service)}>
-              <Paper className="service-item">
-                <div className="service-container">
-                  <div className="service-info">
-                    <Typography variant="body1" className="bold-text">{service.name}</Typography>
-                    <Typography variant="body1">{service.description}</Typography>
-                  </div>
-                  <div className="service-details">
-                    <Typography variant="body1" className="bold-text">{service.duration}</Typography>
-                    <Typography variant="body1">€{service.price}</Typography>
-                  </div>
-                </div>
-              </Paper>
-            </ListItem>
-          ))}
-        </List>
-      )}
-    </div>
+    <List>
+      {services.map((service) => (
+        <Fragment key={service.serviceId}>
+          <ListItem
+            sx={{
+              borderRadius: '8px',
+              backgroundColor: '#f0f8ff',
+              mb: 2,
+              boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #1976d2',
+              '&:hover': {
+                boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+                backgroundColor: '#e6f1ff',
+              },
+            }}
+            secondaryAction={
+              <>
+                <IconButton edge="end" aria-label="edit" onClick={() => handleEditService(service)}>
+                  <Edit />
+                </IconButton>
+                <IconButton edge="end" aria-label="delete" onClick={() => confirmDeleteService(service.serviceId)}>
+                  <Delete />
+                </IconButton>
+              </>
+            }
+          >
+            <ListItemText
+              primary={
+                <Typography variant="body1" component="span" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+                  {service.name}
+                </Typography>
+              }
+              secondary={
+                <>
+                  <Typography variant="body2" component="span">
+                    {service.description}
+                  </Typography>
+                  <br />
+                  <Typography variant="body2" component="span">
+                    {service.duration} - ${service.price}
+                  </Typography>
+                </>
+              }
+            />
+          </ListItem>
+          {/* Update Service Form - Only visible when editServiceId matches the current serviceId */}
+          {editServiceId === service.serviceId && (
+            <Collapse in={editServiceId === service.serviceId}>
+              <Box ref={formRef}> {/* Reference for scrolling */}
+                <ServiceForm
+                  title="Update Service"
+                  newService={newService}
+                  setNewService={setNewService}
+                  handleAction={() => handleUpdateService(service.serviceId)}
+                  handleCancelForm={handleCancelForm}
+                  buttonText="Update Service"
+                  buttonColor="#28a745"
+                />
+              </Box>
+            </Collapse>
+          )}
+        </Fragment>
+      ))}
+    </List>
   );
-};
-
-ServiceList.propTypes = {
-  businessId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  onServiceSelect: PropTypes.func.isRequired,
-  searchQuery: PropTypes.string.isRequired,
 };
 
 export default ServiceList;
