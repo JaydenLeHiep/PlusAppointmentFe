@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
@@ -14,11 +13,11 @@ import {
   Box,
   Alert,
   Typography,
+  TextField,
 } from '@mui/material';
 import { Delete, Edit, Add, Close as CloseIcon } from '@mui/icons-material';
 import { useStaffsContext } from '../staff/StaffsContext';
-import StaffForm from './StaffForm';
-import ConfirmationDialog from '../../components/ConfirmationDialog'; // Importing the ConfirmationDialog component
+import ConfirmationDialog from '../../components/ConfirmationDialog';
 
 const ShowStaffDialog = ({ open, onClose, businessId }) => {
   const { staff, fetchAllStaff, addStaff, updateStaff, deleteStaff } = useStaffsContext();
@@ -214,7 +213,161 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
             <CloseIcon />
           </IconButton>
         </DialogTitle>
+        {alert.message && (
+            <Alert
+              severity={alert.severity}
+              onClose={() => setAlert({ message: '', severity: '' })}
+              ref={alertRef} // Reference for scrolling to the alert message
+              sx={{ mt: 2 }}
+            >
+              {alert.message}
+            </Alert>
+          )}
         <DialogContent dividers>
+          <Box mt={1} mb={3} display="flex" justifyContent="center">
+            <Typography
+              variant="h7"
+              onClick={handleAddNewStaffClick}
+              sx={{
+                cursor: 'pointer',
+                textDecoration: 'underline',
+                color: '#1976d2',
+                '&:hover': {
+                  color: '#115293',
+                },
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+            >
+              <Add sx={{ fontSize: '40px' }} /> Add New Staff
+            </Typography>
+          </Box>
+          <Collapse in={isFormOpen || selectedStaffId !== null}>
+            <Box
+              mt={2}
+              p={2}
+              mb={2}
+              ref={formRef} // Reference for scrolling to the expanding box
+              sx={{ borderRadius: '8px', backgroundColor: '#f9f9f9', boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.2)' }}
+            >
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+                {selectedStaffId ? 'Update Staff' : 'Add New Staff'}
+              </Typography>
+              <TextField
+                margin="dense"
+                label="Name"
+                type="text"
+                fullWidth
+                name="name"
+                value={newStaff.name}
+                onChange={(e) => setNewStaff({ ...newStaff, [e.target.name]: e.target.value })}
+                sx={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: '12px',
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      border: 'none', // Removing the default border
+                    },
+                  },
+                }}
+              />
+              <TextField
+                margin="dense"
+                label="Email"
+                type="email"
+                fullWidth
+                name="email"
+                value={newStaff.email}
+                onChange={(e) => setNewStaff({ ...newStaff, [e.target.name]: e.target.value })}
+                sx={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: '12px',
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      border: 'none', // Removing the default border
+                    },
+                  },
+                }}
+              />
+              <TextField
+                margin="dense"
+                label="Phone"
+                type="text"
+                fullWidth
+                name="phone"
+                value={newStaff.phone}
+                onChange={(e) => setNewStaff({ ...newStaff, [e.target.name]: e.target.value })}
+                sx={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: '12px',
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      border: 'none', // Removing the default border
+                    },
+                  },
+                }}
+              />
+              <TextField
+                margin="dense"
+                label="Password"
+                type="password"
+                fullWidth
+                name="password"
+                value={newStaff.password}
+                onChange={(e) => setNewStaff({ ...newStaff, [e.target.name]: e.target.value })}
+                sx={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: '12px',
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      border: 'none', // Removing the default border
+                    },
+                  },
+                }}
+              />
+              <Box mt={3} display="flex" justifyContent="space-between">
+                <Button
+                  onClick={handleCancelForm}
+                  sx={{
+                    width: '120px',
+                    height: '40px',
+                    fontSize: '0.875rem',
+                    fontWeight: 'bold',
+                    borderRadius: '8px',
+                    backgroundColor: '#6c757d',
+                    color: '#fff',
+                    '&:hover': { backgroundColor: '#5a6268' },
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={selectedStaffId ? handleUpdateStaff : handleAddStaff}
+                  sx={{
+                    width: '150px',
+                    height: '40px',
+                    fontSize: '0.875rem',
+                    fontWeight: 'bold',
+                    borderRadius: '8px',
+                    backgroundColor: selectedStaffId ? '#28a745' : '#007bff',
+                    color: '#fff',
+                    '&:hover': {
+                      backgroundColor: selectedStaffId ? '#218838' : '#0056b3',
+                    },
+                  }}
+                >
+                  {selectedStaffId ? 'Update Staff' : 'Add Staff'}
+                </Button>
+              </Box>
+            </Box>
+          </Collapse>
+
+          {/* Staff List */}
           {staff.length > 0 ? (
             <List>
               {staff.map((member) => (
@@ -266,88 +419,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
           ) : (
             <DialogContentText>No staff found for this business.</DialogContentText>
           )}
-          <Box mt={2} mb={2} display="flex" justifyContent="center">
-            <Typography
-              variant="h7"
-              onClick={handleAddNewStaffClick}
-              sx={{
-                cursor: 'pointer',
-                textDecoration: 'underline',
-                color: '#1976d2',
-                '&:hover': {
-                  color: '#115293',
-                },
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-              }}
-            >
-              <Add sx={{ fontSize: '40px' }} /> Add New Staff
-            </Typography>
-          </Box>
-          <Collapse in={isFormOpen || selectedStaffId !== null}>
-            <Box
-              mt={2}
-              p={2}
-              ref={formRef} // Reference for scrolling to the expanding box
-              sx={{ borderRadius: '8px', backgroundColor: '#f9f9f9', boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.2)' }}
-            >
-              <StaffForm
-                title={selectedStaffId ? 'Update Staff' : 'Add New Staff'}
-                newStaff={newStaff}
-                setNewStaff={setNewStaff}
-                handleCancelForm={handleCancelForm}
-              />
-            </Box>
-          </Collapse>
-          {alert.message && (
-            <Alert
-              severity={alert.severity}
-              onClose={() => setAlert({ message: '', severity: '' })}
-              ref={alertRef} // Reference for scrolling to the alert message
-              sx={{ mt: 2 }}
-            >
-              {alert.message}
-            </Alert>
-          )}
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'space-between', padding: '16px 24px' }}>
-          <Button
-            variant="contained"
-            onClick={handleAddStaff}
-            disabled={!isFormOpen || !!selectedStaffId}
-            sx={{
-              width: '120px',
-              height: '40px',
-              fontSize: '0.875rem',
-              fontWeight: 'bold',
-              borderRadius: '8px',
-              backgroundColor: '#007bff',
-              color: '#fff',
-              '&:hover': { backgroundColor: '#0056b3' }
-            }}
-          >
-            Add Staff
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleUpdateStaff}
-            disabled={!selectedStaffId}
-            sx={{
-              width: '150px',
-              height: '40px',
-              fontSize: '0.875rem',
-              fontWeight: 'bold',
-              borderRadius: '8px',
-              boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
-              backgroundColor: '#28a745',
-              color: '#fff',
-              '&:hover': { backgroundColor: '#218838' }
-            }}
-          >
-            Update Staff
-          </Button>
-        </DialogActions>
       </Dialog>
 
       {/* Confirmation Dialog for Deleting Staff */}

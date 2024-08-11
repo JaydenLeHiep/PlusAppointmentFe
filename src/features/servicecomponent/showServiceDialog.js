@@ -206,59 +206,18 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent dividers>
-        {services.length > 0 ? (
-          <List>
-            {services.map((service) => (
-              <ListItem
-                key={service.serviceId}
-                sx={{
-                  borderRadius: '8px',
-                  backgroundColor: '#f0f8ff', // Light background color
-                  mb: 2,
-                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', // Elevated shadow
-                  border: '1px solid #1976d2', // Border color to make it pop
-                  '&:hover': {
-                    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-                    backgroundColor: '#e6f1ff', // Slightly darker background on hover
-                  }
-                }}
-                secondaryAction={
-                  <>
-                    <IconButton edge="end" aria-label="edit" onClick={() => handleEditService(service)}>
-                      <Edit />
-                    </IconButton>
-                    <IconButton edge="end" aria-label="delete" onClick={() => confirmDeleteService(service.serviceId)}>
-                      <Delete />
-                    </IconButton>
-                  </>
-                }
-              >
-                <ListItemText
-                  primary={
-                    <Typography variant="body1" component="span" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
-                      {service.name}
-                    </Typography>
-                  }
-                  secondary={
-                    <>
-                      <Typography variant="body2" component="span">
-                        {service.description}
-                      </Typography>
-                      <br />
-                      <Typography variant="body2" component="span">
-                        {service.duration} - ${service.price}
-                      </Typography>
-                    </>
-                  }
-                />
-              </ListItem>
-            ))}
-          </List>
-        ) : (
-          <DialogContentText>No services found for this business.</DialogContentText>
+      {alert.message && (
+          <Alert
+            severity={alert.severity}
+            onClose={() => setAlert({ message: '', severity: '' })}
+            ref={alertRef} // Reference for scrolling to the alert message
+            sx={{ mt: 2 }}
+          >
+            {alert.message}
+          </Alert>
         )}
-        <Box mt={2} mb={2} display="flex" justifyContent="center">
+      <DialogContent dividers>
+        <Box mt={1} mb={3} display="flex" justifyContent="center">
           <Typography
             variant="h7"
             onClick={handleAddNewServiceClick}
@@ -281,6 +240,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
           <Box
             mt={2}
             p={2}
+            mb={3}
             ref={formRef} // Reference for scrolling to the expanding form
             sx={{ borderRadius: '12px', backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)' }}
           >
@@ -392,18 +352,63 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
             </Box>
           </Box>
         </Collapse>
-        {alert.message && (
-          <Alert
-            severity={alert.severity}
-            onClose={() => setAlert({ message: '', severity: '' })}
-            ref={alertRef} // Reference for scrolling to the alert message
-            sx={{ mt: 2 }}
-          >
-            {alert.message}
-          </Alert>
+  
+        {/* Service List */}
+        {services.length > 0 ? (
+          <List>
+            {services.map((service) => (
+              <ListItem
+                key={service.serviceId}
+                sx={{
+                  borderRadius: '8px',
+                  backgroundColor: '#f0f8ff', // Light background color
+                  mb: 2,
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', // Elevated shadow
+                  border: '1px solid #1976d2', // Border color to make it pop
+                  '&:hover': {
+                    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+                    backgroundColor: '#e6f1ff', // Slightly darker background on hover
+                  }
+                }}
+                secondaryAction={
+                  <>
+                    <IconButton edge="end" aria-label="edit" onClick={() => handleEditService(service)}>
+                      <Edit />
+                    </IconButton>
+                    <IconButton edge="end" aria-label="delete" onClick={() => confirmDeleteService(service.serviceId)}>
+                      <Delete />
+                    </IconButton>
+                  </>
+                }
+              >
+                <ListItemText
+                  primary={
+                    <Typography variant="body1" component="span" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+                      {service.name}
+                    </Typography>
+                  }
+                  secondary={
+                    <>
+                      <Typography variant="body2" component="span">
+                        {service.description}
+                      </Typography>
+                      <br />
+                      <Typography variant="body2" component="span">
+                        {service.duration} - ${service.price}
+                      </Typography>
+                    </>
+                  }
+                />
+              </ListItem>
+            ))}
+          </List>
+        ) : (
+          <DialogContentText>No services found for this business.</DialogContentText>
         )}
+        
+        
       </DialogContent>
-
+  
       {/* Confirmation Dialog for Deleting Service */}
       <ConfirmationDialog
         open={confirmDialogOpen}
