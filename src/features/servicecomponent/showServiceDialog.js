@@ -126,16 +126,17 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
     setConfirmDialogOpen(true); // Open the confirmation dialog
   };
 
-  const handleDeleteService = (serviceId) => {
+  const handleDeleteService = () => {
     closeFormAndExecuteAction(async () => {
       try {
-        await deleteService(String(businessId), serviceId);
+        await deleteService(String(businessId), serviceToDelete);
         setAlert({ message: 'Service deleted successfully!', severity: 'success' });
       } catch (error) {
         console.error('Failed to delete service:', error);
         const errorMessage = error.response?.data?.message || error.message || 'Failed to delete service. Please try again.';
         setAlert({ message: errorMessage, severity: 'error' });
       }
+      setConfirmDialogOpen(false); // Close the confirmation dialog after deletion
     });
   };
 
