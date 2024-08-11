@@ -1,8 +1,8 @@
-//import { apiBaseUrl } from '../config/apiConfig';
-//const appointmentApiUrl = `${apiBaseUrl}/api/appointments`;
+import { apiBaseUrl } from '../config/apiConfig';
+const appointmentApiUrl = `${apiBaseUrl}/api/appointments`;
 
 // use this for production
-const appointmentApiUrl = `https://plus-appointment.com/api/appointments`;
+//const appointmentApiUrl = `https://plus-appointment.com/api/appointments`;
 
 //Api appointments
 

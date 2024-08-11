@@ -24,6 +24,7 @@ const ServiceList = ({ businessId, onServiceSelect, searchQuery }) => {
   const filteredServices = services.filter(service =>
     service.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  
 
   return (
     <div>
@@ -42,7 +43,7 @@ const ServiceList = ({ businessId, onServiceSelect, searchQuery }) => {
                   </div>
                   <div className="service-details">
                     <Typography variant="body1" className="bold-text">{service.duration}</Typography>
-                    <Typography variant="body1">${service.price}</Typography>
+                    <Typography variant="body1">€{service.price}</Typography>
                   </div>
                 </div>
               </Paper>

@@ -1,8 +1,8 @@
-//import { apiBaseUrl } from '../config/apiConfig';
+import { apiBaseUrl } from '../config/apiConfig';
 
-//const serviceApiUrl = `${apiBaseUrl}/api/service`;
+const serviceApiUrl = `${apiBaseUrl}/api/service`;
 // use this for production
-const serviceApiUrl = `https://plus-appointment.com/api/service`;
+//const serviceApiUrl = `https://plus-appointment.com/api/service`;
 
 export const fetchService = async (businessId) => {
     // const token = localStorage.getItem('token');
