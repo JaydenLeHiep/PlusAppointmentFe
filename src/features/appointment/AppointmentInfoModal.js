@@ -260,52 +260,127 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
       <DialogTitle
         sx={{
           fontWeight: '550',
-          fontSize: '1.75rem',
-          color: '#1a1a1a',
-          textAlign: 'center',
-          padding: '16px 24px',
-          justifyContent: 'space-between',          
+          fontSize: '1.75rem', // Increased font size
+          color: '#1a1a1a', // Darker color for better contrast
+          textAlign: 'center', // Center align the text
+          padding: '16px 24px', // Added padding for better spacing
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
-        className="modal-title"
       >
         Appointment Details
-        <IconButton aria-label="close" onClick={handleCloseDialog} className="close-icon">
+        <IconButton aria-label="close" onClick={onClose} sx={{ color: '#808080', fontSize: '1.5rem' }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent ref={dialogContentRef} dividers className="modal-content">
-      {alert.message && (
-              <Alert ref={alertRef} severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} sx={{ mb: 2 }}>
-                {alert.message}
-              </Alert>
-            )}
+        {alert.message && (
+          <Alert ref={alertRef} severity={alert.severity} onClose={() => setAlert({ message: '', severity: '' })} sx={{ mb: 2 }}>
+            {alert.message}
+          </Alert>
+        )}
         <Grid container spacing={2}>
-          <Grid item xs={editMode ? 12 : 8}>          
+          <Grid item xs={editMode ? 12 : 8}>
             {!editMode ? (
               <>
-                <Typography variant="body1" gutterBottom className="bold-text">
+                <Typography
+                  variant="h5"
+                  gutterBottom
+                  sx={{
+                    fontWeight: 'bold',
+                    color: '#007bff', // Adding a blue color to the client name
+                    marginBottom: '12px',
+                  }}
+                >
                   Client: {appointment.customerName}
                 </Typography>
-                <Typography variant="body1" gutterBottom>
+
+                <Typography
+                  variant="body1"
+                  gutterBottom
+                  sx={{
+                    color: '#333',
+                    fontSize: '1.1rem', // Slightly larger font size
+                    marginBottom: '10px',
+                  }}
+                >
                   {appointment.customerPhone}
                 </Typography>
-                <Typography variant="body1" gutterBottom>
+
+                <Typography
+                  variant="body1"
+                  gutterBottom
+                  sx={{
+                    color: '#333',
+                    fontSize: '1.1rem', // Slightly larger font size
+                    marginBottom: '10px',
+                  }}
+                >
                   {formatAppointmentTime(appointment.appointmentTime, appointment.duration)}
                 </Typography>
-                <Typography variant="body1" gutterBottom>
+
+                <Typography
+                  variant="body1"
+                  gutterBottom
+                  sx={{
+                    color: '#333',
+                    fontSize: '1.1rem', // Slightly larger font size
+                    marginBottom: '10px',
+                  }}
+                >
                   {appointment.service}
                 </Typography>
-                <Typography variant="body1" gutterBottom>
+
+                <Typography
+                  variant="body1"
+                  gutterBottom
+                  sx={{
+                    color: '#333',
+                    fontSize: '1.1rem', // Slightly larger font size
+                    marginBottom: '10px',
+                  }}
+                >
                   Comment: {appointment.comment}
                 </Typography>
-                <Typography variant="body1" gutterBottom>
+
+                <Typography
+                  variant="h5"
+                  gutterBottom
+                  sx={{
+                    fontWeight: 'bold',
+                    color: '#28a745', // Adding a green color to the staff name
+                    marginBottom: '12px',
+                  }}
+                >
                   By {appointment.staffName}
                 </Typography>
-                <Typography variant="body1" gutterBottom>
+
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  sx={{
+                    fontWeight: 'bold',
+                    color: '#1a1a1a',
+                    marginBottom: '12px',
+                    fontSize: '1.2rem', // Slightly larger font size for Services title
+                  }}
+                >
                   Services:
                 </Typography>
+
                 {appointment.services.$values.map((service, index) => (
-                  <Typography key={index} variant="body2" gutterBottom>
+                  <Typography
+                    key={index}
+                    variant="body2"
+                    gutterBottom
+                    sx={{
+                      color: '#555',
+                      fontSize: '1rem', // Slightly larger font size for service items
+                      marginLeft: '16px',
+                      marginBottom: '6px',
+                    }}
+                  >
                     {index + 1}. {service.name}
                   </Typography>
                 ))}
