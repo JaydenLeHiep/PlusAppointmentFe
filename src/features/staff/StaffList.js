@@ -1,69 +1,90 @@
-import React, { useState, useEffect } from 'react';
-import { List, ListItem, Typography, Paper, CircularProgress, Box, Alert } from '@mui/material';
-import { useStaffsContext } from '../staff/StaffsContext'; 
+import React, { Fragment, useRef, useEffect } from 'react';
+import { List, ListItem, ListItemText, IconButton, Typography, Collapse, Box } from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
+import StaffForm from './StaffForm';
 
-const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
-  const { staff, fetchAllStaff } = useStaffsContext(); // Use the context
-  const [loading, setLoading] = useState(true); // State to track loading status
-  const [error, setError] = useState(''); // State to track any errors
+const StaffList = ({
+  staff,
+  editStaffId,
+  handleEditStaff,
+  confirmDeleteStaff,
+  newStaff,
+  setNewStaff,
+  handleUpdateStaff,
+  handleCancelForm,
+}) => {
+  const formRef = useRef(null);
 
   useEffect(() => {
-    const fetchStaffData = async () => {
-      try {
-        await fetchAllStaff(businessId); // Fetch staff using the context
-        setLoading(false); // Mark loading as complete
-      } catch (error) {
-        console.error('Error fetching staff:', error.message);
-        setError('Failed to fetch staff. Please try again.'); // Set error message
-        setLoading(false);
-      }
-    };
-
-    fetchStaffData();
-  }, [businessId, fetchAllStaff]);
-
-  // Filtering staff based on search query
-  const filteredStaff = staff.filter(staffMember =>
-    staffMember.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-        <CircularProgress />
-      </Box>
-    ); // Display loading indicator while fetching data
-  }
-
-  if (error) {
-    return (
-      <Box mt={2}>
-        <Alert severity="error">{error}</Alert>
-      </Box>
-    ); // Display an error message if there's an error
-  }
+    if (editStaffId !== null && formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [editStaffId]);
 
   return (
-    <div>
-      <Typography variant="h6">Staff</Typography>
-      <List>
-        {filteredStaff.length > 0 ? (
-          filteredStaff.map((staffMember) => (
-            <ListItem key={staffMember.staffId} button onClick={() => onStaffSelect(staffMember)}>
-              <Paper className="staff-item">
-                <div className="staff-info">
-                  <Typography variant="body1" className="bold-text">{staffMember.name}</Typography>
-                  <Typography variant="body2">{staffMember.email}</Typography>
-                  <Typography variant="body2">Phone: {staffMember.phone}</Typography>
-                </div>
-              </Paper>
-            </ListItem>
-          ))
-        ) : (
-          <Typography variant="body2">No staff members match your search.</Typography>
-        )}
-      </List>
-    </div>
+    <List>
+      {staff.map((member) => (
+        <Fragment key={member.staffId}>
+          <ListItem
+            sx={{
+              borderRadius: '8px',
+              backgroundColor: '#f0f8ff',
+              mb: 2,
+              boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #1976d2',
+              '&:hover': {
+                boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+                backgroundColor: '#e6f1ff',
+              },
+            }}
+            secondaryAction={
+              <>
+                <IconButton edge="end" aria-label="edit" onClick={() => handleEditStaff(member)}>
+                  <Edit />
+                </IconButton>
+                <IconButton edge="end" aria-label="delete" onClick={() => confirmDeleteStaff(member.staffId)}>
+                  <Delete />
+                </IconButton>
+              </>
+            }
+          >
+            <ListItemText
+              primary={
+                <Typography variant="body1" component="span" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+                  {member.name}
+                </Typography>
+              }
+              secondary={
+                <>
+                  <Typography variant="body2" component="span">
+                    {member.email}
+                  </Typography>
+                  <br />
+                  <Typography variant="body2" component="span">
+                    {member.phone}
+                  </Typography>
+                </>
+              }
+            />
+          </ListItem>
+          {editStaffId === member.staffId && (
+            <Collapse in={editStaffId === member.staffId}>
+              <Box ref={formRef}>
+                <StaffForm
+                  title="Update Staff"
+                  newStaff={newStaff}
+                  setNewStaff={setNewStaff}
+                  handleAction={() => handleUpdateStaff(member.staffId)}
+                  handleCancelForm={handleCancelForm}
+                  buttonText="Update Staff"
+                  buttonColor="#28a745"
+                />
+              </Box>
+            </Collapse>
+          )}
+        </Fragment>
+      ))}
+    </List>
   );
 };
 

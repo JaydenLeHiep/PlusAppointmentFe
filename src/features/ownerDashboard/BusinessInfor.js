@@ -32,10 +32,27 @@ const BusinessInfo = ({
         </Box>
         <Box display="flex" alignItems="center">
           <Badge badgeContent={staffCount} color="primary" sx={{ marginRight: 2 }}>
-            <InsertEmoticonTwoToneIcon className="material-symbols-outlined" onClick={handleStaffOpen} style={{ cursor: 'pointer' }} />
+            <InsertEmoticonTwoToneIcon
+              onClick={handleStaffOpen}
+              sx={{
+                cursor: 'pointer',
+                fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24",
+                fontSize: '24px',
+              }}
+            />
           </Badge>
-          <Badge badgeContent={servicesCount} sx={{ "& .MuiBadge-badge": { backgroundColor: "green", color: "white" } }}>
-            <AutoAwesomeTwoToneIcon className="material-symbols-outlined" onClick={handleServiceOpen} style={{ cursor: 'pointer' }} />
+          <Badge
+            badgeContent={servicesCount}
+            sx={{ "& .MuiBadge-badge": { backgroundColor: 'green', color: 'white' } }}
+          >
+            <AutoAwesomeTwoToneIcon
+              onClick={handleServiceOpen}
+              sx={{
+                cursor: 'pointer',
+                fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24",
+                fontSize: '24px',
+              }}
+            />
           </Badge>
         </Box>
       </Box>
@@ -43,7 +60,6 @@ const BusinessInfo = ({
         <Typography
           variant="h2"
           gutterBottom
-          className="business-title"
           sx={{
             fontWeight: 'bold',
             color: '#1976d2',

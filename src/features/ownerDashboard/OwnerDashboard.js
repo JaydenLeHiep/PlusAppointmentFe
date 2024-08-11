@@ -4,12 +4,11 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import BusinessList from './BusinessList';
 import BusinessDetails from './BusinessDetails';
-import AppointmentList from '../appointment/AppointmentList'; // Ensure AppointmentList is imported
+import AppointmentList from '../appointment/AppointmentList';
 import { fetchBusinesses } from '../../lib/apiClientBusiness';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { useStaffsContext } from '../staff/StaffsContext';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
-import '../../styles/css/OwnerDashboardCss/OwnerDashboard.css';
 
 const OwnerDashboard = () => {
   const { appointments, fetchAppointmentsForBusiness } = useAppointmentsContext();
@@ -73,14 +72,49 @@ const OwnerDashboard = () => {
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar />
-      <Box className="dashboard-hero">
+      <Box
+        sx={{
+          backgroundColor: '#F5F5F5',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+          padding: { xs: '0 1rem', md: '0 2rem' },
+          flex: 1,
+        }}
+      >
         <Container
-          className="d-flex align-items-center justify-content-center"
-          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '82vh', paddingTop: 0, marginTop: 0 }}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '82vh',
+            paddingTop: 0,
+            marginTop: 0,
+          }}
         >
-          <Card className="dashboard-container">
+          <Card
+            sx={{
+              width: '100%',
+              maxWidth: '100%',
+              padding: { xs: '1rem', md: '2rem' },
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+              borderRadius: '8px',
+              marginTop: { xs: '10px', md: '30px' },
+              marginBottom: { xs: '10px', md: '30px' },
+              textAlign: 'left',
+              display: 'flex',
+              flexDirection: 'column',
+              flexGrow: 1,
+            }}
+          >
             {loading ? (
-              <CircularProgress />
+              <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+                <CircularProgress />
+              </Box>
             ) : error ? (
               <Alert severity="error">{error}</Alert>
             ) : selectedBusiness ? (

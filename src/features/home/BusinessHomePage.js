@@ -3,26 +3,51 @@ import { Box, Button, Container, Grid, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import '../../styles/css/OwnerDashboardCss/BusinessHomePage.css';
+
+const heroImage = require('../../assets/hero-image.jpg');
 
 const BusinessHomePage = () => {
   return (
-    <Box>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+      }}
+    >
       <Navbar />
-      <Box className="hero">
-        <Box className="hero-content">
+      <Box
+        sx={{
+          backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${heroImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          height: '80vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: '#fff',
+          textAlign: 'center',
+        }}
+      >
+        <Box sx={{ padding: '2rem' }}>
           <Typography variant="h2" component="h1" gutterBottom>
             Welcome to Nail Store
           </Typography>
           <Typography variant="h5" component="p" gutterBottom>
             Experience the best nail care services with us.
           </Typography>
-          <Button variant="contained" color="primary" component={RouterLink} to="/register">
+          <Button
+            variant="contained"
+            color="primary"
+            component={RouterLink}
+            to="/register"
+            sx={{ mt: 2, padding: '10px 20px', fontSize: '1rem' }}
+          >
             Get Started
           </Button>
         </Box>
       </Box>
-      <Container className="section">
+      <Container sx={{ padding: '4rem 0', flex: '1' }}>
         <Typography variant="h4" component="h2" gutterBottom>
           Our Services
         </Typography>

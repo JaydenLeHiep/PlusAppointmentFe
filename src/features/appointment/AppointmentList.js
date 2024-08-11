@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { List, ListItem, Typography, Paper, MenuItem, Select, FormControl, InputLabel, ButtonBase, Box, Badge } from '@mui/material';
 import AppointmentInfoModal from './AppointmentInfoModal';
-import '../../styles/css/OwnerDashboardCss/AppointmentList.css';
 
 const AppointmentList = ({ appointments, businessId }) => {
   const [sortCriteria, setSortCriteria] = useState('date');
@@ -73,9 +72,9 @@ const AppointmentList = ({ appointments, businessId }) => {
                   }
                 }}
               >
-                <Box className="appointment-container" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Box className="info-container" sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-                    <Box className="appointment-time" sx={{ minWidth: '120px', textAlign: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box sx={{ display: 'flex', gap: '16px', alignItems: 'center', flexGrow: 1 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: '120px', textAlign: 'center' }}>
                       <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
                         {new Date(appointment.appointmentTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </Typography>
@@ -83,7 +82,7 @@ const AppointmentList = ({ appointments, businessId }) => {
                         {new Date(appointment.appointmentTime).toLocaleDateString([], { day: '2-digit', month: '2-digit' })}
                       </Typography>
                     </Box>
-                    <Box className="customer-info" sx={{ flexGrow: 1, ml: 2 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', flexGrow: 1 }}>
                       <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
                         {appointment.customerName}
                       </Typography>

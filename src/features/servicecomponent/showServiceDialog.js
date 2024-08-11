@@ -2,46 +2,36 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  Button,
   IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Collapse,
   Box,
-  TextField,
-  Alert,
   Typography,
+  Collapse,
+  Alert,
 } from '@mui/material';
-import { Delete, Edit, Add, Close as CloseIcon } from '@mui/icons-material';
+import { Add, Close as CloseIcon } from '@mui/icons-material';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
+import ServiceList from './ServiceList';
+import ServiceForm from './ServiceForm';
 
 const ShowServicesDialog = ({ open, onClose, businessId }) => {
-  const { services, fetchServices, addService, updateService, deleteService } = useServicesContext();
+  const { services, addService, updateService, deleteService } = useServicesContext();
 
-  const [selectedServiceId, setSelectedServiceId] = useState(null);
+  const [editServiceId, setEditServiceId] = useState(null); // Track which service is being edited
   const [newService, setNewService] = useState({
     name: '',
     description: '',
     duration: '00:30', // Default to 30 minutes
     price: ''
   });
-  const [alert, setAlert] = useState({ message: '', severity: '' });
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [alert, setAlert] = useState({ message: '', severity: '' });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [serviceToDelete, setServiceToDelete] = useState(null); // For tracking the service to be deleted
 
   const alertRef = useRef(null); // Ref for alert message
   const formRef = useRef(null); // Ref for expanding form
-
-  useEffect(() => {
-    if (open && services.length === 0) {  // Fetch only if services are not already loaded
-      fetchServices(String(businessId));
-    }
-  }, [open, fetchServices, businessId, services.length]);
 
   useEffect(() => {
     if (alert.message) {
@@ -57,16 +47,11 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
   }, [alert]);
 
   const closeFormAndExecuteAction = async (action) => {
-    if (isFormOpen) {
-      setIsFormOpen(false);
-      setTimeout(() => {
-        action();
-        setTimeout(() => setSelectedServiceId(null), 300);
-      }, 300);
-    } else {
+    setIsFormOpen(false);
+    setEditServiceId(null);
+    setTimeout(() => {
       action();
-      setTimeout(() => setSelectedServiceId(null), 300);
-    }
+    }, 300);
   };
 
   const handleAddService = () => {
@@ -95,7 +80,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
     });
   };
 
-  const handleUpdateService = () => {
+  const handleUpdateService = (serviceId) => {
     closeFormAndExecuteAction(async () => {
       try {
         const serviceDetails = {
@@ -104,7 +89,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
           BusinessId: String(businessId)
         };
 
-        await updateService(String(businessId), selectedServiceId, serviceDetails);
+        await updateService(String(businessId), serviceId, serviceDetails);
         setAlert({ message: 'Service updated successfully!', severity: 'success' });
 
         setNewService({
@@ -135,20 +120,21 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
         console.error('Failed to delete service:', error);
         const errorMessage = error.response?.data?.message || error.message || 'Failed to delete service. Please try again.';
         setAlert({ message: errorMessage, severity: 'error' });
+      } finally {
+        setConfirmDialogOpen(false); // Close the confirmation dialog after deletion
+        setServiceToDelete(null); // Clear the serviceToDelete state
       }
-      setConfirmDialogOpen(false); // Close the confirmation dialog after deletion
     });
   };
 
   const handleEditService = (service) => {
-    setSelectedServiceId(service.serviceId);
+    setEditServiceId(service.serviceId);
     setNewService({
       name: service.name,
       description: service.description,
       duration: service.duration.substring(0, 5),
       price: service.price
     });
-    setIsFormOpen(true);
   };
 
   const handleAddNewServiceClick = () => {
@@ -159,7 +145,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
       duration: '00:30',
       price: ''
     });
-    setSelectedServiceId(null);
+    setEditServiceId(null); // Close the edit form if add form is opened
     setAlert({ message: '', severity: '' });
 
     setTimeout(() => {
@@ -171,7 +157,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
 
   const handleCancelForm = () => {
     setIsFormOpen(false);
-    setSelectedServiceId(null);
+    setEditServiceId(null);
     setNewService({
       name: '',
       description: '',
@@ -187,26 +173,27 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-      <DialogTitle
-        sx={{
-          fontWeight: '550',
-          fontSize: '1.75rem',
-          color: '#1a1a1a',
-          textAlign: 'center',
-          padding: '16px 24px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginLeft: '3px'
-        }}
-      >
-        Service List
-        <IconButton aria-label="close" onClick={onClose} sx={{ color: '#808080', fontSize: '1.5rem' }}>
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      {alert.message && (
+    <>
+      <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
+        <DialogTitle
+          sx={{
+            fontWeight: '550',
+            fontSize: '1.75rem',
+            color: '#1a1a1a',
+            textAlign: 'center',
+            padding: '16px 24px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginLeft: '3px'
+          }}
+        >
+          Service List
+          <IconButton aria-label="close" onClick={onClose} sx={{ color: '#808080', fontSize: '1.5rem' }}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        {alert.message && (
           <Alert
             severity={alert.severity}
             onClose={() => setAlert({ message: '', severity: '' })}
@@ -216,199 +203,50 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
             {alert.message}
           </Alert>
         )}
-      <DialogContent dividers>
-        <Box mt={1} mb={3} display="flex" justifyContent="center">
-          <Typography
-            variant="h7"
-            onClick={handleAddNewServiceClick}
-            sx={{
-              cursor: 'pointer',
-              textDecoration: 'underline',
-              color: '#1976d2',
-              '&:hover': {
-                color: '#115293',
-              },
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-            }}
-          >
-            <Add sx={{ fontSize: '40px' }} /> Add New Service
-          </Typography>
-        </Box>
-        <Collapse in={isFormOpen || selectedServiceId !== null}>
-          <Box
-            mt={2}
-            p={2}
-            mb={3}
-            ref={formRef} // Reference for scrolling to the expanding form
-            sx={{ borderRadius: '12px', backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)' }}
-          >
-            <TextField
-              margin="dense"
-              label="Name"
-              type="text"
-              fullWidth
-              value={newService.name}
-              onChange={(e) => setNewService({ ...newService, name: e.target.value })}
+        <DialogContent dividers>
+          <Box mt={1} mb={3} display="flex" justifyContent="center">
+            <Typography
+              variant="h7"
+              onClick={handleAddNewServiceClick}
               sx={{
-                backgroundColor: '#f9f9f9',
-                borderRadius: '12px',
-                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    border: 'none', // Removing the default border
-                  },
+                cursor: 'pointer',
+                textDecoration: 'underline',
+                color: '#1976d2',
+                '&:hover': {
+                  color: '#115293',
                 },
-                mb: 2,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
               }}
-            />
-            <TextField
-              margin="dense"
-              label="Description"
-              type="text"
-              fullWidth
-              value={newService.description}
-              onChange={(e) => setNewService({ ...newService, description: e.target.value })}
-              sx={{
-                backgroundColor: '#f9f9f9',
-                borderRadius: '12px',
-                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    border: 'none', // Removing the default border
-                  },
-                },
-                mb: 2,
-              }}
-            />
-            <TextField
-              margin="dense"
-              label="Duration"
-              type="time"
-              fullWidth
-              value={newService.duration}
-              InputLabelProps={{ shrink: true }}
-              inputProps={{ step: 300 }} // 5 min steps
-              onChange={(e) => setNewService({ ...newService, duration: e.target.value })}
-              sx={{
-                backgroundColor: '#f9f9f9',
-                borderRadius: '12px',
-                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    border: 'none', // Removing the default border
-                  },
-                },
-                mb: 2,
-              }}
-            />
-            <TextField
-              margin="dense"
-              label="Price"
-              type="number"
-              fullWidth
-              value={newService.price}
-              onChange={(e) => setNewService({ ...newService, price: e.target.value })}
-              sx={{
-                backgroundColor: '#f9f9f9',
-                borderRadius: '12px',
-                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    border: 'none', // Removing the default border
-                  },
-                },
-                mb: 2,
-              }}
-            />
-            <Box mt={2} display="flex" justifyContent="space-between">
-              <Button
-                onClick={handleCancelForm}
-                sx={{
-                  backgroundColor: '#6c757d',
-                  color: '#fff',
-                  '&:hover': { backgroundColor: '#5a6268' },
-                  fontWeight: 'bold',
-                  borderRadius: '8px',
-                  padding: '8px 16px',
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={selectedServiceId ? handleUpdateService : handleAddService}
-                sx={{
-                  backgroundColor: selectedServiceId ? '#007bff' : '#28a745',
-                  color: '#fff',
-                  '&:hover': { backgroundColor: selectedServiceId ? '#0056b3' : '#218838' },
-                  fontWeight: 'bold',
-                  borderRadius: '8px',
-                  padding: '8px 16px',
-                }}
-              >
-                {selectedServiceId ? 'Update Service' : 'Add Service'}
-              </Button>
-            </Box>
+            >
+              <Add sx={{ fontSize: '40px' }} /> Add New Service
+            </Typography>
           </Box>
-        </Collapse>
-  
-        {/* Service List */}
-        {services.length > 0 ? (
-          <List>
-            {services.map((service) => (
-              <ListItem
-                key={service.serviceId}
-                sx={{
-                  borderRadius: '8px',
-                  backgroundColor: '#f0f8ff', // Light background color
-                  mb: 2,
-                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', // Elevated shadow
-                  border: '1px solid #1976d2', // Border color to make it pop
-                  '&:hover': {
-                    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-                    backgroundColor: '#e6f1ff', // Slightly darker background on hover
-                  }
-                }}
-                secondaryAction={
-                  <>
-                    <IconButton edge="end" aria-label="edit" onClick={() => handleEditService(service)}>
-                      <Edit />
-                    </IconButton>
-                    <IconButton edge="end" aria-label="delete" onClick={() => confirmDeleteService(service.serviceId)}>
-                      <Delete />
-                    </IconButton>
-                  </>
-                }
-              >
-                <ListItemText
-                  primary={
-                    <Typography variant="body1" component="span" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
-                      {service.name}
-                    </Typography>
-                  }
-                  secondary={
-                    <>
-                      <Typography variant="body2" component="span">
-                        {service.description}
-                      </Typography>
-                      <br />
-                      <Typography variant="body2" component="span">
-                        {service.duration} - ${service.price}
-                      </Typography>
-                    </>
-                  }
-                />
-              </ListItem>
-            ))}
-          </List>
-        ) : (
-          <DialogContentText>No services found for this business.</DialogContentText>
-        )}
-        
-        
-      </DialogContent>
-  
+          <Collapse in={isFormOpen}>
+            <ServiceForm
+              title="Add New Service"
+              newService={newService}
+              setNewService={setNewService}
+              handleAction={handleAddService}
+              handleCancelForm={handleCancelForm}
+              buttonText="Add Service"
+              buttonColor="#007bff"
+            />
+          </Collapse>
+          <ServiceList
+            services={services}
+            editServiceId={editServiceId}
+            handleEditService={handleEditService}
+            confirmDeleteService={confirmDeleteService}
+            newService={newService}
+            setNewService={setNewService}
+            handleUpdateService={handleUpdateService}
+            handleCancelForm={handleCancelForm}
+          />
+        </DialogContent>
+      </Dialog>
+
       {/* Confirmation Dialog for Deleting Service */}
       <ConfirmationDialog
         open={confirmDialogOpen}
@@ -417,7 +255,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
         onConfirm={handleDeleteService}
         onCancel={() => setConfirmDialogOpen(false)}
       />
-    </Dialog>
+    </>
   );
 };
 

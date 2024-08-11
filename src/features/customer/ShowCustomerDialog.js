@@ -62,15 +62,17 @@ const ShowCustomerDialog = ({ open, onClose }) => {
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle
         sx={{
-          fontWeight: '550',
+          fontWeight: 'bold',
           fontSize: '1.75rem',
-          color: '#1a1a1a', 
+          color: '#333', 
           textAlign: 'center', 
-          padding: '16px 24px',
+          padding: '16px 24px', 
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginLeft: '5px'
+          textTransform: 'capitalize', 
+          textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)', 
+          marginLeft: '3px'
         }}
       >
         Add New Customer
