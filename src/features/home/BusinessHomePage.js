@@ -3,7 +3,7 @@ import { Box, Button, Container, Grid, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import '../../styles/css/OwnerCss/BusinessHomePage.css';
+import '../../styles/css/OwnerDashboardCss/BusinessHomePage.css';
 
 const BusinessHomePage = () => {
   return (

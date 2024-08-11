@@ -23,13 +23,37 @@ const CustomerBusinessInfo = ({ businessInfo }) => {
         backgroundImage: 'url("https://www.transparenttextures.com/patterns/asfalt-dark.png")', // Subtle background pattern
       }}
     >
-      <Typography variant="h5" component="h2" sx={{ fontWeight: 'bold', color: '#1976d2', marginBottom: '12px' }}>
+      <Typography 
+        variant="h3" 
+        component="h2" 
+        sx={{ 
+          fontWeight: 'bold', 
+          color: '#1976d2', 
+          marginBottom: '10px',
+          fontFamily: "'Dancing Script', cursive", // Apply calligraphy font
+        }}
+      >
         {businessInfo.name}
       </Typography>
-      <Typography variant="body1" component="p" sx={{ marginBottom: '8px', color: '#555' }}>
+      <Typography 
+        variant="body1" 
+        component="p" 
+        sx={{ 
+          marginBottom: '8px', 
+          color: '#555',
+          fontFamily: "'Dancing Script', cursive", // Apply calligraphy font
+        }}
+      >
         Address: {businessInfo.address}
       </Typography>
-      <Typography variant="body1" component="p" sx={{ color: '#555' }}>
+      <Typography 
+        variant="body1" 
+        component="p" 
+        sx={{ 
+          color: '#555',
+          fontFamily: "'Dancing Script', cursive", // Apply calligraphy font
+        }}
+      >
         Phone: {businessInfo.phone}
       </Typography>
     </Box>

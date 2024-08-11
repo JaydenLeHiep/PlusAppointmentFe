@@ -7,7 +7,7 @@ import RegisterPage from './features/auth/Register/RegisterPage';
 import OwnerDashboard from './features/ownerDashboard/OwnerDashboard';
 import GlobalStyles from './styles/GlobalStyles';
 import { useAuth } from './hooks/useAuth';
-import CustomerDashboard from './features/customerDashboard/CustomerDashboard';
+import ResponsiveDashboard from './features/customerDashboard/ResponsiveDashboard'; // Import the responsive dashboard
 import { AppointmentsProvider } from './features/appointment/AppointmentsContext';
 import { StaffsProvider } from './features/staff/StaffsContext';
 import { ServicesProvider } from './features/servicecomponent/ServicesContext';
@@ -37,7 +37,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
-              <Route path="/customer-dashboard" element={<CustomerDashboard />} />
+              <Route path="/customer-dashboard" element={<ResponsiveDashboard />} /> {/* Use ResponsiveDashboard */}
               <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
               <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
               <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />

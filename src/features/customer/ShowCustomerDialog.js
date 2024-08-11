@@ -66,7 +66,9 @@ const ShowCustomerDialog = ({ open, onClose }) => {
   return (
     <Dialog open={open} onClose={handleCancelForm} fullWidth maxWidth="sm">
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6">Add New Customer</Typography>
+        <Typography variant="body1" component="div" sx={{ fontWeight: 'bold', fontSize: '1.25rem' }}>
+          Add New Customer
+        </Typography>
         <IconButton aria-label="close" onClick={handleCancelForm} sx={{ color: (theme) => theme.palette.grey[500] }}>
           <CloseIcon />
         </IconButton>

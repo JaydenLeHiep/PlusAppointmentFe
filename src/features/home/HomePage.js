@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Typography, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import '../../styles/css/OwnerCss/HomePage.css';
+import '../../styles/css/OwnerDashboardCss/HomePage.css';
 
 const HomePage = () => {
   const navigate = useNavigate();

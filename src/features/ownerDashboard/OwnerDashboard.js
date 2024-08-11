@@ -9,7 +9,7 @@ import { fetchBusinesses } from '../../lib/apiClientBusiness';
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { useStaffsContext } from '../staff/StaffsContext';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
-import '../../styles/css/OwnerCss/OwnerDashboard.css';
+import '../../styles/css/OwnerDashboardCss/OwnerDashboard.css';
 
 const OwnerDashboard = () => {
   const { appointments, fetchAppointmentsForBusiness } = useAppointmentsContext();

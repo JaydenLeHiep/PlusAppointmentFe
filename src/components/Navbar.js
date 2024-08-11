@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import '../styles/css/OwnerCss/Navbar.css';
+import '../styles/css/OwnerDashboardCss/Navbar.css';
 import { useAuth } from '../hooks/useAuth';
 
 const Navbar = () => {

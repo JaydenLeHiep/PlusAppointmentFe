@@ -20,7 +20,7 @@ import { Add, Close as CloseIcon, Remove as RemoveIcon, Edit as EditIcon, Delete
 import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { useStaffsContext } from '../staff/StaffsContext';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
-import '../../styles/css/OwnerCss/AppointmentInfoModal.css';
+import '../../styles/css/OwnerDashboardCss/AppointmentInfoModal.css';
 
 const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
   const { appointments, changeStatusAppointments, deleteAppointmentAndUpdateList, updateAppointmentAndRefresh, customers, fetchAllCustomers } = useAppointmentsContext();
