@@ -3,7 +3,7 @@ import { apiBaseUrl } from '../config/apiConfig';
 const serviceApiUrl = `${apiBaseUrl}/api/service`;
 
 // use this for production
-//const userApiUrl = `https://plus-appointment.com/api/users`;
+//const serviceApiUrl = `https://plus-appointment.com/api/service`;
 
 // Utility function to get token and handle missing authentication
 const getToken = () => {

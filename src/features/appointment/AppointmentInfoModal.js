@@ -288,6 +288,14 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                 <Typography variant="body1" gutterBottom>
                   By {appointment.staffName}
                 </Typography>
+                <Typography variant="body1" gutterBottom>
+                  Services:
+                </Typography>
+                {appointment.services.$values.map((service, index) => (
+                  <Typography key={index} variant="body2" gutterBottom>
+                    {index + 1}. {service.name}
+                  </Typography>
+                ))}
               </>
             ) : (
               <>

@@ -3,7 +3,7 @@ import { apiBaseUrl } from '../config/apiConfig';
 const businessApiUrl = `${apiBaseUrl}/api/business`;
 
 // use this for production
-//const userApiUrl = `https://plus-appointment.com/api/users`;
+//const businessApiUrl = `https://plus-appointment.com/api/business`;
 
 //API client function for Ownerdashboard
 export const fetchBusinesses = async () => {

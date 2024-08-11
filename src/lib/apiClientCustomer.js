@@ -5,7 +5,7 @@ import { apiBaseUrl } from '../config/apiConfig';
 const customerApiUrl = `${apiBaseUrl}/api/customer`;
 
 // use this for production
-//const userApiUrl = `https://plus-appointment.com/api/users`;
+//const customerApiUrl = `https://plus-appointment.com/api/customer`;
 
 export const fetchCustomerId = async (emailOrPhone) => {
   const findCustomerApiUrl = `${customerApiUrl}/find-customer`;
