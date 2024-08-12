@@ -63,12 +63,12 @@ const AppointmentList = ({ appointments, businessId }) => {
                   padding: '16px', 
                   marginBottom: '8px', 
                   borderRadius: '12px', 
-                  backgroundColor: '#f0f8ff', // Light background color to make it stand out
-                  border: '1px solid #1976d2', // Border color to make it pop
+                  backgroundColor: '#f0f8ff', 
+                  border: '1px solid #1976d2', 
                   boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
                   '&:hover': {
                     boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-                    backgroundColor: '#e6f1ff', // Slightly darker background on hover
+                    backgroundColor: '#e6f1ff', 
                   }
                 }}
               >

@@ -74,7 +74,7 @@ const OwnerDashboard = () => {
       <Navbar />
       <Box
         sx={{
-          backgroundColor: '#F5F5F5',
+          backgroundColor: '#fdf2f4',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           display: 'flex',

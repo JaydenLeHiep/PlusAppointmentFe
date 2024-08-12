@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Importing Google Font
-import '@fontsource/lobster'; // or whichever script font you prefer
+import '@fontsource/josefin-sans'; // Importing Josefin Sans font
 
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -18,7 +18,15 @@ const Navbar = () => {
 
   const theme = createTheme({
     typography: {
-      fontFamily: '"Lobster", cursive', 
+      fontFamily: '"Josefin Sans", sans-serif',
+      h4: {
+        fontSize: '2.2rem',
+        fontWeight: '700',
+      },
+      button: {
+        fontSize: '1.3rem',
+        fontWeight: '700',
+      },
     },
   });
 
@@ -27,7 +35,8 @@ const Navbar = () => {
       <AppBar
         position="static"
         sx={{
-          background: 'linear-gradient(90deg, #fdf2f4 0%, #fbd1d9 100%)', 
+          backgroundColor: '#fff', // White background
+          color: '#000', // Black text
           boxShadow: 'none',
           borderBottom: '1px solid #e0e0e0',
           height: { xs: '65px', sm: '85px' },
@@ -41,7 +50,7 @@ const Navbar = () => {
             justifyContent: 'space-between',
             alignItems: 'center',
             height: '100%',
-            padding: { xs: '0 16px', sm: '0 24px' }, 
+            padding: { xs: '0 16px', sm: '0 24px' },
           }}
         >
           <Typography
@@ -49,12 +58,11 @@ const Navbar = () => {
             component={RouterLink}
             to="/business-home"
             sx={{
-              color: '#fff',
-              textDecoration: 'none',
+              color: '#000', // Ensure the text is black
+              textDecoration: 'none', // Remove underline from link
               fontWeight: 'bold',
               flexGrow: 1,
               textAlign: 'left',
-              textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)', 
             }}
           >
             Plus Appointment
@@ -65,7 +73,11 @@ const Navbar = () => {
                 color="primary"
                 component={RouterLink}
                 to="/business-home"
-                sx={{ color: '#fff', textTransform: 'none', fontSize: '1.2rem', fontWeight: 'bold', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }} // Stronger black shadow for better readability
+                sx={{
+                  color: '#000', // Ensure button text is black
+                  textTransform: 'none',
+                  textDecoration: 'none', // Ensure no underline
+                }}
               >
                 Home
               </Button>
@@ -74,7 +86,11 @@ const Navbar = () => {
               <Button
                 color="primary"
                 onClick={handleLogout}
-                sx={{ color: '#fff', textTransform: 'none', fontSize: '1.2rem', fontWeight: 'bold', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }} // Stronger black shadow for better readability
+                sx={{
+                  color: '#000', // Ensure button text is black
+                  textTransform: 'none',
+                  textDecoration: 'none', // Ensure no underline
+                }}
               >
                 Logout
               </Button>
@@ -84,7 +100,11 @@ const Navbar = () => {
                   color="primary"
                   component={RouterLink}
                   to="/register"
-                  sx={{ color: '#fff', textTransform: 'none', fontSize: '1.2rem', fontWeight: 'bold', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }} // Stronger black shadow for better readability
+                  sx={{
+                    color: '#000', // Ensure button text is black
+                    textTransform: 'none',
+                    textDecoration: 'none', // Ensure no underline
+                  }}
                 >
                   Register
                 </Button>
@@ -92,7 +112,11 @@ const Navbar = () => {
                   color="primary"
                   component={RouterLink}
                   to="/login"
-                  sx={{ color: '#fff', textTransform: 'none', fontSize: '1.2rem', fontWeight: 'bold', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }} // Stronger black shadow for better readability
+                  sx={{
+                    color: '#000', // Ensure button text is black
+                    textTransform: 'none',
+                    textDecoration: 'none', // Ensure no underline
+                  }}
                 >
                   Login
                 </Button>
