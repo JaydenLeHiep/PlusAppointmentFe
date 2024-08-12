@@ -259,14 +259,14 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
         sx={{
           fontWeight: 'bold',
           fontSize: '1.75rem',
-          color: '#333', 
-          textAlign: 'center', 
-          padding: '16px 24px', 
+          color: '#333',
+          textAlign: 'center',
+          padding: '16px 24px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          textTransform: 'capitalize', 
-          textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)', 
+          textTransform: 'capitalize',
+          textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
         }}
       >
         Appointment Details
@@ -494,78 +494,78 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                   }}
                 />
 
-{updatedAppointment.services.map((service, index) => (
-  <Box key={index} mb={2} mt={2}>
-    <Grid container spacing={2} alignItems="center">
-      <Grid item xs={4}>
-        <FormControl fullWidth margin="dense" sx={{ mb: 0 }}>
-          <InputLabel>Service</InputLabel>
-          <Select
-            value={service.serviceId}
-            onChange={(e) => handleServiceChange(index, 'serviceId', e.target.value)}
-            label="Service"
-            disabled={!editMode}
-            sx={{
-              backgroundColor: '#ffffff',
-              borderRadius: '8px',
-              boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-            }}
-          >
-            {services.map((availableService) => (
-              <MenuItem key={availableService.serviceId} value={availableService.serviceId}>
-                {availableService.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Grid>
-      <Grid item xs={3}>
-        <TextField
-          margin="dense"
-          label="Duration"
-          type="time"
-          fullWidth
-          value={service.duration}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          inputProps={{
-            step: 300,
-          }}
-          disabled
-          sx={{
-            backgroundColor: '#ffffff',
-            borderRadius: '8px',
-            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-            textAlign: 'center', // Center-align the text
-          }}
-        />
-      </Grid>
-      <Grid item xs={3}>
-        <TextField
-          margin="dense"
-          label="Price"
-          type="number"
-          fullWidth
-          value={service.price}
-          onChange={(e) => handleServiceChange(index, 'price', e.target.value)}
-          disabled
-          sx={{
-            backgroundColor: '#ffffff',
-            borderRadius: '8px',
-            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-            textAlign: 'center', // Center-align the text
-          }}
-        />
-      </Grid>
-      <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <IconButton onClick={() => handleRemoveService(index)} sx={{ color: 'red' }}>
-          <RemoveIcon />
-        </IconButton>
-      </Grid>
-    </Grid>
-  </Box>
-))}
+                {updatedAppointment.services.map((service, index) => (
+                  <Box key={index} mb={2} mt={2}>
+                    <Grid container spacing={2} alignItems="center">
+                      <Grid item xs={4}>
+                        <FormControl fullWidth margin="dense" sx={{ mb: 0 }}>
+                          <InputLabel>Service</InputLabel>
+                          <Select
+                            value={service.serviceId}
+                            onChange={(e) => handleServiceChange(index, 'serviceId', e.target.value)}
+                            label="Service"
+                            disabled={!editMode}
+                            sx={{
+                              backgroundColor: '#ffffff',
+                              borderRadius: '8px',
+                              boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                            }}
+                          >
+                            {services.map((availableService) => (
+                              <MenuItem key={availableService.serviceId} value={availableService.serviceId}>
+                                {availableService.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <TextField
+                          margin="dense"
+                          label="Duration"
+                          type="time"
+                          fullWidth
+                          value={service.duration}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          inputProps={{
+                            step: 300,
+                          }}
+                          disabled
+                          sx={{
+                            backgroundColor: '#ffffff',
+                            borderRadius: '8px',
+                            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                            textAlign: 'center', // Center-align the text
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={3}>
+                        <TextField
+                          margin="dense"
+                          label="Price"
+                          type="number"
+                          fullWidth
+                          value={service.price}
+                          onChange={(e) => handleServiceChange(index, 'price', e.target.value)}
+                          disabled
+                          sx={{
+                            backgroundColor: '#ffffff',
+                            borderRadius: '8px',
+                            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                            textAlign: 'center', // Center-align the text
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <IconButton onClick={() => handleRemoveService(index)} sx={{ color: 'red' }}>
+                          <RemoveIcon />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                ))}
                 <Box mt={2} mb={3}>
                   <Typography
                     variant="h7"

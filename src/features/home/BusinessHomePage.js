@@ -47,7 +47,7 @@ const BusinessHomePage = () => {
           </Button>
         </Box>
       </Box>
-      <Container sx={{ padding: '4rem 0', flex: '1' }}>
+      <Container sx={{ padding: '4rem 0', flex: '1', backgroundColor: '#fdf2f4' }}>
         <Typography variant="h4" component="h2" gutterBottom>
           Our Services
         </Typography>

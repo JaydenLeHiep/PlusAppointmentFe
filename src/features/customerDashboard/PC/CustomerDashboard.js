@@ -7,7 +7,7 @@ import CustomerBusinessInfo from './CustomerBusinessInfo';
 import CustomerButtonDashboard from './CustomerButtonDashboard';
 import ListsServiceStaff from './ListsServiceStaff';
 import CustomerForm from './CustomerForm';
-import AddAppointmentDialog from '../../appointment/AddApointmentDialog';
+import AddAppointmentDialog from '../../appointment/AddAppointment/AddAppointmentDialog';
 import { fetchBusinessesById } from '../../../lib/apiClientBusiness';
 
 const CustomerDashboard = () => {

@@ -62,9 +62,8 @@ const BusinessInfo = ({
           gutterBottom
           sx={{
             fontWeight: 'bold',
-            color: '#1976d2',
             marginBottom: '10px',
-            fontFamily: "'Dancing Script', cursive", // Apply calligraphy font
+            fontFamily: '"Josefin Sans", sans-serif'
           }}
         >
           {selectedBusiness.name}
