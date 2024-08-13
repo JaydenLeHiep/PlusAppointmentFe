@@ -8,6 +8,8 @@
     "@fontsource/josefin-sans": "^5.0.20",
     "@fontsource/lobster": "^5.0.20",
     "@fontsource/playfair-display": "^5.0.24",
+    "@fontsource/poppins": "^5.0.14",
+    "@fontsource/roboto": "^5.0.14",
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.13",
     "@fullcalendar/interaction": "^6.1.13",

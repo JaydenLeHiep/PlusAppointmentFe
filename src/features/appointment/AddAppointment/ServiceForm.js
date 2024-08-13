@@ -4,7 +4,7 @@ import { Remove } from '@mui/icons-material';
 
 const ServiceForm = ({ service, index, services, handleServiceChange, handleRemoveService, lastServiceRef }) => {
   return (
-    <Grid container spacing={2} alignItems="center" ref={lastServiceRef} mb={2}>
+    <Grid container spacing={2} alignItems="center" ref={lastServiceRef}>
       <Grid item xs={4}>
         <FormControl fullWidth margin="dense">
           <InputLabel>Service</InputLabel>

@@ -61,9 +61,9 @@ const BusinessInfo = ({
           variant="h2"
           gutterBottom
           sx={{
-            fontWeight: 'bold',
+            fontWeight: '500',           
             marginBottom: '10px',
-            fontFamily: '"Josefin Sans", sans-serif'
+            fontFamily: '"Poppins", "Roboto", sans-serif',
           }}
         >
           {selectedBusiness.name}
