@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
-import AppointmentInfoModal from '../appointment/AppointmentInfoModal';
-import CalendarViewControls from './CalendarViewControls';
+import AppointmentInfoModal from '../appointment/AppointmentInfoModal/AppointmentInfoModal';
+import CalendarViewControls from './CalendarViewControlls';
 import CalendarEventContent from './CalendarEventContent';
 import CalendarDayCell from './CalendarDayCell';
 import FullCalendarWrapper from './FullCalendarWrapper';

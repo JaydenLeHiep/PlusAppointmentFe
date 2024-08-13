@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { List, ListItem, Typography, Paper, MenuItem, Select, FormControl, InputLabel, ButtonBase, Box, Badge } from '@mui/material';
-import AppointmentInfoModal from './AppointmentInfoModal';
+import AppointmentInfoModal from '../appointment/AppointmentInfoModal/AppointmentInfoModal.js';
 
 const AppointmentList = ({ appointments, businessId }) => {
   const [sortCriteria, setSortCriteria] = useState('date');

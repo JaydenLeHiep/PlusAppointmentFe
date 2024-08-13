@@ -63,7 +63,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
         onAddAppointment={handleAppointmentOpen}
       />
 
-      <Box className="calendar-container" style={{ marginBottom: '10px' }}>
+      <Box style={{ marginBottom: '10px' }}>
         <FullCalendarComponent
           events={appointments.map(appt => ({
             title: `${appt.customerName}`,
