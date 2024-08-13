@@ -77,7 +77,22 @@ export const AppointmentsProvider = ({ children }) => {
 
   const updateAppointmentAndRefresh = useCallback(async (appointmentId, updateData, businessId) => {
     try {
-      await apiUpdateAppointment(appointmentId, updateData);
+      // Transform services to the new structure
+      const transformedServices = updateData.services.map(service => {
+        return {
+          serviceId: service.serviceId,
+          ...(service.updatedDuration && { updatedDuration: service.updatedDuration })
+        };
+      });
+  
+      const transformedUpdateData = {
+        businessId: updateData.businessId,
+        services: transformedServices,
+        appointmentTime: updateData.appointmentTime,
+        comment: updateData.comment
+      };
+  
+      await apiUpdateAppointment(appointmentId, transformedUpdateData);
       await fetchAppointmentsForBusiness(businessId);
     } catch (error) {
       console.error('Error updating appointment:', error);
