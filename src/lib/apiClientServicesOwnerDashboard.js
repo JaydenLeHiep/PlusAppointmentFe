@@ -25,17 +25,10 @@ const handleApiResponse = async (response) => {
 
 // Fetch all services for a business
 export const fetchServices = async (businessId) => {
-  const token = getToken();
   const response = await fetch(`${serviceApiUrl}/business_id=${businessId}`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
   });
-  
   const data = await handleApiResponse(response);
-  
   if (Array.isArray(data)) {
     return data;
   } else if (data.$values) {
@@ -57,7 +50,6 @@ export const addService = async (businessId, serviceDetails) => {
     },
     body: JSON.stringify(serviceDetails)
   });
-
   return await handleApiResponse(response);
 };
 
@@ -72,7 +64,6 @@ export const updateService = async (businessId, serviceId, serviceDetails) => {
     },
     body: JSON.stringify(serviceDetails)
   });
-
   return await handleApiResponse(response);
 };
 
@@ -86,6 +77,5 @@ export const deleteService = async (businessId, serviceId) => {
       'Authorization': `Bearer ${token}`
     }
   });
-
   return await handleApiResponse(response);
 };
