@@ -5,7 +5,7 @@ import { useStaffsContext } from '../../staff/StaffsContext';
 
 // Styled components using MUI's styled function
 const StaffListItem = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
+  padding: theme.spacing(3),
   background: 'linear-gradient(145deg, #f0f0f0, #ffffff)',
   borderRadius: '12px',
   transition: 'background-color 0.3s ease, transform 0.3s ease',
@@ -14,9 +14,9 @@ const StaffListItem = styled(Paper)(({ theme }) => ({
   cursor: 'pointer',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'center',
+  justifyContent: 'space-between',
   alignItems: 'flex-start',
-  height: '180px',
+  height: 'auto',
   boxSizing: 'border-box',
   border: '1px solid #e0e0e0',
   '&:hover': {
@@ -26,29 +26,18 @@ const StaffListItem = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const StaffItemContainer = styled(Box)({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  height: '100%',
-});
-
-const StaffItemInfo = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(1),
-  textAlign: 'left',
-}));
-
-const StaffItemBoldText = styled(Typography)({
+const ItemBoldText = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
   color: '#1976d2',
-  fontSize: '1.2rem',
-});
+  fontSize: '1.4rem',
+  marginBottom: theme.spacing(1),
+}));
 
-const StaffItemInfoText = styled(Typography)({
+const ItemText = styled(Typography)(({ theme }) => ({
   color: '#555',
   fontSize: '1.1rem',
-  margin: '4px 0',
-});
+  marginBottom: theme.spacing(0.5),
+}));
 
 const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
   const { staff, fetchAllStaff } = useStaffsContext();
@@ -61,7 +50,6 @@ const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
         await fetchAllStaff(businessId);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching staff:', error.message);
         setError('Failed to fetch staff. Please try again.');
         setLoading(false);
       }
@@ -70,43 +58,28 @@ const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
     fetchStaffData();
   }, [businessId, fetchAllStaff]);
 
+  if (loading) return <CircularProgress />;
+  if (error) return <Alert severity="error">{error}</Alert>;
+
   const filteredStaff = staff.filter(staffMember =>
     staffMember.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box mt={2}>
-        <Alert severity="error">{error}</Alert>
-      </Box>
-    );
+  if (filteredStaff.length === 0) {
+    return <Typography variant="body2">No staff members match your search.</Typography>;
   }
 
   return (
     <React.Fragment>
-      {filteredStaff.length > 0 ? (
-        filteredStaff.map((staffMember) => (
-          <StaffListItem key={staffMember.staffId} onClick={() => onStaffSelect(staffMember)}>
-            <StaffItemContainer>
-              <StaffItemInfo>
-                <StaffItemBoldText variant="body1">{staffMember.name}</StaffItemBoldText>
-                <StaffItemInfoText variant="body2">{staffMember.email}</StaffItemInfoText>
-                <StaffItemInfoText variant="body2">Phone: {staffMember.phone}</StaffItemInfoText>
-              </StaffItemInfo>
-            </StaffItemContainer>
-          </StaffListItem>
-        ))
-      ) : (
-        <Typography variant="body2">No staff members match your search.</Typography>
-      )}
+      {filteredStaff.map(staffMember => (
+        <StaffListItem key={staffMember.staffId} onClick={() => onStaffSelect(staffMember)}>
+          <Box>
+            <ItemBoldText>{staffMember.name}</ItemBoldText>
+            <ItemText variant="body2">{staffMember.email}</ItemText>
+            <ItemText variant="body2">Phone: {staffMember.phone}</ItemText>
+          </Box>
+        </StaffListItem>
+      ))}
     </React.Fragment>
   );
 };
