@@ -15,6 +15,7 @@
     "@fullcalendar/interaction": "^6.1.13",
     "@fullcalendar/react": "^6.1.13",
     "@fullcalendar/resource": "^6.1.15",
+    "@fullcalendar/resource-timegrid": "^6.1.15",
     "@fullcalendar/resource-timeline": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.13",
     "@mui/icons-material": "^5.15.18",
