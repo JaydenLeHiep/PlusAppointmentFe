@@ -101,7 +101,7 @@ const CustomerDashboard = () => {
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
       {/* Top Section: Business Information */}
-      <Box sx={{ backgroundColor: '#f5f5f5', display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+      <Box sx={{ backgroundColor: '#f0f8ff', display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
         <Container>
           <CustomerBusinessInfo businessInfo={businessInfo} />
         </Container>
@@ -109,7 +109,7 @@ const CustomerDashboard = () => {
 
       {/* Content Section: Lists Service Staff */}
       <Box sx={{ 
-        backgroundColor: '#f5f5f5', 
+        backgroundColor: '#f0f8ff', 
         display: 'flex', 
         justifyContent: 'center', 
         alignItems: 'center', 

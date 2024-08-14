@@ -37,9 +37,10 @@ const CustomerListHeader = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   marginBottom: theme.spacing(2),
-  padding: `0 ${theme.spacing(2)}px`, // Padding to align with the container
+  padding: `0 ${theme.spacing(2)}px`, 
   width: '100%',
   boxSizing: 'border-box',
+  marginLeft: '35px'
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -87,6 +88,7 @@ const ListsServiceStaff = ({ view, businessId, onServiceSelect, onStaffSelect, s
             maxWidth: { xs: '100%', sm: '300px' },
             width: '100%',
             flex: '1 1 auto',
+            marginRight: '70px'
           }}
         />
       </CustomerListHeader>
@@ -96,7 +98,7 @@ const ListsServiceStaff = ({ view, businessId, onServiceSelect, onStaffSelect, s
           width: '100%',
           maxWidth: '100%',
           boxSizing: 'border-box',
-          backgroundImage: 'linear-gradient(to bottom, #f0f4ff, #ffffff)', // Soft gradient for a modern look
+          backgroundImage: 'linear-gradient(to right, #ffffff, #f0f8ff)', // Soft gradient for a modern look
           border: '1px solid #e0e0e0', // Light border for a clean edge
         }}
       >

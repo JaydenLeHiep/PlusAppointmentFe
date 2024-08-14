@@ -26,17 +26,18 @@ const ServiceListItem = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const ItemBoldText = styled(Typography)({
+
+const ItemBoldText = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
   color: '#1976d2',
-  fontSize: '1.2rem',
-});
+  fontSize: '1.4rem',
+  marginBottom: theme.spacing(1),
+}));
 
-const ItemDetails = styled(Box)(({ theme }) => ({
-  marginTop: theme.spacing(1),
+const ItemText = styled(Typography)(({ theme }) => ({
   color: '#555',
   fontSize: '1.1rem',
-  lineHeight: 1.2,
+  marginBottom: theme.spacing(0.5),
 }));
 
 const ServiceList = ({ businessId, onServiceSelect, searchQuery }) => {
@@ -65,12 +66,9 @@ const ServiceList = ({ businessId, onServiceSelect, searchQuery }) => {
         <ServiceListItem key={service.serviceId} onClick={() => onServiceSelect(service)}>
           <Box>
             <ItemBoldText>{service.name}</ItemBoldText>
-            <Typography variant="body1">{service.description}</Typography>
-          </Box>
-          <ItemDetails>
-            <ItemBoldText>{service.duration}</ItemBoldText>
-            <Typography variant="body1">${service.price}</Typography>
-          </ItemDetails>
+          </Box>        
+            <ItemText>{service.duration}</ItemText>
+            <ItemText>${service.price}</ItemText>   
         </ServiceListItem>
       ))}
     </React.Fragment>
