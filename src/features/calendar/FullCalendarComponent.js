@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Button, ButtonGroup } from '@mui/material';
 import AppointmentInfoModal from '../appointment/AppointmentInfoModal/AppointmentInfoModal';
 import CalendarViewControls from './CalendarViewControlls';
 import CalendarEventContent from './CalendarEventContent';
 import CalendarDayCell from './CalendarDayCell';
 import FullCalendarWrapper from './FullCalendarWrapper';
 
-const views = ['dayGridMonth', 'timeGridDay', 'resourceTimelineDay'];
+const views = ['dayGridMonth', 'timeGridDay', 'resourceTimeGridDay'];
 const viewLabels = ['Month', 'Day', 'Staff'];
 
 const FullCalendarComponent = ({ events, staff }) => {
   const [currentView, setCurrentView] = useState(views[0]);
+  const [currentPage, setCurrentPage] = useState(0);
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const staffPerPage = 4; // Number of staff to display per view
 
   const handleDateClick = () => {
     setCurrentView('timeGridDay');
@@ -36,8 +39,22 @@ const FullCalendarComponent = ({ events, staff }) => {
     setSelectedAppointmentId(null);
   };
 
-  const resources = staff.map((staffMember, index) => ({
-    id: index.toString(),
+  const handlePageChange = (direction) => {
+    setCurrentPage((prevPage) => {
+      const maxPage = Math.ceil(staff.length / staffPerPage) - 1;
+      const newPage = prevPage + direction;
+      if (newPage < 0) return 0;
+      if (newPage > maxPage) return maxPage;
+      return newPage;
+    });
+  };
+
+  const startIndex = currentPage * staffPerPage;
+  const endIndex = startIndex + staffPerPage;
+  const currentStaff = staff.slice(startIndex, endIndex);
+
+  const resources = currentStaff.map((staffMember, index) => ({
+    id: (startIndex + index).toString(),
     title: staffMember.name,
   }));
 
@@ -64,6 +81,18 @@ const FullCalendarComponent = ({ events, staff }) => {
         onPrevClick={() => handleViewChange(-1)}
         onNextClick={() => handleViewChange(1)}
       />
+
+      {currentView === 'resourceTimeGridDay' && (
+        <ButtonGroup variant="outlined" sx={{ mb: 2 }}>
+          <Button onClick={() => handlePageChange(-1)} disabled={currentPage === 0}>
+            Previous
+          </Button>
+          <Button onClick={() => handlePageChange(1)} disabled={endIndex >= staff.length}>
+            Next
+          </Button>
+        </ButtonGroup>
+      )}
+
       <FullCalendarWrapper
         currentView={currentView}
         events={updatedEvents}

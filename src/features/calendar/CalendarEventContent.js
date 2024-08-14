@@ -1,8 +1,8 @@
 import React from 'react';
 
 const CalendarEventContent = ({ eventInfo, currentView }) => {
-  const { title, extendedProps } = eventInfo.event;
-  const { staffName } = extendedProps;
+  const { title} = eventInfo.event;
+  
   const startTime = eventInfo.event.start;
   const endTime = eventInfo.event.end;
 
@@ -12,10 +12,10 @@ const CalendarEventContent = ({ eventInfo, currentView }) => {
   
   const timeText = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-  if (currentView === 'timeGridDay' || currentView === 'resourceTimelineDay') {
+  if (currentView === 'timeGridDay' || currentView === 'resourceTimeGridDay') {
     return (
       <div>
-        <span><strong>{timeText}</strong> {`${title} - ${staffName}`}</span>
+        <span><strong>{timeText}</strong> {`${title}`}</span>
       </div>
     );
   }

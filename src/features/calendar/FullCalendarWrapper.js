@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 
 const FullCalendarWrapper = ({ currentView, events, resources, handleDateClick, handleEventClick, renderEventContent, renderDayCell }) => {
   const calendarRef = useRef(null);
@@ -19,8 +19,8 @@ const FullCalendarWrapper = ({ currentView, events, resources, handleDateClick, 
     <FullCalendar
       ref={calendarRef}
       schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
-      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, resourceTimelinePlugin]}
-      initialView={currentView}
+      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, resourceTimeGridPlugin]} // Removed resourceTimelinePlugin
+      initialView={currentView || 'resourceTimeGridDay'}  // Default to 'resourceTimeGridDay'
       events={events}
       resources={resources}
       height="auto"
@@ -33,26 +33,20 @@ const FullCalendarWrapper = ({ currentView, events, resources, handleDateClick, 
         startTime: '08:00',
         endTime: '19:00',
       }}
-      slotMinTime="08:00:00"
-      slotMaxTime="19:00:00"
+      slotMinTime="07:00:00"
+      slotMaxTime="21:00:00"
       headerToolbar={{
         left: 'title',
         center: '',
         right: 'prev,next today',
       }}
       views={{
-        timeGridDay: {
-          type: 'timeGrid',
+        resourceTimeGridDay: {  // Vertical resource view configuration
+          type: 'resourceTimeGrid',
           duration: { days: 1 },
-          buttonText: 'day',
-          slotDuration: '01:00:00',
-          resources: true,
-        },
-        resourceTimelineDay: {
-          type: 'resourceTimeline',
-          duration: { days: 1 },
-          buttonText: 'staff',
-        },
+          slotDuration: '00:15:00',
+          buttonText: 'Vertical Staff',
+        }
       }}
       slotLabelFormat={{ hour: 'numeric', minute: '2-digit', omitZeroMinute: false }}
     />
