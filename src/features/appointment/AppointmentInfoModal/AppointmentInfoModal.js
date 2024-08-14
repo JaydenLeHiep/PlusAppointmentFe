@@ -280,6 +280,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                     alignItems: 'center',
                     textTransform: 'capitalize',
                     textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                    marginLeft: '7px'
                 }}
             >
                 Appointment Details

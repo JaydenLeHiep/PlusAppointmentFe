@@ -12,6 +12,7 @@ import {
 import { Add, Close as CloseIcon } from '@mui/icons-material';
 import { useStaffsContext } from '../staff/StaffsContext';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
+import usePasswordValidation from '../../hooks/usePasswordValidation';
 import StaffList from './StaffList';
 import StaffForm from './StaffForm';
 
@@ -25,6 +26,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
     phone: '',
     password: ''
   });
+  const passwordValid = usePasswordValidation(newStaff.password);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [alert, setAlert] = useState({ message: '', severity: '' });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -61,6 +63,10 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
   };
 
   const handleAddStaff = () => {
+    if (!passwordValid) {
+      setAlert({ message: 'Invalid password format.', severity: 'error' });
+      return;
+    }
     closeFormAndExecuteAction(async () => {
       try {
         const staffDetails = {
@@ -89,6 +95,10 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
   };
 
   const handleUpdateStaff = (staffId) => {
+    if (!passwordValid) {
+      setAlert({ message: 'Invalid password format.', severity: 'error' });
+      return;
+    }
     closeFormAndExecuteAction(async () => {
       try {
         const staffDetails = {

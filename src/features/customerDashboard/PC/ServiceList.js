@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Paper, CircularProgress, Alert, Box } from '@mui/material';
+import { Typography, CircularProgress, Alert, Box, Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useServicesContext } from '../../servicecomponent/ServicesContext';
 
 // Styled components using MUI's styled function
 const ServiceListItem = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
+  padding: theme.spacing(3),
   background: 'linear-gradient(145deg, #f0f0f0, #ffffff)',
   borderRadius: '12px',
   transition: 'background-color 0.3s ease, transform 0.3s ease',
@@ -17,7 +17,6 @@ const ServiceListItem = styled(Paper)(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'flex-start',
-  height: '180px',
   boxSizing: 'border-box',
   border: '1px solid #e0e0e0',
   '&:hover': {
@@ -27,30 +26,14 @@ const ServiceListItem = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const ServiceItemContainer = styled(Box)({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  height: '100%',
-});
-
-const ServiceItemInfo = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(1),
-  textAlign: 'left',
-}));
-
-const ServiceItemBoldText = styled(Typography)({
+const ItemBoldText = styled(Typography)({
   fontWeight: 700,
   color: '#1976d2',
   fontSize: '1.2rem',
 });
 
-const ServiceItemDetails = styled(Box)(({ theme }) => ({
-  textAlign: 'left',
+const ItemDetails = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(1),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
   color: '#555',
   fontSize: '1.1rem',
   lineHeight: 1.2,
@@ -65,38 +48,31 @@ const ServiceList = ({ businessId, onServiceSelect, searchQuery }) => {
     }
   }, [businessId, fetchServices, services.length]);
 
-  if (loading) {
-    return <CircularProgress />;
-  }
-
-  if (error) {
-    return <Alert severity="error">{error}</Alert>;
-  }
+  if (loading) return <CircularProgress />;
+  if (error) return <Alert severity="error">{error}</Alert>;
 
   const filteredServices = services.filter(service =>
     service.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  if (filteredServices.length === 0) {
+    return <Typography variant="body1">No services found</Typography>;
+  }
+
   return (
     <React.Fragment>
-      {filteredServices.length === 0 ? (
-        <Typography variant="body1">No services found</Typography>
-      ) : (
-        filteredServices.map((service) => (
-          <ServiceListItem key={service.serviceId} onClick={() => onServiceSelect(service)}>
-            <ServiceItemContainer>
-              <ServiceItemInfo>
-                <ServiceItemBoldText variant="body1">{service.name}</ServiceItemBoldText>
-                <Typography variant="body1">{service.description}</Typography>
-              </ServiceItemInfo>
-              <ServiceItemDetails>
-                <ServiceItemBoldText variant="body1">{service.duration}</ServiceItemBoldText>
-                <Typography variant="body1">${service.price}</Typography>
-              </ServiceItemDetails>
-            </ServiceItemContainer>
-          </ServiceListItem>
-        ))
-      )}
+      {filteredServices.map(service => (
+        <ServiceListItem key={service.serviceId} onClick={() => onServiceSelect(service)}>
+          <Box>
+            <ItemBoldText>{service.name}</ItemBoldText>
+            <Typography variant="body1">{service.description}</Typography>
+          </Box>
+          <ItemDetails>
+            <ItemBoldText>{service.duration}</ItemBoldText>
+            <Typography variant="body1">${service.price}</Typography>
+          </ItemDetails>
+        </ServiceListItem>
+      ))}
     </React.Fragment>
   );
 };

@@ -21,11 +21,11 @@ const Navbar = () => {
     typography: {
       fontFamily: '"Poppins", "Roboto", sans-serif',
       h4: {
-        fontSize: '1.8rem',
+        fontSize: '1.6rem',
         fontWeight: '500',
       },
       button: {
-        fontSize: '1.2rem',
+        fontSize: '1.0rem',
         fontWeight: '500',
       },
     },
@@ -40,7 +40,7 @@ const Navbar = () => {
           color: '#000000',
           boxShadow: 'none',
           borderBottom: '1px solid #e0e0e0',
-          height: { xs: '65px', sm: '85px' },
+          height: { xs: '55px', sm: '75px' }, // Reduced heights
           display: 'flex',
           justifyContent: 'center',
         }}
@@ -50,7 +50,7 @@ const Navbar = () => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            height: '100%',
+            height: '100%', // Ensures the Toolbar matches AppBar height
             padding: { xs: '0 16px', sm: '0 24px' },
           }}
         >

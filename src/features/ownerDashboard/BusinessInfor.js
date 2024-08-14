@@ -58,7 +58,7 @@ const BusinessInfo = ({
       </Box>
       <Box mt={2}>
         <Typography
-          variant="h2"
+          variant="h3"
           gutterBottom
           sx={{
             fontWeight: '500',           

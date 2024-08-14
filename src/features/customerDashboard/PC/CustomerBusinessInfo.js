@@ -1,63 +1,84 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PhoneIcon from '@mui/icons-material/Phone';
 
 const CustomerBusinessInfo = ({ businessInfo }) => {
   return (
     <Box 
       sx={{
-        borderRadius: '16px',
-        backgroundColor: '#ffffff',
-        padding: '32px',
-        boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.1)',
-        border: '1px solid #e0e0e0',
-        '&:hover': {
-          boxShadow: '0px 15px 30px rgba(0, 0, 0, 0.15)',
-          transform: 'translateY(-3px)',  // Subtle hover effect
-        },
-        maxWidth: '400px',
-        margin: 'auto',
-        marginTop: '40px',
-        marginBottom: '20px',
+        marginTop: '15px',
         textAlign: 'center',
-        transition: 'all 0.3s ease-in-out',
-        backgroundImage: 'url("https://www.transparenttextures.com/patterns/asfalt-dark.png")', // Subtle background pattern
+        padding: '40px 20px',
+        backgroundColor: '#f5f5f5',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
       }}
     >
+      {/* Business Name Centered */}
       <Typography 
-        variant="h3" 
+        variant="h2" 
         component="h2" 
         sx={{ 
           fontWeight: 'bold', 
           color: '#1976d2', 
-          marginBottom: '10px',
-          fontFamily: "'Dancing Script', cursive", // Apply calligraphy font
+          fontFamily: "'Montserrat', sans-serif", 
+          margin: '0 auto',
+          textTransform: 'uppercase', 
+          letterSpacing: '0.05em',
+          textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)', 
         }}
       >
         {businessInfo.name}
       </Typography>
-      <Typography 
-        variant="body1" 
-        component="p" 
-        sx={{ 
-          marginBottom: '8px', 
+
+      {/* Address and Phone at Top Right with Icons */}
+      <Box 
+        sx={{
+          position: 'absolute',
+          top: '20px',
+          right: '0px', 
+          textAlign: 'right',
           color: '#555',
-          fontFamily: "'Dancing Script', cursive", // Apply calligraphy font
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          gap: '8px',
+          paddingRight: '20px', // Ensures the text doesn't touch the right edge
         }}
       >
-        Address: {businessInfo.address}
-      </Typography>
-      <Typography 
-        variant="body1" 
-        component="p" 
-        sx={{ 
-          color: '#555',
-          fontFamily: "'Dancing Script', cursive", // Apply calligraphy font
-        }}
-      >
-        Phone: {businessInfo.phone}
-      </Typography>
+        <Typography 
+          variant="body2" 
+          component="div" 
+          sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            fontSize: '0.95rem',
+            fontFamily: "'Roboto', sans-serif",
+            color: '#1976d2',
+          }}
+        >
+          <LocationOnIcon sx={{ marginRight: '6px', color: '#1976d2' }} />
+          {businessInfo.address}
+        </Typography>
+        <Typography 
+          variant="body2" 
+          component="div" 
+          sx={{ 
+            display: 'flex', 
+            alignItems: 'center',
+            fontSize: '0.95rem',
+            fontFamily: "'Roboto', sans-serif",
+            color: '#1976d2',
+          }}
+        >
+          <PhoneIcon sx={{ marginRight: '6px', color: '#1976d2' }} />
+          {businessInfo.phone}
+        </Typography>
+      </Box>
     </Box>
-  );
+  );  
 };
 
 export default CustomerBusinessInfo;
