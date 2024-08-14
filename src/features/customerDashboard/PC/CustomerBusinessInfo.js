@@ -7,10 +7,8 @@ const CustomerBusinessInfo = ({ businessInfo }) => {
   return (
     <Box 
       sx={{
-        marginTop: '15px',
+        marginTop: '40px',
         textAlign: 'center',
-        padding: '40px 20px',
-        backgroundColor: '#f5f5f5',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
