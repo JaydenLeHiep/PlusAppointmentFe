@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Box, Container, CircularProgress } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { Box, Container, CircularProgress, Typography } from '@mui/material';
 import CustomerBusinessInfo from './CustomerBusinessInfo';
 import ListsServiceStaff from './ListsServiceStaff';
 import CustomerForm from './CustomerForm';
-import AddAppointmentDialog from '../../appointment/AddAppointment/AddAppointmentDialog';
 import { fetchBusinessesById } from '../../../lib/apiClientBusiness';
+import MyDatePicker from './MyDatePicker';
+import { useLocation } from 'react-router-dom';
 
 const CustomerDashboard = () => {
   const location = useLocation();
@@ -17,10 +17,12 @@ const CustomerDashboard = () => {
   const [error, setError] = useState('');
   const [view, setView] = useState('services');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
   const [selectedStaff, setSelectedStaff] = useState(null);
-  const [customerId, setCustomerId] = useState(null);
-  const [showAddAppointmentDialog, setShowAddAppointmentDialog] = useState(false);
+  const [setCustomerId] = useState(null);
+  const [setShowAddAppointmentDialog] = useState(false);
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -55,23 +57,43 @@ const CustomerDashboard = () => {
   const handleServiceSelect = (service) => {
     setSelectedService(service);
     if (selectedStaff) {
-      setView('form');
+      setView('calendar');
     } else {
       setView('staffs');
     }
   };
 
   const handleStaffSelect = (staff) => {
-    setSelectedStaff(staff);
+    setSelectedStaff(staff); // Set the selected staff here
     if (selectedService) {
-      setView('form');
+      setView('calendar');
     } else {
       setView('services');
     }
   };
 
-  const handleCloseAddAppointmentDialog = () => {
-    setShowAddAppointmentDialog(false);
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    setSelectedTime(null); // Reset the selected time when date changes
+    setView('calendar');
+  };
+
+  const handleTimeSelect = (time) => {
+    setSelectedTime(time);
+  };
+
+  const handleConfirmTime = () => {
+    setView('form');
+  };
+
+  const handleBackClick = () => {
+    if (view === 'calendar') {
+      setView(selectedService && !selectedStaff ? 'staffs' : 'services');
+      setSelectedDate(null);
+      setSelectedTime(null);
+    } else if (view === 'staffs') {
+      setView('services');
+    }
   };
 
   if (!businessId) {
@@ -99,55 +121,61 @@ const CustomerDashboard = () => {
   }
 
   return (
-    <Box display="flex" flexDirection="column" minHeight="100vh">
-      {/* Top Section: Business Information */}
-      <Box sx={{ backgroundColor: '#f0f8ff', display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-        <Container>
-          <CustomerBusinessInfo businessInfo={businessInfo} />
-        </Container>
-      </Box>
+    <Box minHeight="100vh" sx={{ backgroundColor: '#f0f8ff' }}>
+      <Container>
+        <CustomerBusinessInfo
+          businessInfo={businessInfo}
+          view={view}
+          onBackClick={handleBackClick}
+        />
+      </Container>
 
-      {/* Content Section: Lists Service Staff */}
-      <Box sx={{ 
-        backgroundColor: '#f0f8ff', 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        minHeight: '82vh', 
-        padding: { xs: '10px', md: '20px' }, 
+      {/* Content Section: Conditional Rendering */}
+      <Box sx={{
+        backgroundColor: '#f0f8ff',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '82vh',
+        padding: { xs: '10px', md: '20px' },
       }}>
         <Container>
-          <ListsServiceStaff
-            view={view}
-            businessId={businessId}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            onViewChange={setView}
-            onServiceSelect={handleServiceSelect}
-            onStaffSelect={handleStaffSelect}
-          />
+          {view === 'services' || view === 'staffs' ? (
+            <ListsServiceStaff
+              view={view}
+              businessId={businessId}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              onViewChange={setView}
+              onServiceSelect={handleServiceSelect}
+              onStaffSelect={handleStaffSelect} // Pass the handler down
+            />
+          ) : (
+            <>
+              <MyDatePicker
+                selectedDate={selectedDate}
+                onDateChange={handleDateChange}
+                selectedTime={selectedTime}
+                onTimeSelect={handleTimeSelect}
+                onConfirmTime={handleConfirmTime}
+                staffId={selectedStaff?.staffId} // Pass the selected staff ID to MyDatePicker
+              />
+              {selectedDate && selectedTime && view === 'form' && (
+                <Box sx={{ marginTop: 8 }}>
+                  <CustomerForm
+                    businessId={businessId}
+                    onCustomerIdReceived={handleCustomerIdReceived}
+                    selectedService={selectedService}
+                    selectedStaff={selectedStaff}
+                    selectedDate={selectedDate}
+                    selectedTime={selectedTime}
+                  />
+                </Box>
+              )}
+            </>
+          )}
         </Container>
       </Box>
-
-      {/* Add Appointment Dialog */}
-      {view === 'form' && (
-        <CustomerForm
-          businessId={businessId}
-          onCustomerIdReceived={handleCustomerIdReceived}
-          selectedService={selectedService}
-          selectedStaff={selectedStaff}
-        />
-      )}
-      {showAddAppointmentDialog && (
-        <AddAppointmentDialog
-          open={showAddAppointmentDialog}
-          onClose={handleCloseAddAppointmentDialog}
-          businessId={businessId}
-          customerId={customerId}
-          serviceId={selectedService?.serviceId}
-          staffId={selectedStaff?.staffId}
-        />
-      )}
     </Box>
   );
 };
