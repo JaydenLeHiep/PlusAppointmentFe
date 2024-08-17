@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Grid, Box, TextField, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material';
+import { Grid,TextField, Typography } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useStaffsContext } from '../../staff/StaffsContext';
 import { useServicesContext } from '../../servicecomponent/ServicesContext';
@@ -35,28 +35,42 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
     };
 
     const handleServiceChange = (index, field, value) => {
-        const selectedService = services.find(service => service.serviceId === value);
-
+        let updatedService = { ...newAppointment.services[index], [field]: value };
+    
+        if (field === 'serviceId') {
+            const selectedService = services.find(service => service.serviceId === value);
+            if (selectedService) {
+                updatedService.duration = selectedService.duration;
+                updatedService.price = selectedService.price;
+            } else {
+                updatedService.duration = '';
+                updatedService.price = '';
+            }
+        }
+    
+        if (field === 'duration') {
+            // Convert duration (HH:MM) to a proper TimeSpan format (HH:MM:SS)
+            const formattedDuration = value.length === 5 ? `${value}:00` : value;
+            updatedService.updatedDuration = formattedDuration; // Update the updatedDuration field
+        }
+    
         const updatedServices = newAppointment.services.map((service, i) =>
-            i === index ? {
-                ...service,
-                [field]: value,
-                duration: selectedService?.duration || '',
-                price: selectedService?.price || ''
-            } : service
+            i === index ? updatedService : service
         );
-
+    
         setNewAppointment({ ...newAppointment, services: updatedServices });
     };
-
+    
+    
+    
     const handleAddService = () => {
         setNewAppointment({
             ...newAppointment,
-            services: [...newAppointment.services, { serviceId: '', duration: '', price: '' }]
+            services: [...newAppointment.services, { serviceId: '', staffId: '', duration: '', price: '' }]
         });
         hasServicesChanged.current = true;
     };
-
+    
     const handleRemoveService = (index) => {
         setNewAppointment({
             ...newAppointment,
@@ -64,6 +78,7 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
         });
         hasServicesChanged.current = true;
     };
+    
 
     return (
         <Grid container spacing={2}>
@@ -77,29 +92,7 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
                     setAlert={setAlert}
                 />
             </Grid>
-            <Grid item xs={12}>
-                <FormControl fullWidth margin="dense">
-                    <InputLabel>Staff</InputLabel>
-                    <Select
-                        value={newAppointment.staffId || ''}
-                        onChange={(e) => handleInputChange(e, 'staffId')}
-                        label="Staff"
-                        sx={{
-                            backgroundColor: '#ffffff',
-                            borderRadius: '8px',
-                            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)'
-                        }}
-                    >
-                        {staff.map((staffMember) => (
-                            <MenuItem key={staffMember.staffId} value={staffMember.staffId}>
-                                <Box component="span" fontWeight="fontWeightBold">
-                                    {staffMember.name}
-                                </Box> - {staffMember.phone}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </Grid>
+
 
             <Grid item xs={12}>
                 <TextField
@@ -160,6 +153,7 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
                         service={service}
                         index={index}
                         services={services}
+                        staff={staff}  // Passing staff data
                         handleServiceChange={handleServiceChange}
                         handleRemoveService={handleRemoveService}
                         lastServiceRef={index === newAppointment.services.length - 1 ? lastServiceRef : null}
