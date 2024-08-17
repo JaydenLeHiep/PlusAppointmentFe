@@ -5,7 +5,15 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 
-const FullCalendarWrapper = ({ currentView, events, resources, handleDateClick, handleEventClick, renderEventContent, renderDayCell }) => {
+const FullCalendarWrapper = ({
+  currentView,
+  events,
+  resources,
+  handleDateClick,
+  handleEventClick,
+  renderEventContent,
+  renderDayCell
+}) => {
   const calendarRef = useRef(null);
 
   useEffect(() => {
@@ -19,11 +27,12 @@ const FullCalendarWrapper = ({ currentView, events, resources, handleDateClick, 
     <FullCalendar
       ref={calendarRef}
       schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
-      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, resourceTimeGridPlugin]} // Removed resourceTimelinePlugin
-      initialView={currentView || 'resourceTimeGridDay'}  // Default to 'resourceTimeGridDay'
+      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, resourceTimeGridPlugin]}
+      initialView={currentView || 'resourceTimeGridDay'}
       events={events}
       resources={resources}
       height="auto"
+      contentHeight="auto" // Ensures the calendar auto-adjusts height
       dateClick={handleDateClick}
       eventClick={handleEventClick}
       eventContent={renderEventContent}
@@ -41,14 +50,17 @@ const FullCalendarWrapper = ({ currentView, events, resources, handleDateClick, 
         right: 'prev,next today',
       }}
       views={{
-        resourceTimeGridDay: {  // Vertical resource view configuration
+        resourceTimeGridDay: {
           type: 'resourceTimeGrid',
           duration: { days: 1 },
-          slotDuration: '00:15:00',
+          slotDuration: '00:10:00',
+          
           buttonText: 'Vertical Staff',
         }
       }}
       slotLabelFormat={{ hour: 'numeric', minute: '2-digit', omitZeroMinute: false }}
+      slotEventOverlap={false} // Prevent overlapping of events
+      eventOrder="start,-duration,appointmentId"  // Order events by start time, duration, and appointment ID
     />
   );
 };
