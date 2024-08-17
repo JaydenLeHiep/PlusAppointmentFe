@@ -16,11 +16,11 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
         appointmentTime: '',
         status: 'Pending',
         customerId: '',
-        staffId: '',
         businessId,
         comment: '',
-        services: [{ serviceId: '', duration: '', price: '' }]
+        services: [{ serviceId: '', staffId: '', duration: '', price: '' }]  // Staff moved under each service
     });
+    
 
     const [newAppointment, setNewAppointment] = useState(initialAppointmentState.current);
     const [alert, setAlert] = useState({ message: '', severity: '' });
@@ -52,21 +52,21 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
 
     const handleAddAppointment = async () => {
         try {
-            const serviceIds = newAppointment.services.map(service => service.serviceId);
             const appointmentDetails = {
-                customerId: parseInt(newAppointment.customerId, 10), // Ensure it's an integer
+                customerId: parseInt(newAppointment.customerId, 10),
                 businessId: newAppointment.businessId,
-                serviceIds: serviceIds,
-                staffId: newAppointment.staffId,
                 appointmentTime: new Date(newAppointment.appointmentTime).toISOString(),
                 status: newAppointment.status,
-                comment: newAppointment.comment
+                comment: newAppointment.comment,
+                services: newAppointment.services.map(service => ({
+                    serviceId: service.serviceId,
+                    staffId: service.staffId,
+                }))
             };
-
+    
             await addAppointmentAndUpdateList(appointmentDetails);
             setAlert({ message: 'Appointment added successfully!', severity: 'success' });
-
-            // Clear the alert after 5 seconds
+    
             setTimeout(() => {
                 setAlert({ message: '', severity: '' });
             }, 5000);
@@ -76,6 +76,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
             setAlert({ message: errorMessage, severity: 'error' });
         }
     };
+    
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">

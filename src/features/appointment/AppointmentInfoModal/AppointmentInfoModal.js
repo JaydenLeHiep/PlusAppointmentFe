@@ -27,11 +27,10 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     const [appointment, setAppointment] = useState(null);
     const [updatedAppointment, setUpdatedAppointment] = useState({
         customerId: '',
-        staffId: '',
         appointmentTime: '',
         status: '',
         comment: '',
-        services: [{ serviceId: '', duration: '', price: '', name: '' }]
+        services: [{ serviceId: '', staffId: '', duration: '', price: '' }]
     });
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
@@ -45,30 +44,31 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
             const selectedAppointment = appointments.find(appt => appt.appointmentId === appointmentId);
             if (selectedAppointment) {
                 setAppointment(selectedAppointment);
-
+    
                 const updatedServices = (selectedAppointment.services?.$values || []).map(serviceDetails => {
                     const service = services.find(s => s.serviceId === serviceDetails.serviceId);
+                    const staffMember = staff.find(st => st.staffId === serviceDetails.staffId);
                     return {
                         serviceId: service?.serviceId || '',
+                        staffId: staffMember?.staffId || '',
                         duration: serviceDetails.duration || service?.duration || '',
                         price: service?.price || '',
                         name: service?.name || ''
                     };
                 });
-
+    
                 setUpdatedAppointment({
                     customerId: selectedAppointment.customerId || '',
-                    staffId: selectedAppointment.staffId || '',
                     appointmentTime: selectedAppointment.appointmentTime
                         ? new Date(selectedAppointment.appointmentTime).toISOString().slice(0, 16)
                         : '',
                     status: selectedAppointment.status || '',
                     comment: selectedAppointment.comment || '',
-                    services: updatedServices.length ? updatedServices : [{ serviceId: '', duration: '', price: '', name: '' }]
+                    services: updatedServices.length ? updatedServices : [{ serviceId: '', staffId: '', duration: '', price: '' }]
                 });
             }
         }
-    }, [appointmentId, appointments, services]);
+    }, [appointmentId, appointments, services, staff]);
 
     useEffect(() => {
         if (open && appointment) {
@@ -154,56 +154,38 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     };
 
     const handleServiceChange = (index, field, value) => {
-        let formattedValue = value;
-
+        let updatedService = { ...updatedAppointment.services[index], [field]: value };
+    
         if (field === 'serviceId') {
             const selectedService = services.find(service => service.serviceId === value);
-            const serviceDuration = selectedService?.duration || '00:00:00'; // Default to '00:00:00' if not found
-
-            const updatedServices = updatedAppointment.services.map((service, i) =>
-                i === index
-                    ? {
-                        ...service,
-                        [field]: formattedValue,
-                        duration: serviceDuration // Auto-fill the duration from context
-                    }
-                    : service
-            );
-            setUpdatedAppointment({ ...updatedAppointment, services: updatedServices });
+            if (selectedService) {
+                updatedService.duration = selectedService.duration;
+                updatedService.price = selectedService.price;
+            } else {
+                updatedService.duration = '';
+                updatedService.price = '';
+            }
         } else if (field === 'duration') {
-            // Ensure the duration is formatted as "HH:mm:ss"
-            const [hours, minutes] = value.split(':');
-            formattedValue = `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00`;
-
-            const updatedServices = updatedAppointment.services.map((service, i) =>
-                i === index
-                    ? {
-                        ...service,
-                        [field]: formattedValue
-                    }
-                    : service
-            );
-            setUpdatedAppointment({ ...updatedAppointment, services: updatedServices });
-        } else {
-            const updatedServices = updatedAppointment.services.map((service, i) =>
-                i === index
-                    ? {
-                        ...service,
-                        [field]: formattedValue
-                    }
-                    : service
-            );
-            setUpdatedAppointment({ ...updatedAppointment, services: updatedServices });
+            // Convert the duration to a TimeSpan-compatible format if it's being edited
+            const formattedDuration = value.length === 5 ? `${value}:00` : value; // HH:MM -> HH:MM:SS
+            updatedService.updatedDuration = formattedDuration;
         }
+    
+        const updatedServices = updatedAppointment.services.map((service, i) =>
+            i === index ? updatedService : service
+        );
+    
+        setUpdatedAppointment({ ...updatedAppointment, services: updatedServices });
     };
+    
 
     const handleAddService = () => {
         setUpdatedAppointment({
             ...updatedAppointment,
-            services: [...updatedAppointment.services, { serviceId: '', duration: '', price: '', name: '' }]
+            services: [...updatedAppointment.services, { serviceId: '', staffId: '', duration: '', price: '' }]
         });
 
-        hasAddedService.current = true; // Set the flag to true when a new service is added
+        hasAddedService.current = true;
     };
 
     const handleRemoveService = (index) => {
@@ -217,26 +199,27 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
         try {
             const updateData = {
                 businessId: appointment.businessId,
-                services: updatedAppointment.services.map((service, index) => {
-                    const serviceData = { serviceId: service.serviceId };
-                    if (service.duration) {
-                        serviceData.updatedDuration = service.duration;
-                    }
-                    return serviceData;
-                }),
-                appointmentTime: updatedAppointment.appointmentTime,
-                comment: updatedAppointment.comment,
+                services: updatedAppointment.services
+                    .filter(service => service.serviceId && service.staffId)
+                    .map(service => ({
+                        serviceId: parseInt(service.serviceId),
+                        staffId: parseInt(service.staffId)
+                    })),
+                appointmentTime: new Date(updatedAppointment.appointmentTime).toISOString(),
+                comment: updatedAppointment.comment || ""
             };
-            await updateAppointmentAndRefresh(appointment.appointmentId, updateData, appointment.businessId);
+
+            console.log("Final update payload:", updateData);
+            console.log("appointment idd:", appointment.appointmentId);
+            console.log("business id:", appointment.businessId);
+
+            await updateAppointmentAndRefresh(appointment.appointmentId, updateData,appointment.businessId);
             setAlert({ message: 'Appointment updated successfully!', severity: 'success' });
+            setEditMode(false);
         } catch (error) {
             console.error('Failed to update appointment:', error);
             const errorMessage = error.response?.data?.message || error.message || 'Failed to update appointment. Please try again.';
             setAlert({ message: errorMessage, severity: 'error' });
-
-            setTimeout(() => {
-                setAlert({ message: '', severity: '' });
-            }, 5000);
         }
     };
 

@@ -92,20 +92,6 @@ const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleTogg
                     gutterBottom
                     sx={{
                         fontWeight: 'bold',
-                        color: '#28a745',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.1em',
-                        marginBottom: '12px',
-                    }}
-                >
-                    By {appointment.staffName}
-                </Typography>
-                <Divider sx={{ borderBottomWidth: 2, borderColor: '#28a745', marginBottom: '16px' }} />
-                <Typography
-                    variant="h6"
-                    gutterBottom
-                    sx={{
-                        fontWeight: 'bold',
                         color: '#1a1a1a',
                         marginBottom: '12px',
                         fontSize: '1.2rem',
@@ -113,8 +99,9 @@ const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleTogg
                         letterSpacing: '0.1em',
                     }}
                 >
-                    Services
+                    Services & Staff
                 </Typography>
+                <Divider sx={{ borderBottomWidth: 2, borderColor: '#28a745', marginBottom: '16px' }} />
                 {appointment.services.$values.map((service, index) => (
                     <Typography
                         key={index}
@@ -130,7 +117,7 @@ const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleTogg
                         }}
                     >
                         <strong style={{ marginRight: '6px', color: '#333' }}>{index + 1}.</strong>
-                        {service.name}
+                        {service.name} - <strong style={{ marginLeft: '6px', color: '#007bff' }}>{service.staffName}</strong>
                     </Typography>
                 ))}
             </Box>

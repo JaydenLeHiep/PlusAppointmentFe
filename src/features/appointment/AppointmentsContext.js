@@ -5,7 +5,7 @@ import {
   changeStatusAppointments as apiChangeStatusAppointments,
   deleteAppointment as apiDeleteAppointment,
   fetchAppointmentById as apiFetchAppointmentById,
-  updateAppointment as apiUpdateAppointment, 
+  updateAppointment as apiUpdateAppointment,
 } from '../../lib/apiClientAppointment';
 import { fetchCustomers as apiFetchAllCustomers } from '../../lib/apiClientCustomer';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
@@ -34,7 +34,7 @@ export const AppointmentsProvider = ({ children }) => {
     } catch (error) {
       console.error('Error fetching appointments:', error);
     }
-  }, []);  
+  }, []);
 
   const fetchAppointmentById = useCallback(async (appointmentId) => {
     try {
@@ -77,28 +77,15 @@ export const AppointmentsProvider = ({ children }) => {
 
   const updateAppointmentAndRefresh = useCallback(async (appointmentId, updateData, businessId) => {
     try {
-      // Transform services to the new structure
-      const transformedServices = updateData.services.map(service => {
-        return {
-          serviceId: service.serviceId,
-          ...(service.updatedDuration && { updatedDuration: service.updatedDuration })
-        };
-      });
-  
-      const transformedUpdateData = {
-        businessId: updateData.businessId,
-        services: transformedServices,
-        appointmentTime: updateData.appointmentTime,
-        comment: updateData.comment
-      };
-  
-      await apiUpdateAppointment(appointmentId, transformedUpdateData);
-      await fetchAppointmentsForBusiness(businessId);
+        await apiUpdateAppointment(appointmentId, updateData);
+        await fetchAppointmentsForBusiness(businessId);
     } catch (error) {
-      console.error('Error updating appointment:', error);
-      throw error;
+        console.error('Error updating appointment:', error);
+        throw error;
     }
-  }, [fetchAppointmentsForBusiness]);
+}, [fetchAppointmentsForBusiness]);
+
+
 
   const fetchAllCustomers = useCallback(async (businessId) => {
     try {
