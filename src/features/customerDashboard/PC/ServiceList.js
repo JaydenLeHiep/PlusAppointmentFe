@@ -68,7 +68,7 @@ const ServiceList = ({ businessId, onServiceSelect, searchQuery }) => {
             <ItemBoldText>{service.name}</ItemBoldText>
           </Box>        
             <ItemText>{service.duration}</ItemText>
-            <ItemText>${service.price}</ItemText>   
+            <ItemText>€{service.price}</ItemText>   
         </ServiceListItem>
       ))}
     </React.Fragment>

@@ -1,5 +1,5 @@
 import { apiBaseUrl } from '../config/apiConfig';
-import moment from 'moment'; 
+import moment from 'moment';
 const appointmentApiUrl = `${apiBaseUrl}/api/appointments`;
 
 // use this for production
@@ -16,7 +16,7 @@ export const fetchAppointments = async (businessId) => {
   if (!token) {
     throw new Error('User not authenticated');
   }
-  
+
   const appointmentBusinessApiUrl = `${appointmentApiUrl}/business/business_id=${businessId}`;
   const response = await fetch(appointmentBusinessApiUrl, {
     method: 'GET',
@@ -25,12 +25,12 @@ export const fetchAppointments = async (businessId) => {
       'Authorization': `Bearer ${token}`,
     },
   });
-  
+
   if (!response.ok) {
     const data = await response.json();
     throw new Error(data.message || 'Failed to fetch appointments');
   }
-  
+
   const data = await response.json();
   return data.$values || data;
 };
@@ -122,7 +122,7 @@ export const fetchAppointmentById = async (appointmentId) => {
   if (!response.ok) {
     throw new Error(data.message);
   }
-  return data;  
+  return data;
 };
 
 // Function to update an appointment

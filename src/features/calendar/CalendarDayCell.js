@@ -3,8 +3,13 @@ import { Box } from '@mui/material';
 
 const CalendarDayCell = ({ dayCellInfo, events, currentView }) => {
   const date = dayCellInfo.date;
+
+  // Filter events that match the specific date
   const dayEvents = events.filter(event => new Date(event.start).toDateString() === date.toDateString());
-  const eventCount = dayEvents.length;
+
+  // Use a Set to track unique appointment IDs
+  const uniqueAppointmentIds = new Set(dayEvents.map(event => event.appointmentId));
+  const uniqueAppointmentCount = uniqueAppointmentIds.size;
 
   if (currentView === 'dayGridMonth') {
     return (
@@ -16,7 +21,7 @@ const CalendarDayCell = ({ dayCellInfo, events, currentView }) => {
           alignItems: 'center',
         }}
       >
-        {eventCount > 0 && (
+        {uniqueAppointmentCount > 0 && (
           <Box
             sx={{
               backgroundColor: 'red',
@@ -28,7 +33,7 @@ const CalendarDayCell = ({ dayCellInfo, events, currentView }) => {
               fontSize: '0.75rem',
             }}
           >
-            {eventCount}
+            {uniqueAppointmentCount}
           </Box>
         )}
         <div>{date.getDate()}</div>

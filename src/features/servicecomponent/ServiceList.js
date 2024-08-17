@@ -61,7 +61,7 @@ const ServiceList = ({
                   </Typography>
                   <br />
                   <Typography variant="body2" component="span">
-                    {service.duration} - ${service.price}
+                    {service.duration} - €{service.price}
                   </Typography>
                 </>
               }

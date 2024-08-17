@@ -54,29 +54,6 @@ const AppointmentEditView = ({
                 </Select>
             </FormControl>
 
-            <FormControl fullWidth margin="dense" sx={{ mb: 2.5 }}>
-                <InputLabel>Staff</InputLabel>
-                <Select
-                    value={updatedAppointment.staffId}
-                    onChange={(e) => handleInputChange(e, 'staffId')}
-                    label="Staff"
-                    sx={{
-                        backgroundColor: '#ffffff',
-                        borderRadius: '8px',
-                        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                    }}
-                >
-                    {staff.map((staffMember) => (
-                        <MenuItem key={staffMember.staffId} value={staffMember.staffId}>
-                            <Box component="span" fontWeight="bold">
-                                {staffMember.name}
-                            </Box>{' '}
-                            - {staffMember.phone}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-
             <TextField
                 margin="dense"
                 label="Appointment Time"
@@ -133,6 +110,7 @@ const AppointmentEditView = ({
                     service={service}
                     index={index}
                     services={services}
+                    staff={staff}  // Pass staff to handle staff selection
                     handleServiceChange={handleServiceChange}
                     handleRemoveService={handleRemoveService}
                     editMode={editMode}
