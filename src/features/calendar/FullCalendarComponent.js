@@ -58,13 +58,25 @@ const FullCalendarComponent = ({ events, staff }) => {
     title: staffMember.name,
   }));
 
-  const updatedEvents = events.map(event => {
-    const resource = resources.find(res => res.title === event.staffName);
-    return {
-      ...event,
-      resourceIds: [resource?.id],
-    };
-  });
+  // Adjust events based on the current view
+  const updatedEvents = currentView === 'resourceTimeGridDay'
+    ? events.map(event => {
+        const resource = resources.find(res => res.title === event.staffName);
+        return {
+          ...event,
+          resourceIds: [resource?.id],
+        };
+      })
+    : events.reduce((acc, event) => {
+        // Group all services of the same appointment together for the Day view
+        const existingEvent = acc.find(e => e.appointmentId === event.appointmentId);
+        if (existingEvent && currentView === 'timeGridDay') {
+          existingEvent.end = new Date(Math.max(new Date(existingEvent.end), new Date(event.end))).toISOString();
+        } else {
+          acc.push({ ...event, resourceIds: [] });
+        }
+        return acc;
+      }, []);
 
   return (
     <Box

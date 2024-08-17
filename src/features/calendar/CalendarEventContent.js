@@ -1,25 +1,33 @@
 import React from 'react';
 
 const CalendarEventContent = ({ eventInfo, currentView }) => {
-  const { title} = eventInfo.event;
-  
+  const {extendedProps } = eventInfo.event;
+
   const startTime = eventInfo.event.start;
   const endTime = eventInfo.event.end;
+  const staffName = extendedProps.staffName;
+  const serviceName = extendedProps.service; // Access the service name from extendedProps
 
   if (!startTime || !endTime) {
     return <div><span>Invalid Time</span></div>;
   }
-  
+
   const timeText = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-  if (currentView === 'timeGridDay' || currentView === 'resourceTimeGridDay') {
+  if (currentView === 'timeGridDay') {
     return (
       <div>
-        <span><strong>{timeText}</strong> {`${title}`}</span>
+        <span><strong>{timeText}</strong> {staffName}</span>
+      </div>
+    );
+  } else if (currentView === 'resourceTimeGridDay') {
+    return (
+      <div>
+        <span><strong>{timeText}</strong> {staffName} - {serviceName}</span>
       </div>
     );
   }
-  
+
   return null;
 };
 
