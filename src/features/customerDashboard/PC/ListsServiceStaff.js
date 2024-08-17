@@ -56,20 +56,16 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 }));
 
 const ListsServiceStaff = ({ view, businessId, onServiceSelect, onStaffSelect, searchQuery, setSearchQuery, onViewChange }) => {
+  const handleStaffSelect = (staff) => {
+    onStaffSelect(staff);  // Use this to pass the selected staff up
+  };
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
   return (
-    <Box 
-      sx={{ 
-        width: '100%', 
-        margin: 'auto', 
-        padding: { xs: '0 16px', sm: '0 24px', md: '0' },
-        boxSizing: 'border-box',
-      }}
-    >
+    <Box sx={{ width: '100%', margin: 'auto', padding: { xs: '0 16px', sm: '0 24px', md: '0' }, boxSizing: 'border-box' }}>
       <CustomerListHeader>
         <CustomerButtonDashboard view={view} onViewChange={onViewChange} />
         <StyledTextField
@@ -113,7 +109,7 @@ const ListsServiceStaff = ({ view, businessId, onServiceSelect, onStaffSelect, s
           <StaffList
             businessId={businessId}
             searchQuery={searchQuery}
-            onStaffSelect={onStaffSelect}
+            onStaffSelect={handleStaffSelect}
           />
         )}
       </CustomerListContainer>

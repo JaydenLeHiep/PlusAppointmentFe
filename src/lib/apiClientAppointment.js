@@ -1,4 +1,5 @@
 import { apiBaseUrl } from '../config/apiConfig';
+import moment from 'moment'; 
 const appointmentApiUrl = `${apiBaseUrl}/api/appointments`;
 
 // use this for production
@@ -143,4 +144,38 @@ export const updateAppointment = async (appointmentId, updateData) => {
     throw new Error(errorData.message || 'Failed to update appointment');
   }
   return response.json();
+};
+
+// Fetch available time slots for a specific staff member and date
+export const fetchAvailableTimeSlots = async (staffId, date) => {
+  if (!staffId || !date) {
+    throw new Error('Staff ID and date are required');
+  }
+
+  // Use moment to format the date consistently
+  const formattedDate = moment(date).format('YYYY-MM-DD');
+
+  console.log("Staff ID:", staffId);
+  console.log("Formatted Date:", formattedDate);
+
+  const response = await fetch(`${appointmentApiUrl}/available-timeslots?staffId=${staffId}&date=${formattedDate}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || 'Failed to fetch available time slots');
+  }
+
+  const data = await response.json();
+
+  // Check if availableTimeSlots exists and is an array
+  if (data && Array.isArray(data.availableTimeSlots.$values)) {
+    return data.availableTimeSlots.$values;
+  } else {
+    return []; // Return an empty array if not an array
+  }
 };
