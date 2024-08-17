@@ -203,7 +203,8 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                     .filter(service => service.serviceId && service.staffId)
                     .map(service => ({
                         serviceId: parseInt(service.serviceId),
-                        staffId: parseInt(service.staffId)
+                        staffId: parseInt(service.staffId),
+                        updatedDuration: service.updatedDuration || null
                     })),
                 appointmentTime: new Date(updatedAppointment.appointmentTime).toISOString(),
                 comment: updatedAppointment.comment || ""
