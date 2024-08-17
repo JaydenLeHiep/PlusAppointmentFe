@@ -155,9 +155,6 @@ export const fetchAvailableTimeSlots = async (staffId, date) => {
   // Use moment to format the date consistently
   const formattedDate = moment(date).format('YYYY-MM-DD');
 
-  console.log("Staff ID:", staffId);
-  console.log("Formatted Date:", formattedDate);
-
   const response = await fetch(`${appointmentApiUrl}/available-timeslots?staffId=${staffId}&date=${formattedDate}`, {
     method: 'GET',
     headers: {
