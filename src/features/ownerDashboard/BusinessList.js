@@ -1,7 +1,10 @@
 import React, { Fragment } from 'react';
 import { List, ListItem, ListItemText, Typography, Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const BusinessList = ({ businesses, onBusinessClick }) => {
+  const { t } = useTranslation('businessList'); // Use the 'businessList' namespace for translations
+
   return (
     <Box>
       <Typography 
@@ -14,7 +17,7 @@ const BusinessList = ({ businesses, onBusinessClick }) => {
           marginBottom: '20px'
         }}
       >
-        My Businesses
+        {t('myBusinesses')}
       </Typography>
       
       <List>
@@ -76,7 +79,7 @@ const BusinessList = ({ businesses, onBusinessClick }) => {
               mt: 3 
             }}
           >
-            No businesses found.
+            {t('noBusinessesFound')}
           </Typography>
         )}
       </List>

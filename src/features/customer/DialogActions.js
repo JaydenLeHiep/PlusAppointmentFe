@@ -1,7 +1,10 @@
 import React from 'react';
 import { Box, Button } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const DialogActions = ({ onClose, onSubmit }) => {
+  const { t } = useTranslation('dialogCustomerActions'); // Use the 'dialogCustomerActions' namespace
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
       <Button
@@ -21,7 +24,7 @@ const DialogActions = ({ onClose, onSubmit }) => {
           },
         }}
       >
-        Cancel
+        {t('cancelButton')}
       </Button>
       <Button
         variant="contained"
@@ -37,7 +40,7 @@ const DialogActions = ({ onClose, onSubmit }) => {
           '&:hover': { backgroundColor: '#218838' },
         }}
       >
-        Add Customer
+        {t('submitButton')}
       </Button>
     </Box>
   );

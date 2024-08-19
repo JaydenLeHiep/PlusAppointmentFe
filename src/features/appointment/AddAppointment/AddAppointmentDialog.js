@@ -10,8 +10,10 @@ import { Close as CloseIcon } from '@mui/icons-material';
 import AppointmentForm from './AppointmentForm';
 import AppointmentActions from './AppointmentActions';
 import { useAppointmentsContext } from '../../appointment/AppointmentsContext';
+import { useTranslation } from 'react-i18next';
 
 const AddAppointmentDialog = ({ open, onClose, businessId }) => {
+    const { t } = useTranslation('addAppointmentDialog'); // Use the 'addAppointmentDialog' namespace for translations
     const initialAppointmentState = useRef({
         appointmentTime: '',
         status: 'Pending',
@@ -65,18 +67,17 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
             };
     
             await addAppointmentAndUpdateList(appointmentDetails);
-            setAlert({ message: 'Appointment added successfully!', severity: 'success' });
+            setAlert({ message: t('appointmentAddedSuccess'), severity: 'success' });
     
             setTimeout(() => {
                 setAlert({ message: '', severity: '' });
             }, 5000);
         } catch (error) {
             console.error('Failed to add appointment:', error);
-            const errorMessage = error.response?.data?.message || error.message || 'Failed to add appointment. Please try again.';
+            const errorMessage = error.response?.data?.message || error.message || t('appointmentAddFailed');
             setAlert({ message: errorMessage, severity: 'error' });
         }
     };
-    
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
@@ -95,7 +96,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
                     marginLeft: '3px'
                 }}
             >
-                Add Appointment
+                {t('addAppointment')}
                 <IconButton aria-label="close" onClick={onClose} sx={{ color: '#808080', fontSize: '1.5rem' }}>
                     <CloseIcon />
                 </IconButton>

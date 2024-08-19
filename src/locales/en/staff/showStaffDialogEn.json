@@ -1,0 +1,15 @@
+{
+    "staffListTitle": "Staff List",
+    "addNewStaff": "Add New Staff",
+    "staffAddedSuccess": "Staff added successfully!",
+    "staffUpdatedSuccess": "Staff updated successfully!",
+    "staffDeletedSuccess": "Staff deleted successfully!",
+    "staffAddedError": "Failed to add staff. Please try again.",
+    "staffUpdatedError": "Failed to update staff. Please try again.",
+    "staffDeletedError": "Failed to delete staff. Please try again.",
+    "invalidPassword": "Invalid password format.",
+    "confirmDeleteTitle": "Confirm Delete",
+    "confirmDeleteContent": "Are you sure you want to delete this staff member?",
+    "addStaff": "Add Staff"
+  }
+  

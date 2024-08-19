@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { TextField, Button, InputAdornment, IconButton, Alert } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 const RegisterForm = ({
   username,
@@ -18,6 +19,7 @@ const RegisterForm = ({
   message,
   alertVariant
 }) => {
+  const { t } = useTranslation('registerForm'); // Use the 'registerForm' namespace for translations
 
   useEffect(() => {
     localStorage.setItem('registerForm', JSON.stringify({ username, email, phone, password }));
@@ -26,7 +28,7 @@ const RegisterForm = ({
   return (
     <form onSubmit={handleRegister}>
       <TextField
-        label="Username"
+        label={t('username')}
         variant="outlined"
         fullWidth
         margin="normal"
@@ -35,7 +37,7 @@ const RegisterForm = ({
         required
       />
       <TextField
-        label="Email"
+        label={t('email')}
         type="email"
         variant="outlined"
         fullWidth
@@ -45,7 +47,7 @@ const RegisterForm = ({
         required
       />
       <TextField
-        label="Phone"
+        label={t('phone')}
         type="tel"
         variant="outlined"
         fullWidth
@@ -55,7 +57,7 @@ const RegisterForm = ({
         required
       />
       <TextField
-        label="Password"
+        label={t('password')}
         type={showPassword ? "text" : "password"}
         variant="outlined"
         fullWidth
@@ -63,7 +65,7 @@ const RegisterForm = ({
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         error={!passwordValid && password.length > 0}
-        helperText={!passwordValid && password.length > 0 ? 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.' : ''}
+        helperText={!passwordValid && password.length > 0 ? t('passwordHelperText') : ''}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -76,7 +78,7 @@ const RegisterForm = ({
         required
       />
       <Button variant="contained" color="primary" type="submit" className="w-100" disabled={!passwordValid} style={{marginTop: '15px'}}>
-        Register
+        {t('register')}
       </Button>
       {message && (
         <Alert severity={alertVariant} className="mt-3" style={{marginTop: '10px'}}>

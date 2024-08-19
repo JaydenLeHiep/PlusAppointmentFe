@@ -1,0 +1,11 @@
+{
+    "username": "Username",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "register": "Register",
+    "passwordHelperText": "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.",
+    "registerSuccess": "Registration successful!",
+    "registerFailure": "Registration failed. Please try again."
+  }
+  

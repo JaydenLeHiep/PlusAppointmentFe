@@ -5,8 +5,10 @@ import Footer from '../../../components/Footer';
 import RegisterForm from './RegisterForm';
 import usePasswordValidation from '../../../hooks/usePasswordValidation';
 import { registerUser } from '../../../lib/apiClient';
+import { useTranslation } from 'react-i18next';
 
 const heroImage = require('../../../assets/hero-image.jpg');
+
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -17,6 +19,7 @@ const RegisterPage = () => {
   const [alertVariant, setAlertVariant] = useState('info');
 
   const passwordValid = usePasswordValidation(password);
+  const { t } = useTranslation('registerPage'); // Use the 'registerPage' namespace for translations
 
   useEffect(() => {
     const savedForm = JSON.parse(localStorage.getItem('registerForm'));
@@ -32,14 +35,14 @@ const RegisterPage = () => {
   const handleRegister = async (event) => {
     event.preventDefault();
     if (!passwordValid) {
-      setMessage('Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character!');
+      setMessage(t('passwordInvalid'));
       setAlertVariant('danger');
       return;
     }
 
     try {
       const data = await registerUser({ username, password, email, phone });
-      setMessage(data.message || 'Registration successful!');
+      setMessage(t('registrationSuccess'));
       setAlertVariant('success');
       // Clear form data
       setUsername('');
@@ -48,7 +51,7 @@ const RegisterPage = () => {
       setPhone('');
       localStorage.removeItem('registerForm');
     } catch (error) {
-      setMessage(error.message);
+      setMessage(t('registrationFailure'));
       setAlertVariant('danger');
     }
   };
@@ -99,7 +102,7 @@ const RegisterPage = () => {
                 color: '#333',
               }}
             >
-              Register
+              {t('registerTitle')}
             </Typography>
             <RegisterForm
               username={username}

@@ -1,0 +1,15 @@
+{
+    "staffListTitle": "Danh sách nhân viên",
+    "addNewStaff": "Thêm nhân viên mới",
+    "staffAddedSuccess": "Thêm nhân viên thành công!",
+    "staffUpdatedSuccess": "Cập nhật nhân viên thành công!",
+    "staffDeletedSuccess": "Xóa nhân viên thành công!",
+    "staffAddedError": "Không thể thêm nhân viên. Vui lòng thử lại.",
+    "staffUpdatedError": "Không thể cập nhật nhân viên. Vui lòng thử lại.",
+    "staffDeletedError": "Không thể xóa nhân viên. Vui lòng thử lại.",
+    "invalidPassword": "Định dạng mật khẩu không hợp lệ.",
+    "confirmDeleteTitle": "Xác nhận xóa",
+    "confirmDeleteContent": "Bạn có chắc chắn muốn xóa nhân viên này không?",
+    "addStaff": "Thêm nhân viên"
+  }
+  

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { List, ListItem, Typography, Paper, MenuItem, Select, FormControl, InputLabel, ButtonBase, Box, Badge } from '@mui/material';
 import AppointmentInfoModal from '../appointment/AppointmentInfoModal/AppointmentInfoModal.js';
+import { useTranslation } from 'react-i18next';
 
 const AppointmentList = ({ appointments, businessId }) => {
+  const { t } = useTranslation('appointmentList'); // Use the 'appointmentList' namespace for translations
   const [sortCriteria, setSortCriteria] = useState('date');
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -31,20 +33,20 @@ const AppointmentList = ({ appointments, businessId }) => {
   }
 
   if (!appointments || appointments.length === 0) {
-    return <Typography variant="h6">No appointments available.</Typography>;
+    return <Typography variant="h6">{t('noAppointments')}</Typography>;
   }
 
   return (
     <div>
       <FormControl variant="outlined" style={{ marginBottom: '16px', minWidth: '200px' }}>
-        <InputLabel>Sort By</InputLabel>
+        <InputLabel>{t('sortBy')}</InputLabel>
         <Select
           value={sortCriteria}
           onChange={(e) => setSortCriteria(e.target.value)}
-          label="Sort By"
+          label={t('sortBy')}
         >
-          <MenuItem value="date">Date</MenuItem>
-          <MenuItem value="status">Status</MenuItem>
+          <MenuItem value="date">{t('date')}</MenuItem>
+          <MenuItem value="status">{t('status')}</MenuItem>
         </Select>
       </FormControl>
       <AppointmentInfoModal
@@ -92,7 +94,7 @@ const AppointmentList = ({ appointments, businessId }) => {
                     </Box>
                   </Box>
                   <Badge
-                    badgeContent={appointment.status}
+                    badgeContent={t(appointment.status.toLowerCase())}
                     color={appointment.status.toLowerCase() === 'confirmed' ? 'success' : appointment.status.toLowerCase() === 'pending' ? 'warning' : 'error'}
                     sx={{
                       '& .MuiBadge-badge': {

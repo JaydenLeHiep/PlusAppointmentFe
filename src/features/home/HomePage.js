@@ -1,9 +1,11 @@
 import React from 'react';
 import { Box, Button, Typography, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation('homePage'); // Use the 'homePage' namespace for translations
 
   return (
     <Box
@@ -30,10 +32,10 @@ const HomePage = () => {
         }}
       >
         <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bold', color: '#1976d2' }}>
-          Welcome to Plus Appointment
+          {t('welcomeMessage')}
         </Typography>
         <Typography variant="h5" gutterBottom sx={{ color: '#555555' }}>
-          Are you...?
+          {t('areYou')}
         </Typography>
         <Box mt={4} sx={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
           <Button
@@ -53,7 +55,7 @@ const HomePage = () => {
             }}
             onClick={() => navigate('/business-home')}
           >
-            Business Owner
+            {t('businessOwner')}
           </Button>
           <Button
             variant="contained"
@@ -72,7 +74,7 @@ const HomePage = () => {
             }}
             onClick={() => navigate('/customer-dashboard')}
           >
-            Customer
+            {t('customer')}
           </Button>
         </Box>
       </Paper>

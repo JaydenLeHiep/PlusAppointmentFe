@@ -1,0 +1,7 @@
+{
+    "registerTitle": "Đăng ký",
+    "passwordInvalid": "Mật khẩu phải có ít nhất 8 ký tự, bao gồm ít nhất một chữ cái in hoa, một chữ cái thường, một số và một ký tự đặc biệt!",
+    "registrationSuccess": "Đăng ký thành công!",
+    "registrationFailure": "Đăng ký không thành công. Vui lòng thử lại."
+  }
+  

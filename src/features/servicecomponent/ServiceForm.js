@@ -1,8 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import { Box, Typography, TextField, Button, IconButton } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 const ServiceForm = ({ title, newService, setNewService, handleAction, handleCancelForm, buttonText, buttonColor }) => {
+  const { t } = useTranslation('serviceServiceForm'); // Use the 'serviceServiceForm' namespace
   const formRef = useRef(null);
 
   useEffect(() => {
@@ -37,7 +39,7 @@ const ServiceForm = ({ title, newService, setNewService, handleAction, handleCan
       </Typography>
       <TextField
         margin="dense"
-        label="Name"
+        label={t('nameLabel')}
         type="text"
         fullWidth
         value={newService.name}
@@ -55,7 +57,7 @@ const ServiceForm = ({ title, newService, setNewService, handleAction, handleCan
       />
       <TextField
         margin="dense"
-        label="Description"
+        label={t('descriptionLabel')}
         type="text"
         fullWidth
         value={newService.description}
@@ -73,7 +75,7 @@ const ServiceForm = ({ title, newService, setNewService, handleAction, handleCan
       />
       <TextField
         margin="dense"
-        label="Duration"
+        label={t('durationLabel')}
         type="time"
         fullWidth
         value={newService.duration}
@@ -93,7 +95,7 @@ const ServiceForm = ({ title, newService, setNewService, handleAction, handleCan
       />
       <TextField
         margin="dense"
-        label="Price"
+        label={t('priceLabel')}
         type="number"
         fullWidth
         value={newService.price}
@@ -123,7 +125,7 @@ const ServiceForm = ({ title, newService, setNewService, handleAction, handleCan
             '&:hover': { backgroundColor: '#5a6268' },
           }}
         >
-          Cancel
+          {t('cancelButton')}
         </Button>
         <Button
           onClick={handleAction}
@@ -138,7 +140,7 @@ const ServiceForm = ({ title, newService, setNewService, handleAction, handleCan
             '&:hover': { backgroundColor: buttonColor === '#007bff' ? '#0056b3' : '#218838' },
           }}
         >
-          {buttonText}
+          {t(buttonText)}
         </Button>
       </Box>
     </Box>

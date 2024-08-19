@@ -1,0 +1,18 @@
+{
+    "appointmentDetails": "Chi tiết cuộc hẹn",
+    "confirmStatusSuccess": "Xác nhận cuộc hẹn thành công!",
+    "confirmStatusError": "Xác nhận cuộc hẹn thất bại. Vui lòng thử lại.",
+    "deleteSuccess": "Xóa cuộc hẹn thành công!",
+    "deleteError": "Xóa cuộc hẹn thất bại. Vui lòng thử lại.",
+    "updateSuccess": "Cập nhật cuộc hẹn thành công!",
+    "updateError": "Cập nhật cuộc hẹn thất bại. Vui lòng thử lại.",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy bỏ",
+    "update": "Cập nhật",
+    "deleteAppointmentTitle": "Xóa cuộc hẹn",
+    "deleteAppointmentContent": "Bạn có chắc chắn muốn xóa cuộc hẹn này không?",
+    "close": "Đóng",
+    "invalidDate": "Ngày không hợp lệ",
+    "invalidTime": "Thời gian không hợp lệ"
+  }
+  

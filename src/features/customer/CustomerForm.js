@@ -1,14 +1,17 @@
 import React from 'react';
 import { Box, TextField } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const CustomerForm = ({ customer, handleChange }) => {
+  const { t } = useTranslation('customerForm'); // Use the 'customerForm' namespace
+
   return (
     <Box sx={{ mb: 3 }}>
       {['name', 'email', 'phone'].map((field) => (
         <TextField
           key={field}
           margin="normal"
-          label={field.charAt(0).toUpperCase() + field.slice(1)}
+          label={t(`${field}Label`)}
           type={field === 'email' ? 'email' : 'text'}
           fullWidth
           name={field}

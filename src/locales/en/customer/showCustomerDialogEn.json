@@ -1,0 +1,6 @@
+{
+    "title": "Add New Customer",
+    "successMessage": "Customer added successfully!",
+    "errorMessage": "Failed to add customer. Please try again."
+  }
+  

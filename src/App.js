@@ -11,6 +11,7 @@ import ResponsiveDashboard from './features/customerDashboard/ResponsiveDashboar
 import { AppointmentsProvider } from './features/appointment/AppointmentsContext';
 import { StaffsProvider } from './features/staff/StaffsContext';
 import { ServicesProvider } from './features/servicecomponent/ServicesContext';
+import './utils/i18n'
 
 const App = () => {
   const { isAuthenticated, user } = useAuth();
