@@ -32,6 +32,11 @@ const OverviewButton = styled(Button)(({ theme }) => ({
 }));
 
 const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFinish }) => {
+  
+  const handleFinish = () => {
+    onFinish(selectedAppointments);
+  };
+
   return (
     <OverviewContainer>
       <Typography variant="h5" sx={{ marginBottom: 2, fontWeight: 'bold', color: '#1976d2' }}>
@@ -60,7 +65,7 @@ const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFi
         </OverviewButton>
         <OverviewButton
           variant="contained"
-          onClick={onFinish}
+          onClick={handleFinish}
         >
           Finish
         </OverviewButton>

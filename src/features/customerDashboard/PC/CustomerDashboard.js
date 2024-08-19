@@ -89,6 +89,12 @@ const CustomerDashboard = () => {
           staffName: selectedStaff.name,
           date: selectedDate,
           time: selectedTime,
+          services: [
+            {
+              serviceId: selectedService.serviceId, // Add serviceId
+              staffId: selectedStaff.staffId // Add staffId
+            }
+          ] // Include a services array with the necessary data
         },
       ]);
       // Reset selections
@@ -110,8 +116,20 @@ const CustomerDashboard = () => {
   };
 
   const handleFinish = () => {
+    console.log("Final selectedAppointments in CustomerDashboard before passing to CustomerForm:", selectedAppointments);
     setShowCustomerForm(true); // Show the CustomerForm when "Finish" is clicked
     setOverview(false); // Hide the overview
+};
+
+  const handleBackClick = () => {
+    if (view === 'calendar') {
+      // Reset both the service and staff if in the calendar view
+      setSelectedService(null);
+      setSelectedStaff(null);
+      setView('services');
+    } else if (view === 'staffs') {
+      setView('services');
+    }
   };
 
   if (!businessId) {
@@ -139,8 +157,15 @@ const CustomerDashboard = () => {
   }
 
   if (showCustomerForm) {
-    return <CustomerForm />;
-  }
+    return (
+        <CustomerForm
+            selectedAppointments={selectedAppointments}
+            onAppointmentSuccess={() => {
+                // handle success here, maybe reset state or navigate away
+            }}
+        />
+    );
+}
 
   if (overview) {
     return (
@@ -158,7 +183,7 @@ const CustomerDashboard = () => {
         <CustomerBusinessInfo
           businessInfo={businessInfo}
           view={view}
-          onBackClick={() => setView('services')}
+          onBackClick={handleBackClick}
         />
         
         {selectedAppointments.length > 0 && view === 'services' && (

@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CustomButton, FormContainer, FormTitle, InnerFormContainer } from '../../../styles/CustomerStyle/CustomerFormStyle';
 import NewCustomerForm from './NewCustomerForm';
 import OldCustomerForm from './OldCustomerForm';
 
-// CustomerForm component
-const CustomerForm = ({ onCustomerIdReceived }) => {
+const CustomerForm = ({ selectedAppointments, onAppointmentSuccess }) => {
   const [isNewCustomer, setIsNewCustomer] = useState(false);
+
+  useEffect(() => {
+    console.log("CustomerForm received selectedAppointments:", selectedAppointments);
+  }, [selectedAppointments]);
 
   const handleSwitchForm = () => {
     setIsNewCustomer(!isNewCustomer);
@@ -25,9 +28,15 @@ const CustomerForm = ({ onCustomerIdReceived }) => {
           {isNewCustomer ? 'Switch to Existing Customer' : 'Switch to New Customer'}
         </CustomButton>
         {isNewCustomer ? (
-          <NewCustomerForm onCustomerIdReceived={onCustomerIdReceived} />
+          <NewCustomerForm
+            selectedAppointments={selectedAppointments}
+            onAppointmentSuccess={onAppointmentSuccess}
+          />
         ) : (
-          <OldCustomerForm onCustomerIdReceived={onCustomerIdReceived} />
+          <OldCustomerForm
+            selectedAppointments={selectedAppointments}
+            onAppointmentSuccess={onAppointmentSuccess}
+          />
         )}
       </InnerFormContainer>
     </FormContainer>

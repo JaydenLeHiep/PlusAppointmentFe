@@ -4,7 +4,7 @@ import PCDashboard from './PC/CustomerDashboard';  // Path to PC version
 import MobileDashboard from './Mobile/CustomerDashboard';  // Path to Mobile version
 
 const ResponsiveDashboard = () => {
-  const isMobile = useMediaQuery('(max-width:768px)'); // Adjust breakpoint as needed
+  const isMobile = useMediaQuery('(max-width:0px)'); // Adjust breakpoint as needed
 
   return isMobile ? <MobileDashboard /> : <PCDashboard />;
 };
