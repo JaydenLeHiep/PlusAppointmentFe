@@ -1,0 +1,7 @@
+{
+  "usernameOrEmail": "Username or Email",
+  "password": "Password",
+  "login": "Login",
+  "loginSuccessful": "Login successful!",
+  "loginFailed": "Failed to login. Please try again."
+}

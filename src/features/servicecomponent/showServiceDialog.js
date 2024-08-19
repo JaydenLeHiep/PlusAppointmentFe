@@ -10,12 +10,14 @@ import {
   Alert,
 } from '@mui/material';
 import { Add, Close as CloseIcon } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
 import { useServicesContext } from '../servicecomponent/ServicesContext';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
 import ServiceList from './ServiceList';
 import ServiceForm from './ServiceForm';
 
 const ShowServicesDialog = ({ open, onClose, businessId }) => {
+  const { t } = useTranslation('showServicesDialog'); // Use the 'showServicesDialog' namespace
   const { services, addService, updateService, deleteService } = useServicesContext();
 
   const [editServiceId, setEditServiceId] = useState(null); // Track which service is being edited
@@ -64,7 +66,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
         };
 
         await addService(String(businessId), serviceDetails);
-        setAlert({ message: 'Service added successfully!', severity: 'success' });
+        setAlert({ message: t('serviceAddedSuccess'), severity: 'success' });
 
         setNewService({
           name: '',
@@ -74,7 +76,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
         });
       } catch (error) {
         console.error('Failed to add service:', error);
-        const errorMessage = error.response?.data?.message || error.message || 'Failed to add service. Please try again.';
+        const errorMessage = error.response?.data?.message || error.message || t('serviceAddedError');
         setAlert({ message: errorMessage, severity: 'error' });
       }
     });
@@ -90,7 +92,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
         };
 
         await updateService(String(businessId), serviceId, serviceDetails);
-        setAlert({ message: 'Service updated successfully!', severity: 'success' });
+        setAlert({ message: t('serviceUpdatedSuccess'), severity: 'success' });
 
         setNewService({
           name: '',
@@ -100,7 +102,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
         });
       } catch (error) {
         console.error('Failed to update service:', error);
-        const errorMessage = error.response?.data?.message || error.message || 'Failed to update service. Please try again.';
+        const errorMessage = error.response?.data?.message || error.message || t('serviceUpdatedError');
         setAlert({ message: errorMessage, severity: 'error' });
       }
     });
@@ -115,10 +117,10 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
     closeFormAndExecuteAction(async () => {
       try {
         await deleteService(String(businessId), serviceToDelete);
-        setAlert({ message: 'Service deleted successfully!', severity: 'success' });
+        setAlert({ message: t('serviceDeletedSuccess'), severity: 'success' });
       } catch (error) {
         console.error('Failed to delete service:', error);
-        const errorMessage = error.response?.data?.message || error.message || 'Failed to delete service. Please try again.';
+        const errorMessage = error.response?.data?.message || error.message || t('serviceDeletedError');
         setAlert({ message: errorMessage, severity: 'error' });
       } finally {
         setConfirmDialogOpen(false); // Close the confirmation dialog after deletion
@@ -188,7 +190,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
             marginLeft: '3px'
           }}
         >
-          Service List
+          {t('serviceListTitle')}
           <IconButton aria-label="close" onClick={onClose} sx={{ color: '#808080', fontSize: '1.5rem' }}>
             <CloseIcon />
           </IconButton>
@@ -220,17 +222,17 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
                 gap: '4px',
               }}
             >
-              <Add sx={{ fontSize: '40px' }} /> Add New Service
+              <Add sx={{ fontSize: '40px' }} /> {t('addNewService')}
             </Typography>
           </Box>
           <Collapse in={isFormOpen}>
             <ServiceForm
-              title="Add New Service"
+              title={t('addNewService')}
               newService={newService}
               setNewService={setNewService}
               handleAction={handleAddService}
               handleCancelForm={handleCancelForm}
-              buttonText="Add Service"
+              buttonText={t('addNewService')}
               buttonColor="#007bff"
             />
           </Collapse>
@@ -250,8 +252,8 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
       {/* Confirmation Dialog for Deleting Service */}
       <ConfirmationDialog
         open={confirmDialogOpen}
-        title="Confirm Delete"
-        content="Are you sure you want to delete this service?"
+        title={t('confirmDeleteTitle')}
+        content={t('confirmDeleteContent')}
         onConfirm={handleDeleteService}
         onCancel={() => setConfirmDialogOpen(false)}
       />

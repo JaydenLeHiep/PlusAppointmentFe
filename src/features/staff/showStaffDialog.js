@@ -10,6 +10,7 @@ import {
   Alert,
 } from '@mui/material';
 import { Add, Close as CloseIcon } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
 import { useStaffsContext } from '../staff/StaffsContext';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
 import usePasswordValidation from '../../hooks/usePasswordValidation';
@@ -17,6 +18,8 @@ import StaffList from './StaffList';
 import StaffForm from './StaffForm';
 
 const ShowStaffDialog = ({ open, onClose, businessId }) => {
+  const { t } = useTranslation('showStaffDialog'); // Use the 'showStaffDialog' namespace
+
   const { staff, fetchAllStaff, addStaff, updateStaff, deleteStaff } = useStaffsContext();
 
   const [editStaffId, setEditStaffId] = useState(null);
@@ -64,7 +67,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
 
   const handleAddStaff = () => {
     if (!passwordValid) {
-      setAlert({ message: 'Invalid password format.', severity: 'error' });
+      setAlert({ message: t('invalidPassword'), severity: 'error' }); // Use translation for error message
       return;
     }
     closeFormAndExecuteAction(async () => {
@@ -78,7 +81,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
         };
 
         await addStaff(String(businessId), staffDetails);
-        setAlert({ message: 'Staff added successfully!', severity: 'success' });
+        setAlert({ message: t('staffAddedSuccess'), severity: 'success' }); // Use translation for success message
 
         setNewStaff({
           name: '',
@@ -88,7 +91,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
         });
       } catch (error) {
         console.error('Failed to add staff:', error);
-        const errorMessage = error.response?.data?.message || error.message || 'Failed to add staff. Please try again.';
+        const errorMessage = error.response?.data?.message || error.message || t('staffAddedError'); // Use translation for error message
         setAlert({ message: errorMessage, severity: 'error' });
       }
     });
@@ -96,7 +99,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
 
   const handleUpdateStaff = (staffId) => {
     if (!passwordValid) {
-      setAlert({ message: 'Invalid password format.', severity: 'error' });
+      setAlert({ message: t('invalidPassword'), severity: 'error' }); // Use translation for error message
       return;
     }
     closeFormAndExecuteAction(async () => {
@@ -110,7 +113,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
         };
 
         await updateStaff(String(businessId), staffId, staffDetails);
-        setAlert({ message: 'Staff updated successfully!', severity: 'success' });
+        setAlert({ message: t('staffUpdatedSuccess'), severity: 'success' }); // Use translation for success message
 
         setNewStaff({
           name: '',
@@ -120,7 +123,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
         });
       } catch (error) {
         console.error('Failed to update staff:', error);
-        const errorMessage = error.response?.data?.message || error.message || 'Failed to update staff. Please try again.';
+        const errorMessage = error.response?.data?.message || error.message || t('staffUpdatedError'); // Use translation for error message
         setAlert({ message: errorMessage, severity: 'error' });
       }
     });
@@ -135,10 +138,10 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
     closeFormAndExecuteAction(async () => {
       try {
         await deleteStaff(String(businessId), staffToDelete);
-        setAlert({ message: 'Staff deleted successfully!', severity: 'success' });
+        setAlert({ message: t('staffDeletedSuccess'), severity: 'success' }); // Use translation for success message
       } catch (error) {
         console.error('Failed to delete staff:', error);
-        const errorMessage = error.response?.data?.message || error.message || 'Failed to delete staff. Please try again.';
+        const errorMessage = error.response?.data?.message || error.message || t('staffDeletedError'); // Use translation for error message
         setAlert({ message: errorMessage, severity: 'error' });
       } finally {
         setConfirmDialogOpen(false);
@@ -209,7 +212,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
             marginLeft: '3px'
           }}
         >
-          Staff List
+          {t('staffListTitle')}
           <IconButton aria-label="close" onClick={onClose} sx={{ color: '#808080', fontSize: '1.5rem' }}>
             <CloseIcon />
           </IconButton>
@@ -241,7 +244,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
                 gap: '4px',
               }}
             >
-              <Add sx={{ fontSize: '40px' }} /> Add New Staff
+              <Add sx={{ fontSize: '40px' }} /> {t('addNewStaff')}
             </Typography>
           </Box>
           <Collapse in={isFormOpen}>
@@ -253,12 +256,12 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
               sx={{ borderRadius: '8px', backgroundColor: '#f9f9f9', boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.2)' }}
             >
               <StaffForm
-                title="Add New Staff"
+                title={t('addNewStaff')}
                 newStaff={newStaff}
                 setNewStaff={setNewStaff}
                 handleAction={handleAddStaff}
                 handleCancelForm={handleCancelForm}
-                buttonText="Add Staff"
+                buttonText={t('addStaff')}
                 buttonColor="#007bff"
               />
             </Box>
@@ -278,8 +281,8 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
 
       <ConfirmationDialog
         open={confirmDialogOpen}
-        title="Confirm Delete"
-        content="Are you sure you want to delete this staff member?"
+        title={t('confirmDeleteTitle')}
+        content={t('confirmDeleteContent')}
         onConfirm={handleDeleteStaff}
         onCancel={() => setConfirmDialogOpen(false)}
       />

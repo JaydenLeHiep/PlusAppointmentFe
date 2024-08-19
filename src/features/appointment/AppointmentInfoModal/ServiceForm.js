@@ -1,18 +1,21 @@
 import React from 'react';
 import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, IconButton, Box } from '@mui/material';
 import { Remove as RemoveIcon } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 const ServiceForm = ({ service, index, services, staff, handleServiceChange, handleRemoveService, editMode }) => {
+    const { t } = useTranslation('serviceForm');
+
     return (
         <Box mb={2} mt={2}>
             <Grid container spacing={2} alignItems="center">
                 <Grid item xs={3}>
                     <FormControl fullWidth margin="dense" sx={{ mb: 0.5 }}>
-                        <InputLabel>Service</InputLabel>
+                        <InputLabel>{t('service')}</InputLabel>
                         <Select
                             value={service.serviceId}
                             onChange={(e) => handleServiceChange(index, 'serviceId', e.target.value)}
-                            label="Service"
+                            label={t('service')}
                             disabled={!editMode}
                             sx={{
                                 backgroundColor: '#ffffff',
@@ -30,11 +33,11 @@ const ServiceForm = ({ service, index, services, staff, handleServiceChange, han
                 </Grid>
                 <Grid item xs={3}>
                     <FormControl fullWidth margin="dense" sx={{ mb: 0.5 }}>
-                        <InputLabel>Staff</InputLabel>
+                        <InputLabel>{t('staff')}</InputLabel>
                         <Select
                             value={service.staffId || ''}
-                            onChange={(e) => handleServiceChange(index, 'staffId', e.target.value)} // Correctly pass 'staffId'
-                            label="Staff"
+                            onChange={(e) => handleServiceChange(index, 'staffId', e.target.value)}
+                            label={t('staff')}
                             disabled={!editMode}
                             sx={{
                                 backgroundColor: '#ffffff',
@@ -54,7 +57,7 @@ const ServiceForm = ({ service, index, services, staff, handleServiceChange, han
                 <Grid item xs={3}>
                     <TextField
                         margin="dense"
-                        label="Duration"
+                        label={t('duration')}
                         type="time"
                         fullWidth
                         value={service.duration}

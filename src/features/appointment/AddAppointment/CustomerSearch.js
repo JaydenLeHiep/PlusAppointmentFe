@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { TextField, IconButton, Box, Typography, List, ListItem, ListItemText } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { searchCustomersByName } from '../../../lib/apiClientCustomer';
+import { useTranslation } from 'react-i18next';
 
 const CustomerSearch = ({ newAppointment, customerSearch, setCustomerSearch, setNewAppointment, alert, setAlert }) => {
+    const { t } = useTranslation('customerSearch'); // Use the 'customerSearch' namespace for translations
     const [filteredCustomers, setFilteredCustomers] = useState([]);
     const [searchPerformed, setSearchPerformed] = useState(false);
 
@@ -13,7 +15,7 @@ const CustomerSearch = ({ newAppointment, customerSearch, setCustomerSearch, set
             const customers = await searchCustomersByName(customerSearch);
             setFilteredCustomers(customers);
         } catch (error) {
-            setAlert({ message: 'Failed to search customers', severity: 'error' });
+            setAlert({ message: t('searchFailed'), severity: 'error' });
         }
     };
 
@@ -26,7 +28,7 @@ const CustomerSearch = ({ newAppointment, customerSearch, setCustomerSearch, set
     return (
         <Box>
             <TextField
-                label="Search Customer by Name or Phone number"
+                label={t('searchLabel')}
                 value={customerSearch}
                 onChange={(e) => setCustomerSearch(e.target.value)}
                 margin="dense"
@@ -65,7 +67,7 @@ const CustomerSearch = ({ newAppointment, customerSearch, setCustomerSearch, set
                     }}
                 >
                     {filteredCustomers.length === 0 ? (
-                        <Typography>No Customer found</Typography>
+                        <Typography>{t('noCustomerFound')}</Typography>
                     ) : (
                         <List>
                             {filteredCustomers.slice(0, 3).map((customer) => (

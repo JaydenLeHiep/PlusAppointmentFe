@@ -1,0 +1,18 @@
+{
+    "appointmentDetails": "Appointment Details",
+    "confirmStatusSuccess": "Appointment confirmed successfully!",
+    "confirmStatusError": "Failed to confirm appointment. Please try again.",
+    "deleteSuccess": "Appointment deleted successfully!",
+    "deleteError": "Failed to delete appointment. Please try again.",
+    "updateSuccess": "Appointment updated successfully!",
+    "updateError": "Failed to update appointment. Please try again.",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "update": "Update",
+    "deleteAppointmentTitle": "Delete Appointment",
+    "deleteAppointmentContent": "Are you sure you want to delete this appointment?",
+    "close": "Close",
+    "invalidDate": "Invalid Date",
+    "invalidTime": "Invalid Time"
+  }
+  

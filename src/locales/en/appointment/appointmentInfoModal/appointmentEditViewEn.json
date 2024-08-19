@@ -1,0 +1,9 @@
+{
+    "customer": "Customer",
+    "noCustomersAvailable": "No Customers Available",
+    "appointmentTime": "Appointment Time",
+    "status": "Status",
+    "comment": "Comment",
+    "addService": "Add Service"
+  }
+  

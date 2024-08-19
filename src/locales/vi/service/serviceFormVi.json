@@ -1,0 +1,10 @@
+{
+    "nameLabel": "Tên",
+    "descriptionLabel": "Mô tả",
+    "durationLabel": "Thời lượng",
+    "priceLabel": "Giá",
+    "cancelButton": "Hủy",
+    "addButton": "Thêm Dịch Vụ",
+    "updateButton": "Cập Nhật Dịch Vụ"
+  }
+  

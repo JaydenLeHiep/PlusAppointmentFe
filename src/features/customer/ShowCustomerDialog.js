@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, Alert } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { addCustomer } from '../../lib/apiClientCustomer';
 import DialogHeader from './DialogHeader';
 import CustomerForm from './CustomerForm';
 import DialogActions from './DialogActions';
 
 const ShowCustomerDialog = ({ open, onClose }) => {
+  const { t } = useTranslation('showCustomerDialog'); // Use the translation namespace
   const [newCustomer, setNewCustomer] = useState({
     name: '',
     email: '',
@@ -31,7 +33,7 @@ const ShowCustomerDialog = ({ open, onClose }) => {
       };
 
       await addCustomer(customerDetails);
-      setAlert({ message: 'Customer added successfully!', severity: 'success' });
+      setAlert({ message: t('successMessage'), severity: 'success' }); // Use translation for success message
 
       setNewCustomer({
         name: '',
@@ -41,7 +43,7 @@ const ShowCustomerDialog = ({ open, onClose }) => {
       onClose();  // Close the dialog after successfully adding a customer
     } catch (error) {
       console.error('Failed to add customer:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to add customer. Please try again.';
+      const errorMessage = error.response?.data?.message || error.message || t('errorMessage'); // Use translation for error message
       setAlert({ message: errorMessage, severity: 'error' });
     }
   };
@@ -53,7 +55,7 @@ const ShowCustomerDialog = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogHeader title="Add New Customer" onClose={onClose} />
+      <DialogHeader title={t('title')} onClose={onClose} />
       <DialogContent dividers sx={{ padding: '24px', backgroundColor: '#f7f7f7' }}>
         <CustomerForm customer={newCustomer} handleChange={handleChange} />
         {alert.message && (

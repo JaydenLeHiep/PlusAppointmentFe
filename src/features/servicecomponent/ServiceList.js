@@ -1,6 +1,7 @@
 import React, { Fragment, useRef, useEffect } from 'react';
 import { List, ListItem, ListItemText, IconButton, Typography, Collapse, Box } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next'; // Import useTranslation hook
 import ServiceForm from './ServiceForm';
 
 const ServiceList = ({
@@ -13,6 +14,7 @@ const ServiceList = ({
   handleUpdateService,
   handleCancelForm
 }) => {
+  const { t } = useTranslation('serviceList'); // Use the 'serviceList' namespace for translations
   const formRef = useRef(null);
 
   useEffect(() => {
@@ -39,10 +41,10 @@ const ServiceList = ({
             }}
             secondaryAction={
               <>
-                <IconButton edge="end" aria-label="edit" onClick={() => handleEditService(service)}>
+                <IconButton edge="end" aria-label={t('edit')} onClick={() => handleEditService(service)}>
                   <Edit />
                 </IconButton>
-                <IconButton edge="end" aria-label="delete" onClick={() => confirmDeleteService(service.serviceId)}>
+                <IconButton edge="end" aria-label={t('delete')} onClick={() => confirmDeleteService(service.serviceId)}>
                   <Delete />
                 </IconButton>
               </>
@@ -72,12 +74,12 @@ const ServiceList = ({
             <Collapse in={editServiceId === service.serviceId}>
               <Box ref={formRef}> {/* Reference for scrolling */}
                 <ServiceForm
-                  title="Update Service"
+                  title={t('updateServiceButton')}
                   newService={newService}
                   setNewService={setNewService}
                   handleAction={() => handleUpdateService(service.serviceId)}
                   handleCancelForm={handleCancelForm}
-                  buttonText="Update Service"
+                  buttonText={t('updateServiceButton')}
                   buttonColor="#28a745"
                 />
               </Box>
