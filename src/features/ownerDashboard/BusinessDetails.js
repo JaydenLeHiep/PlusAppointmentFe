@@ -90,7 +90,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
       <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} />
       <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={fetchAppointmentsForBusiness} />
       <ShowServicesDialog open={servicesOpen} onClose={handleServicesClose} businessId={selectedBusiness.businessId} />
-      <ShowCustomerDialog open={customerOpen} onClose={handleCustomerClose} />
+      <ShowCustomerDialog open={customerOpen} onClose={handleCustomerClose} businessId={selectedBusiness.businessId} />
     </Box>
   );
 };
