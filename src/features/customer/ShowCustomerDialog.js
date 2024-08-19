@@ -6,7 +6,7 @@ import DialogHeader from './DialogHeader';
 import CustomerForm from './CustomerForm';
 import DialogActions from './DialogActions';
 
-const ShowCustomerDialog = ({ open, onClose }) => {
+const ShowCustomerDialog = ({ open, onClose, businessId }) => {
   const { t } = useTranslation('showCustomerDialog'); // Use the translation namespace
   const [newCustomer, setNewCustomer] = useState({
     name: '',
@@ -30,6 +30,7 @@ const ShowCustomerDialog = ({ open, onClose }) => {
         name: newCustomer.name,
         email: newCustomer.email,
         phone: newCustomer.phone,
+        businessId
       };
 
       await addCustomer(customerDetails);
