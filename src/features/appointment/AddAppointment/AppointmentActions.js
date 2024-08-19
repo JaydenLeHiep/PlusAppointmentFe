@@ -1,7 +1,10 @@
 import React from 'react';
 import { DialogActions, Button } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const AppointmentActions = ({ newAppointment, handleAddAppointment, onClose }) => {
+    const { t } = useTranslation('appointmentActions'); // Use the 'appointmentActions' namespace for translations
+
     const handleCancel = () => {
         onClose();
     };
@@ -39,7 +42,7 @@ const AppointmentActions = ({ newAppointment, handleAddAppointment, onClose }) =
                     }
                 }}
             >
-                Clear
+                {t('clear')}
             </Button>
             <Button
                 variant="contained"
@@ -55,7 +58,7 @@ const AppointmentActions = ({ newAppointment, handleAddAppointment, onClose }) =
                     }
                 }}
             >
-                Add
+                {t('add')}
             </Button>
         </DialogActions>
     );

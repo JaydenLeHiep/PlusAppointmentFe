@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import ServiceForm from './ServiceForm';
+import { useTranslation } from 'react-i18next';
 
 const AppointmentEditView = ({
     updatedAppointment,
@@ -22,14 +23,16 @@ const AppointmentEditView = ({
     handleRemoveService,
     editMode
 }) => {
+    const { t } = useTranslation('appointmentEditView');
+
     return (
         <>
             <FormControl fullWidth margin="dense" sx={{ mb: 2.5 }}>
-                <InputLabel>Customer</InputLabel>
+                <InputLabel>{t('customer')}</InputLabel>
                 <Select
                     value={updatedAppointment.customerId || ''}
                     onChange={(e) => handleInputChange(e, 'customerId')}
-                    label="Customer"
+                    label={t('customer')}
                     disabled
                     sx={{
                         backgroundColor: '#ffffff',
@@ -48,7 +51,7 @@ const AppointmentEditView = ({
                         ))
                     ) : (
                         <MenuItem value="">
-                            <em>No Customers Available</em>
+                            <em>{t('noCustomersAvailable')}</em>
                         </MenuItem>
                     )}
                 </Select>
@@ -56,7 +59,7 @@ const AppointmentEditView = ({
 
             <TextField
                 margin="dense"
-                label="Appointment Time"
+                label={t('appointmentTime')}
                 type="datetime-local"
                 fullWidth
                 value={updatedAppointment.appointmentTime}
@@ -74,7 +77,7 @@ const AppointmentEditView = ({
 
             <TextField
                 margin="dense"
-                label="Status"
+                label={t('status')}
                 type="text"
                 fullWidth
                 value={updatedAppointment.status}
@@ -90,7 +93,7 @@ const AppointmentEditView = ({
 
             <TextField
                 margin="dense"
-                label="Comment"
+                label={t('comment')}
                 type="text"
                 fullWidth
                 multiline
@@ -133,7 +136,7 @@ const AppointmentEditView = ({
                         },
                     }}
                 >
-                    <Add sx={{ fontSize: '40px' }} /> Add Service
+                    <Add sx={{ fontSize: '40px' }} /> {t('addService')}
                 </Typography>
             </Box>
         </>

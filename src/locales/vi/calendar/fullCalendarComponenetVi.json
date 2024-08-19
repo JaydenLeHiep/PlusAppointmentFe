@@ -1,0 +1,12 @@
+{
+    "viewLabels": {
+      "month": "Tháng",
+      "day": "Ngày",
+      "staff": "Nhân viên"
+    },
+    "buttons": {
+      "previous": "Trước",
+      "next": "Tiếp theo"
+    }
+  }
+  

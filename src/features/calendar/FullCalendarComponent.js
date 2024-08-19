@@ -5,11 +5,12 @@ import CalendarViewControls from './CalendarViewControlls';
 import CalendarEventContent from './CalendarEventContent';
 import CalendarDayCell from './CalendarDayCell';
 import FullCalendarWrapper from './FullCalendarWrapper';
+import { useTranslation } from 'react-i18next';
 
 const views = ['dayGridMonth', 'timeGridDay', 'resourceTimeGridDay'];
-const viewLabels = ['Month', 'Day', 'Staff'];
 
 const FullCalendarComponent = ({ events, staff }) => {
+  const { t } = useTranslation('fullCalendarComponent'); // Use the 'fullCalendarComponent' namespace for translations
   const [currentView, setCurrentView] = useState(views[0]);
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
@@ -89,7 +90,7 @@ const FullCalendarComponent = ({ events, staff }) => {
       <CalendarViewControls
         currentView={currentView}
         views={views}
-        viewLabels={viewLabels}
+        viewLabels={[t('viewLabels.month'), t('viewLabels.day'), t('viewLabels.staff')]} // Using translations for labels
         onPrevClick={() => handleViewChange(-1)}
         onNextClick={() => handleViewChange(1)}
       />
@@ -97,10 +98,10 @@ const FullCalendarComponent = ({ events, staff }) => {
       {currentView === 'resourceTimeGridDay' && (
         <ButtonGroup variant="outlined" sx={{ mb: 2 }}>
           <Button onClick={() => handlePageChange(-1)} disabled={currentPage === 0}>
-            Previous
+            {t('buttons.previous')}
           </Button>
           <Button onClick={() => handlePageChange(1)} disabled={endIndex >= staff.length}>
-            Next
+            {t('buttons.next')}
           </Button>
         </ButtonGroup>
       )}

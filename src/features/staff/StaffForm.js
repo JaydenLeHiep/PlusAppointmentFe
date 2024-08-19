@@ -1,11 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import { Box, Typography, TextField, Button, IconButton } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next'; // Import useTranslation hook
 import usePasswordValidation from '../../hooks/usePasswordValidation';
 
 const StaffForm = ({ title, newStaff, setNewStaff, handleAction, handleCancelForm, buttonText, buttonColor }) => {
+    const { t } = useTranslation('staffForm'); // Use the 'staffForm' namespace
     const passwordValid = usePasswordValidation(newStaff.password);
     const formRef = useRef(null);
+
     useEffect(() => {
         if (formRef.current) {
             formRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -38,7 +41,7 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleAction, handleCancelFor
             </Typography>
             <TextField
                 margin="dense"
-                label="Name"
+                label={t('name')} // Translate label
                 type="text"
                 fullWidth
                 value={newStaff.name}
@@ -56,7 +59,7 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleAction, handleCancelFor
             />
             <TextField
                 margin="dense"
-                label="Email"
+                label={t('email')} // Translate label
                 type="email"
                 fullWidth
                 value={newStaff.email}
@@ -74,7 +77,7 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleAction, handleCancelFor
             />
             <TextField
                 margin="dense"
-                label="Phone"
+                label={t('phone')} // Translate label
                 type="text"
                 fullWidth
                 value={newStaff.phone}
@@ -92,7 +95,7 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleAction, handleCancelFor
             />
             <TextField
                 margin="dense"
-                label="Password"
+                label={t('password')} // Translate label
                 type="password"
                 fullWidth
                 value={newStaff.password}
@@ -110,7 +113,7 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleAction, handleCancelFor
             />
             {!passwordValid && (
                 <Typography color="error" sx={{ mt: 1 }}>
-                    Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.
+                    {t('passwordError')} {/* Translate error message */}
                 </Typography>
             )}
             <Box mt={3} display="flex" justifyContent="space-between">
@@ -127,7 +130,7 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleAction, handleCancelFor
                         '&:hover': { backgroundColor: '#5a6268' },
                     }}
                 >
-                    Cancel
+                    {t('cancel')} {/* Translate button text */}
                 </Button>
                 <Button
                     onClick={() => passwordValid && handleAction()}

@@ -1,0 +1,9 @@
+{
+    "customer": "Khách hàng",
+    "noCustomersAvailable": "Không có khách hàng nào",
+    "appointmentTime": "Thời gian hẹn",
+    "status": "Trạng thái",
+    "comment": "Bình luận",
+    "addService": "Thêm dịch vụ"
+  }
+  

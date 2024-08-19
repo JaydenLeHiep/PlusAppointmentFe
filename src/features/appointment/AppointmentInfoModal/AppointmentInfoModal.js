@@ -16,8 +16,11 @@ import { useServicesContext } from '../../servicecomponent/ServicesContext';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import AppointmentDetailsView from './AppointmentDetailsView';
 import AppointmentEditView from './AppointmentEditView';
+import { useTranslation } from 'react-i18next'; // Importing the useTranslation hook
 
 const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
+    const { t } = useTranslation('appointmentInfoModal'); // Initialize the translation hook
+
     const { appointments, changeStatusAppointments, deleteAppointmentAndUpdateList, updateAppointmentAndRefresh, customers, fetchAllCustomers } = useAppointmentsContext();
     const { staff, fetchAllStaff } = useStaffsContext();
     const { services, fetchServices } = useServicesContext();
@@ -109,10 +112,10 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
         try {
             const updatedStatus = 'Confirm';
             await changeStatusAppointments(appointment.appointmentId, updatedStatus, appointment.businessId);
-            setAlert({ message: 'Appointment confirmed successfully!', severity: 'success' });
+            setAlert({ message: t('confirmStatusSuccess'), severity: 'success' });
         } catch (error) {
             console.error('Failed to change appointment status:', error);
-            const errorMessage = error.response?.data?.message || error.message || 'Failed to confirm appointment. Please try again.';
+            const errorMessage = error.response?.data?.message || error.message || t('confirmStatusError');
             setAlert({ message: errorMessage, severity: 'error' });
         }
     };
@@ -126,10 +129,10 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
             await deleteAppointmentAndUpdateList(appointment.appointmentId, appointment.businessId);
             setShowConfirmDialog(false);
             onClose();
-            setAlert({ message: 'Appointment deleted successfully!', severity: 'success' });
+            setAlert({ message: t('deleteSuccess'), severity: 'success' });
         } catch (error) {
             console.error('Failed to delete appointment:', error);
-            const errorMessage = error.response?.data?.message || error.message || 'Failed to delete appointment. Please try again.';
+            const errorMessage = error.response?.data?.message || error.message || t('deleteError');
             setAlert({ message: errorMessage, severity: 'error' });
         }
     };
@@ -215,23 +218,23 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
             console.log("business id:", appointment.businessId);
 
             await updateAppointmentAndRefresh(appointment.appointmentId, updateData,appointment.businessId);
-            setAlert({ message: 'Appointment updated successfully!', severity: 'success' });
+            setAlert({ message: t('updateSuccess'), severity: 'success' });
             setEditMode(false);
         } catch (error) {
             console.error('Failed to update appointment:', error);
-            const errorMessage = error.response?.data?.message || error.message || 'Failed to update appointment. Please try again.';
+            const errorMessage = error.response?.data?.message || error.message || t('updateError');
             setAlert({ message: errorMessage, severity: 'error' });
         }
     };
 
     const formatAppointmentTime = (appointmentTime, duration) => {
         if (!appointmentTime || !duration) {
-            return 'Invalid Date';
+            return t('invalidDate');
         }
 
         const startTime = new Date(appointmentTime);
         if (isNaN(startTime.getTime())) {
-            return 'Invalid Date';
+            return t('invalidDate');
         }
 
         const [hours, minutes, seconds] = duration.split(':').map(Number);
@@ -243,7 +246,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
             if (date && !isNaN(date.getTime())) {
                 return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             } else {
-                return 'Invalid Time';
+                return t('invalidTime');
             }
         };
 
@@ -267,8 +270,8 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                     marginLeft: '7px'
                 }}
             >
-                Appointment Details
-                <IconButton aria-label="close" onClick={handleCloseDialog} sx={{ color: '#808080', fontSize: '1.5rem' }}>
+                {t('appointmentDetails')}
+                <IconButton aria-label={t('close')} onClick={handleCloseDialog} sx={{ color: '#808080', fontSize: '1.5rem' }}>
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
@@ -334,7 +337,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                             },
                         }}
                     >
-                        Cancel
+                        {t('cancel')}
                     </Button>
                     <Button
                         variant="contained"
@@ -354,7 +357,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                             },
                         }}
                     >
-                        Update
+                        {t('update')}
                     </Button>
                 </DialogActions>
             )}
@@ -378,7 +381,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                             },
                         }}
                     >
-                        Confirm
+                        {t('confirm')}
                     </Button>
                 </DialogActions>
             )}
@@ -386,8 +389,8 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
             {/* Confirmation Dialog */}
             <ConfirmationDialog
                 open={showConfirmDialog}
-                title="Delete Appointment"
-                content="Are you sure you want to delete this appointment?"
+                title={t('deleteAppointmentTitle')}
+                content={t('deleteAppointmentContent')}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
             />

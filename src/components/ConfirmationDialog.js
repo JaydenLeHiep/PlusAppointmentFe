@@ -7,8 +7,11 @@ import {
   Button,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const ConfirmationDialog = ({ open, title, content, onConfirm, onCancel }) => {
+  const { t } = useTranslation('confirmationDialog');
+
   return (
     <Dialog
       open={open}
@@ -27,14 +30,14 @@ const ConfirmationDialog = ({ open, title, content, onConfirm, onCancel }) => {
         id="confirmation-dialog-title"
         sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.5rem' }}
       >
-        {title || 'Confirm'}
+        {title || t('confirm')}
       </DialogTitle>
       <DialogContent>
         <Typography
           variant="body1"
           sx={{ textAlign: 'center', fontSize: '1.1rem', color: '#555' }}
         >
-          {content || 'Are you sure you want to proceed?'}
+          {content || t('defaultContent')}
         </Typography>
       </DialogContent>
       <DialogActions
@@ -63,7 +66,7 @@ const ConfirmationDialog = ({ open, title, content, onConfirm, onCancel }) => {
             },
           }}
         >
-          Cancel
+          {t('cancel')}
         </Button>
         <Button
           onClick={onConfirm}
@@ -83,7 +86,7 @@ const ConfirmationDialog = ({ open, title, content, onConfirm, onCancel }) => {
           }}
           autoFocus
         >
-          OK
+          {t('ok')}
         </Button>
       </DialogActions>
     </Dialog>

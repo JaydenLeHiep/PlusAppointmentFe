@@ -1,0 +1,12 @@
+{
+    "viewLabels": {
+      "month": "Month",
+      "day": "Day",
+      "staff": "Staff"
+    },
+    "buttons": {
+      "previous": "Previous",
+      "next": "Next"
+    }
+  }
+  

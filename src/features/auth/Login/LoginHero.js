@@ -1,9 +1,13 @@
 import React from 'react';
 import { Box, Container, Card, Typography } from '@mui/material';
 import LoginForm from './LoginForm';
+import { useTranslation } from 'react-i18next';
+
 const heroImage = require('../../../assets/hero-image.jpg');
 
 const LoginHero = () => {
+  const { t } = useTranslation('loginHero'); // Use the 'loginHero' namespace for translations
+
   return (
     <Box
       sx={{
@@ -46,7 +50,7 @@ const LoginHero = () => {
               color: '#333',
             }}
           >
-            Login
+            {t('loginTitle')}
           </Typography>
           <LoginForm />
         </Card>

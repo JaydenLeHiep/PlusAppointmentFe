@@ -1,0 +1,13 @@
+{
+    "serviceListTitle": "Danh sách dịch vụ",
+    "addNewService": "Thêm dịch vụ mới",
+    "serviceAddedSuccess": "Thêm dịch vụ thành công!",
+    "serviceUpdatedSuccess": "Cập nhật dịch vụ thành công!",
+    "serviceDeletedSuccess": "Xóa dịch vụ thành công!",
+    "serviceAddedError": "Không thể thêm dịch vụ. Vui lòng thử lại.",
+    "serviceUpdatedError": "Không thể cập nhật dịch vụ. Vui lòng thử lại.",
+    "serviceDeletedError": "Không thể xóa dịch vụ. Vui lòng thử lại.",
+    "confirmDeleteTitle": "Xác nhận xóa",
+    "confirmDeleteContent": "Bạn có chắc chắn muốn xóa dịch vụ này không?"
+  }
+  

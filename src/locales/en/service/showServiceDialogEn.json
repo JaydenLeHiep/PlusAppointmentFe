@@ -1,0 +1,13 @@
+{
+    "serviceListTitle": "Service List",
+    "addNewService": "Add New Service",
+    "serviceAddedSuccess": "Service added successfully!",
+    "serviceUpdatedSuccess": "Service updated successfully!",
+    "serviceDeletedSuccess": "Service deleted successfully!",
+    "serviceAddedError": "Failed to add service. Please try again.",
+    "serviceUpdatedError": "Failed to update service. Please try again.",
+    "serviceDeletedError": "Failed to delete service. Please try again.",
+    "confirmDeleteTitle": "Confirm Delete",
+    "confirmDeleteContent": "Are you sure you want to delete this service?"
+  }
+  

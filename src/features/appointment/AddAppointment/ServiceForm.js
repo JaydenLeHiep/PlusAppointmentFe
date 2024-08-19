@@ -1,17 +1,20 @@
 import React from 'react';
 import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, IconButton } from '@mui/material';
 import { Remove } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 const ServiceForm = ({ service, index, services, staff, handleServiceChange, handleRemoveService, lastServiceRef }) => {
+    const { t } = useTranslation('serviceFormAddAppointment'); // Use the 'serviceFormAddAppointment' namespace for translations
+
     return (
         <Grid container spacing={2} alignItems="center" ref={lastServiceRef}>
             <Grid item xs={3}>
                 <FormControl fullWidth margin="dense">
-                    <InputLabel>Service</InputLabel>
+                    <InputLabel>{t('service')}</InputLabel>
                     <Select
                         value={service.serviceId}
                         onChange={(e) => handleServiceChange(index, 'serviceId', e.target.value)}
-                        label="Service"
+                        label={t('service')}
                         sx={{
                             backgroundColor: '#ffffff',
                             borderRadius: '8px',
@@ -28,11 +31,11 @@ const ServiceForm = ({ service, index, services, staff, handleServiceChange, han
             </Grid>
             <Grid item xs={3}>
                 <FormControl fullWidth margin="dense">
-                    <InputLabel>Staff</InputLabel>
+                    <InputLabel>{t('staff')}</InputLabel>
                     <Select
                         value={service.staffId}
                         onChange={(e) => handleServiceChange(index, 'staffId', e.target.value)}
-                        label="Staff"
+                        label={t('staff')}
                         sx={{
                             backgroundColor: '#ffffff',
                             borderRadius: '8px',
@@ -50,7 +53,7 @@ const ServiceForm = ({ service, index, services, staff, handleServiceChange, han
             <Grid item xs={2}>
                 <TextField
                     margin="dense"
-                    label="Duration"
+                    label={t('duration')}
                     type="text"
                     fullWidth
                     value={service.duration || ''}
@@ -72,7 +75,7 @@ const ServiceForm = ({ service, index, services, staff, handleServiceChange, han
             <Grid item xs={2}>
                 <TextField
                     margin="dense"
-                    label="Price"
+                    label={t('price')}
                     type="number"
                     fullWidth
                     value={service.price || ''}
@@ -93,4 +96,4 @@ const ServiceForm = ({ service, index, services, staff, handleServiceChange, han
     );
 };
 
-export default ServiceForm
+export default ServiceForm;

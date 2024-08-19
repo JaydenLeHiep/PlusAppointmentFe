@@ -1,8 +1,11 @@
 import React from 'react';
 import { Typography, Divider, Box, IconButton } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleToggleEditMode, handleDeleteAppointment }) => {
+    const { t } = useTranslation('appointmentDetailsView');
+
     return (
         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <Box
@@ -27,7 +30,7 @@ const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleTogg
                         marginBottom: '8px',
                     }}
                 >
-                    Client: {appointment.customerName}
+                    {t('client')}: {appointment.customerName}
                 </Typography>
                 <Divider sx={{ borderBottomWidth: 2, borderColor: '#007bff', marginBottom: '16px' }} />
                 <Typography
@@ -38,7 +41,7 @@ const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleTogg
                         marginBottom: '12px',
                     }}
                 >
-                    <strong>Phone:</strong> {appointment.customerPhone}
+                    <strong>{t('phone')}:</strong> {appointment.customerPhone}
                 </Typography>
                 <Typography
                     variant="body1"
@@ -48,7 +51,7 @@ const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleTogg
                         marginBottom: '12px',
                     }}
                 >
-                    <strong>Time:</strong> {formatAppointmentTime(appointment.appointmentTime, appointment.duration)}
+                    <strong>{t('time')}:</strong> {formatAppointmentTime(appointment.appointmentTime, appointment.duration)}
                 </Typography>
                 <Typography
                     variant="body1"
@@ -58,7 +61,7 @@ const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleTogg
                         marginBottom: '12px',
                     }}
                 >
-                    <strong>Comment:</strong> {appointment.comment}
+                    <strong>{t('comment')}:</strong> {appointment.comment}
                 </Typography>
                 <Box
                     sx={{
@@ -69,10 +72,10 @@ const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleTogg
                         gap: '8px',
                     }}
                 >
-                    <IconButton aria-label="edit" onClick={handleToggleEditMode} sx={{ color: '#1976d2', '&:hover': { color: '#115293' } }}>
+                    <IconButton aria-label={t('edit')} onClick={handleToggleEditMode} sx={{ color: '#1976d2', '&:hover': { color: '#115293' } }}>
                         <EditIcon />
                     </IconButton>
-                    <IconButton aria-label="delete" onClick={handleDeleteAppointment} sx={{ color: '#d32f2f', '&:hover': { color: '#9a0007' } }}>
+                    <IconButton aria-label={t('delete')} onClick={handleDeleteAppointment} sx={{ color: '#d32f2f', '&:hover': { color: '#9a0007' } }}>
                         <DeleteIcon />
                     </IconButton>
                 </Box>
@@ -99,7 +102,7 @@ const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleTogg
                         letterSpacing: '0.1em',
                     }}
                 >
-                    Services & Staff
+                    {t('servicesAndStaff')}
                 </Typography>
                 <Divider sx={{ borderBottomWidth: 2, borderColor: '#28a745', marginBottom: '16px' }} />
                 {appointment.services.$values.map((service, index) => (

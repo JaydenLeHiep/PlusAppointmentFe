@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Grid,TextField, Typography } from '@mui/material';
+import { Grid, TextField, Typography } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useStaffsContext } from '../../staff/StaffsContext';
 import { useServicesContext } from '../../servicecomponent/ServicesContext';
 import ServiceForm from './ServiceForm';
 import CustomerSearch from './CustomerSearch';
+import { useTranslation } from 'react-i18next';
 
 const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, businessId }) => {
+    const { t } = useTranslation('appointmentForm'); // Use the 'appointmentForm' namespace for translations
     const { staff, fetchAllStaff } = useStaffsContext();
     const { services, fetchServices } = useServicesContext();
     const [customerSearch, setCustomerSearch] = useState('');
@@ -61,8 +63,6 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
         setNewAppointment({ ...newAppointment, services: updatedServices });
     };
     
-    
-    
     const handleAddService = () => {
         setNewAppointment({
             ...newAppointment,
@@ -78,7 +78,6 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
         });
         hasServicesChanged.current = true;
     };
-    
 
     return (
         <Grid container spacing={2}>
@@ -93,11 +92,10 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
                 />
             </Grid>
 
-
             <Grid item xs={12}>
                 <TextField
                     margin="dense"
-                    label="Appointment Time"
+                    label={t('appointmentTime')}
                     type="datetime-local"
                     fullWidth
                     value={newAppointment.appointmentTime || ''}
@@ -115,7 +113,7 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
             <Grid item xs={12}>
                 <TextField
                     margin="dense"
-                    label="Status"
+                    label={t('status')}
                     type="text"
                     fullWidth
                     value={newAppointment.status || ''}
@@ -132,7 +130,7 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
             <Grid item xs={12}>
                 <TextField
                     margin="dense"
-                    label="Comment"
+                    label={t('comment')}
                     type="text"
                     fullWidth
                     multiline
@@ -177,7 +175,7 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
                         }
                     }}
                 >
-                    <Add sx={{ fontSize: '35px' }} /> Add Service
+                    <Add sx={{ fontSize: '35px' }} /> {t('addService')}
                 </Typography>
             </Grid>
         </Grid>

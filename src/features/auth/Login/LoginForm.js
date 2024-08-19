@@ -4,8 +4,10 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import { loginUser } from '../../../lib/apiClient';
+import { useTranslation } from 'react-i18next';
 
 const LoginForm = () => {
+  const { t } = useTranslation('loginForm'); // Use the 'loginForm' namespace for translations
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -20,7 +22,7 @@ const LoginForm = () => {
     try {
       const data = await loginUser({ usernameOrEmail, password });
 
-      setMessage(data.message || 'Login successful!');
+      setMessage(data.message || t('loginSuccessful'));
       setAlertVariant('success');
       
       // Store token in localStorage and update auth state
@@ -32,7 +34,7 @@ const LoginForm = () => {
       // Redirect based on user role or other criteria
       navigate('/owner-dashboard');
     } catch (error) {
-      setMessage(error.message);
+      setMessage(error.message || t('loginFailed'));
       setAlertVariant('danger');
     }
   };
@@ -42,7 +44,7 @@ const LoginForm = () => {
   return (
     <form onSubmit={handleLogin}>
       <TextField
-        label="Username or Email"
+        label={t('usernameOrEmail')}
         variant="outlined"
         fullWidth
         margin="normal"
@@ -51,7 +53,7 @@ const LoginForm = () => {
         required
       />
       <TextField
-        label="Password"
+        label={t('password')}
         type={showPassword ? "text" : "password"}
         variant="outlined"
         fullWidth
@@ -70,7 +72,7 @@ const LoginForm = () => {
         required
       />
       <Button variant="contained" color="primary" type="submit" fullWidth sx={{ mt: 2 }} disabled={!usernameOrEmail || !password}>
-        Login
+        {t('login')}
       </Button>
       {message && (
         <Alert severity={alertVariant} sx={{ mt: 3 }}>
