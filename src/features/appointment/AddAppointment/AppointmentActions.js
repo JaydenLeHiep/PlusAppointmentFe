@@ -16,7 +16,7 @@ const AppointmentActions = ({ newAppointment, handleAddAppointment, onClose }) =
             businessId: newAppointment.businessId,
             serviceIds,
             staffId: newAppointment.staffId,
-            appointmentTime: new Date(newAppointment.appointmentTime).toISOString(),
+            appointmentTime: newAppointment.appointmentTime,
             status: newAppointment.status,
             comment: newAppointment.comment
         };

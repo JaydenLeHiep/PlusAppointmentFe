@@ -3,7 +3,7 @@
     "sortBy": "Sắp xếp theo",
     "date": "Ngày",
     "status": "Trạng thái",
-    "confirmed": "xác nhận",
+    "confirm": "ok",
     "pending": "chờ",
     "cancelled": "Đã hủy"
   }
