@@ -3,7 +3,7 @@
     "sortBy": "Sort By",
     "date": "Date",
     "status": "Status",
-    "confirmed": "Confirmed",
+    "confirm": "Confirmed",
     "pending": "Pending",
     "cancelled": "Cancelled"
   }
