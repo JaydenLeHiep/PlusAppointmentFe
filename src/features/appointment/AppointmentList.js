@@ -55,66 +55,74 @@ const AppointmentList = ({ appointments, businessId }) => {
         onClose={handleCloseModal}
       />
       <List>
-        {sortedAppointments.map((appointment) => (
-          <ListItem key={appointment.appointmentId} sx={{ p: 0 }}>
-            <ButtonBase onClick={() => handleAppointmentClick(appointment.appointmentId)} sx={{ width: '100%' }}>
-              <Paper 
-                elevation={3} 
-                sx={{ 
-                  width: '100%', 
-                  padding: '16px', 
-                  marginBottom: '8px', 
-                  borderRadius: '12px', 
-                  backgroundColor: '#f0f8ff', 
-                  border: '1px solid #1976d2', 
-                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                  '&:hover': {
-                    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-                    backgroundColor: '#e6f1ff', 
-                  }
-                }}
-              >
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Box sx={{ display: 'flex', gap: '16px', alignItems: 'center', flexGrow: 1 }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: '120px', textAlign: 'center' }}>
-                      <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
-                        {new Date(appointment.appointmentTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {new Date(appointment.appointmentTime).toLocaleDateString([], { day: '2-digit', month: '2-digit' })}
-                      </Typography>
+        {sortedAppointments.map((appointment) => {
+          const appointmentTime = new Date(appointment.appointmentTime);
+          const hours = String(appointmentTime.getUTCHours()).padStart(2, '0');
+          const minutes = String(appointmentTime.getUTCMinutes()).padStart(2, '0');
+          const day = String(appointmentTime.getUTCDate()).padStart(2, '0');
+          const month = String(appointmentTime.getUTCMonth() + 1).padStart(2, '0');
+
+          return (
+            <ListItem key={appointment.appointmentId} sx={{ p: 0 }}>
+              <ButtonBase onClick={() => handleAppointmentClick(appointment.appointmentId)} sx={{ width: '100%' }}>
+                <Paper 
+                  elevation={3} 
+                  sx={{ 
+                    width: '100%', 
+                    padding: '16px', 
+                    marginBottom: '8px', 
+                    borderRadius: '12px', 
+                    backgroundColor: '#f0f8ff', 
+                    border: '1px solid #1976d2', 
+                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                    '&:hover': {
+                      boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+                      backgroundColor: '#e6f1ff', 
+                    }
+                  }}
+                >
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: '16px', alignItems: 'center', flexGrow: 1 }}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: '120px', textAlign: 'center' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+                          {`${hours}:${minutes}`}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          {`${day}/${month}`}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', flexGrow: 1 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+                          {appointment.customerName}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          {appointment.customerPhone}
+                        </Typography>
+                      </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', flexGrow: 1 }}>
-                      <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
-                        {appointment.customerName}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {appointment.customerPhone}
-                      </Typography>
-                    </Box>
+                    <Badge
+                      badgeContent={t(appointment.status.toLowerCase())}
+                      color={appointment.status.toLowerCase() === 'confirmed' ? 'success' : appointment.status.toLowerCase() === 'pending' ? 'warning' : 'error'}
+                      sx={{
+                        '& .MuiBadge-badge': {
+                          fontSize: '0.75rem',
+                          padding: '0 8px',
+                          borderRadius: '8px',
+                          height: '24px',
+                          lineHeight: '24px',
+                          minWidth: '60px',
+                          textAlign: 'center',
+                          backgroundColor: appointment.status.toLowerCase() === 'confirmed' ? '#4caf50' : appointment.status.toLowerCase() === 'pending' ? '#ff9800' : '#f44336',
+                          color: '#fff'
+                        }
+                      }}
+                    />
                   </Box>
-                  <Badge
-                    badgeContent={t(appointment.status.toLowerCase())}
-                    color={appointment.status.toLowerCase() === 'confirmed' ? 'success' : appointment.status.toLowerCase() === 'pending' ? 'warning' : 'error'}
-                    sx={{
-                      '& .MuiBadge-badge': {
-                        fontSize: '0.75rem',
-                        padding: '0 8px',
-                        borderRadius: '8px',
-                        height: '24px',
-                        lineHeight: '24px',
-                        minWidth: '60px',
-                        textAlign: 'center',
-                        backgroundColor: appointment.status.toLowerCase() === 'confirmed' ? '#4caf50' : appointment.status.toLowerCase() === 'pending' ? '#ff9800' : '#f44336',
-                        color: '#fff'
-                      }
-                    }}
-                  />
-                </Box>
-              </Paper>
-            </ButtonBase>
-          </ListItem>
-        ))}
+                </Paper>
+              </ButtonBase>
+            </ListItem>
+          );
+        })}
       </List>
     </div>
   );

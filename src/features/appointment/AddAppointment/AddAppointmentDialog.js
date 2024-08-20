@@ -57,7 +57,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
             const appointmentDetails = {
                 customerId: parseInt(newAppointment.customerId, 10),
                 businessId: newAppointment.businessId,
-                appointmentTime: new Date(newAppointment.appointmentTime).toISOString(),
+                appointmentTime: newAppointment.appointmentTime,
                 status: newAppointment.status,
                 comment: newAppointment.comment,
                 services: newAppointment.services.map(service => ({

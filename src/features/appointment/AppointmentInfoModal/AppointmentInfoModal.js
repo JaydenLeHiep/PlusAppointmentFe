@@ -16,10 +16,10 @@ import { useServicesContext } from '../../servicecomponent/ServicesContext';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import AppointmentDetailsView from './AppointmentDetailsView';
 import AppointmentEditView from './AppointmentEditView';
-import { useTranslation } from 'react-i18next'; // Importing the useTranslation hook
+import { useTranslation } from 'react-i18next';
 
 const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
-    const { t } = useTranslation('appointmentInfoModal'); // Initialize the translation hook
+    const { t } = useTranslation('appointmentInfoModal');
 
     const { appointments, changeStatusAppointments, deleteAppointmentAndUpdateList, updateAppointmentAndRefresh, customers, fetchAllCustomers } = useAppointmentsContext();
     const { staff, fetchAllStaff } = useStaffsContext();
@@ -102,7 +102,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     useEffect(() => {
         if (editMode && hasAddedService.current && servicesEndRef.current) {
             servicesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-            hasAddedService.current = false; // Reset the flag after scrolling
+            hasAddedService.current = false;
         }
     }, [updatedAppointment.services, editMode]);
 
@@ -169,7 +169,6 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                 updatedService.price = '';
             }
         } else if (field === 'duration') {
-            // Convert the duration to a TimeSpan-compatible format if it's being edited
             const formattedDuration = value.length === 5 ? `${value}:00` : value; // HH:MM -> HH:MM:SS
             updatedService.updatedDuration = formattedDuration;
         }
@@ -180,7 +179,6 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     
         setUpdatedAppointment({ ...updatedAppointment, services: updatedServices });
     };
-    
 
     const handleAddService = () => {
         setUpdatedAppointment({
@@ -217,7 +215,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
             console.log("appointment idd:", appointment.appointmentId);
             console.log("business id:", appointment.businessId);
 
-            await updateAppointmentAndRefresh(appointment.appointmentId, updateData,appointment.businessId);
+            await updateAppointmentAndRefresh(appointment.appointmentId, updateData, appointment.businessId);
             setAlert({ message: t('updateSuccess'), severity: 'success' });
             setEditMode(false);
         } catch (error) {
@@ -244,7 +242,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
 
         const formatTime = (date) => {
             if (date && !isNaN(date.getTime())) {
-                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                return `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
             } else {
                 return t('invalidTime');
             }
