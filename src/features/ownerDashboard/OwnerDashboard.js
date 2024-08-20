@@ -65,6 +65,14 @@ const OwnerDashboard = () => {
     }
   }, [selectedBusiness, fetchAppointmentsForBusiness, fetchAllStaff, fetchServices]);
 
+  // Add useEffect to listen to changes in appointments array
+  useEffect(() => {
+    // This effect will run when the appointments array is updated
+    if (selectedBusiness) {
+      fetchAppointmentsForBusiness(selectedBusiness.businessId);
+    }
+  }, [appointments, selectedBusiness, fetchAppointmentsForBusiness]);
+
   const handleBusinessClick = (business) => {
     setSelectedBusiness(business);
   };
@@ -74,7 +82,7 @@ const OwnerDashboard = () => {
       <Navbar />
       <Box
         sx={{
-          backgroundColor:'#f0f8ff',
+          backgroundColor: '#f0f8ff',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           display: 'flex',

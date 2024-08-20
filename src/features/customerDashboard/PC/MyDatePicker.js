@@ -2,7 +2,6 @@ import * as React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { TextField, Box, Button, Grid, Typography } from '@mui/material';
-import moment from 'moment-timezone';
 import { fetchAvailableTimeSlots } from '../../../lib/apiClientAppointment';
 import {
   StyledDatePicker,
@@ -21,7 +20,7 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
 
   React.useEffect(() => {
     if (staffId && selectedDate) {
-      const formattedDate = selectedDate.format('YYYY-MM-DD');
+      const formattedDate = selectedDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
   
       const fetchTimeSlots = async () => {
         try {
@@ -57,9 +56,9 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
     setConfirmedTime(null);
   };
 
-  // Separate AM and PM time slots
-  const amTimeSlots = availableTimeSlots.filter(time => moment.utc(time).hour() < 12);
-  const pmTimeSlots = availableTimeSlots.filter(time => moment.utc(time).hour() >= 12);
+  // Separate AM and PM time slots, treating them as plain times without timezone conversion
+  const amTimeSlots = availableTimeSlots.filter(time => new Date(time).getUTCHours() < 12);
+  const pmTimeSlots = availableTimeSlots.filter(time => new Date(time).getUTCHours() >= 12);
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -116,7 +115,7 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
                       onClick={() => handleTimeChangeWrapper(time)}
                       selected={time === selectedTime}
                     >
-                      {moment.utc(time).format('HH:mm')}
+                      {new Date(time).toISOString().substring(11, 16)} {/* HH:mm format */}
                     </TimeSlotButton>
                   </Grid>
                 ))
@@ -138,7 +137,7 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
                       onClick={() => handleTimeChangeWrapper(time)}
                       selected={time === selectedTime}
                     >
-                      {moment.utc(time).format('HH:mm')}
+                      {new Date(time).toISOString().substring(11, 16)} {/* HH:mm format */}
                     </TimeSlotButton>
                   </Grid>
                 ))
@@ -158,7 +157,7 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
 
         {confirmedTime && (
           <SelectedTimeMessage variant="h6">
-            Selected Time: {moment(confirmedTime).format('HH:mm')}
+            Selected Time: {confirmedTime.toISOString().substring(11, 16)}
           </SelectedTimeMessage>
         )}
       </StyledBox>

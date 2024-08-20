@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Container, Box, CircularProgress, Typography, Button } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import CustomerBusinessInfo from './CustomerBusinessInfo';
-import ListsServiceStaff from './ListsServiceStaff';
+import ServiceList from './ServiceList';
+import StaffList from './StaffList';
 import MyDatePicker from './MyDatePicker';
-import AppointmentOverviewPage from './AppointmentOverviewPage'; // Import the new page component
-import CustomerForm from './CustomerForm'; // Import the CustomerForm component
+import AppointmentOverviewPage from './AppointmentOverviewPage';
+import CustomerForm from './CustomerForm';
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
 import { fetchBusinessesById } from '../../../lib/apiClientBusiness';
+import { CustomerListContainer, CustomerListHeader, StyledTextField } from '../../../styles/CustomerStyle/CustomerDashboardStyle';
 
 const CustomerDashboard = () => {
   const location = useLocation();
@@ -18,13 +22,13 @@ const CustomerDashboard = () => {
   const [error, setError] = useState('');
   const [view, setView] = useState('services');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedStaff, setSelectedStaff] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [selectedService, setSelectedService] = useState(null);
-  const [selectedStaff, setSelectedStaff] = useState(null);
-  const [selectedAppointments, setSelectedAppointments] = useState([]); // State to hold the list of selected appointments
-  const [overview, setOverview] = useState(false); // State to manage the overview page view
-  const [showCustomerForm, setShowCustomerForm] = useState(false); // State to control CustomerForm view
+  const [selectedAppointments, setSelectedAppointments] = useState([]);
+  const [overview, setOverview] = useState(false);
+  const [showCustomerForm, setShowCustomerForm] = useState(false);
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -52,27 +56,23 @@ const CustomerDashboard = () => {
   }, [businessId]);
 
   const handleServiceSelect = (service) => {
-    setSelectedService(service);
-    if (selectedStaff) {
-      setView('calendar');
-    } else {
+    setSelectedServices([...selectedServices, service]);
+  };
+
+  const handleNextFromServices = () => {
+    if (selectedServices.length > 0) {
       setView('staffs');
     }
   };
 
   const handleStaffSelect = (staff) => {
     setSelectedStaff(staff);
-    if (selectedService) {
-      setView('calendar');
-    } else {
-      setView('services');
-    }
+    setView('calendar');
   };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
     setSelectedTime(null);
-    setView('calendar');
   };
 
   const handleTimeSelect = (time) => {
@@ -80,56 +80,35 @@ const CustomerDashboard = () => {
   };
 
   const handleConfirmTime = () => {
-    if (selectedService && selectedStaff && selectedDate && selectedTime) {
-      // Add the selected appointment to the list
-      setSelectedAppointments([
-        ...selectedAppointments,
-        {
-          serviceName: selectedService.name,
-          staffName: selectedStaff.name,
-          date: selectedDate,
-          time: selectedTime,
-          services: [
-            {
-              serviceId: selectedService.serviceId, // Add serviceId
-              staffId: selectedStaff.staffId // Add staffId
-            }
-          ] // Include a services array with the necessary data
-        },
-      ]);
+    if (selectedServices.length > 0 && selectedStaff && selectedDate && selectedTime) {
+      const appointmentDetails = selectedServices.map(service => ({
+        serviceName: service.name,
+        staffName: selectedStaff.name,
+        date: selectedDate,
+        time: selectedTime,
+        services: [
+          {
+            serviceId: service.serviceId,
+            staffId: selectedStaff.staffId,
+          }
+        ]
+      }));
+
+      setSelectedAppointments([...selectedAppointments, ...appointmentDetails]);
+
       // Reset selections
-      setSelectedService(null);
+      setSelectedServices([]);
       setSelectedStaff(null);
       setSelectedDate(null);
       setSelectedTime(null);
-      setView('services'); // Go back to service selection for the next appointment
+      setOverview(true);
     }
-  };
-
-  const handleViewOverview = () => {
-    setOverview(true); // Trigger to view the overview page
-  };
-
-  const handleAddMoreServices = () => {
-    setView('services'); // Allow adding more services
-    setOverview(false);
   };
 
   const handleFinish = () => {
     console.log("Final selectedAppointments in CustomerDashboard before passing to CustomerForm:", selectedAppointments);
-    setShowCustomerForm(true); // Show the CustomerForm when "Finish" is clicked
-    setOverview(false); // Hide the overview
-};
-
-  const handleBackClick = () => {
-    if (view === 'calendar') {
-      // Reset both the service and staff if in the calendar view
-      setSelectedService(null);
-      setSelectedStaff(null);
-      setView('services');
-    } else if (view === 'staffs') {
-      setView('services');
-    }
+    setShowCustomerForm(true);
+    setOverview(false);
   };
 
   if (!businessId) {
@@ -158,21 +137,22 @@ const CustomerDashboard = () => {
 
   if (showCustomerForm) {
     return (
-        <CustomerForm
-            selectedAppointments={selectedAppointments}
-            onAppointmentSuccess={() => {
-                // handle success here, maybe reset state or navigate away
-            }}
-        />
+      <CustomerForm
+        selectedAppointments={selectedAppointments}
+        businessId={businessId}
+        onAppointmentSuccess={() => {
+          // handle success here, maybe reset state or navigate away
+        }}
+      />
     );
-}
+  }
 
   if (overview) {
     return (
       <AppointmentOverviewPage
         selectedAppointments={selectedAppointments}
-        onAddMoreServices={handleAddMoreServices}
-        onFinish={handleFinish} // Use the new handleFinish function
+        onAddMoreServices={() => setView('services')}
+        onFinish={handleFinish}
       />
     );
   }
@@ -183,55 +163,70 @@ const CustomerDashboard = () => {
         <CustomerBusinessInfo
           businessInfo={businessInfo}
           view={view}
-          onBackClick={handleBackClick}
+          onBackClick={() => setView('services')}
         />
-        
-        {selectedAppointments.length > 0 && view === 'services' && (
+
+        <CustomerListHeader>
+          <StyledTextField
+            placeholder="Search..."
+            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchQuery}
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </CustomerListHeader>
+
+        {view === 'services' && (
+          <CustomerListContainer>
+            <ServiceList
+              businessId={businessId}
+              searchQuery={searchQuery}
+              onServiceSelect={handleServiceSelect}
+            />
+          </CustomerListContainer>
+        )}
+
+        {view === 'staffs' && (
+          <CustomerListContainer>
+            <StaffList
+              businessId={businessId}
+              searchQuery={searchQuery}
+              onStaffSelect={handleStaffSelect}
+            />
+          </CustomerListContainer>
+        )}
+
+        {view === 'calendar' && (
+          <MyDatePicker
+            selectedDate={selectedDate}
+            onDateChange={handleDateChange}
+            selectedTime={selectedTime}
+            onTimeSelect={handleTimeSelect}
+            onConfirmTime={handleConfirmTime}
+            staffId={selectedStaff?.staffId}
+          />
+        )}
+
+        {view === 'services' && (
           <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
             <Button
               variant="contained"
               color="primary"
-              onClick={handleViewOverview}
+              onClick={handleNextFromServices}
+              disabled={selectedServices.length === 0}
               sx={{ fontWeight: 'bold' }}
             >
-              View Appointment Overview
+              Next
             </Button>
           </Box>
         )}
       </Container>
-
-      {/* Content Section: Conditional Rendering */}
-      <Box sx={{
-        backgroundColor: '#f0f8ff',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '82vh',
-        padding: { xs: '10px', md: '20px' },
-      }}>
-        <Container>
-          {view === 'services' || view === 'staffs' ? (
-            <ListsServiceStaff
-              view={view}
-              businessId={businessId}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              onViewChange={setView}
-              onServiceSelect={handleServiceSelect}
-              onStaffSelect={handleStaffSelect}
-            />
-          ) : (
-            <MyDatePicker
-              selectedDate={selectedDate}
-              onDateChange={handleDateChange}
-              selectedTime={selectedTime}
-              onTimeSelect={handleTimeSelect}
-              onConfirmTime={handleConfirmTime}
-              staffId={selectedStaff?.staffId}
-            />
-          )}
-        </Container>
-      </Box>
     </Box>
   );
 };

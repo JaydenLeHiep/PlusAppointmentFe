@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Snackbar, Alert } from '@mui/material';
 import { fetchCustomerByEmailOrPhone } from '../../../lib/apiClientCustomer';
-import { addAppointment } from '../../../lib/apiClientAppointment';
+import { useAppointmentsContext } from '../../../features/appointment/AppointmentsContext';
 
-const OldCustomerForm = ({ selectedAppointments, onAppointmentSuccess }) => {
+const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSuccess }) => {
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
+  // Call useAppointmentsContext hook at the top level of the component
+  const { addAppointmentAndUpdateList } = useAppointmentsContext();
+
   useEffect(() => {
     console.log("OldCustomerForm received selectedAppointments:", selectedAppointments);
-  }, [selectedAppointments]);
+    console.log("Business ID:", businessId); // Add this to verify the businessId is received correctly
+  }, [selectedAppointments, businessId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -24,6 +28,7 @@ const OldCustomerForm = ({ selectedAppointments, onAppointmentSuccess }) => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+  
     try {
       console.log("Checking if customer exists with Email/Phone:", emailOrPhone);
       const customerId = await fetchCustomerByEmailOrPhone(emailOrPhone);
@@ -31,51 +36,52 @@ const OldCustomerForm = ({ selectedAppointments, onAppointmentSuccess }) => {
       if (customerId) {
         console.log("Customer exists. Customer ID:", customerId);
   
+        console.log("Business ID:", businessId);
+  
         if (!Array.isArray(selectedAppointments)) {
-          console.error('Received selectedAppointments:', selectedAppointments); // Log the problematic data
+          console.error('Received selectedAppointments:', selectedAppointments);
           throw new Error('Selected appointments data is not in the correct format.');
         }
   
-        // Log the structure of each appointment before mapping services
-        selectedAppointments.forEach((appointment, index) => {
-          console.log(`Appointment ${index} structure:`, appointment);
-          console.log(`Services for appointment ${index}:`, appointment.services);
-        });
-  
         const appointmentDetails = selectedAppointments.map(appointment => {
-          if (!appointment.services || !Array.isArray(appointment.services)) {
-            console.error('Error with appointment services:', appointment.services);
-            throw new Error('Appointment services data is not in the correct format.');
-          }
-  
           return {
-            customerId,
-            businessId: appointment.businessId, // Ensure businessId is present
-            appointmentTime: new Date(appointment.date).toISOString(),
-            status: 'pending',
-            comment,
+            customerId: parseInt(customerId, 10),
+            businessId: parseInt(businessId, 10),
+            appointmentTime: appointment.date.toISOString(), // Keep the combined date-time as is
+            status: 'Pending',
+            comment: comment || '',
             services: appointment.services.map(service => ({
               serviceId: service.serviceId,
-              staffId: service.staffId
-            }))
+              staffId: service.staffId,
+            })),
           };
         });
   
-        // Log the final appointment details before sending
-        console.log("Final appointment details to be sent to backend:", appointmentDetails);
+        console.log("Final appointment details:", JSON.stringify(appointmentDetails, null, 2));
   
-        await addAppointment(appointmentDetails);
+        // Use addAppointmentAndUpdateList from AppointmentsContext
+        await Promise.all(
+          appointmentDetails.map(async (details) => {
+            await addAppointmentAndUpdateList(details);
+          })
+        );
+  
         setSuccess(true);
         onAppointmentSuccess();
       } else {
         throw new Error('Customer not found');
       }
     } catch (error) {
-      console.error("Error during form submission:", error.message || error);
-      setError(error.message || 'Failed to find customer or add appointment');
+      if (error.response && error.response.data) {
+        console.error("Error during form submission:", error.response.data.message || error.message || error);
+        setError(error.response.data.message || 'Failed to find customer or add appointment');
+      } else {
+        console.error("Error during form submission:", error.message || error);
+        setError(error.message || 'Failed to find customer or add appointment');
+      }
     }
   };
-  
+
   return (
     <Box>
       <form onSubmit={handleFormSubmit}>

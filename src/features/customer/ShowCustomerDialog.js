@@ -41,7 +41,6 @@ const ShowCustomerDialog = ({ open, onClose, businessId }) => {
         email: '',
         phone: '',
       });
-      onClose();  // Close the dialog after successfully adding a customer
     } catch (error) {
       console.error('Failed to add customer:', error);
       const errorMessage = error.response?.data?.message || error.message || t('errorMessage'); // Use translation for error message

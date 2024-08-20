@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Typography, Button, Paper } from '@mui/material';
-import moment from 'moment';
 import { styled } from '@mui/material/styles';
 
 const OverviewContainer = styled(Box)(({ theme }) => ({
@@ -32,9 +31,19 @@ const OverviewButton = styled(Button)(({ theme }) => ({
 }));
 
 const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFinish }) => {
-  
+
   const handleFinish = () => {
     onFinish(selectedAppointments);
+  };
+
+  const formatDate = (date) => {
+    const d = new Date(date);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+
+  const formatTime = (time) => {
+    const t = new Date(time);
+    return `${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}`;
   };
 
   return (
@@ -47,10 +56,8 @@ const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFi
           <Box>
             <OverviewText>{appointment.serviceName}</OverviewText>
             <Typography variant="body2">{appointment.staffName}</Typography>
-            <Typography variant="body2">{appointment.date.format('YYYY-MM-DD')}</Typography>
-            <Typography variant="body2">
-              {moment(appointment.time).format('HH:mm')}
-            </Typography>
+            <Typography variant="body2">{formatDate(appointment.date)}</Typography>
+            <Typography variant="body2">{formatTime(appointment.time)}</Typography>
           </Box>
         </OverviewItem>
       ))}
