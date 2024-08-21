@@ -35,36 +35,34 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
   
       if (customerId) {
         console.log("Customer exists. Customer ID:", customerId);
-  
         console.log("Business ID:", businessId);
   
         if (!Array.isArray(selectedAppointments)) {
           console.error('Received selectedAppointments:', selectedAppointments);
           throw new Error('Selected appointments data is not in the correct format.');
         }
-  
-        const appointmentDetails = selectedAppointments.map(appointment => {
-          return {
-            customerId: parseInt(customerId, 10),
-            businessId: parseInt(businessId, 10),
-            appointmentTime: appointment.date.toISOString(), // Keep the combined date-time as is
-            status: 'Pending',
-            comment: comment || '',
-            services: appointment.services.map(service => ({
+
+        // Combine all services into one appointment object
+        const combinedAppointmentDetails = {
+          customerId: parseInt(customerId, 10),
+          businessId: parseInt(businessId, 10),
+          appointmentTime: selectedAppointments[0].appointmentTime, // Use the appointment time from the first service (assumes all services share the same date and time)
+          status: 'Pending',
+          comment: comment || '',
+          services: selectedAppointments.flatMap(appointment => 
+            appointment.services.map(service => ({
               serviceId: service.serviceId,
               staffId: service.staffId,
-            })),
-          };
-        });
+              duration: service.duration,
+              price: service.price,
+            }))
+          )
+        };
   
-        console.log("Final appointment details:", JSON.stringify(appointmentDetails, null, 2));
+        console.log("Final combined appointment details:", JSON.stringify(combinedAppointmentDetails, null, 2));
   
-        // Use addAppointmentAndUpdateList from AppointmentsContext
-        await Promise.all(
-          appointmentDetails.map(async (details) => {
-            await addAppointmentAndUpdateList(details);
-          })
-        );
+        // Use addAppointmentAndUpdateList from AppointmentsContext to send the combined appointment
+        await addAppointmentAndUpdateList(combinedAppointmentDetails);
   
         setSuccess(true);
         onAppointmentSuccess();

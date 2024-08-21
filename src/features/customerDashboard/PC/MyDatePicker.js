@@ -9,7 +9,6 @@ import {
   StyledBox,
   SectionTitle,
   TimeSlotsGrid,
-  NoSlotsMessage,
   ConfirmButton,
   SelectedTimeMessage,
 } from '../../../styles/CustomerStyle/MydatePickerStyle';
@@ -20,12 +19,11 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
 
   React.useEffect(() => {
     if (staffId && selectedDate) {
-      const formattedDate = selectedDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-  
+      const formattedDate = selectedDate.format('YYYY-MM-DD'); // Format as YYYY-MM-DD
+
       const fetchTimeSlots = async () => {
         try {
           const slots = await fetchAvailableTimeSlots(staffId, formattedDate);
-  
           if (Array.isArray(slots)) {
             setAvailableTimeSlots(slots);
           } else {
@@ -36,7 +34,7 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
           setAvailableTimeSlots([]);
         }
       };
-  
+
       fetchTimeSlots();
     }
   }, [staffId, selectedDate]);
@@ -56,9 +54,35 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
     setConfirmedTime(null);
   };
 
-  // Separate AM and PM time slots, treating them as plain times without timezone conversion
-  const amTimeSlots = availableTimeSlots.filter(time => new Date(time).getUTCHours() < 12);
-  const pmTimeSlots = availableTimeSlots.filter(time => new Date(time).getUTCHours() >= 12);
+  // Function to generate all possible time slots within a range of hours
+  const generateAllTimeSlots = (startHour, endHour) => {
+    if (!selectedDate) return []; // Add guard clause
+
+    const slots = [];
+    const startTime = selectedDate.clone().set({ hour: startHour, minute: 0, second: 0 });
+    const endTime = selectedDate.clone().set({ hour: endHour, minute: 0, second: 0 });
+
+    while (startTime.isBefore(endTime)) {
+      const slot = startTime.clone().format('YYYY-MM-DDTHH:mm:ss');
+      slots.push(slot);
+      startTime.add(15, 'minutes');
+    }
+
+    return slots;
+  };
+
+  // Generate morning and afternoon time slots
+  const amTimeSlots = generateAllTimeSlots(8, 12);
+  const pmTimeSlots = generateAllTimeSlots(12, 20);
+
+  // Normalize format of availableTimeSlots to match the generated slots
+  const normalizedAvailableTimeSlots = availableTimeSlots.map(slot =>
+    new Date(slot).toISOString().substring(0, 19)
+  );
+
+  const isAvailableTimeSlot = (timeSlot) => {
+    return normalizedAvailableTimeSlots.includes(timeSlot);
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -100,48 +124,40 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
 
         {selectedDate && !confirmedTime && (
           <>
-            <SectionTitle variant="body1">
-              Morning
-            </SectionTitle>
+            <SectionTitle variant="body1">Morning</SectionTitle>
             <TimeSlotsGrid container justifyContent="center">
-              {amTimeSlots.length === 0 ? (
-                <NoSlotsMessage variant="body1">
-                  No available AM time slots
-                </NoSlotsMessage>
-              ) : (
-                amTimeSlots.map((time) => (
+              {amTimeSlots.map((time) => {
+                const isAvailable = isAvailableTimeSlot(time);
+                return (
                   <Grid item key={time}>
                     <TimeSlotButton
-                      onClick={() => handleTimeChangeWrapper(time)}
+                      onClick={isAvailable ? () => handleTimeChangeWrapper(time) : null}
                       selected={time === selectedTime}
+                      disabled={!isAvailable}
                     >
-                      {new Date(time).toISOString().substring(11, 16)} {/* HH:mm format */}
+                      {time.substring(11, 16)} {/* HH:mm format */}
                     </TimeSlotButton>
                   </Grid>
-                ))
-              )}
+                );
+              })}
             </TimeSlotsGrid>
 
-            <SectionTitle variant="body1">
-              Afternoon
-            </SectionTitle>
+            <SectionTitle variant="body1">Afternoon</SectionTitle>
             <TimeSlotsGrid container justifyContent="center">
-              {pmTimeSlots.length === 0 ? (
-                <NoSlotsMessage variant="body1">
-                  No available PM time slots
-                </NoSlotsMessage>
-              ) : (
-                pmTimeSlots.map((time) => (
+              {pmTimeSlots.map((time) => {
+                const isAvailable = isAvailableTimeSlot(time);
+                return (
                   <Grid item key={time}>
                     <TimeSlotButton
-                      onClick={() => handleTimeChangeWrapper(time)}
+                      onClick={isAvailable ? () => handleTimeChangeWrapper(time) : null}
                       selected={time === selectedTime}
+                      disabled={!isAvailable}
                     >
-                      {new Date(time).toISOString().substring(11, 16)} {/* HH:mm format */}
+                      {time.substring(11, 16)} {/* HH:mm format */}
                     </TimeSlotButton>
                   </Grid>
-                ))
-              )}
+                );
+              })}
             </TimeSlotsGrid>
 
             <ConfirmButton
@@ -157,7 +173,7 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
 
         {confirmedTime && (
           <SelectedTimeMessage variant="h6">
-            Selected Time: {confirmedTime.toISOString().substring(11, 16)}
+            Selected Time: {confirmedTime.substring(11, 16)}
           </SelectedTimeMessage>
         )}
       </StyledBox>

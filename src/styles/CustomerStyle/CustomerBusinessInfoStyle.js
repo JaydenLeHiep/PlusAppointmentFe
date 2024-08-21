@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Box, Typography, IconButton } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 
@@ -7,24 +7,20 @@ export const Container = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  paddingTop: '20px',
+  padding: theme.spacing(3),
   backgroundColor: '#f0f8ff',
   position: 'relative',
   width: '100%',
-}));
-
-export const BackButtonContainer = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-}));
-
-export const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  color: theme.palette.primary.main,
+  borderRadius: theme.spacing(2),
+  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+  marginBottom: theme.spacing(4),
 }));
 
 export const BusinessName = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
-  color: theme.palette.primary.main,
+  color: '#333',
   fontFamily: "'Montserrat', sans-serif",
+  fontSize: '1.75rem',
   textTransform: 'uppercase',
   letterSpacing: '0.05em',
   textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',
@@ -32,8 +28,6 @@ export const BusinessName = styled(Typography)(({ theme }) => ({
 }));
 
 export const InfoContainer = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  right: 0,
   textAlign: 'right',
 }));
 
@@ -42,12 +36,13 @@ export const AddressText = styled(Typography)(({ theme }) => ({
   alignItems: 'center',
   fontSize: '1rem',
   fontFamily: "'Roboto', sans-serif",
-  color: theme.palette.primary.main,
+  color: '#555',
+  marginBottom: theme.spacing(1),
 }));
 
 export const StyledLocationOnIcon = styled(LocationOnIcon)(({ theme }) => ({
-  marginRight: '6px',
-  color: theme.palette.primary.main,
+  marginRight: theme.spacing(1),
+  color: '#1976d2',
 }));
 
 export const PhoneText = styled(Typography)(({ theme }) => ({
@@ -55,11 +50,10 @@ export const PhoneText = styled(Typography)(({ theme }) => ({
   alignItems: 'center',
   fontSize: '1rem',
   fontFamily: "'Roboto', sans-serif",
-  color: theme.palette.primary.main,
-  marginTop: '4px',
+  color: '#555',
 }));
 
 export const StyledPhoneIcon = styled(PhoneIcon)(({ theme }) => ({
-  marginRight: '6px',
-  color: theme.palette.primary.main,
+  marginRight: theme.spacing(1),
+  color: '#1976d2',
 }));

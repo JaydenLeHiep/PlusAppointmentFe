@@ -1,63 +1,51 @@
 import React from 'react';
-import { Box, Typography, Button, Paper } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, Typography, List } from '@mui/material';
+import {
+  OverviewContainer,
+  OverviewItem,
+  OverviewText,
+  OverviewButton,
+  StyledListItem,
+  StyledListItemText,
+} from '../../../styles/CustomerStyle/AppointmentOverViewPageStyle';
 
-const OverviewContainer = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-  padding: theme.spacing(2),
-}));
+const formatDate = (appointmentTime) => {
+  const d = new Date(appointmentTime);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
 
-const OverviewItem = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
-  marginBottom: theme.spacing(2),
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  backgroundColor: '#f0f8ff',
-}));
-
-const OverviewText = styled(Typography)(({ theme }) => ({
-  color: '#1976d2',
-  fontWeight: 'bold',
-}));
-
-const OverviewButton = styled(Button)(({ theme }) => ({
-  marginLeft: theme.spacing(2),
-  backgroundColor: '#1976d2',
-  color: '#fff',
-  '&:hover': {
-    backgroundColor: '#115293',
-  },
-}));
+const formatTime = (appointmentTime) => {
+  const t = new Date(appointmentTime);
+  return t.toTimeString().substring(0, 5); // HH:mm format
+};
 
 const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFinish }) => {
-
   const handleFinish = () => {
     onFinish(selectedAppointments);
   };
 
-  const formatDate = (date) => {
-    const d = new Date(date);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  };
-
-  const formatTime = (time) => {
-    const t = new Date(time);
-    return `${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}`;
-  };
-
   return (
     <OverviewContainer>
-      <Typography variant="h5" sx={{ marginBottom: 2, fontWeight: 'bold', color: '#1976d2' }}>
+      <Typography variant="h5" sx={{ marginBottom: 3, fontWeight: 'bold', color: '#1976d2', textAlign: 'center' }}>
         Appointment Overview
       </Typography>
       {selectedAppointments.map((appointment, index) => (
         <OverviewItem key={index}>
           <Box>
-            <OverviewText>{appointment.serviceName}</OverviewText>
-            <Typography variant="body2">{appointment.staffName}</Typography>
-            <Typography variant="body2">{formatDate(appointment.date)}</Typography>
-            <Typography variant="body2">{formatTime(appointment.time)}</Typography>
+            <OverviewText>Staff: {appointment.staffName}</OverviewText>
+            <Typography variant="body2" sx={{ marginBottom: 2 }}>
+              Date: {formatDate(appointment.appointmentTime)} | Time: {formatTime(appointment.appointmentTime)}
+            </Typography>
+            <List dense>
+              {appointment.services.map((service, idx) => (
+                <StyledListItem key={idx}>
+                  <StyledListItemText
+                    primary={service.serviceName}
+                    secondary={`Duration: ${service.duration || 'N/A'} | Price: €${service.price || 'N/A'}`}
+                  />
+                </StyledListItem>
+              ))}
+            </List>
           </Box>
         </OverviewItem>
       ))}

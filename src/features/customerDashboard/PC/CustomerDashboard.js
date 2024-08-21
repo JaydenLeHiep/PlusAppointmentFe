@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Box, CircularProgress, Typography, Button } from '@mui/material';
+import { Container, Box, CircularProgress, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import CustomerBusinessInfo from './CustomerBusinessInfo';
 import ServiceList from './ServiceList';
@@ -11,6 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import { fetchBusinessesById } from '../../../lib/apiClientBusiness';
 import { CustomerListContainer, CustomerListHeader, StyledTextField } from '../../../styles/CustomerStyle/CustomerDashboardStyle';
+import BackAndNextButtons from './BackNextButtons';
 
 const CustomerDashboard = () => {
   const location = useLocation();
@@ -27,7 +28,6 @@ const CustomerDashboard = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedAppointments, setSelectedAppointments] = useState([]);
-  const [overview, setOverview] = useState(false);
   const [showCustomerForm, setShowCustomerForm] = useState(false);
 
   useEffect(() => {
@@ -59,6 +59,10 @@ const CustomerDashboard = () => {
     setSelectedServices([...selectedServices, service]);
   };
 
+  const handleServiceDeselect = (service) => {
+    setSelectedServices(selectedServices.filter(s => s.serviceId !== service.serviceId));
+  };
+
   const handleNextFromServices = () => {
     if (selectedServices.length > 0) {
       setView('staffs');
@@ -81,34 +85,57 @@ const CustomerDashboard = () => {
 
   const handleConfirmTime = () => {
     if (selectedServices.length > 0 && selectedStaff && selectedDate && selectedTime) {
-      const appointmentDetails = selectedServices.map(service => ({
-        serviceName: service.name,
-        staffName: selectedStaff.name,
-        date: selectedDate,
-        time: selectedTime,
-        services: [
-          {
-            serviceId: service.serviceId,
-            staffId: selectedStaff.staffId,
-          }
-        ]
-      }));
+      const appointmentDetails = selectedServices.map(service => {
+        const appointmentTime = `${selectedDate.format('YYYY-MM-DD')}T${selectedTime.substring(11, 16)}`;
+
+        return {
+          serviceName: service.name,
+          staffName: selectedStaff.name,
+          appointmentTime: appointmentTime, // Pass the combined date and time
+          services: [
+            {
+              serviceId: service.serviceId,
+              staffId: selectedStaff.staffId,
+              duration: service.duration, // Ensure duration is included
+              price: service.price, // Ensure price is included
+            }
+          ]
+        };
+      });
 
       setSelectedAppointments([...selectedAppointments, ...appointmentDetails]);
-
-      // Reset selections
-      setSelectedServices([]);
-      setSelectedStaff(null);
-      setSelectedDate(null);
-      setSelectedTime(null);
-      setOverview(true);
+      setView('overview');
     }
   };
 
   const handleFinish = () => {
-    console.log("Final selectedAppointments in CustomerDashboard before passing to CustomerForm:", selectedAppointments);
     setShowCustomerForm(true);
-    setOverview(false);
+    setView('customerForm');
+  };
+
+  const handleBackClick = () => {
+    switch (view) {
+      case 'staffs':
+        setView('services');
+        break;
+      case 'calendar':
+        setView('staffs');
+        break;
+      case 'overview':
+        setView('calendar');
+        break;
+      case 'customerForm':
+        setView('overview');
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleNextClick = () => {
+    if (view === 'services') {
+      handleNextFromServices();
+    }
   };
 
   if (!businessId) {
@@ -147,47 +174,47 @@ const CustomerDashboard = () => {
     );
   }
 
-  if (overview) {
-    return (
-      <AppointmentOverviewPage
-        selectedAppointments={selectedAppointments}
-        onAddMoreServices={() => setView('services')}
-        onFinish={handleFinish}
-      />
-    );
-  }
-
   return (
     <Box minHeight="100vh" sx={{ backgroundColor: '#f0f8ff' }}>
       <Container>
         <CustomerBusinessInfo
           businessInfo={businessInfo}
           view={view}
-          onBackClick={() => setView('services')}
         />
 
-        <CustomerListHeader>
-          <StyledTextField
-            placeholder="Search..."
-            onChange={(e) => setSearchQuery(e.target.value)}
-            value={searchQuery}
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </CustomerListHeader>
+        {(view === 'services' || view === 'staffs') && (
+          <CustomerListHeader>
+            <StyledTextField
+              placeholder="Search..."
+              onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchQuery}
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </CustomerListHeader>
+        )}
+
+        <BackAndNextButtons
+          onBackClick={handleBackClick}
+          onNextClick={handleNextClick}
+          disableBack={view === 'services'}
+          disableNext={view !== 'services' || selectedServices.length === 0}
+        />
 
         {view === 'services' && (
           <CustomerListContainer>
             <ServiceList
               businessId={businessId}
               searchQuery={searchQuery}
+              selectedServices={selectedServices}
               onServiceSelect={handleServiceSelect}
+              onServiceDeselect={handleServiceDeselect}
             />
           </CustomerListContainer>
         )}
@@ -213,18 +240,12 @@ const CustomerDashboard = () => {
           />
         )}
 
-        {view === 'services' && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleNextFromServices}
-              disabled={selectedServices.length === 0}
-              sx={{ fontWeight: 'bold' }}
-            >
-              Next
-            </Button>
-          </Box>
+        {view === 'overview' && (
+          <AppointmentOverviewPage
+            selectedAppointments={selectedAppointments}
+            onAddMoreServices={() => setView('services')}
+            onFinish={handleFinish}
+          />
         )}
       </Container>
     </Box>

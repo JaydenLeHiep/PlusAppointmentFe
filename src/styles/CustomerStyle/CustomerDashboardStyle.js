@@ -52,6 +52,7 @@ export const CustomerListContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   maxWidth: '1200px',
   margin: 'auto',
+  boxSizing: 'border-box',  // Ensure padding doesn't affect the size or position of items
   transition: 'box-shadow 0.3s ease, transform 0.3s ease',
   '&:hover': {
     boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.15)', // Slightly stronger hover shadow
@@ -75,7 +76,7 @@ export const CustomerListHeader = styled(Box)(({ theme }) => ({
   padding: `0 ${theme.spacing(2)}px`, 
   width: '100%',
   boxSizing: 'border-box',
-  marginLeft: '35px'
+
 }));
 
 // StyledTextField styling
