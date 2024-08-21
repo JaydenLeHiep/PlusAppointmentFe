@@ -47,7 +47,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
             const selectedAppointment = appointments.find(appt => appt.appointmentId === appointmentId);
             if (selectedAppointment) {
                 setAppointment(selectedAppointment);
-    
+
                 const updatedServices = (selectedAppointment.services?.$values || []).map(serviceDetails => {
                     const service = services.find(s => s.serviceId === serviceDetails.serviceId);
                     const staffMember = staff.find(st => st.staffId === serviceDetails.staffId);
@@ -59,11 +59,11 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                         name: service?.name || ''
                     };
                 });
-    
+
                 setUpdatedAppointment({
                     customerId: selectedAppointment.customerId || '',
                     appointmentTime: selectedAppointment.appointmentTime
-                        ? new Date(selectedAppointment.appointmentTime).toISOString().slice(0, 16)
+                        ? selectedAppointment.appointmentTime.replace('Z', '')  // Keep as a string
                         : '',
                     status: selectedAppointment.status || '',
                     comment: selectedAppointment.comment || '',
@@ -158,7 +158,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
 
     const handleServiceChange = (index, field, value) => {
         let updatedService = { ...updatedAppointment.services[index], [field]: value };
-    
+
         if (field === 'serviceId') {
             const selectedService = services.find(service => service.serviceId === value);
             if (selectedService) {
@@ -172,11 +172,11 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
             const formattedDuration = value.length === 5 ? `${value}:00` : value; // HH:MM -> HH:MM:SS
             updatedService.updatedDuration = formattedDuration;
         }
-    
+
         const updatedServices = updatedAppointment.services.map((service, i) =>
             i === index ? updatedService : service
         );
-    
+
         setUpdatedAppointment({ ...updatedAppointment, services: updatedServices });
     };
 
@@ -207,13 +207,9 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                         staffId: parseInt(service.staffId),
                         updatedDuration: service.updatedDuration || null
                     })),
-                appointmentTime: new Date(updatedAppointment.appointmentTime).toISOString(),
+                appointmentTime: updatedAppointment.appointmentTime,  // Send raw string
                 comment: updatedAppointment.comment || ""
             };
-
-            console.log("Final update payload:", updateData);
-            console.log("appointment idd:", appointment.appointmentId);
-            console.log("business id:", appointment.businessId);
 
             await updateAppointmentAndRefresh(appointment.appointmentId, updateData, appointment.businessId);
             setAlert({ message: t('updateSuccess'), severity: 'success' });
