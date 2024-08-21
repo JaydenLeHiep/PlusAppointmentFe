@@ -1,6 +1,6 @@
 {
-    "nameLabel": "Tên",
-    "emailLabel": "Email",
-    "phoneLabel": "Số điện thoại"
-  }
-  
+  "nameLabel": "Tên",
+  "emailLabel": "Email",
+  "phoneLabel": "Số điện thoại",
+  "cancel": "Hủy"
+}

@@ -11,6 +11,7 @@ import ResponsiveDashboard from './features/customerDashboard/ResponsiveDashboar
 import { AppointmentsProvider } from './features/appointment/AppointmentsContext';
 import { StaffsProvider } from './features/staff/StaffsContext';
 import { ServicesProvider } from './features/servicecomponent/ServicesContext';
+import { CustomersProvider } from './features/customer/CustomerContext';
 import './utils/i18n'
 
 const App = () => {
@@ -32,20 +33,24 @@ const App = () => {
   return (
     <>
       <GlobalStyles />
-      <ServicesProvider>
-        <StaffsProvider>
-          <AppointmentsProvider>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
-              <Route path="/customer-dashboard" element={<ResponsiveDashboard />} /> {/* Use ResponsiveDashboard */}
-              <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
-              <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
-              <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
-            </Routes>
-          </AppointmentsProvider>
-        </StaffsProvider>
-      </ServicesProvider>
+      <CustomersProvider>
+        <ServicesProvider>
+          <StaffsProvider>
+            <AppointmentsProvider>
+
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
+                <Route path="/customer-dashboard" element={<ResponsiveDashboard />} /> {/* Use ResponsiveDashboard */}
+                <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
+                <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
+                <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
+              </Routes>
+
+            </AppointmentsProvider>
+          </StaffsProvider>
+        </ServicesProvider>
+      </CustomersProvider>
     </>
   );
 };

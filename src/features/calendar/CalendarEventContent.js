@@ -6,7 +6,7 @@ const CalendarEventContent = ({ eventInfo, currentView }) => {
   const startTime = eventInfo.event.start;
   const endTime = eventInfo.event.end;
   //const staffName = extendedProps.staffName;
-  const serviceName = extendedProps.service; // Access the service name from extendedProps
+  //const serviceName = extendedProps.service; // Access the service name from extendedProps
   const customerName = extendedProps.customerName;
 
   if (!startTime || !endTime) {
@@ -24,7 +24,7 @@ const CalendarEventContent = ({ eventInfo, currentView }) => {
   } else if (currentView === 'resourceTimeGridDay') {
     return (
       <div>
-        <span><strong>{timeText}</strong> {customerName} - {serviceName}</span>
+        <span><strong>{timeText}</strong> {customerName}</span>
       </div>
     );
   }
