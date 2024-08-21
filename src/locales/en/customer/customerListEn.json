@@ -1,0 +1,10 @@
+{
+    "editCustomer": "Edit",
+    "deleteCustomer": "Delete",
+    "updateCustomer": "Update Customer",
+    "customerName": "Name",
+    "customerEmail": "Email",
+    "customerPhone": "Phone",
+    "cancel": "Cancel"
+  }
+  

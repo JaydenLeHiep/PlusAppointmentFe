@@ -74,6 +74,9 @@ import dialogCustomerActionsVi from '../locales/vi/customer/dialogCustomerAction
 import showCustomerDialogEn from '../locales/en/customer/showCustomerDialogEn.json';
 import showCustomerDialogVi from '../locales/vi/customer/showCustomerDialogVi.json';
 
+import customerListEn from '../locales/en/customer/customerListEn.json';
+import customerListVi from '../locales/vi/customer/customerListVi.json';
+
 
 // Import other translation files similarly
 
@@ -108,7 +111,8 @@ i18n
         showServicesDialog: showServicesDialogEn,
         customerForm: customerFormEn,
         dialogCustomerActions: dialogCustomerActionsEn,
-        showCustomerDialog: showCustomerDialogEn
+        showCustomerDialog: showCustomerDialogEn,
+        customerList: customerListEn
         // Add other namespaces for English
       },
       vi: {
@@ -138,7 +142,8 @@ i18n
         showServicesDialog: showServicesDialogVi,
         customerForm: customerFormVi,
         dialogCustomerActions: dialogCustomerActionsVi,
-        showCustomerDialog: showCustomerDialogVi
+        showCustomerDialog: showCustomerDialogVi,
+        customerList: customerListVi
         // Add other namespaces for Vietnamese
       },
     },
