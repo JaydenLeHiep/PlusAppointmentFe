@@ -1,6 +1,6 @@
 {
-    "nameLabel": "Name",
-    "emailLabel": "Email",
-    "phoneLabel": "Phone"
-  }
-  
+  "nameLabel": "Name",
+  "emailLabel": "Email",
+  "phoneLabel": "Phone",
+  "cancel": "Cancel"
+}

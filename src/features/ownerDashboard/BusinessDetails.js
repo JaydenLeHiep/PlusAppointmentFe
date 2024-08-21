@@ -27,7 +27,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
   };
   const handleServicesOpen = () => setServicesOpen(true);
   const handleServicesClose = () => setServicesOpen(false);
-  const handleCustomerOpen = () => setCustomerOpen(true); 
+  const handleCustomerOpen = () => setCustomerOpen(true);
   const handleCustomerClose = () => setCustomerOpen(false);
 
   const parseDuration = (duration) => {
@@ -40,13 +40,13 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
   }
 
   const events = appointments.flatMap(appt => {
-    let startTime = new Date(appt.appointmentTime).getTime();
+    let startTime = new Date(appt.appointmentTime).getTime() - 2 * 60 * 60 * 1000; // Subtract 2 hours
 
     return appt.services.$values.map(service => {
-      const serviceStart = new Date(startTime).toISOString();
-      const serviceEnd = new Date(startTime + parseDuration(service.duration)).toISOString();
+      const serviceStart = new Date(startTime).toISOString(); // Convert to ISO string
+      const serviceEnd = new Date(startTime + parseDuration(service.duration)).toISOString(); // Calculate and convert to ISO string
 
-      startTime += parseDuration(service.duration); // Move to the next service time
+      startTime += parseDuration(service.duration); // Update startTime for the next service
 
       return {
         title: `${appt.customerName} - ${service.name}`,
