@@ -1,8 +1,6 @@
 import React from 'react';
 import {
   Container,
-  BackButtonContainer,
-  StyledIconButton,
   BusinessName,
   InfoContainer,
   AddressText,
@@ -10,32 +8,20 @@ import {
   PhoneText,
   StyledPhoneIcon,
 } from '../../../styles/CustomerStyle/CustomerBusinessInfoStyle';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const CustomerBusinessInfo = ({ businessInfo, view, onBackClick }) => {
+const CustomerBusinessInfo = ({ businessInfo }) => {
   return (
     <Container>
-      {/* Back Button */}
-      {view !== 'services' && (
-        <BackButtonContainer>
-          <StyledIconButton onClick={onBackClick}>
-            <ArrowBackIcon />
-          </StyledIconButton>
-        </BackButtonContainer>
-      )}
-
-      {/* Business Name Centered */}
-      <BusinessName variant="h2" component="h2">
+      <BusinessName variant="h4">
         {businessInfo.name}
       </BusinessName>
 
-      {/* Address and Phone */}
       <InfoContainer>
-        <AddressText variant="body2" component="div">
+        <AddressText variant="body2">
           <StyledLocationOnIcon />
           {businessInfo.address}
         </AddressText>
-        <PhoneText variant="body2" component="div">
+        <PhoneText variant="body2">
           <StyledPhoneIcon />
           {businessInfo.phone}
         </PhoneText>

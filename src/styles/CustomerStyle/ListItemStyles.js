@@ -2,24 +2,32 @@ import { Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 // Shared styled components
-export const ListItem = styled(Paper)(({ theme }) => ({
+export const ListItem = styled(Paper)(({ theme, selected }) => ({
   padding: theme.spacing(3),
-  background: 'linear-gradient(145deg, #f0f0f0, #ffffff)',
+  background: selected
+    ? 'linear-gradient(145deg, #d0e0ff, #c0d4ff)' // Different background for selected items
+    : 'linear-gradient(145deg, #f0f0f0, #ffffff)',
   borderRadius: '12px',
-  transition: 'background-color 0.3s ease, transform 0.3s ease',
+  transition: 'background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease',
   textAlign: 'left',
-  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-  cursor: 'pointer',
+  boxShadow: selected 
+    ? '0px 8px 20px rgba(0, 0, 0, 0.3)'  // Stronger shadow for selected items
+    : '0px 4px 12px rgba(0, 0, 0, 0.1)',
+  cursor: 'pointer', // Allow clicking for both selected and unselected items
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'flex-start',
   boxSizing: 'border-box',
-  border: '1px solid #e0e0e0',
+  border: selected ? '2px solid #1976d2' : '1px solid #e0e0e0', // Border color change for selected items
   '&:hover': {
-    background: 'linear-gradient(145deg, #ffffff, #f0f8ff)',
-    transform: 'translateY(-4px)',
-    boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.15)',
+    background: selected 
+      ? 'linear-gradient(145deg, #d0e0ff, #c0d4ff)'  // Maintain hover effect for selected items
+      : 'linear-gradient(145deg, #ffffff, #f0f8ff)',
+    transform: selected ? 'none' : 'translateY(-4px)',
+    boxShadow: selected 
+      ? '0px 8px 20px rgba(0, 0, 0, 0.3)'  // Maintain shadow for selected items
+      : '0px 8px 20px rgba(0, 0, 0, 0.15)',
   },
 }));
 

@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { CircularProgress, Alert, Box, Typography } from '@mui/material';
+import { CircularProgress, Box, Alert, Typography } from '@mui/material';
 import { useServicesContext } from '../../servicecomponent/ServicesContext';
 import { ListItem, ItemBoldText, ItemText } from '../../../styles/CustomerStyle/ListItemStyles';
 
-const ServiceList = ({ businessId, onServiceSelect, searchQuery }) => {
+const ServiceList = ({ businessId, onServiceSelect, searchQuery, selectedServices, onServiceDeselect }) => {
   const { services, fetchServices, loading, error } = useServicesContext();
 
   useEffect(() => {
@@ -24,25 +23,37 @@ const ServiceList = ({ businessId, onServiceSelect, searchQuery }) => {
     return <Typography variant="body1">No services found</Typography>;
   }
 
+  const isServiceSelected = (service) => {
+    return selectedServices.some(selectedService => selectedService.serviceId === service.serviceId);
+  };
+
+  const handleServiceClick = (service) => {
+    if (isServiceSelected(service)) {
+      // Deselect service
+      onServiceDeselect(service);
+    } else {
+      // Select service
+      onServiceSelect(service);
+    }
+  };
+
   return (
     <React.Fragment>
       {filteredServices.map(service => (
-        <ListItem key={service.serviceId} onClick={() => onServiceSelect(service)}>
+        <ListItem
+          key={service.serviceId}
+          onClick={() => handleServiceClick(service)}
+          selected={isServiceSelected(service)} // Pass selected prop for styling
+        >
           <Box>
             <ItemBoldText>{service.name}</ItemBoldText>
           </Box>        
-            <ItemText>{service.duration}</ItemText>
-            <ItemText>€{service.price}</ItemText>   
+          <ItemText>{service.duration}</ItemText>
+          <ItemText>€{service.price}</ItemText>   
         </ListItem>
       ))}
     </React.Fragment>
   );
-};
-
-ServiceList.propTypes = {
-  businessId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  onServiceSelect: PropTypes.func.isRequired,
-  searchQuery: PropTypes.string.isRequired,
 };
 
 export default ServiceList;

@@ -7,7 +7,7 @@ import RegisterPage from './features/auth/Register/RegisterPage';
 import OwnerDashboard from './features/ownerDashboard/OwnerDashboard';
 import GlobalStyles from './styles/GlobalStyles';
 import { useAuth } from './hooks/useAuth';
-import ResponsiveDashboard from './features/customerDashboard/ResponsiveDashboard'; // Import the responsive dashboard
+import ResponsiveDashboard from './features/customerDashboard/ResponsiveDashboard'; 
 import { AppointmentsProvider } from './features/appointment/AppointmentsContext';
 import { StaffsProvider } from './features/staff/StaffsContext';
 import { ServicesProvider } from './features/servicecomponent/ServicesContext';
