@@ -7,10 +7,8 @@ import StaffList from './StaffList';
 import MyDatePicker from './MyDatePicker';
 import AppointmentOverviewPage from './AppointmentOverviewPage';
 import CustomerForm from './CustomerForm';
-import SearchIcon from '@mui/icons-material/Search';
-import InputAdornment from '@mui/material/InputAdornment';
 import { fetchBusinessesById } from '../../../lib/apiClientBusiness';
-import { CustomerListContainer, CustomerListHeader, StyledTextField } from '../../../styles/CustomerStyle/CustomerDashboardStyle';
+import { CustomerListContainer } from '../../../styles/CustomerStyle/CustomerDashboardStyle';
 import BackAndNextButtons from './BackNextButtons';
 
 const CustomerDashboard = () => {
@@ -71,7 +69,7 @@ const CustomerDashboard = () => {
 
   const handleStaffSelect = (staff) => {
     setSelectedStaff(staff);
-    setView('calendar');
+    setView('calendar'); // Automatically move to calendar view after selecting staff
   };
 
   const handleDateChange = (date) => {
@@ -91,20 +89,34 @@ const CustomerDashboard = () => {
         return {
           serviceName: service.name,
           staffName: selectedStaff.name,
-          appointmentTime: appointmentTime, // Pass the combined date and time
+          appointmentTime: appointmentTime,
           services: [
             {
               serviceId: service.serviceId,
               staffId: selectedStaff.staffId,
-              duration: service.duration, // Ensure duration is included
-              price: service.price, // Ensure price is included
+              duration: service.duration,
+              price: service.price,
             }
           ]
         };
       });
 
-      setSelectedAppointments([...selectedAppointments, ...appointmentDetails]);
-      setView('overview');
+      const uniqueAppointments = [...selectedAppointments];
+
+      appointmentDetails.forEach(newAppointment => {
+        const isDuplicate = uniqueAppointments.some(existingAppointment =>
+          existingAppointment.services[0].serviceId === newAppointment.services[0].serviceId &&
+          existingAppointment.services[0].staffId === newAppointment.services[0].staffId &&
+          existingAppointment.appointmentTime === newAppointment.appointmentTime
+        );
+
+        if (!isDuplicate) {
+          uniqueAppointments.push(newAppointment);
+        }
+      });
+
+      setSelectedAppointments(uniqueAppointments);
+      setView('overview'); // Automatically move to overview view after confirming time
     }
   };
 
@@ -135,6 +147,8 @@ const CustomerDashboard = () => {
   const handleNextClick = () => {
     if (view === 'services') {
       handleNextFromServices();
+    } else if (view === 'calendar') {
+      handleConfirmTime();
     }
   };
 
@@ -182,29 +196,13 @@ const CustomerDashboard = () => {
           view={view}
         />
 
-        {(view === 'services' || view === 'staffs') && (
-          <CustomerListHeader>
-            <StyledTextField
-              placeholder="Search..."
-              onChange={(e) => setSearchQuery(e.target.value)}
-              value={searchQuery}
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </CustomerListHeader>
-        )}
-
         <BackAndNextButtons
           onBackClick={handleBackClick}
           onNextClick={handleNextClick}
           disableBack={view === 'services'}
           disableNext={view !== 'services' || selectedServices.length === 0}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
         />
 
         {view === 'services' && (

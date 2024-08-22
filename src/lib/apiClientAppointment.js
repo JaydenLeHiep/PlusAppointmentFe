@@ -38,16 +38,10 @@ export const fetchAppointments = async (businessId) => {
 
 // for add Appointment
 export const addAppointment = async (appointmentDetails) => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    throw new Error('User not authenticated');
-  }
-
   const response = await fetch(`${appointmentApiUrl}/add`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
     },
     body: JSON.stringify(appointmentDetails),
   });

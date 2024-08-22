@@ -1,12 +1,12 @@
 import { styled } from '@mui/material/styles';
-import { Box, Button } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 
 export const ButtonContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  width: '100%',
   marginBottom: theme.spacing(3),
-  padding: theme.spacing(0, 2),
   [theme.breakpoints.down('sm')]: {
     flexDirection: 'column',
     alignItems: 'stretch',
@@ -26,5 +26,30 @@ export const StyledButton = styled(Button)(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     marginBottom: theme.spacing(2),
+  },
+}));
+
+export const StyledTextFieldContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+}));
+
+export const StyledTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderRadius: '30px',
+    },
+    height: '54px', // Larger height for the search bar
+    paddingRight: theme.spacing(4), 
+  },
+  '& .MuiInputBase-input': {
+    padding: '10px 14px', 
+    textAlign: 'center', 
+  },
+  width: '400px', 
+  [theme.breakpoints.down('sm')]: {
+    marginTop: theme.spacing(2),
+    width: '100%',
   },
 }));
