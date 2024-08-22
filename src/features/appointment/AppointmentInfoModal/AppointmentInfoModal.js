@@ -11,29 +11,24 @@ import {
 } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { useAppointmentsContext } from '../../appointment/AppointmentsContext';
-import { useStaffsContext } from '../../staff/StaffsContext';
-import { useServicesContext } from '../../servicecomponent/ServicesContext';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import AppointmentDetailsView from './AppointmentDetailsView';
 import AppointmentEditView from './AppointmentEditView';
 import { useTranslation } from 'react-i18next';
 
-const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
+const AppointmentInfoModal = ({ open, appointment, onClose, staff, services }) => {
     const { t } = useTranslation('appointmentInfoModal');
-
-    const { appointments, changeStatusAppointments, deleteAppointmentAndUpdateList, updateAppointmentAndRefresh, customers, fetchAllCustomers } = useAppointmentsContext();
-    const { staff, fetchAllStaff } = useStaffsContext();
-    const { services, fetchServices } = useServicesContext();
+    const { changeStatusAppointments, deleteAppointmentAndUpdateList, updateAppointmentAndRefresh } = useAppointmentsContext();
 
     const [alert, setAlert] = useState({ message: '', severity: '' });
     const [editMode, setEditMode] = useState(false);
-    const [appointment, setAppointment] = useState(null);
     const [updatedAppointment, setUpdatedAppointment] = useState({
         customerId: '',
+        customerName: '',
         appointmentTime: '',
         status: '',
         comment: '',
-        services: [{ serviceId: '', staffId: '', duration: '', price: '' }]
+        services: [],
     });
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
@@ -42,44 +37,26 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
     const alertTimeoutRef = useRef(null);
     const hasAddedService = useRef(false);
 
+    // Update state when a new appointment is passed as a prop
     useEffect(() => {
-        if (appointmentId) {
-            const selectedAppointment = appointments.find(appt => appt.appointmentId === appointmentId);
-            if (selectedAppointment) {
-                setAppointment(selectedAppointment);
-
-                const updatedServices = (selectedAppointment.services?.$values || []).map(serviceDetails => {
-                    const service = services.find(s => s.serviceId === serviceDetails.serviceId);
-                    const staffMember = staff.find(st => st.staffId === serviceDetails.staffId);
-                    return {
-                        serviceId: service?.serviceId || '',
-                        staffId: staffMember?.staffId || '',
-                        duration: serviceDetails.duration || service?.duration || '',
-                        price: service?.price || '',
-                        name: service?.name || ''
-                    };
-                });
-
-                setUpdatedAppointment({
-                    customerId: selectedAppointment.customerId || '',
-                    appointmentTime: selectedAppointment.appointmentTime
-                        ? selectedAppointment.appointmentTime.replace('Z', '')  // Keep as a string
-                        : '',
-                    status: selectedAppointment.status || '',
-                    comment: selectedAppointment.comment || '',
-                    services: updatedServices.length ? updatedServices : [{ serviceId: '', staffId: '', duration: '', price: '' }]
-                });
-            }
+        if (appointment) {
+            setUpdatedAppointment({
+                customerId: appointment.customerId || '',
+                customerName: appointment.customerName || '',
+                customerPhone: appointment.customerPhone,
+                appointmentTime: appointment.appointmentTime?.replace('Z', '') || '',
+                status: appointment.status || '',
+                comment: appointment.comment || '',
+                services: (appointment.services?.$values || []).map(serviceDetails => ({
+                    serviceId: serviceDetails.serviceId,
+                    staffId: serviceDetails.staffId,
+                    duration: serviceDetails.duration,
+                    price: serviceDetails.price,
+                    name: serviceDetails.name
+                })),
+            });
         }
-    }, [appointmentId, appointments, services, staff]);
-
-    useEffect(() => {
-        if (open && appointment) {
-            if (!services.length) fetchServices(appointment.businessId);
-            if (!customers.length) fetchAllCustomers(appointment.businessId);
-            if (!staff.length) fetchAllStaff(appointment.businessId);
-        }
-    }, [open, services.length, customers.length, staff.length, fetchServices, fetchAllCustomers, fetchAllStaff, appointment]);
+    }, [appointment]);
 
     useEffect(() => {
         if (alert.message && alertRef.current) {
@@ -170,7 +147,7 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
             }
         } else if (field === 'duration') {
             const formattedDuration = value.length === 5 ? `${value}:00` : value; // HH:MM -> HH:MM:SS
-            updatedService.updatedDuration = formattedDuration;
+            updatedService.duration = formattedDuration;
         }
 
         const updatedServices = updatedAppointment.services.map((service, i) =>
@@ -205,7 +182,8 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                     .map(service => ({
                         serviceId: parseInt(service.serviceId),
                         staffId: parseInt(service.staffId),
-                        updatedDuration: service.updatedDuration || null
+                        duration: service.duration || null,
+                        price: service.price || null,
                     })),
                 appointmentTime: updatedAppointment.appointmentTime,  // Send raw string
                 comment: updatedAppointment.comment || ""
@@ -297,7 +275,6 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                         ) : (
                             <AppointmentEditView
                                 updatedAppointment={updatedAppointment}
-                                customers={customers}
                                 staff={staff}
                                 services={services}
                                 handleInputChange={handleInputChange}
@@ -380,7 +357,6 @@ const AppointmentInfoModal = ({ open, appointmentId, onClose }) => {
                 </DialogActions>
             )}
 
-            {/* Confirmation Dialog */}
             <ConfirmationDialog
                 open={showConfirmDialog}
                 title={t('deleteAppointmentTitle')}

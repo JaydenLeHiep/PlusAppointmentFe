@@ -73,7 +73,7 @@ const OwnerDashboard = () => {
   useEffect(() => {
     const connectToHub = async () => {
       const newConnection = new signalR.HubConnectionBuilder()
-        .withUrl(`${apiBaseUrl}/appointmentHub`)  // Adjust the URL as necessary
+        .withUrl(`${apiBaseUrl}/appointmentHub`)
         .withAutomaticReconnect()
         .build();
 
@@ -163,7 +163,12 @@ const OwnerDashboard = () => {
                   services={services}
                   appointments={appointments}
                 />
-                <AppointmentList appointments={appointments} />
+                <AppointmentList
+                  appointments={appointments}
+                  staff={staff}
+                  services={services}
+                  businessId={selectedBusiness.businessId}
+                />
               </>
             ) : (
               <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />

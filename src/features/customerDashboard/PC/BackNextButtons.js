@@ -1,7 +1,8 @@
 import React from 'react';
-import { ButtonContainer, StyledButton } from '../../../styles/CustomerStyle/BackNextButtonsStyle';
+import { Box } from '@mui/material';
+import { ButtonContainer, StyledButton, StyledTextFieldContainer, StyledTextField } from '../../../styles/CustomerStyle/BackNextButtonsStyle';
 
-const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext }) => {
+const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext, searchQuery, onSearchChange }) => {
   return (
     <ButtonContainer>
       <StyledButton
@@ -12,14 +13,28 @@ const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext
       >
         BACK
       </StyledButton>
-      <StyledButton
-        variant="contained"
-        color="primary"
-        onClick={onNextClick}
-        disabled={disableNext}
-      >
-        NEXT
-      </StyledButton>
+      
+      <StyledTextFieldContainer>
+        <StyledTextField
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          variant="outlined"
+        />
+      </StyledTextFieldContainer>
+
+      <Box sx={{ minWidth: '150px', display: 'flex', justifyContent: 'flex-end' }}>
+        {!disableNext && (
+          <StyledButton
+            variant="contained"
+            color="primary"
+            onClick={onNextClick}
+            disabled={disableNext}
+          >
+            NEXT
+          </StyledButton>
+        )}
+      </Box>
     </ButtonContainer>
   );
 };
