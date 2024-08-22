@@ -5,7 +5,6 @@ import {
   OverviewItem,
   OverviewText,
   OverviewButton,
-  StyledListItem,
   StyledListItemText,
 } from '../../../styles/CustomerStyle/AppointmentOverViewPageStyle';
 
@@ -38,12 +37,11 @@ const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFi
             </Typography>
             <List dense>
               {appointment.services.map((service, idx) => (
-                <StyledListItem key={idx}>
-                  <StyledListItemText
-                    primary={service.serviceName}
-                    secondary={`Duration: ${service.duration || 'N/A'} | Price: €${service.price || 'N/A'}`}
-                  />
-                </StyledListItem>
+                <StyledListItemText
+                  key={idx}
+                  primary={service.serviceName}
+                  secondary={`Duration: ${service.duration || 'N/A'} | Price: €${service.price || 'N/A'}`}
+                />
               ))}
             </List>
           </Box>
