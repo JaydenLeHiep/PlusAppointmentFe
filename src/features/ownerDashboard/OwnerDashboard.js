@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Card, Box, CircularProgress, Alert } from '@mui/material';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
@@ -46,15 +46,15 @@ const OwnerDashboard = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchAllData = async () => {
-      if (selectedBusiness && selectedBusiness.businessId) {
-        await fetchAppointmentsForBusiness(selectedBusiness.businessId);
-        await fetchAllStaff(selectedBusiness.businessId);
-        await fetchServices(selectedBusiness.businessId);
-      }
-    };
+  const fetchAllData = useCallback(async () => {
+    if (selectedBusiness && selectedBusiness.businessId) {
+      await fetchAppointmentsForBusiness(selectedBusiness.businessId);
+      await fetchAllStaff(selectedBusiness.businessId);
+      await fetchServices(selectedBusiness.businessId);
+    }
+  }, [selectedBusiness, fetchAppointmentsForBusiness, fetchAllStaff, fetchServices]);
 
+  useEffect(() => {
     if (selectedBusiness) {
       localStorage.setItem('selectedBusiness', JSON.stringify(selectedBusiness));
       localStorage.setItem('selectedBusinessId', selectedBusiness.businessId);
@@ -63,16 +63,21 @@ const OwnerDashboard = () => {
       localStorage.removeItem('selectedBusiness');
       localStorage.removeItem('selectedBusinessId');
     }
-  }, [selectedBusiness, fetchAppointmentsForBusiness, fetchAllStaff, fetchServices]);
+  }, [selectedBusiness, fetchAllData]);
 
-  // Add useEffect to listen to changes in appointments array
+  // Polling setup
   useEffect(() => {
-    // This effect will run when the appointments array is updated
     if (selectedBusiness) {
-      fetchAppointmentsForBusiness(selectedBusiness.businessId);
-    }
-  }, [appointments, selectedBusiness, fetchAppointmentsForBusiness]);
+      const intervalId = setInterval(() => {
+        console.log('Polling for new appointments...');
+        fetchAppointmentsForBusiness(selectedBusiness.businessId);
+      }, 2000); // Poll every 10 seconds
 
+      return () => clearInterval(intervalId); // Clean up the interval on component unmount
+    }
+  }, [selectedBusiness, fetchAppointmentsForBusiness]);
+
+  // Define the missing handleBusinessClick function
   const handleBusinessClick = (business) => {
     setSelectedBusiness(business);
   };
@@ -86,9 +91,9 @@ const OwnerDashboard = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          textAlign: 'center',
+          justifyContent:"center",
+          alignItems:"center",
+          textAlign:"center",
           padding: { xs: '0 1rem', md: '0 2rem' },
           flex: 1,
         }}
@@ -96,9 +101,9 @@ const OwnerDashboard = () => {
         <Container
           sx={{
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '82vh',
+            justifyContent:"center",
+            alignItems:"center",
+            minHeight:"82vh",
             paddingTop: 0,
             marginTop: 0,
           }}
