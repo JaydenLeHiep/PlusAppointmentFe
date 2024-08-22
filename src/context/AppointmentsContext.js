@@ -6,10 +6,10 @@ import {
   deleteAppointment as apiDeleteAppointment,
   fetchAppointmentById as apiFetchAppointmentById,
   updateAppointment as apiUpdateAppointment,
-} from '../../lib/apiClientAppointment';
-import { fetchCustomers as apiFetchAllCustomers } from '../../lib/apiClientCustomer';
-import { useServicesContext } from '../servicecomponent/ServicesContext';
-import { useStaffsContext } from '../staff/StaffsContext';
+} from '../lib/apiClientAppointment';
+import { fetchCustomers as apiFetchAllCustomers } from '../lib/apiClientCustomer';
+import { useServicesContext } from '../context/ServicesContext';
+import { useStaffsContext } from '../context/StaffsContext';
 
 const AppointmentsContext = createContext();
 

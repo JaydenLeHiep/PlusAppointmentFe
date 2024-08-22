@@ -2,11 +2,9 @@ import React, { useRef, useEffect } from 'react';
 import { Box, Typography, TextField, Button, IconButton } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next'; // Import useTranslation hook
-import usePasswordValidation from '../../hooks/usePasswordValidation';
 
 const StaffForm = ({ title, newStaff, setNewStaff, handleAction, handleCancelForm, buttonText, buttonColor }) => {
     const { t } = useTranslation('staffForm'); // Use the 'staffForm' namespace
-    const passwordValid = usePasswordValidation(newStaff.password);
     const formRef = useRef(null);
 
     useEffect(() => {
@@ -111,11 +109,6 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleAction, handleCancelFor
                     },
                 }}
             />
-            {!passwordValid && (
-                <Typography color="error" sx={{ mt: 1 }}>
-                    {t('passwordError')} {/* Translate error message */}
-                </Typography>
-            )}
             <Box mt={3} display="flex" justifyContent="space-between">
                 <Button
                     onClick={handleCancelForm}
@@ -133,8 +126,7 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleAction, handleCancelFor
                     {t('cancel')} {/* Translate button text */}
                 </Button>
                 <Button
-                    onClick={() => passwordValid && handleAction()}
-                    disabled={!passwordValid}
+                    onClick={handleAction}
                     sx={{
                         width: '150px',
                         height: '40px',
@@ -144,7 +136,6 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleAction, handleCancelFor
                         backgroundColor: buttonColor,
                         color: '#fff',
                         '&:hover': { backgroundColor: buttonColor === '#007bff' ? '#0056b3' : '#218838' },
-                        '&.Mui-disabled': { backgroundColor: '#ccc' },
                     }}
                 >
                     {buttonText}

@@ -3,7 +3,6 @@ import { Box, Container, Card, Typography } from '@mui/material';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 import RegisterForm from './RegisterForm';
-import usePasswordValidation from '../../../hooks/usePasswordValidation';
 import { registerUser } from '../../../lib/apiClient';
 import { useTranslation } from 'react-i18next';
 
@@ -18,7 +17,6 @@ const RegisterPage = () => {
   const [message, setMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('info');
 
-  const passwordValid = usePasswordValidation(password);
   const { t } = useTranslation('registerPage'); // Use the 'registerPage' namespace for translations
 
   useEffect(() => {
@@ -34,17 +32,11 @@ const RegisterPage = () => {
 
   const handleRegister = async (event) => {
     event.preventDefault();
-    if (!passwordValid) {
-      setMessage(t('passwordInvalid'));
-      setAlertVariant('danger');
-      return;
-    }
-
+  
     try {
       const data = await registerUser({ username, password, email, phone });
-      setMessage(t('registrationSuccess'));
+      setMessage(t('registrationSuccess') + ': ' + data.message); 
       setAlertVariant('success');
-      // Clear form data
       setUsername('');
       setPassword('');
       setEmail('');
@@ -113,7 +105,6 @@ const RegisterPage = () => {
               setPhone={setPhone}
               password={password}
               setPassword={setPassword}
-              passwordValid={passwordValid}
               showPassword={showPassword}
               toggleShowPassword={toggleShowPassword}
               handleRegister={handleRegister}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, IconButton, Box, Typography, List, ListItem, ListItemText } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
-import { useCustomersContext } from '../../../features/customer/CustomerContext';
+import { useCustomersContext } from '../../../../context/CustomerContext';
 import { useTranslation } from 'react-i18next';
 
 const CustomerSearch = ({ newAppointment, customerSearch, setCustomerSearch, setNewAppointment, alert, setAlert }) => {

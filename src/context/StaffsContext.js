@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { fetchStaff as apiFetchStaff, addStaff as apiAddStaff, updateStaff as apiUpdateStaff, deleteStaff as apiDeleteStaff } from '../../lib/apiClientStaff';
+import { fetchStaff as apiFetchStaff, addStaff as apiAddStaff, updateStaff as apiUpdateStaff, deleteStaff as apiDeleteStaff } from '../lib/apiClientStaff';
 
 const StaffsContext = createContext();
 

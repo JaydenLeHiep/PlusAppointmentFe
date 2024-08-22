@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Snackbar, Alert } from '@mui/material';
 import { fetchCustomerByEmailOrPhone } from '../../../lib/apiClientCustomer';
-import { useAppointmentsContext } from '../../../features/appointment/AppointmentsContext';
+import { useAppointmentsContext } from '../../../context/AppointmentsContext';
 
 const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSuccess }) => {
   const [emailOrPhone, setEmailOrPhone] = useState('');

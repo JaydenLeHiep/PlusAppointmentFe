@@ -10,8 +10,8 @@ import {
     Grid,
 } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
-import { useAppointmentsContext } from '../../appointment/AppointmentsContext';
-import ConfirmationDialog from '../../../components/ConfirmationDialog';
+import { useAppointmentsContext } from '../../../../context/AppointmentsContext';
+import ConfirmationDialog from '../../../../components/ConfirmationDialog';
 import AppointmentDetailsView from './AppointmentDetailsView';
 import AppointmentEditView from './AppointmentEditView';
 import { useTranslation } from 'react-i18next';

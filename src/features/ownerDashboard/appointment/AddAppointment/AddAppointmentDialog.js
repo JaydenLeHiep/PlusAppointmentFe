@@ -9,7 +9,7 @@ import {
 import { Close as CloseIcon } from '@mui/icons-material';
 import AppointmentForm from './AppointmentForm';
 import AppointmentActions from './AppointmentActions';
-import { useAppointmentsContext } from '../../appointment/AppointmentsContext';
+import { useAppointmentsContext } from '../../../../context/AppointmentsContext';
 import { useTranslation } from 'react-i18next';
 
 const AddAppointmentDialog = ({ open, onClose, businessId }) => {

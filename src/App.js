@@ -8,10 +8,10 @@ import OwnerDashboard from './features/ownerDashboard/OwnerDashboard';
 import GlobalStyles from './styles/GlobalStyles';
 import { useAuth } from './hooks/useAuth';
 import ResponsiveDashboard from './features/customerDashboard/ResponsiveDashboard'; 
-import { AppointmentsProvider } from './features/appointment/AppointmentsContext';
-import { StaffsProvider } from './features/staff/StaffsContext';
-import { ServicesProvider } from './features/servicecomponent/ServicesContext';
-import { CustomersProvider } from './features/customer/CustomerContext';
+import { AppointmentsProvider } from './context/AppointmentsContext';
+import { StaffsProvider } from './context/StaffsContext';
+import { ServicesProvider } from './context/ServicesContext';
+import { CustomersProvider } from './context/CustomerContext';
 import './utils/i18n'
 
 const App = () => {

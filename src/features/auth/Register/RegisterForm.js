@@ -12,7 +12,6 @@ const RegisterForm = ({
   setPhone,
   password,
   setPassword,
-  passwordValid,
   showPassword,
   toggleShowPassword,
   handleRegister,
@@ -64,8 +63,6 @@ const RegisterForm = ({
         margin="normal"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        error={!passwordValid && password.length > 0}
-        helperText={!passwordValid && password.length > 0 ? t('passwordHelperText') : ''}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -77,7 +74,7 @@ const RegisterForm = ({
         }}
         required
       />
-      <Button variant="contained" color="primary" type="submit" className="w-100" disabled={!passwordValid} style={{marginTop: '15px'}}>
+      <Button variant="contained" color="primary" type="submit" className="w-100" style={{marginTop: '15px'}}>
         {t('register')}
       </Button>
       {message && (

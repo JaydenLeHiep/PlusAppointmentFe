@@ -4,11 +4,11 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import BusinessList from './BusinessList';
 import BusinessDetails from './BusinessDetails';
-import AppointmentList from '../appointment/AppointmentList';
+import AppointmentList from '../ownerDashboard/appointment/AppointmentList';
 import { fetchBusinesses } from '../../lib/apiClientBusiness';
-import { useAppointmentsContext } from '../appointment/AppointmentsContext';
-import { useStaffsContext } from '../staff/StaffsContext';
-import { useServicesContext } from '../servicecomponent/ServicesContext';
+import { useAppointmentsContext } from '../../context/AppointmentsContext';
+import { useStaffsContext } from '../../context/StaffsContext';
+import { useServicesContext } from '../../context/ServicesContext';
 
 import * as signalR from '@microsoft/signalr';
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;

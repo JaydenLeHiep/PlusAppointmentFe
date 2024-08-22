@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import FullCalendarComponent from '../calendar/FullCalendarComponent';
+import FullCalendarComponent from '../ownerDashboard/calendar/FullCalendarComponent';
 import BusinessInfo from './BusinessInfor';
-import ShowStaffDialog from '../staff/showStaffDialog';
-import AddAppointmentDialog from '../appointment/AddAppointment/AddAppointmentDialog';
-import ShowServicesDialog from '../servicecomponent/showServiceDialog';
-import { useAppointmentsContext } from '../appointment/AppointmentsContext';
-import ShowCustomerDialog from '../customer/ShowCustomerDialog';
+import ShowStaffDialog from './staff/showStaffDialog.js';
+import AddAppointmentDialog from '../ownerDashboard/appointment/AddAppointment/AddAppointmentDialog';
+import ShowServicesDialog from './servicecomponent/showServiceDialog';
+import { useAppointmentsContext } from '../../context/AppointmentsContext';
+import ShowCustomerDialog from '../ownerDashboard/customer/ShowCustomerDialog';
 
 const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments }) => {
   const { fetchAppointmentsForBusiness } = useAppointmentsContext();
