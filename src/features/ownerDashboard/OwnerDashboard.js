@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Card, Box, CircularProgress, Alert } from '@mui/material';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
@@ -10,6 +10,9 @@ import { useAppointmentsContext } from '../appointment/AppointmentsContext';
 import { useStaffsContext } from '../staff/StaffsContext';
 import { useServicesContext } from '../servicecomponent/ServicesContext';
 
+import * as signalR from '@microsoft/signalr';
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
 const OwnerDashboard = () => {
   const { appointments, fetchAppointmentsForBusiness } = useAppointmentsContext();
   const { staff, fetchAllStaff } = useStaffsContext();
@@ -19,6 +22,7 @@ const OwnerDashboard = () => {
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const connectionRef = useRef(null); // Use a ref for SignalR connection
 
   useEffect(() => {
     const loadBusinesses = async () => {
@@ -65,13 +69,38 @@ const OwnerDashboard = () => {
     }
   }, [selectedBusiness, fetchAppointmentsForBusiness, fetchAllStaff, fetchServices]);
 
-  // Add useEffect to listen to changes in appointments array
+  // Setup SignalR connection
   useEffect(() => {
-    // This effect will run when the appointments array is updated
-    if (selectedBusiness) {
-      fetchAppointmentsForBusiness(selectedBusiness.businessId);
-    }
-  }, [appointments, selectedBusiness, fetchAppointmentsForBusiness]);
+    const connectToHub = async () => {
+      const newConnection = new signalR.HubConnectionBuilder()
+        .withUrl(`${apiBaseUrl}/appointmentHub`)  // Adjust the URL as necessary
+        .withAutomaticReconnect()
+        .build();
+
+      try {
+        await newConnection.start();
+        console.log('Connected to SignalR hub');
+        connectionRef.current = newConnection;
+
+        newConnection.on('ReceiveAppointmentUpdate', async (message) => {
+          console.log('New appointment update:', message);
+          if (selectedBusiness && selectedBusiness.businessId) {
+            await fetchAppointmentsForBusiness(selectedBusiness.businessId); // Refresh the appointments
+          }
+        });
+      } catch (error) {
+        console.error('Error connecting to SignalR hub:', error);
+      }
+    };
+
+    connectToHub();
+
+    return () => {
+      if (connectionRef.current) {
+        connectionRef.current.stop();
+      }
+    };
+  }, [selectedBusiness, fetchAppointmentsForBusiness]);
 
   const handleBusinessClick = (business) => {
     setSelectedBusiness(business);

@@ -19,6 +19,7 @@
     "@fullcalendar/resource-timegrid": "^6.1.15",
     "@fullcalendar/resource-timeline": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
+    "@microsoft/signalr": "^8.0.7",
     "@mui/icons-material": "^5.15.18",
     "@mui/lab": "^5.0.0-alpha.173",
     "@mui/material": "^5.16.7",
