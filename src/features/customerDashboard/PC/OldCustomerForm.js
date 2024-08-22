@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Snackbar, Alert } from '@mui/material';
 import { fetchCustomerByEmailOrPhone } from '../../../lib/apiClientCustomer';
 import { useAppointmentsContext } from '../../../features/appointment/AppointmentsContext';
@@ -12,6 +12,11 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
   // Call useAppointmentsContext hook at the top level of the component
   const { addAppointmentAndUpdateList } = useAppointmentsContext();
 
+  useEffect(() => {
+    console.log("OldCustomerForm received selectedAppointments:", selectedAppointments);
+    console.log("Business ID:", businessId); // Add this to verify the businessId is received correctly
+  }, [selectedAppointments, businessId]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === 'emailOrPhone') {
@@ -23,18 +28,28 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
+      console.log("Checking if customer exists with Email/Phone:", emailOrPhone);
       const customerId = await fetchCustomerByEmailOrPhone(emailOrPhone);
-
+  
       if (customerId) {
+        console.log("Customer exists. Customer ID:", customerId);
+        console.log("Business ID:", businessId);
+  
+        if (!Array.isArray(selectedAppointments)) {
+          console.error('Received selectedAppointments:', selectedAppointments);
+          throw new Error('Selected appointments data is not in the correct format.');
+        }
+
+        // Combine all services into one appointment object
         const combinedAppointmentDetails = {
           customerId: parseInt(customerId, 10),
           businessId: parseInt(businessId, 10),
-          appointmentTime: selectedAppointments[0].appointmentTime,
+          appointmentTime: selectedAppointments[0].appointmentTime, // Use the appointment time from the first service (assumes all services share the same date and time)
           status: 'Pending',
           comment: comment || '',
-          services: selectedAppointments.flatMap(appointment =>
+          services: selectedAppointments.flatMap(appointment => 
             appointment.services.map(service => ({
               serviceId: service.serviceId,
               staffId: service.staffId,
@@ -43,27 +58,27 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
             }))
           )
         };
-
+  
+        console.log("Final combined appointment details:", JSON.stringify(combinedAppointmentDetails, null, 2));
+  
+        // Use addAppointmentAndUpdateList from AppointmentsContext to send the combined appointment
         await addAppointmentAndUpdateList(combinedAppointmentDetails);
-
+  
         setSuccess(true);
-        onAppointmentSuccess(); // Trigger parent component callback
-
-        // Log to confirm the event dispatch
-        console.log(`Dispatching appointmentAdded event for businessId: ${businessId}`);
-
-        // Dispatch a custom event
-        const event = new CustomEvent('appointmentAdded', { detail: { businessId } });
-        window.dispatchEvent(event); // Dispatch the event globally
+        onAppointmentSuccess();
       } else {
         throw new Error('Customer not found');
       }
     } catch (error) {
-      setError(error.message || 'Failed to find customer or add appointment');
+      if (error.response && error.response.data) {
+        console.error("Error during form submission:", error.response.data.message || error.message || error);
+        setError(error.response.data.message || 'Failed to find customer or add appointment');
+      } else {
+        console.error("Error during form submission:", error.message || error);
+        setError(error.message || 'Failed to find customer or add appointment');
+      }
     }
   };
-
-
 
   return (
     <Box>
@@ -99,6 +114,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
         </Button>
       </form>
 
+      {/* Snackbar for success */}
       <Snackbar
         open={success}
         autoHideDuration={6000}
@@ -109,6 +125,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
         </Alert>
       </Snackbar>
 
+      {/* Snackbar for error */}
       <Snackbar
         open={!!error}
         autoHideDuration={6000}
