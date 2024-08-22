@@ -3,7 +3,7 @@ import { List, ListItem, Typography, Paper, MenuItem, Select, FormControl, Input
 import AppointmentInfoModal from '../appointment/AppointmentInfoModal/AppointmentInfoModal.js';
 import { useTranslation } from 'react-i18next';
 
-const AppointmentList = ({ appointments, businessId, onAppointmentChange }) => {
+const AppointmentList = ({ appointments, businessId }) => {
   const { t } = useTranslation('appointmentList'); // Use the 'appointmentList' namespace for translations
   const [sortCriteria, setSortCriteria] = useState('date');
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
@@ -22,11 +22,6 @@ const AppointmentList = ({ appointments, businessId, onAppointmentChange }) => {
   const handleCloseModal = () => {
     setModalOpen(false);
     setSelectedAppointmentId(null);
-  };
-
-  const handleAddOrUpdateAppointment = () => {
-    // After adding or updating an appointment, call the callback to refresh the list
-    onAppointmentChange();
   };
 
   const sortedAppointments = appointments?.filter(appt => appt.status !== 'Delete') || [];
@@ -58,7 +53,6 @@ const AppointmentList = ({ appointments, businessId, onAppointmentChange }) => {
         open={modalOpen}
         appointmentId={selectedAppointmentId} 
         onClose={handleCloseModal}
-        onAppointmentChange={handleAddOrUpdateAppointment} // Pass the callback to the modal if needed
       />
       <List>
         {sortedAppointments.map((appointment) => {

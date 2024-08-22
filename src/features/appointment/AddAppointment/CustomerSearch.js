@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, IconButton, Box, Typography, List, ListItem, ListItemText, CircularProgress } from '@mui/material';
+import { TextField, IconButton, Box, Typography, List, ListItem, ListItemText } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { searchCustomersByName } from '../../../lib/apiClientCustomer';
 import { useTranslation } from 'react-i18next';
@@ -8,26 +8,16 @@ const CustomerSearch = ({ newAppointment, customerSearch, setCustomerSearch, set
     const { t } = useTranslation('customerSearch'); // Use the 'customerSearch' namespace for translations
     const [filteredCustomers, setFilteredCustomers] = useState([]);
     const [searchPerformed, setSearchPerformed] = useState(false);
-    const [loading, setLoading] = useState(false);
 
     const handleCustomerSearch = async () => {
         setSearchPerformed(true);
-        setLoading(true); // Set loading to true while search is performed
         try {
-            const response = await searchCustomersByName(customerSearch);
-            
-            // Extract the customers array from the response
-            const customers = response.customers?.$values || [];
-            
-            setFilteredCustomers(Array.isArray(customers) ? customers : []); // Ensure customers is an array
+            const customers = await searchCustomersByName(customerSearch);
+            setFilteredCustomers(customers);
         } catch (error) {
             setAlert({ message: t('searchFailed'), severity: 'error' });
-            setFilteredCustomers([]); // Reset to an empty array on error
-        } finally {
-            setLoading(false); // Set loading to false after search completes
         }
     };
-    
 
     const handleSelectCustomer = (customer) => {
         setNewAppointment({ ...newAppointment, customerId: parseInt(customer.customerId, 10) });
@@ -50,8 +40,8 @@ const CustomerSearch = ({ newAppointment, customerSearch, setCustomerSearch, set
                 }}
                 InputProps={{
                     endAdornment: (
-                        <IconButton onClick={handleCustomerSearch} disabled={loading}>
-                            {loading ? <CircularProgress size={24} /> : <SearchIcon />}
+                        <IconButton onClick={handleCustomerSearch}>
+                            <SearchIcon />
                         </IconButton>
                     )
                 }}
@@ -94,5 +84,3 @@ const CustomerSearch = ({ newAppointment, customerSearch, setCustomerSearch, set
 };
 
 export default CustomerSearch;
-
-
