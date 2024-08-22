@@ -4,7 +4,7 @@ import {
   addService as apiAddService,
   updateService as apiUpdateService,
   deleteService as apiDeleteService
-} from '../../lib/apiClientService';
+} from '../lib/apiClientService';
 
 const ServicesContext = createContext();
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Grid, TextField, Typography } from '@mui/material';
 import { Add } from '@mui/icons-material';
-import { useStaffsContext } from '../../staff/StaffsContext';
-import { useServicesContext } from '../../servicecomponent/ServicesContext';
+import { useStaffsContext } from '../../../../context/StaffsContext';
+import { useServicesContext } from '../../../../context/ServicesContext';
 import ServiceForm from './ServiceForm';
 import CustomerSearch from './CustomerSearch';
 import { useTranslation } from 'react-i18next';

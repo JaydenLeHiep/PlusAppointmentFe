@@ -6,7 +6,7 @@ import {
     updateCustomer, 
     searchCustomersByName, 
     fetchCustomersByBusinessId 
-} from '../../lib/apiClientCustomer';
+} from '../lib/apiClientCustomer';
 
 const CustomersContext = createContext();
 

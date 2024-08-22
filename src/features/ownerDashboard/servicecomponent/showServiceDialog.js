@@ -11,8 +11,8 @@ import {
 } from '@mui/material';
 import { Add, Close as CloseIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
-import { useServicesContext } from '../servicecomponent/ServicesContext';
-import ConfirmationDialog from '../../components/ConfirmationDialog';
+import { useServicesContext } from '../../../context/ServicesContext';
+import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import ServiceList from './ServiceList';
 import ServiceForm from './ServiceForm';
 
