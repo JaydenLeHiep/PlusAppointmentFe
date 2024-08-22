@@ -3,25 +3,25 @@ import { List, ListItem, Typography, Paper, MenuItem, Select, FormControl, Input
 import AppointmentInfoModal from '../appointment/AppointmentInfoModal/AppointmentInfoModal.js';
 import { useTranslation } from 'react-i18next';
 
-const AppointmentList = ({ appointments, businessId }) => {
-  const { t } = useTranslation('appointmentList'); // Use the 'appointmentList' namespace for translations
+const AppointmentList = ({ appointments, staff, services }) => {
+  const { t } = useTranslation('appointmentList');
   const [sortCriteria, setSortCriteria] = useState('date');
-  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    if (selectedAppointmentId !== null) {
+    if (selectedAppointment !== null) {
       setModalOpen(true);
     }
-  }, [selectedAppointmentId]);
+  }, [selectedAppointment]);
 
-  const handleAppointmentClick = (appointmentId) => {
-    setSelectedAppointmentId(appointmentId);
+  const handleAppointmentClick = (appointment) => {
+    setSelectedAppointment(appointment);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
-    setSelectedAppointmentId(null);
+    setSelectedAppointment(null);
   };
 
   const sortedAppointments = appointments?.filter(appt => appt.status !== 'Delete') || [];
@@ -51,8 +51,10 @@ const AppointmentList = ({ appointments, businessId }) => {
       </FormControl>
       <AppointmentInfoModal
         open={modalOpen}
-        appointmentId={selectedAppointmentId} 
+        appointment={selectedAppointment}
         onClose={handleCloseModal}
+        staff={staff}
+        services={services}
       />
       <List>
         {sortedAppointments.map((appointment) => {
@@ -64,20 +66,20 @@ const AppointmentList = ({ appointments, businessId }) => {
 
           return (
             <ListItem key={appointment.appointmentId} sx={{ p: 0 }}>
-              <ButtonBase onClick={() => handleAppointmentClick(appointment.appointmentId)} sx={{ width: '100%' }}>
-                <Paper 
-                  elevation={3} 
-                  sx={{ 
-                    width: '100%', 
-                    padding: '16px', 
-                    marginBottom: '8px', 
-                    borderRadius: '12px', 
-                    backgroundColor: '#f0f8ff', 
-                    border: '1px solid #1976d2', 
+              <ButtonBase onClick={() => handleAppointmentClick(appointment)} sx={{ width: '100%' }}>
+                <Paper
+                  elevation={3}
+                  sx={{
+                    width: '100%',
+                    padding: '16px',
+                    marginBottom: '8px',
+                    borderRadius: '12px',
+                    backgroundColor: '#f0f8ff',
+                    border: '1px solid #1976d2',
                     boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
                     '&:hover': {
                       boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-                      backgroundColor: '#e6f1ff', 
+                      backgroundColor: '#e6f1ff',
                     }
                   }}
                 >

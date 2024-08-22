@@ -14,9 +14,8 @@ import { useTranslation } from 'react-i18next';
 
 const AppointmentEditView = ({
     updatedAppointment,
-    customers,
-    staff,
-    services,
+    staff = [],
+    services = [],
     handleInputChange,
     handleServiceChange,
     handleAddService,
@@ -27,6 +26,11 @@ const AppointmentEditView = ({
 
     return (
         <>
+            {/* Display the customer name prominently */}
+            <Typography variant="h6" sx={{ mb: 2.5, fontWeight: 'bold', textAlign: 'center' }}>
+                {updatedAppointment.customerName || t('noCustomerName')}
+            </Typography>
+
             <FormControl fullWidth margin="dense" sx={{ mb: 2.5 }}>
                 <InputLabel>{t('customer')}</InputLabel>
                 <Select
@@ -40,20 +44,13 @@ const AppointmentEditView = ({
                         boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
                     }}
                 >
-                    {customers.length > 0 ? (
-                        customers.map((customer) => (
-                            <MenuItem key={customer.customerId} value={customer.customerId}>
-                                <Box component="span" fontWeight="bold">
-                                    {customer.name}
-                                </Box>{' '}
-                                - {customer.phone}
-                            </MenuItem>
-                        ))
-                    ) : (
-                        <MenuItem value="">
-                            <em>{t('noCustomersAvailable')}</em>
-                        </MenuItem>
-                    )}
+                    {/* In case you want to retain the ability to change the customer, map through the updatedAppointment */}
+                    <MenuItem value={updatedAppointment.customerId}>
+                        <Box component="span" fontWeight="bold">
+                            {updatedAppointment.customerName}
+                        </Box>{' '}
+                        - {updatedAppointment.customerPhone}
+                    </MenuItem>
                 </Select>
             </FormControl>
 
@@ -107,18 +104,21 @@ const AppointmentEditView = ({
                 }}
             />
 
+            {/* Render each service form with the correct staff and service options */}
             {updatedAppointment.services.map((service, index) => (
                 <ServiceForm
                     key={index}
                     service={service}
                     index={index}
                     services={services}
-                    staff={staff}  // Pass staff to handle staff selection
+                    staff={staff}
                     handleServiceChange={handleServiceChange}
                     handleRemoveService={handleRemoveService}
                     editMode={editMode}
                 />
             ))}
+
+            {/* Option to add a new service to the appointment */}
             <Box mt={2}>
                 <Typography
                     variant="h7"

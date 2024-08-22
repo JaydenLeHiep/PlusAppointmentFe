@@ -51,7 +51,6 @@ const ServiceForm = ({ service, index, services, staff, handleServiceChange, han
                                 </MenuItem>
                             ))}
                         </Select>
-
                     </FormControl>
                 </Grid>
                 <Grid item xs={3}>

@@ -109,7 +109,13 @@ export const searchCustomersByName = async (name) => {
     },
   });
 
-  return await handleApiResponse(response);
+  const data = await handleApiResponse(response);
+
+  if (data.customers && data.customers.$values) {
+    return data.customers.$values;
+  } else {
+    return []; 
+  }
 };
 
 // Function to check if a customer exists based on email or phone
@@ -170,4 +176,3 @@ export const fetchCustomersByBusinessId = async (businessId) => {
   // Ensure you extract the actual customer data from the $values array
   return data || [];
 };
-

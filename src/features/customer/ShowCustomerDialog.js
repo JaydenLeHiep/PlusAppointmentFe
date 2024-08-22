@@ -230,23 +230,15 @@ const ShowCustomerDialog = ({ open, onClose, businessId }) => {
             </Typography>
           </Box>
           <Collapse in={isFormOpen}>
-            <Box
-              mt={2}
-              p={2}
-              mb={2}
-              ref={formRef}
-              sx={{ borderRadius: '8px', backgroundColor: '#f9f9f9', boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.2)' }}
-            >
-              <CustomerForm
-                title={t('addNewCustomer')}
-                customer={newCustomer}
-                setCustomer={setNewCustomer}
-                handleAction={handleAddCustomer}
-                handleCancelForm={handleCancelForm}
-                buttonText={t('addCustomer')}
-                buttonColor="#007bff"
-              />
-            </Box>
+            <CustomerForm
+              title={t('addNewCustomer')}
+              customer={newCustomer}
+              setCustomer={setNewCustomer}
+              handleAction={handleAddCustomer}
+              handleCancelForm={handleCancelForm}
+              buttonText={t('addCustomer')}
+              buttonColor="#007bff"
+            />
           </Collapse>
           <CustomerList
             customers={customers}
