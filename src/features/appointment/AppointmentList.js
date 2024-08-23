@@ -59,10 +59,11 @@ const AppointmentList = ({ appointments, staff, services }) => {
       <List>
         {sortedAppointments.map((appointment) => {
           const appointmentTime = new Date(appointment.appointmentTime);
-          const hours = String(appointmentTime.getUTCHours()).padStart(2, '0');
-          const minutes = String(appointmentTime.getUTCMinutes()).padStart(2, '0');
-          const day = String(appointmentTime.getUTCDate()).padStart(2, '0');
-          const month = String(appointmentTime.getUTCMonth() + 1).padStart(2, '0');
+          const hours = String(appointmentTime.getHours()).padStart(2, '0');
+          const minutes = String(appointmentTime.getMinutes()).padStart(2, '0');
+          const day = String(appointmentTime.getDate()).padStart(2, '0');
+          const month = String(appointmentTime.getMonth() + 1).padStart(2, '0');
+          
 
           return (
             <ListItem key={appointment.appointmentId} sx={{ p: 0 }}>

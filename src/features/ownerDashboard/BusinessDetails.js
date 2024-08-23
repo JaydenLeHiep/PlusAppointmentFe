@@ -40,21 +40,21 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
   }
 
   const events = appointments.flatMap(appt => {
-    let startTime = new Date(appt.appointmentTime).getTime() - 2 * 60 * 60 * 1000; // Subtract 2 hours
+    let startTime = new Date(appt.appointmentTime).getTime(); // Use the original appointment time without subtracting 2 hours
 
     return appt.services.$values.map(service => {
-      const serviceStart = new Date(startTime).toISOString(); // Convert to ISO string
-      const serviceEnd = new Date(startTime + parseDuration(service.duration)).toISOString(); // Calculate and convert to ISO string
+      const serviceStart = new Date(startTime); // Keep the original date format
+      const serviceEnd = new Date(startTime + parseDuration(service.duration)); // Calculate the end time in the original format
 
       startTime += parseDuration(service.duration); // Update startTime for the next service
 
       return {
         title: `${appt.customerName} - ${service.name}`,
-        start: serviceStart,
-        end: serviceEnd,
+        start: serviceStart, // Use Date object directly
+        end: serviceEnd, // Use Date object directly
         customerName: appt.customerName,
         customerPhone: appt.customerPhone,
-        appointmentTime: serviceStart,
+        appointmentTime: serviceStart, // Use Date object directly
         service: service.name,
         staffName: service.staffName,
         status: appt.status,
@@ -63,6 +63,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
       };
     });
   });
+
 
   return (
     <Box>
