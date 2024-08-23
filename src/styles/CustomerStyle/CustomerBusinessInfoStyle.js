@@ -1,59 +1,67 @@
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import PhoneIcon from '@mui/icons-material/Phone';
 
-export const Container = styled(Box)(({ theme }) => ({
+export const BusinessInfoContainer = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  padding: theme.spacing(4, 6), 
+  borderRadius: theme.shape.borderRadius * 2, 
+  boxShadow: theme.shadows[3], 
   display: 'flex',
+  flexDirection: 'column', 
   alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: theme.spacing(3),
-  backgroundColor: '#f0f8ff',
-  position: 'relative',
-  width: '100%',
-  borderRadius: theme.spacing(2),
-  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-  marginBottom: theme.spacing(4),
+  textAlign: 'center',
+  [theme.breakpoints.up('md')]: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    textAlign: 'left',
+  },
 }));
 
 export const BusinessName = styled(Typography)(({ theme }) => ({
-  fontWeight: 'bold',
-  color: '#333',
-  fontFamily: "'Montserrat', sans-serif",
-  fontSize: '1.75rem',
-  textTransform: 'uppercase',
-  letterSpacing: '0.05em',
-  textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',
-  margin: '0 auto',
+  fontWeight: theme.typography.fontWeightBold,
+  color: theme.palette.text.primary,
+  fontFamily: "'Dancing Script', cursive",
+  fontSize: '2.5rem', // Increased size for emphasis
+  marginBottom: theme.spacing(2),
+  [theme.breakpoints.up('md')]: {
+    fontSize: '3rem',
+    marginBottom: 0,
+  },
 }));
 
 export const InfoContainer = styled(Box)(({ theme }) => ({
-  textAlign: 'right',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: theme.spacing(1),
+  [theme.breakpoints.up('md')]: {
+    alignItems: 'flex-end',
+  },
 }));
 
-export const AddressText = styled(Typography)(({ theme }) => ({
+export const AddressWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  fontSize: '1rem',
-  fontFamily: "'Roboto', sans-serif",
-  color: '#555',
-  marginBottom: theme.spacing(1),
+  gap: theme.spacing(1),
 }));
 
-export const StyledLocationOnIcon = styled(LocationOnIcon)(({ theme }) => ({
-  marginRight: theme.spacing(1),
-  color: '#1976d2',
-}));
-
-export const PhoneText = styled(Typography)(({ theme }) => ({
+export const PhoneWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  fontSize: '1rem',
-  fontFamily: "'Roboto', sans-serif",
-  color: '#555',
+  gap: theme.spacing(1),
 }));
 
-export const StyledPhoneIcon = styled(PhoneIcon)(({ theme }) => ({
-  marginRight: theme.spacing(1),
-  color: '#1976d2',
+export const IconWrapper = styled(Box)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+export const InfoText = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  fontSize: '1.125rem', 
+  fontFamily: theme.typography.fontFamily,
 }));

@@ -5,7 +5,8 @@ import {
     deleteCustomer, 
     updateCustomer, 
     searchCustomersByName, 
-    fetchCustomersByBusinessId 
+    fetchCustomersByBusinessId,
+    checkCustomerExists, 
 } from '../lib/apiClientCustomer';
 
 const CustomersContext = createContext();
@@ -87,6 +88,16 @@ export const CustomersProvider = ({ children }) => {
     }
   }, []);
 
+  const checkIfCustomerExists = useCallback(async (emailOrPhone) => {
+    try {
+      const customerId = await checkCustomerExists(emailOrPhone);
+      return customerId;
+    } catch (error) {
+      console.error('Error checking customer existence:', error);
+      throw error;
+    }
+  }, []);
+
   const contextValue = {
     customers,
     findCustomerById,
@@ -95,6 +106,7 @@ export const CustomersProvider = ({ children }) => {
     deleteExistingCustomer,
     searchCustomers,
     fetchCustomersForBusiness,
+    checkIfCustomerExists,
     alert,
   };
 

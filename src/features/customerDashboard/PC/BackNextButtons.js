@@ -1,30 +1,42 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, InputAdornment } from '@mui/material';
 import { ButtonContainer, StyledButton, StyledTextFieldContainer, StyledTextField } from '../../../styles/CustomerStyle/BackNextButtonsStyle';
+import SearchIcon from '@mui/icons-material/Search';
 
-const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext, searchQuery, onSearchChange }) => {
+const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext, searchQuery, onSearchChange, view }) => {
   return (
     <ButtonContainer>
-      <StyledButton
-        variant="contained"
-        color="primary"
-        onClick={onBackClick}
-        disabled={disableBack}
-      >
-        BACK
-      </StyledButton>
-      
-      <StyledTextFieldContainer>
-        <StyledTextField
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
-          variant="outlined"
-        />
-      </StyledTextFieldContainer>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+        <StyledButton
+          variant="contained"
+          color="primary"
+          onClick={onBackClick}
+          disabled={disableBack}
+        >
+          BACK
+        </StyledButton>
+      </Box>
 
-      <Box sx={{ minWidth: '150px', display: 'flex', justifyContent: 'flex-end' }}>
-        {!disableNext && (
+      {(view === 'services' || view === 'staffs') && (
+        <StyledTextFieldContainer>
+          <StyledTextField
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+            variant="outlined"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </StyledTextFieldContainer>
+      )}
+
+      {view !== 'calendar' && view !== 'overview' && view !== 'customerForm' && (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <StyledButton
             variant="contained"
             color="primary"
@@ -33,8 +45,8 @@ const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext
           >
             NEXT
           </StyledButton>
-        )}
-      </Box>
+        </Box>
+      )}
     </ButtonContainer>
   );
 };

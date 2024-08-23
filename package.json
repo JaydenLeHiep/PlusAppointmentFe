@@ -6,6 +6,7 @@
     "@date-io/date-fns": "^3.0.0",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
+    "@fontsource/dancing-script": "^5.0.19",
     "@fontsource/josefin-sans": "^5.0.20",
     "@fontsource/lobster": "^5.0.20",
     "@fontsource/playfair-display": "^5.0.24",

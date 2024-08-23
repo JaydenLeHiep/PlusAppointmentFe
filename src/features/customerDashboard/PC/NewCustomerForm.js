@@ -1,61 +1,106 @@
 import React, { useState } from 'react';
 import { Snackbar, Alert } from '@mui/material';
-import { addCustomer } from '../../../lib/apiClientCustomer';
+import { useCustomersContext } from '../../../context/CustomerContext'; 
+import { useAppointmentsContext } from '../../../context/AppointmentsContext'; 
 import {
   CustomButton,
   FormContainer,
-  StyledTextField,
-  StyledCheckbox,
-  StyledFormControlLabel
+  StyledTextField
 } from '../../../styles/CustomerStyle/NewCustomerFormStyle';
 
-const NewCustomerForm = ({ onCustomerIdReceived, onSwitchForm }) => {
+const NewCustomerForm = ({ businessId, selectedAppointments, onAppointmentSuccess, onSwitchForm }) => {
+  const { checkIfCustomerExists, addNewCustomer } = useCustomersContext();
+  const { addAppointmentAndUpdateList } = useAppointmentsContext();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
-    saveData: false,
+    phone: ''
   });
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
   const handleInputChange = (e) => {
-    const { name, value, checked, type } = e.target;
+    const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: value,
     }));
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
+  const handleAddCustomer = async () => {
     try {
+      console.log('Checking if customer exists with email/phone:', formData.email || formData.phone);
+      const existingCustomerId = await checkIfCustomerExists(formData.email || formData.phone);
+
+      if (existingCustomerId) {
+        console.warn('User already exists. Customer ID:', existingCustomerId);
+        setSubmitError('User already exists. Please switch to the Existing Customer form.');
+        return;
+      } else {
+        console.log('Customer does not exist, proceeding to add new customer.');
+      }
+
       const customerDetails = {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
+        BusinessId: String(businessId)
       };
-      const newCustomer = await addCustomer(customerDetails);
-      onCustomerIdReceived(newCustomer.id);
+
+      const newCustomer = await addNewCustomer(customerDetails, businessId);
+      console.log('New customer added successfully:', newCustomer);
+
       setSubmitSuccess(true);
+      setSubmitError('');
 
       // Reset form data after submission if needed
       setFormData({
         name: '',
         email: '',
-        phone: '',
-        saveData: false,
+        phone: ''
       });
+
+      // Combine all services into one appointment object
+      const combinedAppointmentDetails = {
+        customerId: parseInt(newCustomer.id, 10),
+        businessId: parseInt(businessId, 10),
+        appointmentTime: selectedAppointments[0].appointmentTime, // Use the appointment time from the first service (assumes all services share the same date and time)
+        status: 'Pending',
+        comment: '', // Add a comment if needed
+        services: selectedAppointments.flatMap(appointment => 
+          appointment.services.map(service => ({
+            serviceId: service.serviceId,
+            staffId: service.staffId,
+            duration: service.duration,
+            price: service.price,
+          }))
+        )
+      };
+
+      console.log('Adding appointment for new customer:', combinedAppointmentDetails);
+      await addAppointmentAndUpdateList(combinedAppointmentDetails);
+      console.log('Appointment added successfully for new customer:', combinedAppointmentDetails);
+
+      // Notify parent component of successful appointment creation
+      onAppointmentSuccess(newCustomer.id, selectedAppointments);
 
       // Redirect to OldCustomerForm after 3 seconds
       setTimeout(() => {
         setSubmitSuccess(false);
-        onSwitchForm();
+        onSwitchForm(); // Switch to the Old Customer form
       }, 3000);
+
     } catch (error) {
-      setSubmitError('Error adding new customer');
-      console.error('Error adding new customer:', error.message);
+      console.error('Failed to add customer:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Error adding new customer';
+      setSubmitError(errorMessage);
     }
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    handleAddCustomer();
   };
 
   return (
@@ -88,21 +133,10 @@ const NewCustomerForm = ({ onCustomerIdReceived, onSwitchForm }) => {
           margin="normal"
           required
         />
-        <StyledFormControlLabel
-          control={
-            <StyledCheckbox
-              name="saveData"
-              checked={formData.saveData}
-              onChange={handleInputChange}
-            />
-          }
-          label="Save my data for future bookings"
-        />
         <CustomButton
           type="submit"
           variant="contained"
           color="primary"
-          disabled={!formData.saveData}
         >
           Submit
         </CustomButton>

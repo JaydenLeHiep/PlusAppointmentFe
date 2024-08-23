@@ -14,6 +14,7 @@ export const ContentContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   minHeight: '82vh',
+  boxShadow: theme.shadows[4], 
   padding: theme.spacing(1.25, 2.5), // padding: { xs: '10px', md: '20px' }
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(1.25, 1.25),
@@ -88,6 +89,6 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     width: '100%',
-    marginTop: theme.spacing(2), // Add some space on top for smaller screens
+    marginTop: theme.spacing(2), 
   },
 }));

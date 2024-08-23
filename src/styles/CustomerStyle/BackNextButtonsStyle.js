@@ -6,6 +6,7 @@ export const ButtonContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   width: '100%',
+  marginTop: theme.spacing(3),
   marginBottom: theme.spacing(3),
   [theme.breakpoints.down('sm')]: {
     flexDirection: 'column',
@@ -32,7 +33,14 @@ export const StyledButton = styled(Button)(({ theme }) => ({
 export const StyledTextFieldContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  width: '100%',
+  justifyContent: 'center',
+  flexGrow: 1,
+  boxSizing: 'border-box',
+  [theme.breakpoints.down('sm')]: {
+    marginTop: theme.spacing(2),
+    width: '100%',
+    justifyContent: 'flex-start',
+  },
 }));
 
 export const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -40,14 +48,14 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
     '& fieldset': {
       borderRadius: '30px',
     },
-    height: '54px', // Larger height for the search bar
-    paddingRight: theme.spacing(4), 
+    height: '54px',
+    paddingRight: theme.spacing(2), 
+    paddingLeft: theme.spacing(2), 
   },
   '& .MuiInputBase-input': {
-    padding: '10px 14px', 
-    textAlign: 'center', 
+    textAlign: 'left',
   },
-  width: '400px', 
+  width: '400px',
   [theme.breakpoints.down('sm')]: {
     marginTop: theme.spacing(2),
     width: '100%',

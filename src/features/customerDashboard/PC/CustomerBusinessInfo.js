@@ -1,32 +1,35 @@
 import React from 'react';
 import {
-  Container,
+  BusinessInfoContainer,
   BusinessName,
   InfoContainer,
-  AddressText,
-  StyledLocationOnIcon,
-  PhoneText,
-  StyledPhoneIcon,
+  AddressWrapper,
+  PhoneWrapper,
+  IconWrapper,
+  InfoText,
 } from '../../../styles/CustomerStyle/CustomerBusinessInfoStyle';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PhoneIcon from '@mui/icons-material/Phone';
 
 const CustomerBusinessInfo = ({ businessInfo }) => {
   return (
-    <Container>
-      <BusinessName variant="h4">
-        {businessInfo.name}
-      </BusinessName>
-
+    <BusinessInfoContainer>
+      <BusinessName>{businessInfo.name}</BusinessName>
       <InfoContainer>
-        <AddressText variant="body2">
-          <StyledLocationOnIcon />
-          {businessInfo.address}
-        </AddressText>
-        <PhoneText variant="body2">
-          <StyledPhoneIcon />
-          {businessInfo.phone}
-        </PhoneText>
+        <AddressWrapper>
+          <IconWrapper>
+            <LocationOnIcon />
+          </IconWrapper>
+          <InfoText>{businessInfo.address}</InfoText>
+        </AddressWrapper>
+        <PhoneWrapper>
+          <IconWrapper>
+            <PhoneIcon />
+          </IconWrapper>
+          <InfoText>{businessInfo.phone}</InfoText>
+        </PhoneWrapper>
       </InfoContainer>
-    </Container>
+    </BusinessInfoContainer>
   );
 };
 
