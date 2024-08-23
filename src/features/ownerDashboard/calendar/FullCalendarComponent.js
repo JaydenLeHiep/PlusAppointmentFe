@@ -10,12 +10,11 @@ import { useTranslation } from 'react-i18next';
 const views = ['dayGridMonth', 'timeGridDay', 'resourceTimeGridDay'];
 
 const FullCalendarComponent = ({ events, staff }) => {
-  const { t } = useTranslation('fullCalendarComponent'); // Use the 'fullCalendarComponent' namespace for translations
+  const { t } = useTranslation('fullCalendarComponent');
   const [currentView, setCurrentView] = useState(views[0]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const staffPerPage = 4; // Number of staff to display per view
 
   const handleDateClick = () => {
@@ -23,7 +22,9 @@ const FullCalendarComponent = ({ events, staff }) => {
   };
 
   const handleEventClick = (clickInfo) => {
-    setSelectedAppointmentId(clickInfo.event.extendedProps.appointmentId);
+    const appointmentData = clickInfo.event.extendedProps; // Get all the event data
+    console.log(appointmentData)
+    setSelectedAppointment(appointmentData); // Store the appointment data
     setIsModalOpen(true);
   };
 
@@ -37,7 +38,7 @@ const FullCalendarComponent = ({ events, staff }) => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedAppointmentId(null);
+    setSelectedAppointment(null); // Clear the selected appointment
   };
 
   const handlePageChange = (direction) => {
@@ -59,7 +60,6 @@ const FullCalendarComponent = ({ events, staff }) => {
     title: staffMember.name,
   }));
 
-  // Adjust events based on the current view
   const updatedEvents = currentView === 'resourceTimeGridDay'
     ? events.map(event => {
         const resource = resources.find(res => res.title === event.staffName);
@@ -69,7 +69,6 @@ const FullCalendarComponent = ({ events, staff }) => {
         };
       })
     : events.reduce((acc, event) => {
-        // Group all services of the same appointment together for the Day view
         const existingEvent = acc.find(e => e.appointmentId === event.appointmentId);
         if (existingEvent && currentView === 'timeGridDay') {
           existingEvent.end = new Date(Math.max(new Date(existingEvent.end), new Date(event.end))).toISOString();
@@ -115,10 +114,10 @@ const FullCalendarComponent = ({ events, staff }) => {
         renderEventContent={(eventInfo) => <CalendarEventContent eventInfo={eventInfo} currentView={currentView} />}
         renderDayCell={(dayCellInfo) => <CalendarDayCell dayCellInfo={dayCellInfo} events={events} currentView={currentView} />}
       />
-      {selectedAppointmentId && (
+      {selectedAppointment && (
         <AppointmentInfoModal
           open={isModalOpen}
-          appointmentId={selectedAppointmentId}
+          appointment={selectedAppointment} // Pass the full appointment data
           onClose={handleCloseModal}
         />
       )}
