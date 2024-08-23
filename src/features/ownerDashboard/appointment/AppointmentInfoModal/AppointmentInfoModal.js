@@ -40,11 +40,12 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services }) =
     // Update state when a new appointment is passed as a prop
     useEffect(() => {
         if (appointment) {
+            const localAppointmentTime = new Date(appointment.appointmentTime).toISOString().slice(0, 16); // Convert to local time and format
             setUpdatedAppointment({
                 customerId: appointment.customerId || '',
                 customerName: appointment.customerName || '',
                 customerPhone: appointment.customerPhone,
-                appointmentTime: appointment.appointmentTime?.replace('Z', '') || '',
+                appointmentTime: localAppointmentTime, // Store the local time string
                 status: appointment.status || '',
                 comment: appointment.comment || '',
                 services: (appointment.services?.$values || []).map(serviceDetails => ({
@@ -57,6 +58,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services }) =
             });
         }
     }, [appointment]);
+
 
     useEffect(() => {
         if (alert.message && alertRef.current) {
@@ -175,6 +177,12 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services }) =
 
     const handleUpdateAppointment = async () => {
         try {
+            // The user-selected local time
+            const localAppointmentTime = new Date(updatedAppointment.appointmentTime);
+
+            // Convert the local time to UTC
+            const utcAppointmentTime = localAppointmentTime.toISOString();
+
             const updateData = {
                 businessId: appointment.businessId,
                 services: updatedAppointment.services
@@ -185,7 +193,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services }) =
                         duration: service.duration || null,
                         price: service.price || null,
                     })),
-                appointmentTime: updatedAppointment.appointmentTime,  // Send raw string
+                appointmentTime: utcAppointmentTime,  // Send in UTC
                 comment: updatedAppointment.comment || ""
             };
 
@@ -199,31 +207,34 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services }) =
         }
     };
 
+
     const formatAppointmentTime = (appointmentTime, duration) => {
         if (!appointmentTime || !duration) {
             return t('invalidDate');
         }
 
+        // Parse the appointment time as local time (since it's already converted to local in useEffect)
         const startTime = new Date(appointmentTime);
-        if (isNaN(startTime.getTime())) {
-            return t('invalidDate');
-        }
 
+        // Calculate the duration in minutes
         const [hours, minutes, seconds] = duration.split(':').map(Number);
         const durationInMinutes = hours * 60 + minutes + (seconds || 0) / 60;
 
+        // Calculate the end time by manually adding the duration to the start time
         const endTime = new Date(startTime.getTime() + durationInMinutes * 60000);
 
+        // Format the time parts in local time
         const formatTime = (date) => {
-            if (date && !isNaN(date.getTime())) {
-                return `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
-            } else {
-                return t('invalidTime');
-            }
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${hours}:${minutes}`;
         };
 
         return `${formatTime(startTime)} - ${formatTime(endTime)}`;
     };
+
+
+
 
     return (
         <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">

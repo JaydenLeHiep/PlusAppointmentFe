@@ -44,7 +44,6 @@ const AppointmentEditView = ({
                         boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
                     }}
                 >
-                    {/* In case you want to retain the ability to change the customer, map through the updatedAppointment */}
                     <MenuItem value={updatedAppointment.customerId}>
                         <Box component="span" fontWeight="bold">
                             {updatedAppointment.customerName}
@@ -59,7 +58,7 @@ const AppointmentEditView = ({
                 label={t('appointmentTime')}
                 type="datetime-local"
                 fullWidth
-                value={updatedAppointment.appointmentTime}
+                value={updatedAppointment.appointmentTime}  // Keep the local time
                 InputLabelProps={{
                     shrink: true,
                 }}
