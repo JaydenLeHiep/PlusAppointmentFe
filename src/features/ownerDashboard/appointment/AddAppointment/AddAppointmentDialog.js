@@ -54,10 +54,16 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
 
     const handleAddAppointment = async () => {
         try {
+            // The user-selected local time
+            const localAppointmentTime = new Date(newAppointment.appointmentTime);
+    
+            // Convert the local time to UTC
+            const utcAppointmentTime = localAppointmentTime.toISOString();
+    
             const appointmentDetails = {
                 customerId: parseInt(newAppointment.customerId, 10),
                 businessId: newAppointment.businessId,
-                appointmentTime: newAppointment.appointmentTime,
+                appointmentTime: utcAppointmentTime,  // Store in UTC
                 status: newAppointment.status,
                 comment: newAppointment.comment,
                 services: newAppointment.services.map(service => ({
@@ -78,6 +84,8 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
             setAlert({ message: errorMessage, severity: 'error' });
         }
     };
+    
+    
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
