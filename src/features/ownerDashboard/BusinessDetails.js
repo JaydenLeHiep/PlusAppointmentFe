@@ -39,30 +39,28 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
     return <Typography variant="h6">No business selected or business ID is missing.</Typography>;
   }
 
-  const events = appointments.flatMap(appt => {
-    let startTime = new Date(appt.appointmentTime).getTime(); // Use the original appointment time without subtracting 2 hours
+  const events = appointments.map(appt => {
+    let startTime = new Date(appt.appointmentTime).getTime();
 
     return appt.services.$values.map(service => {
-      const serviceStart = new Date(startTime); // Keep the original date format
-      const serviceEnd = new Date(startTime + parseDuration(service.duration)); // Calculate the end time in the original format
+      const serviceStart = new Date(startTime);
+      const serviceEnd = new Date(startTime + parseDuration(service.duration));
 
-      startTime += parseDuration(service.duration); // Update startTime for the next service
+      startTime += parseDuration(service.duration);
 
       return {
+        ...appt, // Include all the appointment details
         title: `${appt.customerName} - ${service.name}`,
-        start: serviceStart, // Use Date object directly
-        end: serviceEnd, // Use Date object directly
-        customerName: appt.customerName,
-        customerPhone: appt.customerPhone,
-        appointmentTime: serviceStart, // Use Date object directly
-        service: service.name,
+        start: serviceStart,
+        end: serviceEnd,
+        serviceName: service.name,
         staffName: service.staffName,
-        status: appt.status,
-        appointmentId: appt.appointmentId,
+        serviceId: service.serviceId,
         staffId: service.staffId,
       };
     });
-  });
+  }).flat();
+
 
 
   return (
