@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, Snackbar, Alert } from '@mui/material';
+import React, { useState } from 'react';
+import { Snackbar, Alert } from '@mui/material';
 import { fetchCustomerByEmailOrPhone } from '../../../lib/apiClientCustomer';
 import { useAppointmentsContext } from '../../../context/AppointmentsContext';
+import {
+  CustomButton,          
+  FormContainer,         
+  StyledTextField,       
+} from '../../../styles/CustomerStyle/OldCustomerFormStyle'; 
 
 const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSuccess }) => {
   const [emailOrPhone, setEmailOrPhone] = useState('');
@@ -11,11 +16,6 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
 
   // Call useAppointmentsContext hook at the top level of the component
   const { addAppointmentAndUpdateList } = useAppointmentsContext();
-
-  useEffect(() => {
-    console.log("OldCustomerForm received selectedAppointments:", selectedAppointments);
-    console.log("Business ID:", businessId); // Add this to verify the businessId is received correctly
-  }, [selectedAppointments, businessId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,12 +30,9 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
     e.preventDefault();
   
     try {
-      console.log("Checking if customer exists with Email/Phone:", emailOrPhone);
       const customerId = await fetchCustomerByEmailOrPhone(emailOrPhone);
   
       if (customerId) {
-        console.log("Customer exists. Customer ID:", customerId);
-        console.log("Business ID:", businessId);
   
         if (!Array.isArray(selectedAppointments)) {
           console.error('Received selectedAppointments:', selectedAppointments);
@@ -58,9 +55,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
             }))
           )
         };
-  
-        console.log("Final combined appointment details:", JSON.stringify(combinedAppointmentDetails, null, 2));
-  
+
         // Use addAppointmentAndUpdateList from AppointmentsContext to send the combined appointment
         await addAppointmentAndUpdateList(combinedAppointmentDetails);
   
@@ -81,19 +76,18 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
   };
 
   return (
-    <Box>
+    <FormContainer>
       <form onSubmit={handleFormSubmit}>
-        <TextField
+        <StyledTextField
           label="Email or Phone"
           name="emailOrPhone"
           value={emailOrPhone}
           onChange={handleInputChange}
           fullWidth
           required
-          sx={{ marginBottom: 2 }}
         />
 
-        <TextField
+        <StyledTextField
           label="Comment"
           name="comment"
           value={comment}
@@ -101,17 +95,15 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
           fullWidth
           multiline
           rows={4}
-          sx={{ marginBottom: 2 }}
         />
 
-        <Button
+        <CustomButton
           type="submit"
           variant="contained"
           color="primary"
-          sx={{ marginTop: 2 }}
         >
           Finish
-        </Button>
+        </CustomButton>
       </form>
 
       {/* Snackbar for success */}
@@ -135,7 +127,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
           {error}
         </Alert>
       </Snackbar>
-    </Box>
+    </FormContainer>
   );
 };
 

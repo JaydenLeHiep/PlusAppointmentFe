@@ -26,7 +26,6 @@ const CustomerDashboard = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedAppointments, setSelectedAppointments] = useState([]);
-  const [showCustomerForm, setShowCustomerForm] = useState(false);
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -121,7 +120,6 @@ const CustomerDashboard = () => {
   };
 
   const handleFinish = () => {
-    setShowCustomerForm(true);
     setView('customerForm');
   };
 
@@ -176,18 +174,6 @@ const CustomerDashboard = () => {
     );
   }
 
-  if (showCustomerForm) {
-    return (
-      <CustomerForm
-        selectedAppointments={selectedAppointments}
-        businessId={businessId}
-        onAppointmentSuccess={() => {
-          // handle success here, maybe reset state or navigate away
-        }}
-      />
-    );
-  }
-
   return (
     <Box minHeight="100vh" sx={{ backgroundColor: '#f0f8ff' }}>
       <Container>
@@ -203,6 +189,7 @@ const CustomerDashboard = () => {
           disableNext={view !== 'services' || selectedServices.length === 0}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          view={view}
         />
 
         {view === 'services' && (
@@ -243,6 +230,16 @@ const CustomerDashboard = () => {
             selectedAppointments={selectedAppointments}
             onAddMoreServices={() => setView('services')}
             onFinish={handleFinish}
+          />
+        )}
+
+        {view === 'customerForm' && (
+          <CustomerForm
+            selectedAppointments={selectedAppointments}
+            businessId={businessId}
+            onAppointmentSuccess={() => {
+
+            }}
           />
         )}
       </Container>

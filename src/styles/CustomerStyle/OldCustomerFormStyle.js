@@ -1,14 +1,14 @@
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-// CustomButton styling
+// CustomButton styling for Old Customer Form
 export const CustomButton = styled(Button)({
-  backgroundColor: '#1976d2', // Primary blue color
-  color: '#fff', // Text color
-  padding: '12px 24px',
+  backgroundColor: '#1976d2',
+  color: '#fff',
+  padding: '9px 24px',
   fontSize: '16px',
   fontWeight: 'bold',
-  borderRadius: '12px', // Increased border-radius for a more modern look
+  borderRadius: '12px',
   boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
   textTransform: 'none',
   transition: 'background-color 0.3s ease, transform 0.2s ease',
@@ -16,16 +16,16 @@ export const CustomButton = styled(Button)({
   '&:hover': {
     backgroundColor: '#115293',
     boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-    transform: 'translateY(-2px)', // Slight lift effect on hover
+    transform: 'translateY(-2px)',
   },
   '&:active': {
     backgroundColor: '#0e3c71',
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-    transform: 'translateY(0)', // Reset lift effect
+    transform: 'translateY(0)',
   },
 });
 
-// FormContainer styling
+// FormContainer styling for Old Customer Form
 export const FormContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
@@ -40,7 +40,7 @@ export const FormContainer = styled(Box)({
   margin: 'auto',
 });
 
-// StyledTextField styling
+// StyledTextField styling for Old Customer Form
 export const StyledTextField = styled(TextField)({
   backgroundColor: '#ffffff',
   borderRadius: '8px',
@@ -50,5 +50,19 @@ export const StyledTextField = styled(TextField)({
     '& fieldset': {
       border: 'none',
     },
+  },
+});
+
+// StyledCheckbox styling for Old Customer Form
+export const StyledCheckbox = styled(Checkbox)({
+  color: '#007bff',
+});
+
+// StyledFormControlLabel styling for Old Customer Form
+export const StyledFormControlLabel = styled(FormControlLabel)({
+  marginBottom: '16px',
+  color: '#1976d2',
+  '& .MuiTypography-root': {
+    fontWeight: 'bold',
   },
 });

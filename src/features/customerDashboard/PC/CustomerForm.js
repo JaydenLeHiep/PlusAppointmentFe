@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CustomButton, FormContainer, FormTitle, InnerFormContainer } from '../../../styles/CustomerStyle/CustomerFormStyle';
+import { CustomButton, FormTitle, InnerFormContainer } from '../../../styles/CustomerStyle/CustomerFormStyle';
 import NewCustomerForm from './NewCustomerForm';
 import OldCustomerForm from './OldCustomerForm';
 
@@ -15,8 +15,8 @@ const CustomerForm = ({ selectedAppointments, businessId, onAppointmentSuccess }
   };
 
   return (
-    <FormContainer>
-      <FormTitle variant="h6">
+    <div style={{ textAlign: 'center', marginTop: '20px' }}>
+      <FormTitle variant="h5">
         {isNewCustomer ? 'New Customer Form' : 'Existing Customer Form'}
       </FormTitle>
       <InnerFormContainer>
@@ -30,18 +30,18 @@ const CustomerForm = ({ selectedAppointments, businessId, onAppointmentSuccess }
         {isNewCustomer ? (
           <NewCustomerForm
             selectedAppointments={selectedAppointments}
-            businessId={businessId}  // Pass businessId here
+            businessId={businessId}
             onAppointmentSuccess={onAppointmentSuccess}
           />
         ) : (
           <OldCustomerForm
             selectedAppointments={selectedAppointments}
-            businessId={businessId}  // Pass businessId here
+            businessId={businessId}
             onAppointmentSuccess={onAppointmentSuccess}
           />
         )}
       </InnerFormContainer>
-    </FormContainer>
+    </div>
   );
 };
 
