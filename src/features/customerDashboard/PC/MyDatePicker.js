@@ -1,8 +1,6 @@
-import * as React from 'react';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { TextField, Box, Button, Grid, Typography } from '@mui/material';
-import { fetchAvailableTimeSlots } from '../../../lib/apiClientAppointment';
+import React, { useState, useEffect } from 'react';
+import { fetchNotAvailableTimeSlots } from '../../../lib/apiClientAppointment'; // Import the function
+import moment from 'moment-timezone';
 import {
   StyledDatePicker,
   TimeSlotButton,
@@ -10,53 +8,54 @@ import {
   SectionTitle,
   TimeSlotsGrid,
   ConfirmButton,
-  SelectedTimeMessage,
 } from '../../../styles/CustomerStyle/MydatePickerStyle';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { TextField, Box, Grid, Typography } from '@mui/material';
 
 const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTimeSelect, onConfirmTime }) => {
-  const [availableTimeSlots, setAvailableTimeSlots] = React.useState([]);
-  const [confirmedTime, setConfirmedTime] = React.useState(null);
+  const [notAvailableTimeSlots, setNotAvailableTimeSlots] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (staffId && selectedDate) {
-      const formattedDate = selectedDate.format('YYYY-MM-DD'); 
-
-      const fetchTimeSlots = async () => {
+      const fetchSlots = async () => {
         try {
-          const slots = await fetchAvailableTimeSlots(staffId, formattedDate);
+          // Convert selectedDate to the local date format without converting to UTC
+          const formattedDate = selectedDate.format('YYYY-MM-DD'); // Format the local date directly
+
+          const slots = await fetchNotAvailableTimeSlots(staffId, formattedDate);
           if (Array.isArray(slots)) {
-            setAvailableTimeSlots(slots);
+            // Convert each UTC time slot to the user's local time
+            const localNotAvailableTimeSlots = slots.map(slot => moment.utc(slot).tz(moment.tz.guess()).format('YYYY-MM-DDTHH:mm:ss'));
+            setNotAvailableTimeSlots(localNotAvailableTimeSlots);
           } else {
-            setAvailableTimeSlots([]);
+            setNotAvailableTimeSlots([]);
           }
         } catch (error) {
-          console.error('Failed to fetch available time slots:', error);
-          setAvailableTimeSlots([]);
+          console.error('Failed to fetch not available time slots:', error);
+          setNotAvailableTimeSlots([]);
         }
       };
 
-      fetchTimeSlots();
+      fetchSlots();
     }
   }, [staffId, selectedDate]);
 
   const handleConfirmTime = () => {
-    setConfirmedTime(selectedTime);
-    onConfirmTime();
+    onConfirmTime(selectedTime);
   };
 
   const handleDateChangeWrapper = (date) => {
     onDateChange(date);
-    setConfirmedTime(null);
   };
 
   const handleTimeChangeWrapper = (time) => {
     onTimeSelect(time);
-    setConfirmedTime(null);
   };
 
   // Function to generate all possible time slots within a range of hours
   const generateAllTimeSlots = (startHour, endHour) => {
-    if (!selectedDate) return []; // Add guard clause
+    if (!selectedDate) return [];
 
     const slots = [];
     const startTime = selectedDate.clone().set({ hour: startHour, minute: 0, second: 0 });
@@ -75,13 +74,9 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
   const amTimeSlots = generateAllTimeSlots(8, 12);
   const pmTimeSlots = generateAllTimeSlots(12, 20);
 
-  // Normalize format of availableTimeSlots to match the generated slots
-  const normalizedAvailableTimeSlots = availableTimeSlots.map(slot =>
-    new Date(slot).toISOString().substring(0, 19)
-  );
-
-  const isAvailableTimeSlot = (timeSlot) => {
-    return normalizedAvailableTimeSlots.includes(timeSlot);
+  // Determine if a time slot is available
+  const isNotAvailableTimeSlot = (timeSlot) => {
+    return notAvailableTimeSlots.includes(timeSlot);
   };
 
   return (
@@ -98,36 +93,25 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
 
         {selectedDate && (
           <Box mt={2} textAlign="center">
-            {confirmedTime ? (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleTimeChangeWrapper(null)}
-                sx={{ fontWeight: 'bold' }}
-              >
-                Choose Time Again
-              </Button>
-            ) : (
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 'bold',
-                  color: '#1976d2',
-                  alignSelf: 'center',
-                }}
-              >
-                Select a Time
-              </Typography>
-            )}
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 'bold',
+                color: '#1976d2',
+                alignSelf: 'center',
+              }}
+            >
+              Select a Time
+            </Typography>
           </Box>
         )}
 
-        {selectedDate && !confirmedTime && (
+        {selectedDate && (
           <>
             <SectionTitle variant="body1">Morning</SectionTitle>
             <TimeSlotsGrid container justifyContent="center">
               {amTimeSlots.map((time) => {
-                const isAvailable = isAvailableTimeSlot(time);
+                const isAvailable = !isNotAvailableTimeSlot(time);
                 return (
                   <Grid item key={time}>
                     <TimeSlotButton
@@ -145,7 +129,7 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
             <SectionTitle variant="body1">Afternoon</SectionTitle>
             <TimeSlotsGrid container justifyContent="center">
               {pmTimeSlots.map((time) => {
-                const isAvailable = isAvailableTimeSlot(time);
+                const isAvailable = !isNotAvailableTimeSlot(time);
                 return (
                   <Grid item key={time}>
                     <TimeSlotButton
@@ -169,12 +153,6 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
               Confirm Time
             </ConfirmButton>
           </>
-        )}
-
-        {confirmedTime && (
-          <SelectedTimeMessage variant="h6">
-            Selected Time: {confirmedTime.substring(11, 16)}
-          </SelectedTimeMessage>
         )}
       </StyledBox>
     </LocalizationProvider>
