@@ -8,7 +8,7 @@ export const DashboardContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'center',
+  alignItems: 'stretch',  
   [theme.breakpoints.down('sm')]: {
     justifyContent: 'flex-start',
   },
@@ -17,16 +17,17 @@ export const DashboardContainer = styled(Box)(({ theme }) => ({
 // ContentContainer styling
 export const ContentContainer = styled(Box)(({ theme }) => ({
   backgroundColor: '#f0f8ff',
+  display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-
+  minHeight: '82vh',  // Reintroduced minHeight for consistency
   width: '100%',
   maxWidth: '1200px',
   boxSizing: 'border-box',
   [theme.breakpoints.down('sm')]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
-    padding: theme.spacing(0),
+    padding: theme.spacing(1.25),  // Restored some padding for mobile
   },
 }));
 

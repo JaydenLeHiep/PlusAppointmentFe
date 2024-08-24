@@ -6,8 +6,12 @@ export const ButtonContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   width: '100%',
+  maxWidth: '1200px', // Limit the width to match the content container's max-width
+  height: '60px', // Increased height for PC
+  margin: '0 auto', // Center the button container within the content
   marginBottom: theme.spacing(2.5),
   [theme.breakpoints.down('sm')]: {
+    height: '50px', // Default height for mobile
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -15,7 +19,7 @@ export const ButtonContainer = styled(Box)(({ theme }) => ({
 
 export const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: 'bold',
-  padding: theme.spacing(1.5, 4), // Default padding for PC
+  padding: theme.spacing(1.3, 4), // Default padding for PC
   fontSize: '1rem',
   borderRadius: '8px',
   boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
@@ -49,17 +53,19 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
     '& fieldset': {
       borderRadius: '30px',
     },
-    height: '44px', // Default height for PC
+    height: '50px', 
     paddingRight: theme.spacing(1),
     paddingLeft: theme.spacing(1),
   },
   '& .MuiInputBase-input': {
     textAlign: 'left',
   },
-  width: '100%',
-  maxWidth: '300px', // Default max-width for PC
+  width: '80%',
+  maxWidth: '350px',
   [theme.breakpoints.down('sm')]: {
-    height: '40px', // Reduced height for mobile
-    maxWidth: '200px', // Reduced width for mobile
+    '& .MuiOutlinedInput-root': {
+      height: '40px',
+    },
+    maxWidth: '200px', 
   },
 }));
