@@ -1,10 +1,9 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, IconButton } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import LanguageIcon from '@mui/icons-material/Language';
 
 // Importing Google Fonts
 import '@fontsource/poppins'; // Importing Poppins font
@@ -13,15 +12,11 @@ import '@fontsource/roboto'; // Importing Roboto font
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
-  const { i18n, t } = useTranslation('navbar'); // Ensure useTranslation is used here
-
+  const { t } = useTranslation('navbar');
+  
   const handleLogout = () => {
     logout();
     navigate('/login');
-  };
-
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng); // Use the i18n instance from useTranslation
   };
 
   const theme = createTheme({
@@ -150,20 +145,6 @@ const Navbar = () => {
                 </Button>
               </>
             )}
-
-            {/* Language Switcher */}
-            <IconButton onClick={() => changeLanguage('en')} aria-label="Change language to English">
-              <LanguageIcon sx={{ color: i18n.language === 'en' ? '#007bff' : '#000000' }} />
-              <Typography sx={{ fontSize: '0.9rem', marginLeft: '4px', color: i18n.language === 'en' ? '#007bff' : '#000000' }}>
-                {t('languageEnglish')}
-              </Typography>
-            </IconButton>
-            <IconButton onClick={() => changeLanguage('vi')} aria-label="Change language to Vietnamese">
-              <LanguageIcon sx={{ color: i18n.language === 'vi' ? '#007bff' : '#000000' }} />
-              <Typography sx={{ fontSize: '0.9rem', marginLeft: '4px', color: i18n.language === 'vi' ? '#007bff' : '#000000' }}>
-                {t('languageVietnamese')}
-              </Typography>
-            </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
