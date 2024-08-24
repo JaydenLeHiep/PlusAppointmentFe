@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Set the environment variable
-ENV REACT_APP_API_BASE_URL=http://plus-appointment-alb-274756742.eu-central-1.elb.amazonaws.com
+ENV REACT_APP_API_BASE_URL=https://plus-appointment.com
 
 # Build the app
 RUN npm run build
