@@ -6,16 +6,18 @@ import SearchIcon from '@mui/icons-material/Search';
 const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext, searchQuery, onSearchChange, view, isAddingNewCustomer }) => {
   return (
     <ButtonContainer>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-        <StyledButton
-          variant="contained"
-          color="primary"
-          onClick={onBackClick}
-          disabled={disableBack}
-        >
-          BACK
-        </StyledButton>
-      </Box>
+      {view !== 'thankYou' && (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+          <StyledButton
+            variant="contained"
+            color="primary"
+            onClick={onBackClick}
+            disabled={disableBack}
+          >
+            BACK
+          </StyledButton>
+        </Box>
+      )}
 
       {(view === 'services' || view === 'staffs') && (
         <StyledTextFieldContainer>

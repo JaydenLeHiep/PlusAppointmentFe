@@ -2,16 +2,16 @@ import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 
 export const BusinessInfoContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
-  padding: theme.spacing(4, 6), 
-  borderRadius: theme.shape.borderRadius * 2, 
-  boxShadow: theme.shadows[3], 
+  backgroundColor: '#ffffff', // White background for a clean, crisp look
+  padding: theme.spacing(4, 6),
+  borderRadius: '12px', // Soft rounded corners
   display: 'flex',
-  flexDirection: 'column', 
+  flexDirection: 'column',
   alignItems: 'center',
   textAlign: 'center',
+  marginBottom: theme.spacing(4), // Space below the container
   [theme.breakpoints.up('md')]: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     textAlign: 'left',
@@ -22,7 +22,7 @@ export const BusinessName = styled(Typography)(({ theme }) => ({
   fontWeight: theme.typography.fontWeightBold,
   color: theme.palette.text.primary,
   fontFamily: "'Dancing Script', cursive",
-  fontSize: '2.5rem', // Increased size for emphasis
+  fontSize: '2.5rem',
   marginBottom: theme.spacing(2),
   [theme.breakpoints.up('md')]: {
     fontSize: '3rem',

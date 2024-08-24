@@ -177,7 +177,7 @@ const CustomerDashboard = () => {
   if (error) {
     return (
       <Box sx={{ textAlign: 'center', padding: '20px' }}>
-        <Typography variant="h6" sx={{ color: '#ff1744' }}>{error}</Typography>
+                <Typography variant="h6" sx={{ color: '#ff1744' }}>{error}</Typography>
       </Box>
     );
   }
@@ -191,13 +191,10 @@ const CustomerDashboard = () => {
   }
 
   return (
-    <Box minHeight="100vh" sx={{ backgroundColor: '#f0f8ff' }}>
-      <Container>
-        <CustomerBusinessInfo
-          businessInfo={businessInfo}
-          view={view}
-        />
+    <Box minHeight="100vh" sx={{ backgroundColor: '#f0f8ff' }}> 
+      <CustomerBusinessInfo businessInfo={businessInfo} />
 
+      <Container>
         <BackAndNextButtons
           onBackClick={handleBackClick}
           onNextClick={handleNextClick}

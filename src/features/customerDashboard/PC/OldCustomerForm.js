@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Snackbar, Alert, Box, Typography } from '@mui/material';
+import { Snackbar, Alert, Box } from '@mui/material';
 import { fetchCustomerByEmailOrPhone } from '../../../lib/apiClientCustomer';
 import { useAppointmentsContext } from '../../../context/AppointmentsContext';
 import {
   CustomButton,          
   FormContainer,         
-  StyledTextField       
+  StyledTextField,
+  FormTitle,
+  NewCustomerLink,     
 } from '../../../styles/CustomerStyle/OldCustomerFormStyle'; 
 
 const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSuccess, onNewCustomer }) => {
@@ -70,7 +72,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
 
   return (
     <FormContainer>
-      <Typography variant="h6" sx={{ marginBottom: '16px' }}>Your Information</Typography>
+      <FormTitle>Your Information</FormTitle>
       <form onSubmit={handleFormSubmit}>
         <StyledTextField
           label="Email or Phone"
@@ -102,14 +104,11 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
         </Box>
 
         <Box mt={2} textAlign="center">
-          <Typography
-            variant="body2"
-            color="primary"
+          <NewCustomerLink
             onClick={onNewCustomer}
-            sx={{ textDecoration: 'underline', cursor: 'pointer' }}
           >
             If you are a new customer, click here
-          </Typography>
+          </NewCustomerLink>
         </Box>
       </form>
 
