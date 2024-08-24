@@ -6,7 +6,6 @@ export const ButtonContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   width: '100%',
-  marginTop: theme.spacing(3),
   marginBottom: theme.spacing(3),
   [theme.breakpoints.down('sm')]: {
     flexDirection: 'column',

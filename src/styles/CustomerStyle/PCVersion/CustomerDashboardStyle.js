@@ -1,4 +1,4 @@
-import { Box, TextField } from '@mui/material';
+import { Box, TextField, Typography, CircularProgress, Container } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 // DashboardContainer styling
@@ -14,8 +14,8 @@ export const ContentContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   minHeight: '82vh',
-  boxShadow: theme.shadows[4], 
-  padding: theme.spacing(1.25, 2.5), 
+  boxShadow: theme.shadows[4],
+  padding: theme.spacing(1.25, 2.5),
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(1.25, 1.25),
   },
@@ -55,10 +55,7 @@ export const CustomerListContainer = styled(Box)(({ theme }) => ({
   margin: 'auto',
   boxSizing: 'border-box',  // Ensure padding doesn't affect the size or position of items
   transition: 'box-shadow 0.3s ease, transform 0.3s ease',
-  '&:hover': {
-    boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.15)', // Slightly stronger hover shadow
-    transform: 'translateY(-2px)', // Subtle hover lift effect
-  },
+  
   [theme.breakpoints.down('md')]: {
     gridTemplateColumns: 'repeat(2, 1fr)', // Two columns on medium screens
   },
@@ -74,10 +71,9 @@ export const CustomerListHeader = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   marginBottom: theme.spacing(2),
-  padding: `0 ${theme.spacing(2)}px`, 
+  padding: `0 ${theme.spacing(2)}px`,
   width: '100%',
   boxSizing: 'border-box',
-
 }));
 
 // StyledTextField styling
@@ -89,6 +85,22 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     width: '100%',
-    marginTop: theme.spacing(2), // Add some space on top for smaller screens
+    marginTop: theme.spacing(2),
   },
+}));
+
+// ErrorTypography styling
+export const ErrorTypography = styled(Typography)(({ theme }) => ({
+  color: '#ff1744',
+}));
+
+// CustomCircularProgress styling
+export const CustomCircularProgress = styled(CircularProgress)(({ theme }) => ({
+  color: theme.palette.primary.main,
+}));
+
+// CustomContainer styling
+export const CustomContainer = styled(Container)(({ theme }) => ({
+  textAlign: 'center',
+  padding: theme.spacing(2.5),
 }));

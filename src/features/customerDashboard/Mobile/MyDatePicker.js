@@ -33,7 +33,6 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
           setNotAvailableTimeSlots([]);
         }
       };
-
       fetchSlots();
     }
   }, [staffId, selectedDate]);
