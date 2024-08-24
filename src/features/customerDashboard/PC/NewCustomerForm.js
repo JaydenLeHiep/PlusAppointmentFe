@@ -1,71 +1,68 @@
 import React, { useState } from 'react';
-import { Snackbar, Alert } from '@mui/material';
-import { addCustomer } from '../../../lib/apiClientCustomer';
+import { Snackbar, Alert, Box } from '@mui/material';
+import { useCustomersContext } from '../../../context/CustomerContext';
 import {
   CustomButton,
   FormContainer,
   StyledTextField,
-  StyledCheckbox,
-  StyledFormControlLabel
+  FormTitle,
 } from '../../../styles/CustomerStyle/NewCustomerFormStyle';
 
-const NewCustomerForm = ({ onCustomerIdReceived, onSwitchForm }) => {
+const NewCustomerForm = ({ businessId, selectedAppointments, onCustomerAdded }) => {
+  const { addNewCustomer } = useCustomersContext();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
-    saveData: false,
+    phone: ''
   });
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
-  const handleInputChange = (e) => {
-    const { name, value, checked, type } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
-
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    console.log("NewCustomerForm submitted with data:", formData);
+
     try {
       const customerDetails = {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
+        BusinessId: String(businessId)
       };
-      const newCustomer = await addCustomer(customerDetails);
-      onCustomerIdReceived(newCustomer.id);
-      setSubmitSuccess(true);
 
-      // Reset form data after submission if needed
+      // Add the new customer
+      const newCustomer = await addNewCustomer(customerDetails, businessId);
+      console.log("New customer added successfully:", newCustomer);
+
+      // Trigger success state and inform the parent component
+      setSubmitSuccess(true);
+      setSubmitError('');
+      onCustomerAdded(newCustomer); // Pass the customer data to the parent component
+
+      // Reset form data after successful addition
       setFormData({
         name: '',
         email: '',
-        phone: '',
-        saveData: false,
+        phone: ''
       });
 
-      // Redirect to OldCustomerForm after 3 seconds
-      setTimeout(() => {
-        setSubmitSuccess(false);
-        onSwitchForm();
-      }, 3000);
     } catch (error) {
-      setSubmitError('Error adding new customer');
-      console.error('Error adding new customer:', error.message);
+      console.error('Failed to add customer:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to add customer.';
+      setSubmitError(errorMessage);
     }
   };
 
   return (
     <FormContainer>
+      <FormTitle>New Customer</FormTitle>
       <form onSubmit={handleFormSubmit} style={{ width: '100%', maxWidth: '400px' }}>
         <StyledTextField
           label="Name"
           name="name"
           value={formData.name}
-          onChange={handleInputChange}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           fullWidth
           margin="normal"
           required
@@ -74,7 +71,7 @@ const NewCustomerForm = ({ onCustomerIdReceived, onSwitchForm }) => {
           label="Email"
           name="email"
           value={formData.email}
-          onChange={handleInputChange}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           fullWidth
           margin="normal"
           required
@@ -83,29 +80,20 @@ const NewCustomerForm = ({ onCustomerIdReceived, onSwitchForm }) => {
           label="Phone"
           name="phone"
           value={formData.phone}
-          onChange={handleInputChange}
+          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           fullWidth
           margin="normal"
           required
         />
-        <StyledFormControlLabel
-          control={
-            <StyledCheckbox
-              name="saveData"
-              checked={formData.saveData}
-              onChange={handleInputChange}
-            />
-          }
-          label="Save my data for future bookings"
-        />
-        <CustomButton
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={!formData.saveData}
-        >
-          Submit
-        </CustomButton>
+        <Box display="flex" justifyContent="center" mt={2}>
+          <CustomButton
+            type="submit"
+            variant="contained"
+            color="primary"
+          >
+            Submit
+          </CustomButton>
+        </Box>
       </form>
       <Snackbar
         open={submitSuccess}

@@ -45,20 +45,13 @@ export const fetchCustomers = async () => {
 
 // Add a new customer
 export const addCustomer = async (customerDetails) => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    throw new Error('User not authenticated');
-  }
-
   const response = await fetch(`${customerApiUrl}/add`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
     },
     body: JSON.stringify(customerDetails),
   });
-
   return await handleApiResponse(response);
 };
 
@@ -121,6 +114,7 @@ export const searchCustomersByName = async (name) => {
 // Function to check if a customer exists based on email or phone
 export const checkCustomerExists = async (emailOrPhone) => {
   const checkCustomerUrl = `${customerApiUrl}/find-customer`;
+
   const response = await fetch(checkCustomerUrl, {
     method: 'POST',
     headers: {
@@ -129,28 +123,30 @@ export const checkCustomerExists = async (emailOrPhone) => {
     body: JSON.stringify({ EmailOrPhone: emailOrPhone }),
   });
 
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message || 'Failed to check customer existence');
+  if (response.ok) {
+    const data = await response.json();
+    
+    if (data.customerId) {
+      return data.customerId; // Customer found
+    } else {
+      return null; // Customer not found
+    }
+  } else {
+    // Handle any other unexpected response without throwing an error
+    return null;
   }
-
-  return data.customerId;
 };
 
 //take customer id by phonenumber or mail
 export const fetchCustomerByEmailOrPhone = async (emailOrPhone) => {
-  const findCustomerApiUrl = `${customerApiUrl}/find-customer-by-name-or-phone?nameOrPhone=${encodeURIComponent(emailOrPhone)}`;
+  const findCustomerApiUrl = `${customerApiUrl}/find-customer`;
   const response = await fetch(findCustomerApiUrl, {
-    method: 'GET', // Use GET as per the backend implementation
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
+    body: JSON.stringify({ EmailOrPhone: emailOrPhone }),
   });
-
-  if (!response.ok) {
-    const errorMessage = await response.text(); // Get the text response to check what went wrong
-    throw new Error(errorMessage || 'Failed to fetch customer ID');
-  }
 
   const data = await response.json();
   return data.customerId;

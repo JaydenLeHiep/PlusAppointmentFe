@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 // CustomButton styling
@@ -53,16 +53,11 @@ export const StyledTextField = styled(TextField)({
   },
 });
 
-// StyledCheckbox styling
-export const StyledCheckbox = styled(Checkbox)({
-  color: '#007bff',
-});
-
-// StyledFormControlLabel styling
-export const StyledFormControlLabel = styled(FormControlLabel)({
-  marginBottom: '16px',
-  color: '#1976d2',
-  '& .MuiTypography-root': {
-    fontWeight: 'bold',
-  },
+// FormTitle styling for the title "New Customer"
+export const FormTitle = styled(Typography)({
+  fontSize: '40px',
+  fontWeight: 'bold',
+  color: '#333333',
+  marginBottom: '24px',
+  textAlign: 'center',
 });

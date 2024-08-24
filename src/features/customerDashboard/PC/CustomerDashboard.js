@@ -6,7 +6,9 @@ import ServiceList from './ServiceList';
 import StaffList from './StaffList';
 import MyDatePicker from './MyDatePicker';
 import AppointmentOverviewPage from './AppointmentOverviewPage';
-import CustomerForm from './CustomerForm';
+import OldCustomerForm from './OldCustomerForm';
+import NewCustomerForm from './NewCustomerForm';
+import ThankYou from './ThankYou';
 import { fetchBusinessesById } from '../../../lib/apiClientBusiness';
 import { CustomerListContainer } from '../../../styles/CustomerStyle/CustomerDashboardStyle';
 import BackAndNextButtons from './BackNextButtons';
@@ -26,7 +28,7 @@ const CustomerDashboard = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedAppointments, setSelectedAppointments] = useState([]);
-  const [showCustomerForm, setShowCustomerForm] = useState(false);
+  const [isAddingNewCustomer, setIsAddingNewCustomer] = useState(false);
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -69,7 +71,7 @@ const CustomerDashboard = () => {
 
   const handleStaffSelect = (staff) => {
     setSelectedStaff(staff);
-    setView('calendar'); // Automatically move to calendar view after selecting staff
+    setView('calendar');
   };
 
   const handleDateChange = (date) => {
@@ -116,31 +118,34 @@ const CustomerDashboard = () => {
       });
 
       setSelectedAppointments(uniqueAppointments);
-      setView('overview'); // Automatically move to overview view after confirming time
+      setView('overview');
     }
   };
 
   const handleFinish = () => {
-    setShowCustomerForm(true);
     setView('customerForm');
   };
 
   const handleBackClick = () => {
-    switch (view) {
-      case 'staffs':
-        setView('services');
-        break;
-      case 'calendar':
-        setView('staffs');
-        break;
-      case 'overview':
-        setView('calendar');
-        break;
-      case 'customerForm':
-        setView('overview');
-        break;
-      default:
-        break;
+    if (isAddingNewCustomer) {
+      setIsAddingNewCustomer(false);
+    } else {
+      switch (view) {
+        case 'staffs':
+          setView('services');
+          break;
+        case 'calendar':
+          setView('staffs');
+          break;
+        case 'overview':
+          setView('calendar');
+          break;
+        case 'customerForm':
+          setView('overview');
+          break;
+        default:
+          break;
+      }
     }
   };
 
@@ -150,6 +155,15 @@ const CustomerDashboard = () => {
     } else if (view === 'calendar') {
       handleConfirmTime();
     }
+  };
+
+  const handleNewCustomerSuccess = () => {
+    setIsAddingNewCustomer(false); 
+  };
+
+  const handleAppointmentSuccess = () => {
+    console.log("Appointment successfully created, switching to ThankYou view");
+    setView('thankYou'); 
   };
 
   if (!businessId) {
@@ -176,18 +190,6 @@ const CustomerDashboard = () => {
     );
   }
 
-  if (showCustomerForm) {
-    return (
-      <CustomerForm
-        selectedAppointments={selectedAppointments}
-        businessId={businessId}
-        onAppointmentSuccess={() => {
-          // handle success here, maybe reset state or navigate away
-        }}
-      />
-    );
-  }
-
   return (
     <Box minHeight="100vh" sx={{ backgroundColor: '#f0f8ff' }}>
       <Container>
@@ -203,6 +205,8 @@ const CustomerDashboard = () => {
           disableNext={view !== 'services' || selectedServices.length === 0}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          view={view}
+          isAddingNewCustomer={isAddingNewCustomer}
         />
 
         {view === 'services' && (
@@ -245,6 +249,24 @@ const CustomerDashboard = () => {
             onFinish={handleFinish}
           />
         )}
+
+        {view === 'customerForm' && (
+          !isAddingNewCustomer ? (
+            <OldCustomerForm
+              selectedAppointments={selectedAppointments}
+              businessId={businessId}
+              onAppointmentSuccess={handleAppointmentSuccess} 
+              onNewCustomer={() => setIsAddingNewCustomer(true)}
+            />
+          ) : (
+            <NewCustomerForm
+              businessId={businessId}
+              onCustomerAdded={handleNewCustomerSuccess}
+            />
+          )
+        )}
+
+        {view === 'thankYou' && <ThankYou />} 
       </Container>
     </Box>
   );
