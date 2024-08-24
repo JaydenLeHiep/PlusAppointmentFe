@@ -5,7 +5,7 @@ import { Box, Typography, Button, ListItem, ListItemText } from '@mui/material';
 export const OverviewContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4),
   backgroundColor: 'transparent',
-  maxWidth: '100%',
+  maxWidth: '1200px',
   margin: 'auto',
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(2),
