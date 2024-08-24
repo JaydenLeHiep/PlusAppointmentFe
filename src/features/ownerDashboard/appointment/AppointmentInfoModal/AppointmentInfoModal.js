@@ -40,7 +40,13 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services }) =
     // Update state when a new appointment is passed as a prop
     useEffect(() => {
         if (appointment) {
-            const localAppointmentTime = new Date(appointment.appointmentTime).toISOString().slice(0, 16); // Convert to local time and format
+            // Convert UTC time from the server to local time
+            const utcDate = new Date(appointment.appointmentTime);
+            const localDate = new Date(utcDate.getTime() - utcDate.getTimezoneOffset() * 60000);
+            
+            // Format to 'YYYY-MM-DDTHH:mm' for input field
+            const localAppointmentTime = localDate.toISOString().slice(0, 16);
+
             setUpdatedAppointment({
                 customerId: appointment.customerId || '',
                 customerName: appointment.customerName || '',
