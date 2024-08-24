@@ -36,6 +36,7 @@ const CustomerDashboard = () => {
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedAppointments, setSelectedAppointments] = useState([]);
   const [isAddingNewCustomer, setIsAddingNewCustomer] = useState(false);
+  const [, setRedirectingToOldCustomerForm] = useState(false);
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -165,6 +166,13 @@ const CustomerDashboard = () => {
   };
 
   const handleNewCustomerSuccess = () => {
+    setRedirectingToOldCustomerForm(true);
+  
+    setTimeout(() => {
+      setIsAddingNewCustomer(false);
+      setView('customerForm');
+      setRedirectingToOldCustomerForm(false);
+    }, 5000);
   };
 
   const handleAppointmentSuccess = () => {
@@ -283,16 +291,16 @@ const CustomerDashboard = () => {
             />
           ) : (
             <NewCustomerForm
-              businessId={businessId}
-              onCustomerAdded={handleNewCustomerSuccess}
-            />
-          )
-        )}
+            businessId={businessId}
+            onCustomerAdded={handleNewCustomerSuccess}
+          />
+        )
+      )}
 
-        {view === 'thankYou' && <ThankYou />}
-      </CustomContainer>
-    </DashboardContainer>
-  );
+      {view === 'thankYou' && <ThankYou />}
+    </CustomContainer>
+  </DashboardContainer>
+);
 };
 
 export default CustomerDashboard;
