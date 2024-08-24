@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Snackbar, Alert, Box } from '@mui/material';
 import { fetchCustomerByEmailOrPhone } from '../../../lib/apiClientCustomer';
 import { useAppointmentsContext } from '../../../context/AppointmentsContext';
+import moment from 'moment-timezone'; 
 import {
   CustomButton,          
   FormContainer,         
@@ -38,11 +39,14 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
           console.error('Received selectedAppointments:', selectedAppointments);
           throw new Error('Selected appointments data is not in the correct format.');
         }
-  
+
+        // Convert the selected appointment time from local time to UTC
+        const utcAppointmentTime = moment.tz(selectedAppointments[0].appointmentTime, moment.tz.guess()).utc().format('YYYY-MM-DDTHH:mm:ss');
+
         const combinedAppointmentDetails = {
           customerId: parseInt(customerId, 10),
           businessId: parseInt(businessId, 10),
-          appointmentTime: selectedAppointments[0].appointmentTime, 
+          appointmentTime: utcAppointmentTime, // Use the UTC time here
           status: 'Pending',
           comment: comment || '',
           services: selectedAppointments.flatMap(appointment => 

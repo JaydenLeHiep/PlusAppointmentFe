@@ -140,8 +140,8 @@ export const updateAppointment = async (appointmentId, updateData) => {
   return response.json();
 };
 
-// Fetch available time slots for a specific staff member and date
-export const fetchAvailableTimeSlots = async (staffId, date) => {
+// Fetch not available time slots for a specific staff member and date
+export const fetchNotAvailableTimeSlots = async (staffId, date) => {
   if (!staffId || !date) {
     throw new Error('Staff ID and date are required');
   }
@@ -149,7 +149,7 @@ export const fetchAvailableTimeSlots = async (staffId, date) => {
   // Use moment to format the date consistently
   const formattedDate = moment(date).format('YYYY-MM-DD');
 
-  const response = await fetch(`${appointmentApiUrl}/available-timeslots?staffId=${staffId}&date=${formattedDate}`, {
+  const response = await fetch(`${appointmentApiUrl}/not-available-timeslots?staffId=${staffId}&date=${formattedDate}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ export const fetchAvailableTimeSlots = async (staffId, date) => {
 
   if (!response.ok) {
     const data = await response.json();
-    throw new Error(data.message || 'Failed to fetch available time slots');
+    throw new Error(data.message || 'Failed to fetch not available time slots');
   }
 
   const data = await response.json();
