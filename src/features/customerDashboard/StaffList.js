@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CircularProgress, Box, Alert, Typography, IconButton, Collapse } from '@mui/material';
 import { useStaffsContext } from '../../context/StaffsContext';
 import { ListItem, ItemBoldText, ItemText } from '../../styles/CustomerStyle/ListItemStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
+const StaffList = ({ businessId, onStaffSelect, searchQuery, selectedStaff }) => {
   const { staff, fetchAllStaff } = useStaffsContext();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -50,8 +50,8 @@ const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
       {filteredStaff.map(staffMember => (
         <ListItem
           key={staffMember.staffId}
-          selected={expandedStaff === staffMember.staffId}
-          onClick={() => handleStaffClick(staffMember)}
+          selected={selectedStaff && selectedStaff.staffId === staffMember.staffId}
+          onClick={() => handleStaffClick(staffMember)} // Toggle selection on click
           sx={{ marginBottom: 2 }}
         >
           <Box

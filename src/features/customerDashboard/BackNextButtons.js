@@ -29,7 +29,7 @@ const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <SearchIcon />
+                  <SearchIcon style={{ color: '#1976d2' }} /> {/* Blue icon for brand consistency */}
                 </InputAdornment>
               ),
             }}

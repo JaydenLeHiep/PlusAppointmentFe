@@ -31,7 +31,7 @@ const CustomerDashboard = () => {
   const [view, setView] = useState('services');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
-  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [selectedStaff, setSelectedStaff] = useState(null);  // Change to a single selectedStaff
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedAppointments, setSelectedAppointments] = useState([]);
@@ -71,15 +71,14 @@ const CustomerDashboard = () => {
     setSelectedServices(selectedServices.filter(s => s.serviceId !== service.serviceId));
   };
 
+  const handleStaffSelect = (staff) => {
+    setSelectedStaff(staff);  // Only allow one staff to be selected
+  };
+
   const handleNextFromServices = () => {
     if (selectedServices.length > 0) {
       setView('staffs');
     }
-  };
-
-  const handleStaffSelect = (staff) => {
-    setSelectedStaff(staff);
-    setView('calendar');
   };
 
   const handleDateChange = (date) => {
@@ -160,6 +159,8 @@ const CustomerDashboard = () => {
   const handleNextClick = () => {
     if (view === 'services') {
       handleNextFromServices();
+    } else if (view === 'staffs') {
+      setView('calendar');
     } else if (view === 'calendar') {
       handleConfirmTime();
     }
@@ -180,7 +181,7 @@ const CustomerDashboard = () => {
   };
 
   if (!businessId) {
-    return (
+        return (
       <ErrorContainer>
         <ErrorTypography variant="h6">
           Error: Business ID not provided
@@ -232,7 +233,11 @@ const CustomerDashboard = () => {
           onBackClick={handleBackClick}
           onNextClick={handleNextClick}
           disableBack={view === 'services'}
-          disableNext={view !== 'services' || selectedServices.length === 0}
+          disableNext={
+            (view === 'services' && selectedServices.length === 0) ||
+            (view === 'staffs' && !selectedStaff) ||
+            (view === 'calendar' && (!selectedDate || !selectedTime))
+          }
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           view={view}
@@ -256,7 +261,8 @@ const CustomerDashboard = () => {
             <StaffList
               businessId={businessId}
               searchQuery={searchQuery}
-              onStaffSelect={handleStaffSelect}
+              selectedStaff={selectedStaff} // Pass the selectedStaff state
+              onStaffSelect={handleStaffSelect} // Use handleStaffSelect for selection
             />
           </CustomerListContainer>
         )}

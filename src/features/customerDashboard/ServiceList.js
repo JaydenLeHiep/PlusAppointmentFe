@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CircularProgress, Box, Alert, Typography, IconButton, Collapse, Button } from '@mui/material';
+import { CircularProgress, Box, Alert, Typography, IconButton, Collapse } from '@mui/material';
 import { useServicesContext } from '../../context/ServicesContext';
 import { ListItem, ItemBoldText, ItemText } from '../../styles/CustomerStyle/ListItemStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -36,7 +36,11 @@ const ServiceList = ({ businessId, onServiceSelect, searchQuery, selectedService
   };
 
   const handleServiceClick = (service) => {
-    onServiceSelect(service);
+    if (isServiceSelected(service)) {
+      onServiceDeselect(service);
+    } else {
+      onServiceSelect(service);
+    }
   };
 
   return (
@@ -45,6 +49,7 @@ const ServiceList = ({ businessId, onServiceSelect, searchQuery, selectedService
         <ListItem
           key={service.serviceId}
           selected={isServiceSelected(service)}
+          onClick={() => handleServiceClick(service)} // Toggle selection on click
         >
           <Box
             display="flex"
@@ -54,7 +59,7 @@ const ServiceList = ({ businessId, onServiceSelect, searchQuery, selectedService
           >
             <ItemBoldText>{service.name}</ItemBoldText>
             {isMobile && (
-              <IconButton onClick={() => handleToggleExpand(service.serviceId)}>
+              <IconButton onClick={(e) => { e.stopPropagation(); handleToggleExpand(service.serviceId); }}>
                 <ExpandMoreIcon
                   style={{
                     transform: expandedService === service.serviceId ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -68,17 +73,6 @@ const ServiceList = ({ businessId, onServiceSelect, searchQuery, selectedService
             <ItemText>{service.duration}</ItemText>
             <ItemText>€{service.price}</ItemText>
             <ItemText>{service.description}</ItemText>
-            {isMobile && (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleServiceClick(service)}
-                fullWidth
-                style={{ marginTop: '8px' }}
-              >
-                Choose Service
-              </Button>
-            )}
           </Collapse>
         </ListItem>
       ))}

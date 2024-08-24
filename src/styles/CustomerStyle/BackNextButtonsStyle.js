@@ -8,14 +8,14 @@ export const ButtonContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   marginBottom: theme.spacing(2.5),
   [theme.breakpoints.down('sm')]: {
-    flexDirection: 'row', // Ensure row direction on mobile as well
-    alignItems: 'center', // Center items vertically
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 }));
 
 export const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: 'bold',
-  padding: theme.spacing(1.5, 4),
+  padding: theme.spacing(1.5, 4), // Default padding for PC
   fontSize: '1rem',
   borderRadius: '8px',
   boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
@@ -25,9 +25,9 @@ export const StyledButton = styled(Button)(({ theme }) => ({
     boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.2)',
   },
   [theme.breakpoints.down('sm')]: {
-    marginBottom: 0, // Remove bottom margin on mobile
-    width: 'auto', // Keep auto width for buttons
-    padding: theme.spacing(1.5, 2), // Adjust padding for smaller screens
+    padding: theme.spacing(1, 2), // Smaller padding for mobile
+    fontSize: '0.875rem', // Smaller font size for mobile
+    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)', // Lighter shadow for mobile
   },
 }));
 
@@ -38,9 +38,9 @@ export const StyledTextFieldContainer = styled(Box)(({ theme }) => ({
   flexGrow: 1,
   boxSizing: 'border-box',
   [theme.breakpoints.down('sm')]: {
-    marginTop: 0, // Remove top margin on mobile
-    width: 'auto', // Keep auto width for search bar
-    justifyContent: 'center', // Keep centered
+    marginTop: 0,
+    width: 'auto',
+    justifyContent: 'center',
   },
 }));
 
@@ -49,17 +49,17 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
     '& fieldset': {
       borderRadius: '30px',
     },
-    height: '44px', // Reduce height for mobile
-    paddingRight: theme.spacing(1), 
-    paddingLeft: theme.spacing(1), 
+    height: '44px', // Default height for PC
+    paddingRight: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
   },
   '& .MuiInputBase-input': {
     textAlign: 'left',
   },
-  width: '100%', // Full width for search bar on mobile
-  maxWidth: '300px', // Restrict max-width for better fit
+  width: '100%',
+  maxWidth: '300px', // Default max-width for PC
   [theme.breakpoints.down('sm')]: {
-    marginTop: 0, // Remove top margin on mobile
-    width: 'auto', // Keep auto width
+    height: '40px', // Reduced height for mobile
+    maxWidth: '200px', // Reduced width for mobile
   },
 }));
