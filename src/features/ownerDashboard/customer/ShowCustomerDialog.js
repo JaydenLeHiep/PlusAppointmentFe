@@ -15,6 +15,9 @@ import { useCustomersContext } from '../../../context/CustomerContext.js';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import CustomerList from './CustomerList.js';
 import CustomerForm from './CustomerForm';
+import * as signalR from '@microsoft/signalr';
+
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const ShowCustomerDialog = ({ open, onClose, businessId }) => {
   const { t } = useTranslation('showCustomerDialog');
@@ -34,6 +37,7 @@ const ShowCustomerDialog = ({ open, onClose, businessId }) => {
 
   const alertRef = useRef(null);
   const formRef = useRef(null);
+  const connectionRef = useRef(null); // Use a ref for SignalR connection
 
   useEffect(() => {
     if (open) {
@@ -52,6 +56,37 @@ const ShowCustomerDialog = ({ open, onClose, businessId }) => {
       return () => clearTimeout(timer);
     }
   }, [alert]);
+
+  // Setup SignalR connection
+  useEffect(() => {
+    const connectToHub = async () => {
+      const newConnection = new signalR.HubConnectionBuilder()
+        .withUrl(`${apiBaseUrl}/appointmentHub`)
+        .withAutomaticReconnect()
+        .build();
+
+      try {
+        await newConnection.start();
+        console.log('Connected to SignalR hub');
+        connectionRef.current = newConnection;
+
+        newConnection.on('ReceiveCustomerUpdate', async (message) => {
+          console.log('New customer update:', message);
+          await fetchCustomersForBusiness(businessId); // Refresh the customer list
+        });
+      } catch (error) {
+        console.error('Error connecting to SignalR hub:', error);
+      }
+    };
+
+    connectToHub();
+
+    return () => {
+      if (connectionRef.current) {
+        connectionRef.current.stop();
+      }
+    };
+  }, [businessId, fetchCustomersForBusiness]);
 
   const closeFormAndExecuteAction = async (action) => {
     setIsFormOpen(false);
