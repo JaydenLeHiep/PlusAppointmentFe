@@ -19,7 +19,7 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
 
   React.useEffect(() => {
     if (staffId && selectedDate) {
-      const formattedDate = selectedDate.format('YYYY-MM-DD'); // Format as YYYY-MM-DD
+      const formattedDate = selectedDate.format('YYYY-MM-DD'); 
 
       const fetchTimeSlots = async () => {
         try {

@@ -3,7 +3,7 @@ import { Box, InputAdornment } from '@mui/material';
 import { ButtonContainer, StyledButton, StyledTextFieldContainer, StyledTextField } from '../../../styles/CustomerStyle/BackNextButtonsStyle';
 import SearchIcon from '@mui/icons-material/Search';
 
-const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext, searchQuery, onSearchChange, view }) => {
+const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext, searchQuery, onSearchChange, view, isAddingNewCustomer }) => {
   return (
     <ButtonContainer>
       <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
@@ -35,7 +35,7 @@ const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext
         </StyledTextFieldContainer>
       )}
 
-      {view !== 'calendar' && view !== 'overview' && view !== 'customerForm' && (
+      {(view === 'services' || view === 'staffs') && (
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <StyledButton
             variant="contained"

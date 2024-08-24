@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { Snackbar, Alert } from '@mui/material';
-import { useCustomersContext } from '../../../context/CustomerContext'; 
-import { useAppointmentsContext } from '../../../context/AppointmentsContext'; 
+import { Snackbar, Alert, Box } from '@mui/material';
+import { useCustomersContext } from '../../../context/CustomerContext';
 import {
   CustomButton,
   FormContainer,
-  StyledTextField
+  StyledTextField,
+  FormTitle,
 } from '../../../styles/CustomerStyle/NewCustomerFormStyle';
 
-const NewCustomerForm = ({ businessId, selectedAppointments, onAppointmentSuccess, onSwitchForm }) => {
-  const { checkIfCustomerExists, addNewCustomer } = useCustomersContext();
-  const { addAppointmentAndUpdateList } = useAppointmentsContext();
+const NewCustomerForm = ({ businessId, selectedAppointments, onCustomerAdded }) => {
+  const { addNewCustomer } = useCustomersContext();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -20,27 +19,11 @@ const NewCustomerForm = ({ businessId, selectedAppointments, onAppointmentSucces
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    console.log("NewCustomerForm submitted with data:", formData);
 
-  const handleAddCustomer = async () => {
     try {
-      console.log('Checking if customer exists with email/phone:', formData.email || formData.phone);
-      const existingCustomerId = await checkIfCustomerExists(formData.email || formData.phone);
-
-      if (existingCustomerId) {
-        console.warn('User already exists. Customer ID:', existingCustomerId);
-        setSubmitError('User already exists. Please switch to the Existing Customer form.');
-        return;
-      } else {
-        console.log('Customer does not exist, proceeding to add new customer.');
-      }
-
       const customerDetails = {
         name: formData.name,
         email: formData.email,
@@ -48,69 +31,38 @@ const NewCustomerForm = ({ businessId, selectedAppointments, onAppointmentSucces
         BusinessId: String(businessId)
       };
 
+      // Add the new customer
       const newCustomer = await addNewCustomer(customerDetails, businessId);
-      console.log('New customer added successfully:', newCustomer);
+      console.log("New customer added successfully:", newCustomer);
 
+      // Trigger success state and inform the parent component
       setSubmitSuccess(true);
       setSubmitError('');
+      onCustomerAdded(newCustomer); // Pass the customer data to the parent component
 
-      // Reset form data after submission if needed
+      // Reset form data after successful addition
       setFormData({
         name: '',
         email: '',
         phone: ''
       });
 
-      // Combine all services into one appointment object
-      const combinedAppointmentDetails = {
-        customerId: parseInt(newCustomer.id, 10),
-        businessId: parseInt(businessId, 10),
-        appointmentTime: selectedAppointments[0].appointmentTime, // Use the appointment time from the first service (assumes all services share the same date and time)
-        status: 'Pending',
-        comment: '', // Add a comment if needed
-        services: selectedAppointments.flatMap(appointment => 
-          appointment.services.map(service => ({
-            serviceId: service.serviceId,
-            staffId: service.staffId,
-            duration: service.duration,
-            price: service.price,
-          }))
-        )
-      };
-
-      console.log('Adding appointment for new customer:', combinedAppointmentDetails);
-      await addAppointmentAndUpdateList(combinedAppointmentDetails);
-      console.log('Appointment added successfully for new customer:', combinedAppointmentDetails);
-
-      // Notify parent component of successful appointment creation
-      onAppointmentSuccess(newCustomer.id, selectedAppointments);
-
-      // Redirect to OldCustomerForm after 3 seconds
-      setTimeout(() => {
-        setSubmitSuccess(false);
-        onSwitchForm(); // Switch to the Old Customer form
-      }, 3000);
-
     } catch (error) {
       console.error('Failed to add customer:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Error adding new customer';
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to add customer.';
       setSubmitError(errorMessage);
     }
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    handleAddCustomer();
-  };
-
   return (
     <FormContainer>
+      <FormTitle>New Customer</FormTitle>
       <form onSubmit={handleFormSubmit} style={{ width: '100%', maxWidth: '400px' }}>
         <StyledTextField
           label="Name"
           name="name"
           value={formData.name}
-          onChange={handleInputChange}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           fullWidth
           margin="normal"
           required
@@ -119,7 +71,7 @@ const NewCustomerForm = ({ businessId, selectedAppointments, onAppointmentSucces
           label="Email"
           name="email"
           value={formData.email}
-          onChange={handleInputChange}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           fullWidth
           margin="normal"
           required
@@ -128,18 +80,20 @@ const NewCustomerForm = ({ businessId, selectedAppointments, onAppointmentSucces
           label="Phone"
           name="phone"
           value={formData.phone}
-          onChange={handleInputChange}
+          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           fullWidth
           margin="normal"
           required
         />
-        <CustomButton
-          type="submit"
-          variant="contained"
-          color="primary"
-        >
-          Submit
-        </CustomButton>
+        <Box display="flex" justifyContent="center" mt={2}>
+          <CustomButton
+            type="submit"
+            variant="contained"
+            color="primary"
+          >
+            Submit
+          </CustomButton>
+        </Box>
       </form>
       <Snackbar
         open={submitSuccess}
