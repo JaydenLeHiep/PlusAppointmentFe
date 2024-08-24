@@ -6,7 +6,7 @@ import {
   OverviewText,
   OverviewButton,
   StyledListItemText,
-} from '../../../styles/CustomerStyle/PCVersion/AppointmentOverViewPageStyle';
+} from '../../styles/CustomerStyle/AppointmentOverViewPageStyle';
 
 const formatDate = (appointmentTime) => {
   const d = new Date(appointmentTime);

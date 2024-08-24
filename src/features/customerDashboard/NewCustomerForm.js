@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Snackbar, Alert, Box } from '@mui/material';
-import { useCustomersContext } from '../../../context/CustomerContext';
+import { Snackbar, Alert, Box, Checkbox, Typography, CircularProgress } from '@mui/material';
+import { useCustomersContext } from '../../context/CustomerContext';
 import {
   CustomButton,
   FormContainer,
   StyledTextField,
   FormTitle,
-} from '../../../styles/CustomerStyle/PCVersion/NewCustomerFormStyle';
+} from '../../styles/CustomerStyle/NewCustomerFormStyle';
 
-const NewCustomerForm = ({ businessId, selectedAppointments, onCustomerAdded }) => {
+const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
   const { addNewCustomer } = useCustomersContext();
 
   const [formData, setFormData] = useState({
@@ -18,6 +18,9 @@ const NewCustomerForm = ({ businessId, selectedAppointments, onCustomerAdded }) 
   });
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [showRedirectMessage, setShowRedirectMessage] = useState(false);
+  const [countdown, setCountdown] = useState(5);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +39,7 @@ const NewCustomerForm = ({ businessId, selectedAppointments, onCustomerAdded }) 
       // Trigger success state and inform the parent component
       setSubmitSuccess(true);
       setSubmitError('');
-      onCustomerAdded(newCustomer); // Pass the customer data to the parent component
+      onCustomerAdded(newCustomer);
 
       // Reset form data after successful addition
       setFormData({
@@ -44,6 +47,19 @@ const NewCustomerForm = ({ businessId, selectedAppointments, onCustomerAdded }) 
         email: '',
         phone: ''
       });
+
+      // Show the redirect message and start countdown
+      setShowRedirectMessage(true);
+      const countdownInterval = setInterval(() => {
+        setCountdown((prevCount) => {
+          if (prevCount <= 1) {
+            clearInterval(countdownInterval);
+            setShowRedirectMessage(false);
+            onCustomerAdded(newCustomer); 
+          }
+          return prevCount - 1;
+        });
+      }, 1000);
 
     } catch (error) {
       console.error('Failed to add customer:', error);
@@ -83,16 +99,47 @@ const NewCustomerForm = ({ businessId, selectedAppointments, onCustomerAdded }) 
           margin="normal"
           required
         />
+
+        <Box display="flex" alignItems="center" mt={2}>
+          <Checkbox
+            checked={acceptTerms}
+            onChange={(e) => setAcceptTerms(e.target.checked)}
+            color="primary"
+          />
+          <Typography variant="body2">
+            I accept to provide my email and phone number to book a new appointment
+          </Typography>
+        </Box>
+
         <Box display="flex" justifyContent="center" mt={2}>
           <CustomButton
             type="submit"
             variant="contained"
             color="primary"
+            disabled={!acceptTerms}  // Disable the button if the checkbox is not checked
           >
             Submit
           </CustomButton>
         </Box>
       </form>
+
+      {showRedirectMessage && (
+        <Box mt={2} textAlign="center">
+          <Typography variant="body2" color="success.main" mb={2}>
+            Add your data successfully! Please come back to Your Information to finish booking.
+          </Typography>
+          <CircularProgress
+            variant="determinate"
+            value={(countdown / 5) * 100}
+            size={40}
+            thickness={4}
+          />
+          <Typography variant="body2" mt={1}>
+            Redirecting in {countdown}...
+          </Typography>
+        </Box>
+      )}
+
       <Snackbar
         open={submitSuccess}
         autoHideDuration={3000}

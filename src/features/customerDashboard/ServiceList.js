@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { CircularProgress, Box, Alert, Typography } from '@mui/material';
-import { useServicesContext } from '../../../context/ServicesContext';
-import { ListItem, ItemBoldText, ItemText } from '../../../styles/CustomerStyle/PCVersion/ListItemStyles';
+import { useServicesContext } from '../../context/ServicesContext';
+import { ListItem, ItemBoldText, ItemText } from '../../styles/CustomerStyle/ListItemStyles';
 
 const ServiceList = ({ businessId, onServiceSelect, searchQuery, selectedServices, onServiceDeselect }) => {
   const { services, fetchServices, loading, error } = useServicesContext();

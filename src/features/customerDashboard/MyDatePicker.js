@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchNotAvailableTimeSlots } from '../../../lib/apiClientAppointment'; 
+import { fetchNotAvailableTimeSlots } from '../../lib/apiClientAppointment'; 
 import moment from 'moment-timezone';
 import {
   StyledDatePicker,
@@ -8,7 +8,7 @@ import {
   SectionTitle,
   TimeSlotsGrid,
   ConfirmButton,
-} from '../../../styles/CustomerStyle/PCVersion/MydatePickerStyle';
+} from '../../styles/CustomerStyle/MydatePickerStyle';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { TextField, Box, Grid, Typography } from '@mui/material';

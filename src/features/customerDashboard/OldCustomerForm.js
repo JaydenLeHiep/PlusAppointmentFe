@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Snackbar, Alert, Box } from '@mui/material';
-import { fetchCustomerByEmailOrPhone } from '../../../lib/apiClientCustomer';
-import { useAppointmentsContext } from '../../../context/AppointmentsContext';
+import { fetchCustomerByEmailOrPhone } from '../../lib/apiClientCustomer';
+import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import {
   CustomButton,          
   FormContainer,         
   StyledTextField,
   FormTitle,
   NewCustomerLink,     
-} from '../../../styles/CustomerStyle/PCVersion/OldCustomerFormStyle'; 
+} from '../../styles/CustomerStyle/OldCustomerFormStyle'; 
 
 const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSuccess, onNewCustomer }) => {
   const [emailOrPhone, setEmailOrPhone] = useState('');

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, InputAdornment } from '@mui/material';
-import { ButtonContainer, StyledButton, StyledTextFieldContainer, StyledTextField } from '../../../styles/CustomerStyle/PCVersion/BackNextButtonsStyle';
+import { ButtonContainer, StyledButton, StyledTextFieldContainer, StyledTextField } from '../../styles/CustomerStyle/BackNextButtonsStyle';
 import SearchIcon from '@mui/icons-material/Search';
 
 const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext, searchQuery, onSearchChange, view, isAddingNewCustomer }) => {
