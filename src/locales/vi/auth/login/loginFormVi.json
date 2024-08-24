@@ -1,0 +1,7 @@
+{
+  "usernameOrEmail": "Tên người dùng hoặc Email",
+  "password": "Mật khẩu",
+  "login": "Đăng nhập",
+  "loginSuccessful": "Đăng nhập thành công!",
+  "loginFailed": "Không thể đăng nhập. Vui lòng thử lại."
+}

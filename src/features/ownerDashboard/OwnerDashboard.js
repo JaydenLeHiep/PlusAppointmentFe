@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Card, Box, CircularProgress, Alert } from '@mui/material';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import BusinessList from './BusinessList';
 import BusinessDetails from './BusinessDetails';
-import AppointmentList from '../appointment/AppointmentList'; // Ensure AppointmentList is imported
+import AppointmentList from '../ownerDashboard/appointment/AppointmentList';
 import { fetchBusinesses } from '../../lib/apiClientBusiness';
-import { useAppointmentsContext } from '../appointment/AppointmentsContext';
-import { useStaffsContext } from '../staff/StaffsContext';
-import { useServicesContext } from '../servicecomponent/ServicesContext';
-import '../../styles/css/OwnerCss/OwnerDashboard.css';
+import { useAppointmentsContext } from '../../context/AppointmentsContext';
+import { useStaffsContext } from '../../context/StaffsContext';
+import { useServicesContext } from '../../context/ServicesContext';
+
+import * as signalR from '@microsoft/signalr';
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const OwnerDashboard = () => {
   const { appointments, fetchAppointmentsForBusiness } = useAppointmentsContext();
@@ -20,6 +22,7 @@ const OwnerDashboard = () => {
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const connectionRef = useRef(null); // Use a ref for SignalR connection
 
   useEffect(() => {
     const loadBusinesses = async () => {
@@ -66,6 +69,39 @@ const OwnerDashboard = () => {
     }
   }, [selectedBusiness, fetchAppointmentsForBusiness, fetchAllStaff, fetchServices]);
 
+  // Setup SignalR connection
+  useEffect(() => {
+    const connectToHub = async () => {
+      const newConnection = new signalR.HubConnectionBuilder()
+        .withUrl(`${apiBaseUrl}/appointmentHub`)
+        .withAutomaticReconnect()
+        .build();
+
+      try {
+        await newConnection.start();
+        console.log('Connected to SignalR hub');
+        connectionRef.current = newConnection;
+
+        newConnection.on('ReceiveAppointmentUpdate', async (message) => {
+          console.log('New appointment update:', message);
+          if (selectedBusiness && selectedBusiness.businessId) {
+            await fetchAppointmentsForBusiness(selectedBusiness.businessId); // Refresh the appointments
+          }
+        });
+      } catch (error) {
+        console.error('Error connecting to SignalR hub:', error);
+      }
+    };
+
+    connectToHub();
+
+    return () => {
+      if (connectionRef.current) {
+        connectionRef.current.stop();
+      }
+    };
+  }, [selectedBusiness, fetchAppointmentsForBusiness]);
+
   const handleBusinessClick = (business) => {
     setSelectedBusiness(business);
   };
@@ -73,14 +109,49 @@ const OwnerDashboard = () => {
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar />
-      <Box className="dashboard-hero">
+      <Box
+        sx={{
+          backgroundColor: '#f0f8ff',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+          padding: { xs: '0 1rem', md: '0 2rem' },
+          flex: 1,
+        }}
+      >
         <Container
-          className="d-flex align-items-center justify-content-center"
-          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '82vh', paddingTop: 0, marginTop: 0 }}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '82vh',
+            paddingTop: 0,
+            marginTop: 0,
+          }}
         >
-          <Card className="dashboard-container">
+          <Card
+            sx={{
+              width: '100%',
+              maxWidth: '100%',
+              padding: { xs: '1rem', md: '2rem' },
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+              borderRadius: '8px',
+              marginTop: { xs: '10px', md: '30px' },
+              marginBottom: { xs: '10px', md: '30px' },
+              textAlign: 'left',
+              display: 'flex',
+              flexDirection: 'column',
+              flexGrow: 1,
+            }}
+          >
             {loading ? (
-              <CircularProgress />
+              <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+                <CircularProgress />
+              </Box>
             ) : error ? (
               <Alert severity="error">{error}</Alert>
             ) : selectedBusiness ? (
@@ -92,7 +163,12 @@ const OwnerDashboard = () => {
                   services={services}
                   appointments={appointments}
                 />
-                <AppointmentList appointments={appointments} /> {/* Added AppointmentList here */}
+                <AppointmentList
+                  appointments={appointments}
+                  staff={staff}
+                  services={services}
+                  businessId={selectedBusiness.businessId}
+                />
               </>
             ) : (
               <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />

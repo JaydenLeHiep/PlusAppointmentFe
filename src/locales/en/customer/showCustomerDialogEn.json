@@ -1,0 +1,16 @@
+{
+  
+    "customerListTitle": "Customer List",
+    "addNewCustomer": "Add New Customer",
+    "customerAddedSuccess": "Customer added successfully!",
+    "customerAddedError": "Failed to add customer. Please try again.",
+    "customerUpdatedSuccess": "Customer updated successfully!",
+    "customerUpdatedError": "Failed to update customer. Please try again.",
+    "customerDeletedSuccess": "Customer deleted successfully!",
+    "customerDeletedError": "Failed to delete customer. Please try again.",
+    "confirmDeleteTitle": "Confirm Deletion",
+    "confirmDeleteContent": "Are you sure you want to delete this customer?",
+    "addCustomer": "Add Customer",
+    "updateCustomer": "Update Customer"
+  
+}

@@ -1,0 +1,16 @@
+{
+  
+    "customerListTitle": "Danh Sách Khách Hàng",
+    "addNewCustomer": "Thêm Khách Hàng Mới",
+    "customerAddedSuccess": "Thêm khách hàng thành công!",
+    "customerAddedError": "Không thể thêm khách hàng. Vui lòng thử lại.",
+    "customerUpdatedSuccess": "Cập nhật khách hàng thành công!",
+    "customerUpdatedError": "Không thể cập nhật khách hàng. Vui lòng thử lại.",
+    "customerDeletedSuccess": "Xóa khách hàng thành công!",
+    "customerDeletedError": "Không thể xóa khách hàng. Vui lòng thử lại.",
+    "confirmDeleteTitle": "Xác Nhận Xóa",
+    "confirmDeleteContent": "Bạn có chắc chắn muốn xóa khách hàng này không?",
+    "addCustomer": "Thêm Khách Hàng",
+    "updateCustomer": "Cập Nhật Khách Hàng"
+  
+}

@@ -1,0 +1,9 @@
+{
+  "nameLabel": "Name",
+  "descriptionLabel": "Description",
+  "durationLabel": "Duration",
+  "priceLabel": "Price",
+  "cancelButton": "Cancel",
+  "addButton": "Add Service",
+  "updateButton": "Update Service"
+}

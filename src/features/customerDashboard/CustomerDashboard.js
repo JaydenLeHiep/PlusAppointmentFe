@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Box, CircularProgress } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-
 import CustomerBusinessInfo from './CustomerBusinessInfo';
-import CustomerButtonDashboard from './CustomerButtonDashboard';
-import ListsServiceStaff from './ListsServiceStaff';
-import CustomerForm from './CustomerForm';
-import SearchCustomer from './SearchCustomer';
-import AddAppointmentDialog from '../appointment/AddApointmentDialog';
-import '../../styles/css/CustomerCss/CustomerDashboard.css';
+import ServiceList from './ServiceList';
+import StaffList from './StaffList';
+import MyDatePicker from './MyDatePicker';
+import AppointmentOverviewPage from './AppointmentOverviewPage';
+import OldCustomerForm from './OldCustomerForm';
+import NewCustomerForm from './NewCustomerForm';
+import ThankYou from './ThankYou';
 import { fetchBusinessesById } from '../../lib/apiClientBusiness';
+import {
+  DashboardContainer,
+  ErrorContainer,
+  LoadingContainer,
+  ErrorTypography,
+  CustomCircularProgress,
+  CustomContainer,
+  CustomerListContainer,
+} from '../../styles/CustomerStyle/CustomerDashboardStyle';
+import BackAndNextButtons from './BackNextButtons';
 
 const CustomerDashboard = () => {
   const location = useLocation();
@@ -20,12 +29,14 @@ const CustomerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [view, setView] = useState('services');
-  const [selectedService, setSelectedService] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedServices, setSelectedServices] = useState([]);
   const [selectedStaff, setSelectedStaff] = useState(null);
-  const [serviceSearchQuery, setServiceSearchQuery] = useState('');
-  const [staffSearchQuery, setStaffSearchQuery] = useState('');
-  const [customerId, setCustomerId] = useState(null);
-  const [showAddAppointmentDialog, setShowAddAppointmentDialog] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedAppointments, setSelectedAppointments] = useState([]);
+  const [isAddingNewCustomer, setIsAddingNewCustomer] = useState(false);
+  const [, setRedirectingToOldCustomerForm] = useState(false);
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -52,112 +63,244 @@ const CustomerDashboard = () => {
     fetchBusiness();
   }, [businessId]);
 
-  const handleCustomerIdReceived = async (id) => {
-    setCustomerId(id);
-    setShowAddAppointmentDialog(true);
+  const handleServiceSelect = (service) => {
+    setSelectedServices([...selectedServices, service]);
   };
 
-  const handleServiceSelect = (service) => {
-    setSelectedService(service);
-    if (selectedStaff) {
-      setView('form');
-    } else {
+  const handleServiceDeselect = (service) => {
+    setSelectedServices(selectedServices.filter(s => s.serviceId !== service.serviceId));
+  };
+
+  const handleNextFromServices = () => {
+    if (selectedServices.length > 0) {
       setView('staffs');
     }
   };
 
   const handleStaffSelect = (staff) => {
     setSelectedStaff(staff);
-    if (selectedService) {
-      setView('form');
-    } else {
-      setView('services');
+    setView('calendar');
+  };
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    setSelectedTime(null);
+  };
+
+  const handleTimeSelect = (time) => {
+    setSelectedTime(time);
+  };
+
+  const handleConfirmTime = () => {
+    if (selectedServices.length > 0 && selectedStaff && selectedDate && selectedTime) {
+      const appointmentDetails = selectedServices.map(service => {
+        const appointmentTime = `${selectedDate.format('YYYY-MM-DD')}T${selectedTime.substring(11, 16)}`;
+
+        return {
+          serviceName: service.name,
+          staffName: selectedStaff.name,
+          appointmentTime: appointmentTime,
+          services: [
+            {
+              serviceId: service.serviceId,
+              staffId: selectedStaff.staffId,
+              duration: service.duration,
+              price: service.price,
+            }
+          ]
+        };
+      });
+
+      const uniqueAppointments = [...selectedAppointments];
+
+      appointmentDetails.forEach(newAppointment => {
+        const isDuplicate = uniqueAppointments.some(existingAppointment =>
+          existingAppointment.services[0].serviceId === newAppointment.services[0].serviceId &&
+          existingAppointment.services[0].staffId === newAppointment.services[0].staffId &&
+          existingAppointment.appointmentTime === newAppointment.appointmentTime
+        );
+
+        if (!isDuplicate) {
+          uniqueAppointments.push(newAppointment);
+        }
+      });
+
+      setSelectedAppointments(uniqueAppointments);
+      setView('overview');
     }
   };
 
-  const handleServiceSearchChange = (e) => {
-    setServiceSearchQuery(e.target.value);
+  const handleFinish = () => {
+    setView('customerForm');
   };
 
-  const handleStaffSearchChange = (e) => {
-    setStaffSearchQuery(e.target.value);
+  const handleBackClick = () => {
+    if (isAddingNewCustomer) {
+      setIsAddingNewCustomer(false);
+    } else {
+      switch (view) {
+        case 'staffs':
+          setView('services');
+          break;
+        case 'calendar':
+          setView('staffs');
+          break;
+        case 'overview':
+          setView('calendar');
+          break;
+        case 'customerForm':
+          setView('overview');
+          break;
+        default:
+          break;
+      }
+    }
   };
 
-  const handleCloseAddAppointmentDialog = () => {
-    setShowAddAppointmentDialog(false);
+  const handleNextClick = () => {
+    if (view === 'services') {
+      handleNextFromServices();
+    } else if (view === 'calendar') {
+      handleConfirmTime();
+    }
+  };
+
+  const handleNewCustomerSuccess = () => {
+    setRedirectingToOldCustomerForm(true);
+  
+    setTimeout(() => {
+      setIsAddingNewCustomer(false);
+      setView('customerForm');
+      setRedirectingToOldCustomerForm(false);
+    }, 5000);
+  };
+
+  const handleAppointmentSuccess = () => {
+    setView('thankYou');
   };
 
   if (!businessId) {
     return (
-      <Box className="customer-dashboard" sx={{ textAlign: 'center', padding: '20px' }}>
-        <Typography variant="h6" sx={{ color: '#ff1744' }}>Error: Business ID not provided</Typography>
-      </Box>
+      <ErrorContainer>
+        <ErrorTypography variant="h6">
+          Error: Business ID not provided
+        </ErrorTypography>
+      </ErrorContainer>
     );
   }
 
   if (error) {
     return (
-      <Box className="customer-dashboard" sx={{ textAlign: 'center', padding: '20px' }}>
-        <Typography variant="h6" sx={{ color: '#ff1744' }}>{error}</Typography>
-      </Box>
+      <ErrorContainer>
+        <ErrorTypography variant="h6">
+          {error}
+        </ErrorTypography>
+      </ErrorContainer>
     );
   }
 
   if (loading) {
     return (
-      <Box className="customer-dashboard" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <CircularProgress color="primary" />
-      </Box>
+      <LoadingContainer>
+        <CustomCircularProgress />
+      </LoadingContainer>
     );
   }
 
+  // Function to parse the duration string in the format "HH:MM:SS"
+  const parseDuration = (durationString) => {
+    const [hours, minutes] = durationString.split(':').map(Number);
+
+    // Convert hours and minutes into total minutes
+    const totalMinutes = (hours * 60) + minutes;
+
+    return totalMinutes;
+  };
+
+  // Calculate the total duration of selected services
+  const totalDuration = selectedServices.reduce((sum, service) => {
+    const parsedDuration = parseDuration(service.duration);
+    return sum + parsedDuration;
+  }, 0);
+
   return (
-    <Box 
-      className="customer-dashboard" 
-      sx={{ 
-        width: '100%', 
-        margin: '0 auto', 
-        padding: '20px',
-        '@media (max-width: 768px)': {
-          padding: '10px',
-        },
-      }}
-    >
+    <DashboardContainer>
       <CustomerBusinessInfo businessInfo={businessInfo} />
-      {!showAddAppointmentDialog && view !== 'form' && (
-        <>
-          <SearchCustomer onChange={view === 'services' ? handleServiceSearchChange : handleStaffSearchChange} />
-          <CustomerButtonDashboard view={view} onViewChange={setView} />
-        </>
-      )}
-      <ListsServiceStaff
-        view={view}
-        businessId={businessId}
-        serviceSearchQuery={serviceSearchQuery}
-        staffSearchQuery={staffSearchQuery}
-        onServiceSelect={handleServiceSelect}
-        onStaffSelect={handleStaffSelect}
-      />
-      {view === 'form' && (
-        <CustomerForm
-          businessId={businessId}
-          onCustomerIdReceived={handleCustomerIdReceived}
-          selectedService={selectedService}
-          selectedStaff={selectedStaff}
+
+      <CustomContainer>
+        <BackAndNextButtons
+          onBackClick={handleBackClick}
+          onNextClick={handleNextClick}
+          disableBack={view === 'services'}
+          disableNext={view !== 'services' || selectedServices.length === 0}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          view={view}
+          isAddingNewCustomer={isAddingNewCustomer}
         />
+
+        {view === 'services' && (
+          <CustomerListContainer>
+            <ServiceList
+              businessId={businessId}
+              searchQuery={searchQuery}
+              selectedServices={selectedServices}
+              onServiceSelect={handleServiceSelect}
+              onServiceDeselect={handleServiceDeselect}
+            />
+          </CustomerListContainer>
+        )}
+
+        {view === 'staffs' && (
+          <CustomerListContainer>
+            <StaffList
+              businessId={businessId}
+              searchQuery={searchQuery}
+              onStaffSelect={handleStaffSelect}
+            />
+          </CustomerListContainer>
+        )}
+
+        {view === 'calendar' && (
+          <MyDatePicker
+            selectedDate={selectedDate}
+            onDateChange={handleDateChange}
+            selectedTime={selectedTime}
+            onTimeSelect={handleTimeSelect}
+            onConfirmTime={handleConfirmTime}
+            staffId={selectedStaff?.staffId}
+            totalDuration={totalDuration}
+          />
+        )}
+
+        {view === 'overview' && (
+          <AppointmentOverviewPage
+            selectedAppointments={selectedAppointments}
+            onAddMoreServices={() => setView('services')}
+            onFinish={handleFinish}
+          />
+        )}
+
+        {view === 'customerForm' && (
+          !isAddingNewCustomer ? (
+            <OldCustomerForm
+              selectedAppointments={selectedAppointments}
+              businessId={businessId}
+              onAppointmentSuccess={handleAppointmentSuccess}
+              onNewCustomer={() => setIsAddingNewCustomer(true)}
+            />
+          ) : (
+            <NewCustomerForm
+            businessId={businessId}
+            onCustomerAdded={handleNewCustomerSuccess}
+          />
+        )
       )}
-      {showAddAppointmentDialog && (
-        <AddAppointmentDialog
-          open={showAddAppointmentDialog}
-          onClose={handleCloseAddAppointmentDialog}
-          businessId={businessId}
-          customerId={customerId}
-          serviceId={selectedService?.serviceId}
-          staffId={selectedStaff?.staffId}
-        />
-      )}
-    </Box>
-  );
+
+      {view === 'thankYou' && <ThankYou />}
+    </CustomContainer>
+  </DashboardContainer>
+);
 };
 
 export default CustomerDashboard;

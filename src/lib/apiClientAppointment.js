@@ -1,8 +1,9 @@
 import { apiBaseUrl } from '../config/apiConfig';
+import moment from 'moment';
 const appointmentApiUrl = `${apiBaseUrl}/api/appointments`;
 
 // use this for production
-//const userApiUrl = `https://plus-appointment.com/api/users`;
+//const appointmentApiUrl = `https://plus-appointment.com/api/appointments`;
 
 //Api appointments
 
@@ -15,7 +16,7 @@ export const fetchAppointments = async (businessId) => {
   if (!token) {
     throw new Error('User not authenticated');
   }
-  
+
   const appointmentBusinessApiUrl = `${appointmentApiUrl}/business/business_id=${businessId}`;
   const response = await fetch(appointmentBusinessApiUrl, {
     method: 'GET',
@@ -24,12 +25,12 @@ export const fetchAppointments = async (businessId) => {
       'Authorization': `Bearer ${token}`,
     },
   });
-  
+
   if (!response.ok) {
     const data = await response.json();
     throw new Error(data.message || 'Failed to fetch appointments');
   }
-  
+
   const data = await response.json();
   return data.$values || data;
 };
@@ -37,16 +38,10 @@ export const fetchAppointments = async (businessId) => {
 
 // for add Appointment
 export const addAppointment = async (appointmentDetails) => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    throw new Error('User not authenticated');
-  }
-
   const response = await fetch(`${appointmentApiUrl}/add`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
     },
     body: JSON.stringify(appointmentDetails),
   });
@@ -121,7 +116,7 @@ export const fetchAppointmentById = async (appointmentId) => {
   if (!response.ok) {
     throw new Error(data.message);
   }
-  return data;  
+  return data;
 };
 
 // Function to update an appointment
@@ -143,4 +138,35 @@ export const updateAppointment = async (appointmentId, updateData) => {
     throw new Error(errorData.message || 'Failed to update appointment');
   }
   return response.json();
+};
+
+// Fetch not available time slots for a specific staff member and date
+export const fetchNotAvailableTimeSlots = async (staffId, date) => {
+  if (!staffId || !date) {
+    throw new Error('Staff ID and date are required');
+  }
+
+  // Use moment to format the date consistently
+  const formattedDate = moment(date).format('YYYY-MM-DD');
+
+  const response = await fetch(`${appointmentApiUrl}/not-available-timeslots?staffId=${staffId}&date=${formattedDate}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || 'Failed to fetch not available time slots');
+  }
+
+  const data = await response.json();
+
+  // Check if availableTimeSlots exists and is an array
+  if (data && Array.isArray(data.availableTimeSlots.$values)) {
+    return data.availableTimeSlots.$values;
+  } else {
+    return []; // Return an empty array if not an array
+  }
 };

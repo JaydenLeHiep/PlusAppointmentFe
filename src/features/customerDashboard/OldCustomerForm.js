@@ -1,91 +1,138 @@
 import React, { useState } from 'react';
-import { Box, TextField } from '@mui/material';
-import CustomButton from './CustomerButton';
-import '../../styles/css/CustomerCss/CustomerForm.css';
-import { fetchCustomerId } from '../../lib/apiClientCustomer';
+import { Snackbar, Alert, Box } from '@mui/material';
+import { fetchCustomerByEmailOrPhone } from '../../lib/apiClientCustomer';
+import { useAppointmentsContext } from '../../context/AppointmentsContext';
+import {
+  CustomButton,          
+  FormContainer,         
+  StyledTextField,
+  FormTitle,
+  NewCustomerLink,     
+} from '../../styles/CustomerStyle/OldCustomerFormStyle'; 
 
-const OldCustomerForm = ({ onCustomerIdReceived }) => {
-  const [formData, setFormData] = useState({
-    emailOrPhone: '',
-  });
+const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSuccess, onNewCustomer }) => {
+  const [emailOrPhone, setEmailOrPhone] = useState('');
+  const [comment, setComment] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const { addAppointmentAndUpdateList } = useAppointmentsContext();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+    if (name === 'emailOrPhone') {
+      setEmailOrPhone(value); 
+    } else if (name === 'comment') {
+      setComment(value);
+    }
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+  
     try {
-      const customerId = await fetchCustomerId(formData.emailOrPhone);
-      onCustomerIdReceived(customerId);
+      const customerId = await fetchCustomerByEmailOrPhone(emailOrPhone);
+  
+      if (customerId) {
+        if (!Array.isArray(selectedAppointments)) {
+          console.error('Received selectedAppointments:', selectedAppointments);
+          throw new Error('Selected appointments data is not in the correct format.');
+        }
 
-      // Reset form data after submission if needed
-      setFormData({
-        emailOrPhone: '',
-      });
+        // Convert the selected appointment time from local time to UTC
+        const localTime = new Date(selectedAppointments[0].appointmentTime);
+        const utcAppointmentTime = localTime.toISOString();  // This will include the 'Z' at the end
+
+        const combinedAppointmentDetails = {
+          customerId: parseInt(customerId, 10),
+          businessId: parseInt(businessId, 10),
+          appointmentTime: utcAppointmentTime, // Use the UTC time here
+          status: 'Pending',
+          comment: comment || '',
+          services: selectedAppointments.flatMap(appointment => 
+            appointment.services.map(service => ({
+              serviceId: service.serviceId,
+              staffId: service.staffId,
+              duration: service.duration,
+              price: service.price,
+            }))
+          )
+        };
+
+        await addAppointmentAndUpdateList(combinedAppointmentDetails);
+        setSuccess(true);
+        onAppointmentSuccess();
+      } else {
+        throw new Error('Customer not found');
+      }
     } catch (error) {
-      console.error('Error fetching customer ID:', error.message);
+      console.error("Error during form submission:", error.message || error);
+      setError(error.message || 'Failed to find customer or add appointment');
     }
   };
 
   return (
-    <Box 
-      className="customer-form"
-      sx={{
-        backgroundColor: '#f9f9f9',
-        padding: '24px',
-        borderRadius: '12px',
-        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-        marginBottom: '24px',
-        maxWidth: '500px',
-        margin: 'auto',
-      }}
-    >
+    <FormContainer>
+      <FormTitle>Your Information</FormTitle>
       <form onSubmit={handleFormSubmit}>
-        <TextField
+        <StyledTextField
           label="Email or Phone"
           name="emailOrPhone"
-          value={formData.emailOrPhone}
+          value={emailOrPhone}
           onChange={handleInputChange}
           fullWidth
-          margin="normal"
           required
-          sx={{
-            backgroundColor: '#ffffff',
-            borderRadius: '8px',
-            mb: 2,
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                border: 'none',
-              },
-            },
-          }}
         />
-        <CustomButton
-          type="submit"
-          variant="contained"
-          color="primary"
-          sx={{
-            width: '100%',
-            backgroundColor: '#007bff',
-            '&:hover': {
-              backgroundColor: '#0056b3',
-            },
-            padding: '12px 20px',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            borderRadius: '8px',
-          }}
-        >
-          Submit
-        </CustomButton>
+
+        <StyledTextField
+          label="Comment"
+          name="comment"
+          value={comment}
+          onChange={handleInputChange}
+          fullWidth
+          multiline
+          rows={4}
+        />
+
+        <Box display="flex" justifyContent="center" mt={2}>
+          <CustomButton
+            type="submit"
+            variant="contained"
+            color="primary"
+          >
+            Finish
+          </CustomButton>
+        </Box>
+
+        <Box mt={2} textAlign="center">
+          <NewCustomerLink
+            onClick={onNewCustomer}
+          >
+            If you are a new customer, click here
+          </NewCustomerLink>
+        </Box>
       </form>
-    </Box>
+
+      <Snackbar
+        open={success}
+        autoHideDuration={6000}
+        onClose={() => setSuccess(false)}
+      >
+        <Alert onClose={() => setSuccess(false)} severity="success">
+          Appointment successfully created!
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!error}
+        autoHideDuration={6000}
+        onClose={() => setError('')}
+      >
+        <Alert onClose={() => setError('')} severity="error">
+          {error}
+        </Alert>
+      </Snackbar>
+    </FormContainer>
   );
 };
 

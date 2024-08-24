@@ -1,31 +1,31 @@
-// customerApi.js
-
 import { apiBaseUrl } from '../config/apiConfig';
 
 const customerApiUrl = `${apiBaseUrl}/api/customer`;
 
-// use this for production
-//const userApiUrl = `https://plus-appointment.com/api/users`;
+// Utility function to handle API responses
+const handleApiResponse = async (response) => {
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || 'API request failed');
+  }
+  return data;
+};
 
+// Fetch customer ID by email or phone
 export const fetchCustomerId = async (emailOrPhone) => {
   const findCustomerApiUrl = `${customerApiUrl}/find-customer`;
   const response = await fetch(findCustomerApiUrl, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ EmailOrPhone: emailOrPhone })
+    body: JSON.stringify({ EmailOrPhone: emailOrPhone }),
   });
 
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-
-  return data.customerId;
+  return await handleApiResponse(response);
 };
 
-// Fetch customers
+// Fetch all customers
 export const fetchCustomers = async () => {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -40,28 +40,11 @@ export const fetchCustomers = async () => {
     },
   });
 
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-
-  if (Array.isArray(data)) {
-    return data;
-  } else if (data.$values) {
-    return data.$values;
-  } else {
-    throw new Error('Unexpected data format');
-  }
+  return await handleApiResponse(response);
 };
 
-
-// for add customer
+// Add a new customer
 export const addCustomer = async (customerDetails) => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    throw new Error('User not authenticated');
-  }
-
   const response = await fetch(`${customerApiUrl}/add`, {
     method: 'POST',
     headers: {
@@ -69,15 +52,47 @@ export const addCustomer = async (customerDetails) => {
     },
     body: JSON.stringify(customerDetails),
   });
-
-  const data = await response.json();
-  console.log(data)
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-  return data;
+  return await handleApiResponse(response);
 };
 
+// Delete a customer
+export const deleteCustomer = async (businessId, customerId) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('User not authenticated');
+  }
+
+  const response = await fetch(`${customerApiUrl}/business_id=${businessId}/customer_id=${customerId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  return await handleApiResponse(response);
+};
+
+// Update a customer
+export const updateCustomer = async (businessId, customerId, customerDetails) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('User not authenticated');
+  }
+
+  const response = await fetch(`${customerApiUrl}/business_id=${businessId}/customer_id=${customerId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(customerDetails),
+  });
+
+  return await handleApiResponse(response);
+};
+
+// Search customers by name
 export const searchCustomersByName = async (name) => {
   const searchApiUrl = `${customerApiUrl}/search?name=${encodeURIComponent(name)}`;
   const response = await fetch(searchApiUrl, {
@@ -87,16 +102,73 @@ export const searchCustomersByName = async (name) => {
     },
   });
 
-  const data = await response.json();
+  const data = await handleApiResponse(response);
 
-  if (!response.ok) {
-    throw new Error(data.message || 'Failed to search customers');
+  if (data.customers && data.customers.$values) {
+    return data.customers.$values;
+  } else {
+    return []; 
   }
-
-  // Extract the customers from the response
-  const customers = data.customers?.$values || [];
-
-  // Return the customers array directly
-  return customers;
 };
 
+// Function to check if a customer exists based on email or phone
+export const checkCustomerExists = async (emailOrPhone) => {
+  const checkCustomerUrl = `${customerApiUrl}/find-customer`;
+
+  const response = await fetch(checkCustomerUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ EmailOrPhone: emailOrPhone }),
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    
+    if (data.customerId) {
+      return data.customerId; // Customer found
+    } else {
+      return null; // Customer not found
+    }
+  } else {
+    // Handle any other unexpected response without throwing an error
+    return null;
+  }
+};
+
+//take customer id by phonenumber or mail
+export const fetchCustomerByEmailOrPhone = async (emailOrPhone) => {
+  const findCustomerApiUrl = `${customerApiUrl}/find-customer`;
+  const response = await fetch(findCustomerApiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ EmailOrPhone: emailOrPhone }),
+  });
+
+  const data = await response.json();
+  return data.customerId;
+};
+
+// Fetch customers by business ID
+export const fetchCustomersByBusinessId = async (businessId) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('User not authenticated');
+  }
+
+  const response = await fetch(`${customerApiUrl}/business_id=${businessId}/customers`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  const data = await handleApiResponse(response);
+  
+  // Ensure you extract the actual customer data from the $values array
+  return data || [];
+};

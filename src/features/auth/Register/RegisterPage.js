@@ -3,9 +3,10 @@ import { Box, Container, Card, Typography } from '@mui/material';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 import RegisterForm from './RegisterForm';
-import usePasswordValidation from '../../../hooks/usePasswordValidation';
 import { registerUser } from '../../../lib/apiClient';
-import '../../../styles/css/OwnerCss/Register.css';
+import { useTranslation } from 'react-i18next';
+
+const heroImage = require('../../../assets/hero-image.jpg');
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
@@ -16,7 +17,7 @@ const RegisterPage = () => {
   const [message, setMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('info');
 
-  const passwordValid = usePasswordValidation(password);
+  const { t } = useTranslation('registerPage'); // Use the 'registerPage' namespace for translations
 
   useEffect(() => {
     const savedForm = JSON.parse(localStorage.getItem('registerForm'));
@@ -31,24 +32,18 @@ const RegisterPage = () => {
 
   const handleRegister = async (event) => {
     event.preventDefault();
-    if (!passwordValid) {
-      setMessage('Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character!');
-      setAlertVariant('danger');
-      return;
-    }
-
+  
     try {
       const data = await registerUser({ username, password, email, phone });
-      setMessage(data.message || 'Registration successful!');
+      setMessage(t('registrationSuccess') + ': ' + data.message); 
       setAlertVariant('success');
-      // Clear form data
       setUsername('');
       setPassword('');
       setEmail('');
       setPhone('');
       localStorage.removeItem('registerForm');
     } catch (error) {
-      setMessage(error.message);
+      setMessage(t('registrationFailure'));
       setAlertVariant('danger');
     }
   };
@@ -58,16 +53,50 @@ const RegisterPage = () => {
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar />
-      <Box className="register-hero">
-        <Container 
-          className="d-flex align-items-center justify-content-center" 
-          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: "82vh", paddingTop: 0, marginTop: 0 }}
+      <Box
+        sx={{
+          backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${heroImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: '#fff',
+          textAlign: 'center',
+          flex: 1,
+          minHeight: '82vh',
+        }}
+      >
+        <Container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '82vh',
+          }}
         >
-          <Card className="register-container" style={{ marginTop: '0 !important' }}>
-            <Typography variant="h4" component="h1" gutterBottom className="text-center">
-              Register
+          <Card
+            sx={{
+              maxWidth: 400,
+              padding: '2rem',
+              backgroundColor: 'rgba(255, 255, 255, 0.9)', // Slightly transparent background
+              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+              borderRadius: '8px',
+              mt: 0,
+            }}
+          >
+            <Typography
+              variant="h4"
+              component="h1"
+              gutterBottom
+              sx={{
+                textAlign: 'center',
+                color: '#333',
+              }}
+            >
+              {t('registerTitle')}
             </Typography>
-            <RegisterForm 
+            <RegisterForm
               username={username}
               setUsername={setUsername}
               email={email}
@@ -76,7 +105,6 @@ const RegisterPage = () => {
               setPhone={setPhone}
               password={password}
               setPassword={setPassword}
-              passwordValid={passwordValid}
               showPassword={showPassword}
               toggleShowPassword={toggleShowPassword}
               handleRegister={handleRegister}

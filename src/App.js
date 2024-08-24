@@ -7,10 +7,12 @@ import RegisterPage from './features/auth/Register/RegisterPage';
 import OwnerDashboard from './features/ownerDashboard/OwnerDashboard';
 import GlobalStyles from './styles/GlobalStyles';
 import { useAuth } from './hooks/useAuth';
-import CustomerDashboard from './features/customerDashboard/CustomerDashboard';
-import { AppointmentsProvider } from './features/appointment/AppointmentsContext';
-import { StaffsProvider } from './features/staff/StaffsContext';
-import { ServicesProvider } from './features/servicecomponent/ServicesContext';
+import PCDashboard from './features/customerDashboard/CustomerDashboard';
+import { AppointmentsProvider } from './context/AppointmentsContext';
+import { StaffsProvider } from './context/StaffsContext';
+import { ServicesProvider } from './context/ServicesContext';
+import { CustomersProvider } from './context/CustomerContext';
+import './utils/i18n'
 
 const App = () => {
   const { isAuthenticated, user } = useAuth();
@@ -31,20 +33,24 @@ const App = () => {
   return (
     <>
       <GlobalStyles />
-      <ServicesProvider>
-        <StaffsProvider>
-          <AppointmentsProvider>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
-              <Route path="/customer-dashboard" element={<CustomerDashboard />} />
-              <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
-              <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
-              <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
-            </Routes>
-          </AppointmentsProvider>
-        </StaffsProvider>
-      </ServicesProvider>
+      <CustomersProvider>
+        <ServicesProvider>
+          <StaffsProvider>
+            <AppointmentsProvider>
+
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
+                <Route path="/customer-dashboard" element={<PCDashboard />} />
+                <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
+                <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
+                <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
+              </Routes>
+
+            </AppointmentsProvider>
+          </StaffsProvider>
+        </ServicesProvider>
+      </CustomersProvider>
     </>
   );
 };

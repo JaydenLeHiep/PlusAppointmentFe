@@ -3,7 +3,7 @@ import { apiBaseUrl } from '../config/apiConfig';
 const staffApiUrl = `${apiBaseUrl}/api/staff`;
 
 // use this for production
-//const userApiUrl = `https://plus-appointment.com/api/users`;
+//const staffApiUrl = `https://plus-appointment.com/api/staff`;
 // Utility function to get token and handle missing authentication
 const getToken = () => {
   const token = localStorage.getItem('token');
@@ -27,17 +27,10 @@ const buildStaffApiUrl = (businessId, path = '') => `${staffApiUrl}/business_id=
 
 // API client function for fetching staff
 export const fetchStaff = async (businessId) => {
-  const token = getToken();
   const response = await fetch(buildStaffApiUrl(businessId), {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
   });
-  
   const data = await handleApiResponse(response);
-  
   if (Array.isArray(data)) {
     return data;
   } else if (data.$values) {
@@ -59,7 +52,6 @@ export const addStaff = async (businessId, staffDetails) => {
     },
     body: JSON.stringify(staffDetails)
   });
-
   return await handleApiResponse(response);
 };
 
@@ -73,7 +65,6 @@ export const deleteStaff = async (businessId, staffId) => {
       'Authorization': `Bearer ${token}`
     }
   });
-
   return await handleApiResponse(response);
 };
 
@@ -88,6 +79,5 @@ export const updateStaff = async (businessId, staffId, staffDetails) => {
     },
     body: JSON.stringify(staffDetails)
   });
-
   return await handleApiResponse(response);
 };

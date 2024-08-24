@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import FullCalendarComponent from '../calendar/FullCalendarComponent';
-import '../../styles/css/OwnerCss/OwnerDashboard.css';
+import FullCalendarComponent from '../ownerDashboard/calendar/FullCalendarComponent';
 import BusinessInfo from './BusinessInfor';
-import ShowStaffDialog from '../staff/showStaffDialog';
-import AddAppointmentDialog from '../appointment/AddApointmentDialog';
-import ShowServicesDialog from '../servicecomponent/showServiceDialog';
-import { useAppointmentsContext } from '../appointment/AppointmentsContext';
-import ShowCustomerDialog from '../customer/ShowCustomerDialog'; // Import the customer dialog component
+import ShowStaffDialog from './staff/showStaffDialog.js';
+import AddAppointmentDialog from '../ownerDashboard/appointment/AddAppointment/AddAppointmentDialog';
+import ShowServicesDialog from './servicecomponent/showServiceDialog';
+import { useAppointmentsContext } from '../../context/AppointmentsContext';
+import ShowCustomerDialog from '../ownerDashboard/customer/ShowCustomerDialog';
 
 const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments }) => {
   const { fetchAppointmentsForBusiness } = useAppointmentsContext();
@@ -16,30 +15,20 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
   const [appointmentOpen, setAppointmentOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [customerOpen, setCustomerOpen] = useState(false);
+
   const handleStaffOpen = () => setStaffOpen(true);
-
-  const handleStaffClose = () => {
-    setStaffOpen(false);
-    // You can choose to refresh staff data here if necessary
-  };
-
+  const handleStaffClose = () => setStaffOpen(false);
   const handleAppointmentOpen = () => setAppointmentOpen(true);
-
   const handleAppointmentClose = async () => {
     setAppointmentOpen(false);
     if (selectedBusiness && selectedBusiness.businessId) {
       await fetchAppointmentsForBusiness(selectedBusiness.businessId);
     }
   };
-
   const handleServicesOpen = () => setServicesOpen(true);
-
-  const handleServicesClose = () => {
-    setServicesOpen(false);
-    // You can choose to refresh services data here if necessary
-  };
-  const handleCustomerOpen = () => setCustomerOpen(true); // Open customer dialog
-  const handleCustomerClose = () => setCustomerOpen(false); 
+  const handleServicesClose = () => setServicesOpen(false);
+  const handleCustomerOpen = () => setCustomerOpen(true);
+  const handleCustomerClose = () => setCustomerOpen(false);
 
   const parseDuration = (duration) => {
     const [hours, minutes, seconds] = duration.split(':').map(Number);
@@ -49,6 +38,30 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
   if (!selectedBusiness || !selectedBusiness.businessId) {
     return <Typography variant="h6">No business selected or business ID is missing.</Typography>;
   }
+
+  const events = appointments.map(appt => {
+    let startTime = new Date(appt.appointmentTime).getTime();
+
+    return appt.services.$values.map(service => {
+      const serviceStart = new Date(startTime);
+      const serviceEnd = new Date(startTime + parseDuration(service.duration));
+
+      startTime += parseDuration(service.duration);
+
+      return {
+        ...appt, // Include all the appointment details
+        title: `${appt.customerName} - ${service.name}`,
+        start: serviceStart,
+        end: serviceEnd,
+        serviceName: service.name,
+        staffName: service.staffName,
+        serviceId: service.serviceId,
+        staffId: service.staffId,
+      };
+    });
+  }).flat();
+
+
 
   return (
     <Box>
@@ -66,20 +79,9 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
         onAddAppointment={handleAppointmentOpen}
       />
 
-      <Box className="calendar-container" style={{ marginBottom: '10px' }}>
+      <Box style={{ marginBottom: '10px' }}>
         <FullCalendarComponent
-          events={appointments.map(appt => ({
-            title: `${appt.customerName}`,
-            start: new Date(appt.appointmentTime).toISOString(),
-            end: new Date(new Date(appt.appointmentTime).getTime() + parseDuration(appt.duration)).toISOString(),
-            customerName: appt.customerName,
-            customerPhone: appt.customerPhone,
-            appointmentTime: appt.appointmentTime,
-            service: appt.serviceName,
-            staffName: appt.staffName,
-            status: appt.status,
-            appointmentId: appt.appointmentId,
-          }))}
+          events={events}
           staff={staff}
         />
       </Box>
@@ -87,7 +89,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
       <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} />
       <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={fetchAppointmentsForBusiness} />
       <ShowServicesDialog open={servicesOpen} onClose={handleServicesClose} businessId={selectedBusiness.businessId} />
-      <ShowCustomerDialog open={customerOpen} onClose={handleCustomerClose} />
+      <ShowCustomerDialog open={customerOpen} onClose={handleCustomerClose} businessId={selectedBusiness.businessId} />
     </Box>
   );
 };
