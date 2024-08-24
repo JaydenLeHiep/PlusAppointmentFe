@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Snackbar, Alert, Box } from '@mui/material';
 import { fetchCustomerByEmailOrPhone } from '../../../lib/apiClientCustomer';
 import { useAppointmentsContext } from '../../../context/AppointmentsContext';
+import moment from 'moment-timezone'; 
 import {
   CustomButton,          
   FormContainer,         
@@ -40,8 +41,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
         }
 
         // Convert the selected appointment time from local time to UTC
-        const localTime = new Date(selectedAppointments[0].appointmentTime);
-        const utcAppointmentTime = localTime.toISOString();  // This will include the 'Z' at the end
+        const utcAppointmentTime = moment.tz(selectedAppointments[0].appointmentTime, moment.tz.guess()).utc().format('YYYY-MM-DDTHH:mm:ss');
 
         const combinedAppointmentDetails = {
           customerId: parseInt(customerId, 10),
@@ -58,7 +58,6 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
             }))
           )
         };
-
         await addAppointmentAndUpdateList(combinedAppointmentDetails);
         setSuccess(true);
         onAppointmentSuccess();

@@ -9,7 +9,6 @@ export const BusinessInfoContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   textAlign: 'center',
-  marginBottom: theme.spacing(4), // Space below the container
   [theme.breakpoints.up('md')]: {
     flexDirection: 'row',
     justifyContent: 'space-between',

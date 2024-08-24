@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Box, CircularProgress, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import CustomerBusinessInfo from './CustomerBusinessInfo';
 import ServiceList from './ServiceList';
@@ -10,7 +9,15 @@ import OldCustomerForm from './OldCustomerForm';
 import NewCustomerForm from './NewCustomerForm';
 import ThankYou from './ThankYou';
 import { fetchBusinessesById } from '../../../lib/apiClientBusiness';
-import { CustomerListContainer } from '../../../styles/CustomerStyle/CustomerDashboardStyle';
+import {
+  DashboardContainer,
+  ErrorContainer,
+  LoadingContainer,
+  ErrorTypography,
+  CustomCircularProgress,
+  CustomContainer,
+  CustomerListContainer,
+} from '../../../styles/CustomerStyle/PCVersion/CustomerDashboardStyle';
 import BackAndNextButtons from './BackNextButtons';
 
 const CustomerDashboard = () => {
@@ -158,43 +165,61 @@ const CustomerDashboard = () => {
   };
 
   const handleNewCustomerSuccess = () => {
-    setIsAddingNewCustomer(false); 
   };
 
   const handleAppointmentSuccess = () => {
-    console.log("Appointment successfully created, switching to ThankYou view");
-    setView('thankYou'); 
+    setView('thankYou');
   };
 
   if (!businessId) {
     return (
-      <Box sx={{ textAlign: 'center', padding: '20px' }}>
-        <Typography variant="h6" sx={{ color: '#ff1744' }}>Error: Business ID not provided</Typography>
-      </Box>
+      <ErrorContainer>
+        <ErrorTypography variant="h6">
+          Error: Business ID not provided
+        </ErrorTypography>
+      </ErrorContainer>
     );
   }
 
   if (error) {
     return (
-      <Box sx={{ textAlign: 'center', padding: '20px' }}>
-                <Typography variant="h6" sx={{ color: '#ff1744' }}>{error}</Typography>
-      </Box>
+      <ErrorContainer>
+        <ErrorTypography variant="h6">
+          {error}
+        </ErrorTypography>
+      </ErrorContainer>
     );
   }
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <CircularProgress color="primary" />
-      </Box>
+      <LoadingContainer>
+        <CustomCircularProgress />
+      </LoadingContainer>
     );
   }
 
+  // Function to parse the duration string in the format "HH:MM:SS"
+  const parseDuration = (durationString) => {
+    const [hours, minutes] = durationString.split(':').map(Number);
+
+    // Convert hours and minutes into total minutes
+    const totalMinutes = (hours * 60) + minutes;
+
+    return totalMinutes;
+  };
+
+  // Calculate the total duration of selected services
+  const totalDuration = selectedServices.reduce((sum, service) => {
+    const parsedDuration = parseDuration(service.duration);
+    return sum + parsedDuration;
+  }, 0);
+
   return (
-    <Box minHeight="100vh" sx={{ backgroundColor: '#f0f8ff' }}> 
+    <DashboardContainer>
       <CustomerBusinessInfo businessInfo={businessInfo} />
 
-      <Container>
+      <CustomContainer>
         <BackAndNextButtons
           onBackClick={handleBackClick}
           onNextClick={handleNextClick}
@@ -236,6 +261,7 @@ const CustomerDashboard = () => {
             onTimeSelect={handleTimeSelect}
             onConfirmTime={handleConfirmTime}
             staffId={selectedStaff?.staffId}
+            totalDuration={totalDuration}
           />
         )}
 
@@ -252,7 +278,7 @@ const CustomerDashboard = () => {
             <OldCustomerForm
               selectedAppointments={selectedAppointments}
               businessId={businessId}
-              onAppointmentSuccess={handleAppointmentSuccess} 
+              onAppointmentSuccess={handleAppointmentSuccess}
               onNewCustomer={() => setIsAddingNewCustomer(true)}
             />
           ) : (
@@ -263,9 +289,9 @@ const CustomerDashboard = () => {
           )
         )}
 
-        {view === 'thankYou' && <ThankYou />} 
-      </Container>
-    </Box>
+        {view === 'thankYou' && <ThankYou />}
+      </CustomContainer>
+    </DashboardContainer>
   );
 };
 
