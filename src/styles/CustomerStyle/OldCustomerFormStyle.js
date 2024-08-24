@@ -29,7 +29,7 @@ export const FormContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  backgroundColor: '#ffffff',
+  backgroundColor: '#f9f9f9',
   padding: '32px',
   borderRadius: '16px',
   boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.1)',
@@ -40,7 +40,7 @@ export const FormContainer = styled(Box)({
 
 // StyledTextField styling for Old Customer Form
 export const StyledTextField = styled(TextField)({
-  backgroundColor: '#f7f7f7',
+  backgroundColor: '#ffffff',
   borderRadius: '8px',
   marginBottom: '16px',
   boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
