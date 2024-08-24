@@ -43,7 +43,7 @@ export const FormContainer = styled(Box)(({ theme }) => ({
 // CustomerListContainer styling
 export const CustomerListContainer = styled(Box)(({ theme }) => ({
   display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)', // Three columns grid
+  gridTemplateColumns: 'repeat(3, 1fr)', // Three columns grid for PC
   gap: theme.spacing(3),
   backgroundColor: '#ffffff',
   borderRadius: '16px',
@@ -62,6 +62,8 @@ export const CustomerListContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     gridTemplateColumns: '1fr', // Single column on small screens
     padding: theme.spacing(2),
+    maxHeight: '400px', // Adjust max height for small screens
+    overflowY: 'auto',  // Enable vertical scroll only on small screens
   },
 }));
 

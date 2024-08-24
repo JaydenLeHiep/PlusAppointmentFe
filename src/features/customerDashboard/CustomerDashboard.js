@@ -167,7 +167,7 @@ const CustomerDashboard = () => {
 
   const handleNewCustomerSuccess = () => {
     setRedirectingToOldCustomerForm(true);
-  
+
     setTimeout(() => {
       setIsAddingNewCustomer(false);
       setView('customerForm');
@@ -291,16 +291,16 @@ const CustomerDashboard = () => {
             />
           ) : (
             <NewCustomerForm
-            businessId={businessId}
-            onCustomerAdded={handleNewCustomerSuccess}
-          />
-        )
-      )}
+              businessId={businessId}
+              onCustomerAdded={handleNewCustomerSuccess}
+            />
+          )
+        )}
 
-      {view === 'thankYou' && <ThankYou />}
-    </CustomContainer>
-  </DashboardContainer>
-);
+        {view === 'thankYou' && <ThankYou />}
+      </CustomContainer>
+    </DashboardContainer>
+  );
 };
 
 export default CustomerDashboard;
