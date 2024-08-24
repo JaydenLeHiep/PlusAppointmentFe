@@ -26,6 +26,7 @@ import appointmentActionsVi from '../locales/vi/appointment/addAppointment/appoi
 import addAppointmentDialogEn from '../locales/en/appointment/addAppointment/addAppointmentDialogEn.json';
 import addAppointmentDialogVi from '../locales/vi/appointment/addAppointment/addAppointmentDialogVi.json';
 
+
 import homePageEn from '../locales/en/home/homePageEn.json';
 import homePageVi from '../locales/vi/home/homePageVi.json';
 
@@ -77,6 +78,8 @@ import showCustomerDialogVi from '../locales/vi/customer/showCustomerDialogVi.js
 import customerListEn from '../locales/en/customer/customerListEn.json';
 import customerListVi from '../locales/vi/customer/customerListVi.json';
 
+import footerEn from "../locales/en/components/footerEn.json"
+import footerVi from "../locales/vi/components/footerVi.json"
 
 // Import other translation files similarly
 
@@ -112,7 +115,8 @@ i18n
         customerForm: customerFormEn,
         dialogCustomerActions: dialogCustomerActionsEn,
         showCustomerDialog: showCustomerDialogEn,
-        customerList: customerListEn
+        customerList: customerListEn,
+        footer: footerEn
         // Add other namespaces for English
       },
       vi: {
@@ -143,7 +147,8 @@ i18n
         customerForm: customerFormVi,
         dialogCustomerActions: dialogCustomerActionsVi,
         showCustomerDialog: showCustomerDialogVi,
-        customerList: customerListVi
+        customerList: customerListVi,
+        footer: footerVi
         // Add other namespaces for Vietnamese
       },
     },
