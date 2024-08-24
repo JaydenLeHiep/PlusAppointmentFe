@@ -8,7 +8,7 @@ import AppointmentOverviewPage from './AppointmentOverviewPage';
 import OldCustomerForm from './OldCustomerForm';
 import NewCustomerForm from './NewCustomerForm';
 import ThankYou from './ThankYou';
-import { fetchBusinessesById } from '../../../lib/apiClientBusiness';
+import { fetchBusinessesById } from '../../lib/apiClientBusiness';
 import {
   DashboardContainer,
   ErrorContainer,
@@ -17,7 +17,7 @@ import {
   CustomCircularProgress,
   CustomContainer,
   CustomerListContainer,
-} from '../../../styles/CustomerStyle/PCVersion/CustomerDashboardStyle';
+} from '../../styles/CustomerStyle/CustomerDashboardStyle';
 import BackAndNextButtons from './BackNextButtons';
 
 const CustomerDashboard = () => {

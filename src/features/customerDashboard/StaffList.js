@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CircularProgress, Box, Alert, Typography } from '@mui/material';
-import { useStaffsContext } from '../../../context/StaffsContext';
-import { ListItem, ItemBoldText, ItemText } from '../../../styles/CustomerStyle/PCVersion/ListItemStyles';
+import { useStaffsContext } from '../../context/StaffsContext';
+import { ListItem, ItemBoldText, ItemText } from '../../styles/CustomerStyle/ListItemStyles';
 
 const StaffList = ({ businessId, onStaffSelect, searchQuery }) => {
   const { staff, fetchAllStaff } = useStaffsContext();

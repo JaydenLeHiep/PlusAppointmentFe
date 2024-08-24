@@ -7,7 +7,7 @@ import {
   PhoneWrapper,
   IconWrapper,
   InfoText,
-} from '../../../styles/CustomerStyle/PCVersion/CustomerBusinessInfoStyle';
+} from '../../styles/CustomerStyle/CustomerBusinessInfoStyle';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 
