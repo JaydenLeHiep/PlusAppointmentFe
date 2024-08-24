@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Snackbar, Alert, Box, Checkbox, Typography } from '@mui/material';
+import { Snackbar, Alert, Box, Checkbox, Typography, CircularProgress } from '@mui/material';
 import { useCustomersContext } from '../../../context/CustomerContext';
-import { fetchCustomerId } from '../../../lib/apiClientCustomer';
 import {
   CustomButton,
   FormContainer,
@@ -20,21 +19,13 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [showRedirectMessage, setShowRedirectMessage] = useState(false);
+  const [countdown, setCountdown] = useState(5);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Check if the customer already exists by calling fetchCustomerId
-      const existingCustomer = await fetchCustomerId(formData.email || formData.phone);
-
-      // If the customer already exists, show an error and return early
-      if (existingCustomer && existingCustomer.customerId) {
-        setSubmitError('Customer already exists with the provided email or phone number.');
-        return;
-      }
-
-      // If customer not found, proceed with adding the new customer
       const customerDetails = {
         name: formData.name,
         email: formData.email,
@@ -48,7 +39,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
       // Trigger success state and inform the parent component
       setSubmitSuccess(true);
       setSubmitError('');
-      onCustomerAdded(newCustomer); // Pass the customer data to the parent component
+      onCustomerAdded(newCustomer);
 
       // Reset form data after successful addition
       setFormData({
@@ -56,6 +47,19 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
         email: '',
         phone: ''
       });
+
+      // Show the redirect message and start countdown
+      setShowRedirectMessage(true);
+      const countdownInterval = setInterval(() => {
+        setCountdown((prevCount) => {
+          if (prevCount <= 1) {
+            clearInterval(countdownInterval);
+            setShowRedirectMessage(false);
+            onCustomerAdded(newCustomer); 
+          }
+          return prevCount - 1;
+        });
+      }, 1000);
 
     } catch (error) {
       console.error('Failed to add customer:', error);
@@ -118,6 +122,24 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           </CustomButton>
         </Box>
       </form>
+
+      {showRedirectMessage && (
+        <Box mt={2} textAlign="center">
+          <Typography variant="body2" color="success.main" mb={2}>
+            Add your data successfully! Please come back to Your Information to finish booking.
+          </Typography>
+          <CircularProgress
+            variant="determinate"
+            value={(countdown / 5) * 100}
+            size={40}
+            thickness={4}
+          />
+          <Typography variant="body2" mt={1}>
+            Redirecting in {countdown}...
+          </Typography>
+        </Box>
+      )}
+
       <Snackbar
         open={submitSuccess}
         autoHideDuration={3000}
