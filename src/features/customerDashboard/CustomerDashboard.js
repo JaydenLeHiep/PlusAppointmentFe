@@ -8,7 +8,7 @@ import AppointmentOverviewPage from './AppointmentOverviewPage';
 import OldCustomerForm from './OldCustomerForm';
 import NewCustomerForm from './NewCustomerForm';
 import ThankYou from './ThankYou';
-import { fetchBusinessesById } from '../../lib/apiClientBusiness';
+import { fetchBusinessesByName } from '../../lib/apiClientBusiness';
 import {
   DashboardContainer,
   ErrorContainer,
@@ -23,7 +23,7 @@ import BackAndNextButtons from './BackNextButtons';
 const CustomerDashboard = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const businessId = queryParams.get('business_id');
+  const businessName = queryParams.get('business_name');
 
   const [businessInfo, setBusinessInfo] = useState({});
   const [loading, setLoading] = useState(true);
@@ -40,18 +40,14 @@ const CustomerDashboard = () => {
 
   useEffect(() => {
     const fetchBusiness = async () => {
-      if (!businessId) {
-        setError('Business ID not provided');
+      if (!businessName) {
+        setError('Business name not provided');
         setLoading(false);
         return;
       }
       try {
-        const data = await fetchBusinessesById(businessId);
-        setBusinessInfo({
-          name: data.name,
-          address: data.address,
-          phone: data.phone,
-        });
+        const data = await fetchBusinessesByName(businessName);
+        setBusinessInfo(data); // Store the whole business object
         setLoading(false);
       } catch (error) {
         setError('Error fetching business information');
@@ -61,7 +57,7 @@ const CustomerDashboard = () => {
     };
 
     fetchBusiness();
-  }, [businessId]);
+  }, [businessName]);
 
   const handleServiceSelect = (service) => {
     setSelectedServices([...selectedServices, service]);
@@ -180,8 +176,8 @@ const CustomerDashboard = () => {
     setView('thankYou');
   };
 
-  if (!businessId) {
-        return (
+  if (!businessInfo.businessId) { // Check for businessId from the fetched data
+    return (
       <ErrorContainer>
         <ErrorTypography variant="h6">
           Error: Business ID not provided
@@ -247,7 +243,7 @@ const CustomerDashboard = () => {
         {view === 'services' && (
           <CustomerListContainer>
             <ServiceList
-              businessId={businessId}
+              businessId={businessInfo.businessId} // Use businessId from fetched data
               searchQuery={searchQuery}
               selectedServices={selectedServices}
               onServiceSelect={handleServiceSelect}
@@ -259,7 +255,7 @@ const CustomerDashboard = () => {
         {view === 'staffs' && (
           <CustomerListContainer>
             <StaffList
-              businessId={businessId}
+              businessId={businessInfo.businessId} // Use businessId from fetched data
               searchQuery={searchQuery}
               selectedStaff={selectedStaff} // Pass the selectedStaff state
               onStaffSelect={handleStaffSelect} // Use handleStaffSelect for selection
@@ -291,13 +287,13 @@ const CustomerDashboard = () => {
           !isAddingNewCustomer ? (
             <OldCustomerForm
               selectedAppointments={selectedAppointments}
-              businessId={businessId}
+              businessId={businessInfo.businessId} // Use businessId from fetched data
               onAppointmentSuccess={handleAppointmentSuccess}
               onNewCustomer={() => setIsAddingNewCustomer(true)}
             />
           ) : (
             <NewCustomerForm
-              businessId={businessId}
+              businessId={businessInfo.businessId} // Use businessId from fetched data
               onCustomerAdded={handleNewCustomerSuccess}
             />
           )
