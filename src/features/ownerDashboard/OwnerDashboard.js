@@ -16,13 +16,13 @@ const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 const OwnerDashboard = () => {
   const { appointments, fetchAppointmentsForBusiness } = useAppointmentsContext();
   const { staff, fetchAllStaff } = useStaffsContext();
-  const { services, fetchServices } = useServicesContext();
+  const { services, fetchServices, fetchCategories } = useServicesContext();
 
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const connectionRef = useRef(null); // Use a ref for SignalR connection
+  const connectionRef = useRef(null); 
 
   useEffect(() => {
     const loadBusinesses = async () => {
@@ -56,9 +56,10 @@ const OwnerDashboard = () => {
         await fetchAppointmentsForBusiness(selectedBusiness.businessId);
         await fetchAllStaff(selectedBusiness.businessId);
         await fetchServices(selectedBusiness.businessId);
+        await fetchCategories();
       }
     };
-
+  
     if (selectedBusiness) {
       localStorage.setItem('selectedBusiness', JSON.stringify(selectedBusiness));
       localStorage.setItem('selectedBusinessId', selectedBusiness.businessId);
@@ -67,7 +68,7 @@ const OwnerDashboard = () => {
       localStorage.removeItem('selectedBusiness');
       localStorage.removeItem('selectedBusinessId');
     }
-  }, [selectedBusiness, fetchAppointmentsForBusiness, fetchAllStaff, fetchServices]);
+  }, [selectedBusiness, fetchAppointmentsForBusiness, fetchAllStaff, fetchServices, fetchCategories]);
 
   // Setup SignalR connection
   useEffect(() => {
@@ -79,11 +80,9 @@ const OwnerDashboard = () => {
 
       try {
         await newConnection.start();
-        console.log('Connected to SignalR hub');
         connectionRef.current = newConnection;
 
         newConnection.on('ReceiveAppointmentUpdate', async (message) => {
-          console.log('New appointment update:', message);
           if (selectedBusiness && selectedBusiness.businessId) {
             await fetchAppointmentsForBusiness(selectedBusiness.businessId); // Refresh the appointments
           }
