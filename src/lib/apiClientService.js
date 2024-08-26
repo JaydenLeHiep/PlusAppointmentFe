@@ -79,3 +79,22 @@ export const deleteService = async (businessId, serviceId) => {
   });
   return await handleApiResponse(response);
 };
+
+// Fetch all categories
+export const fetchCategories = async () => {
+  const token = getToken();
+  const response = await fetch(`${apiBaseUrl}/api/servicecategory`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  const data = await handleApiResponse(response);
+  if (Array.isArray(data.$values)) {
+    return data.$values;
+  } else {
+    console.error('Unexpected data format:', data);
+    throw new Error('Unexpected data format');
+  }
+};

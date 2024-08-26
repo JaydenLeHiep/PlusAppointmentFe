@@ -1,7 +1,7 @@
-import React, { Fragment, useRef, useEffect } from 'react';
+import React, { useRef, useEffect, Fragment } from 'react';
 import { List, ListItem, ListItemText, IconButton, Typography, Collapse, Box } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import { useTranslation } from 'react-i18next'; // Import useTranslation hook
+import { useTranslation } from 'react-i18next';
 import ServiceForm from './ServiceForm';
 
 const ServiceList = ({
@@ -12,9 +12,9 @@ const ServiceList = ({
   newService,
   setNewService,
   handleUpdateService,
-  handleCancelForm
+  handleCancelForm,
 }) => {
-  const { t } = useTranslation('serviceList'); // Use the 'serviceList' namespace for translations
+  const { t } = useTranslation('serviceList');
   const formRef = useRef(null);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const ServiceList = ({
 
   return (
     <List>
-      {services.map((service) => (
+      {services.map((service, index) => (
         <Fragment key={service.serviceId}>
           <ListItem
             sx={{
@@ -69,10 +69,9 @@ const ServiceList = ({
               }
             />
           </ListItem>
-          {/* Update Service Form - Only visible when editServiceId matches the current serviceId */}
           {editServiceId === service.serviceId && (
             <Collapse in={editServiceId === service.serviceId}>
-              <Box ref={formRef}> {/* Reference for scrolling */}
+              <Box ref={formRef}>
                 <ServiceForm
                   title={t('updateServiceButton')}
                   newService={newService}
