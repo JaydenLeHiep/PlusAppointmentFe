@@ -29,9 +29,9 @@ export const StyledButton = styled(Button)(({ theme }) => ({
     boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.2)',
   },
   [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(1, 2), // Smaller padding for mobile
-    fontSize: '0.875rem', // Smaller font size for mobile
-    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)', // Lighter shadow for mobile
+    padding: theme.spacing(0.8, 1.8), 
+    fontSize: '0.875rem', 
+    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
   },
 }));
 

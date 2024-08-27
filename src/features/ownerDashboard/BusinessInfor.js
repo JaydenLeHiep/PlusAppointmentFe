@@ -48,7 +48,7 @@ const BusinessInfo = ({
               onClick={handleServiceOpen}
               sx={{
                 cursor: 'pointer',
-                fontSize: 40, // Changed to 30px
+                fontSize: 30, // Changed to 30px
               }}
             />
           </Badge>

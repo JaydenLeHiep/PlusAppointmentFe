@@ -32,15 +32,16 @@ export const ServicesProvider = ({ children }) => {
   }, []);
 
   // Fetch categories
-  const fetchCategories = useCallback(async () => {
-    try {
-      const categoriesList = await apiFetchCategories();
-      setCategories(categoriesList);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-      setAlert({ message: 'Failed to fetch categories.', severity: 'error' });
-    }
-  }, []);
+const fetchCategories = useCallback(async () => {
+  try {
+    const categoriesList = await apiFetchCategories();
+    console.log('Fetched Categories from Backend:', categoriesList); // Log the fetched categories
+    setCategories(categoriesList);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    setAlert({ message: 'Failed to fetch categories.', severity: 'error' });
+  }
+}, []);
 
   // Fetch all data on initialization
   useEffect(() => {

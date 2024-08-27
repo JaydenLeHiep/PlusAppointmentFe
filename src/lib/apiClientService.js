@@ -82,12 +82,10 @@ export const deleteService = async (businessId, serviceId) => {
 
 // Fetch all categories
 export const fetchCategories = async () => {
-  const token = getToken();
   const response = await fetch(`${apiBaseUrl}/api/servicecategory`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
     }
   });
   const data = await handleApiResponse(response);

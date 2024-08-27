@@ -9,6 +9,7 @@ import OldCustomerForm from './OldCustomerForm';
 import NewCustomerForm from './NewCustomerForm';
 import ThankYou from './ThankYou';
 import { fetchBusinessesByName } from '../../lib/apiClientBusiness';
+import { useServicesContext } from '../../context/ServicesContext';
 import {
   DashboardContainer,
   ErrorContainer,
@@ -31,12 +32,14 @@ const CustomerDashboard = () => {
   const [view, setView] = useState('services');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
-  const [selectedStaff, setSelectedStaff] = useState(null);  // Change to a single selectedStaff
+  const [selectedStaff, setSelectedStaff] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedAppointments, setSelectedAppointments] = useState([]);
   const [isAddingNewCustomer, setIsAddingNewCustomer] = useState(false);
   const [, setRedirectingToOldCustomerForm] = useState(false);
+
+  const { services, categories, fetchServices, fetchCategories } = useServicesContext();
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -48,6 +51,8 @@ const CustomerDashboard = () => {
       try {
         const data = await fetchBusinessesByName(businessName);
         setBusinessInfo(data); // Store the whole business object
+        await fetchServices(data.businessId); // Fetch services by business ID
+        await fetchCategories(); // Fetch categories
         setLoading(false);
       } catch (error) {
         setError('Error fetching business information');
@@ -57,7 +62,7 @@ const CustomerDashboard = () => {
     };
 
     fetchBusiness();
-  }, [businessName]);
+  }, [businessName, fetchServices, fetchCategories]);
 
   const handleServiceSelect = (service) => {
     setSelectedServices([...selectedServices, service]);
@@ -220,6 +225,19 @@ const CustomerDashboard = () => {
     return sum + parsedDuration;
   }, 0);
 
+  const columns = [[], [], []];
+  categories.forEach((category, index) => {
+  console.log('Current Category:', category); // Log the current category object
+  console.log('Current Index:', index); // Log the current index
+  
+  // Distribute categories across the columns based on the index modulo the number of columns
+  columns[index % 3].push(category);
+  
+  console.log('Columns after push:', columns); // Log the state of columns after each push
+});
+
+console.log('Final Columns Distribution:', columns); // Log the final distribution of categories across columns
+
   return (
     <DashboardContainer>
       <CustomerBusinessInfo businessInfo={businessInfo} />
@@ -241,15 +259,24 @@ const CustomerDashboard = () => {
         />
 
         {view === 'services' && (
-          <CustomerListContainer>
-            <ServiceList
-              businessId={businessInfo.businessId} // Use businessId from fetched data
-              searchQuery={searchQuery}
-              selectedServices={selectedServices}
-              onServiceSelect={handleServiceSelect}
-              onServiceDeselect={handleServiceDeselect}
-            />
-          </CustomerListContainer>
+             <CustomerListContainer>
+             {columns.map((column, colIndex) => (
+               <div key={colIndex}>
+                 {column.map(category => (
+                   <ServiceList
+                     key={category.categoryId}
+                     category={category}
+                     services={services.filter(service => service.categoryId === category.categoryId)}
+                     businessId={businessInfo.businessId}
+                     searchQuery={searchQuery}
+                     selectedServices={selectedServices}
+                     onServiceSelect={handleServiceSelect}
+                     onServiceDeselect={handleServiceDeselect}
+                   />
+                 ))}
+               </div>
+             ))}
+           </CustomerListContainer>
         )}
 
         {view === 'staffs' && (
@@ -290,19 +317,19 @@ const CustomerDashboard = () => {
               businessId={businessInfo.businessId} // Use businessId from fetched data
               onAppointmentSuccess={handleAppointmentSuccess}
               onNewCustomer={() => setIsAddingNewCustomer(true)}
-            />
-          ) : (
-            <NewCustomerForm
-              businessId={businessInfo.businessId} // Use businessId from fetched data
-              onCustomerAdded={handleNewCustomerSuccess}
-            />
-          )
-        )}
-
-        {view === 'thankYou' && <ThankYou />}
-      </CustomContainer>
-    </DashboardContainer>
-  );
-};
-
-export default CustomerDashboard;
+              />
+            ) : (
+              <NewCustomerForm
+                businessId={businessInfo.businessId} // Use businessId from fetched data
+                onCustomerAdded={handleNewCustomerSuccess}
+              />
+            )
+          )}
+  
+          {view === 'thankYou' && <ThankYou />}
+        </CustomContainer>
+      </DashboardContainer>
+    );
+  };
+  
+  export default CustomerDashboard;
