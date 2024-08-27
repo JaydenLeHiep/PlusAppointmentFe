@@ -10,30 +10,31 @@ import {
   Alert,
 } from '@mui/material';
 import { Add, Close as CloseIcon } from '@mui/icons-material';
-import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
+import { useTranslation } from 'react-i18next';
 import { useServicesContext } from '../../../context/ServicesContext';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import ServiceList from './ServiceList';
 import ServiceForm from './ServiceForm';
 
 const ShowServicesDialog = ({ open, onClose, businessId }) => {
-  const { t } = useTranslation('showServicesDialog'); // Use the 'showServicesDialog' namespace
+  const { t } = useTranslation('showServicesDialog');
   const { services, addService, updateService, deleteService } = useServicesContext();
 
-  const [editServiceId, setEditServiceId] = useState(null); // Track which service is being edited
+  const [editServiceId, setEditServiceId] = useState(null);
   const [newService, setNewService] = useState({
     name: '',
     description: '',
-    duration: '00:30', // Default to 30 minutes
-    price: ''
+    duration: '00:30',
+    price: '',
+    categoryId: null,
   });
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isAddFormOpen, setIsAddFormOpen] = useState(false);
   const [alert, setAlert] = useState({ message: '', severity: '' });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [serviceToDelete, setServiceToDelete] = useState(null); // For tracking the service to be deleted
+  const [serviceToDelete, setServiceToDelete] = useState(null);
 
-  const alertRef = useRef(null); // Ref for alert message
-  const formRef = useRef(null); // Ref for expanding form
+  const alertRef = useRef(null);
+  const formRef = useRef(null);
 
   useEffect(() => {
     if (alert.message) {
@@ -42,14 +43,14 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
       }
       const timer = setTimeout(() => {
         setAlert({ message: '', severity: '' });
-      }, 5000); // 5 seconds
+      }, 5000);
 
       return () => clearTimeout(timer);
     }
   }, [alert]);
 
   const closeFormAndExecuteAction = async (action) => {
-    setIsFormOpen(false);
+    setIsAddFormOpen(false);
     setEditServiceId(null);
     setTimeout(() => {
       action();
@@ -62,7 +63,8 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
         const serviceDetails = {
           ...newService,
           BusinessId: String(businessId),
-          duration: newService.duration + ':00'
+          duration: newService.duration + ':00',
+          categoryId: newService.categoryId,
         };
 
         await addService(String(businessId), serviceDetails);
@@ -72,7 +74,8 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
           name: '',
           description: '',
           duration: '00:30',
-          price: ''
+          price: '',
+          categoryId: null,
         });
       } catch (error) {
         console.error('Failed to add service:', error);
@@ -88,7 +91,8 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
         const serviceDetails = {
           ...newService,
           duration: newService.duration + ':00',
-          BusinessId: String(businessId)
+          BusinessId: String(businessId),
+          categoryId: newService.categoryId,
         };
 
         await updateService(String(businessId), serviceId, serviceDetails);
@@ -98,7 +102,8 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
           name: '',
           description: '',
           duration: '00:30',
-          price: ''
+          price: '',
+          categoryId: null,
         });
       } catch (error) {
         console.error('Failed to update service:', error);
@@ -109,8 +114,8 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
   };
 
   const confirmDeleteService = (serviceId) => {
-    setServiceToDelete(serviceId); // Set the service to be deleted
-    setConfirmDialogOpen(true); // Open the confirmation dialog
+    setServiceToDelete(serviceId);
+    setConfirmDialogOpen(true);
   };
 
   const handleDeleteService = () => {
@@ -123,8 +128,8 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
         const errorMessage = error.response?.data?.message || error.message || t('serviceDeletedError');
         setAlert({ message: errorMessage, severity: 'error' });
       } finally {
-        setConfirmDialogOpen(false); // Close the confirmation dialog after deletion
-        setServiceToDelete(null); // Clear the serviceToDelete state
+        setConfirmDialogOpen(false);
+        setServiceToDelete(null);
       }
     });
   };
@@ -135,36 +140,40 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
       name: service.name,
       description: service.description,
       duration: service.duration.substring(0, 5),
-      price: service.price
+      price: service.price,
+      categoryId: service.categoryId || null,
     });
+    setIsAddFormOpen(false); // Close add form when editing
   };
 
   const handleAddNewServiceClick = () => {
-    setIsFormOpen(!isFormOpen);
+    setIsAddFormOpen(!isAddFormOpen);
     setNewService({
       name: '',
       description: '',
       duration: '00:30',
-      price: ''
+      price: '',
+      categoryId: null,
     });
-    setEditServiceId(null); // Close the edit form if add form is opened
+    setEditServiceId(null);
     setAlert({ message: '', severity: '' });
 
     setTimeout(() => {
       if (formRef.current) {
         formRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
-    }, 300); // Adjust delay to match animation time
+    }, 300);
   };
 
   const handleCancelForm = () => {
-    setIsFormOpen(false);
+    setIsAddFormOpen(false);
     setEditServiceId(null);
     setNewService({
       name: '',
       description: '',
       duration: '00:30',
-      price: ''
+      price: '',
+      categoryId: null,
     });
   };
 
@@ -187,7 +196,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginLeft: '3px'
+            marginLeft: '3px',
           }}
         >
           {t('serviceListTitle')}
@@ -199,7 +208,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
           <Alert
             severity={alert.severity}
             onClose={() => setAlert({ message: '', severity: '' })}
-            ref={alertRef} // Reference for scrolling to the alert message
+            ref={alertRef}
             sx={{ mt: 2 }}
           >
             {alert.message}
@@ -225,7 +234,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
               <Add sx={{ fontSize: '40px' }} /> {t('addNewService')}
             </Typography>
           </Box>
-          <Collapse in={isFormOpen}>
+          <Collapse in={isAddFormOpen}>
             <ServiceForm
               title={t('addNewService')}
               newService={newService}

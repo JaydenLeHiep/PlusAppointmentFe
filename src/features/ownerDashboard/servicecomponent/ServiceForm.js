@@ -1,11 +1,13 @@
 import React, { useRef, useEffect } from 'react';
-import { Box, Typography, TextField, Button, IconButton } from '@mui/material';
+import { Box, Typography, TextField, Button, IconButton, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
+import { useServicesContext } from '../../../context/ServicesContext';
 
 const ServiceForm = ({ title, newService, setNewService, handleAction, handleCancelForm, buttonText, buttonColor }) => {
-  const { t } = useTranslation('serviceServiceForm'); // Use the 'serviceServiceForm' namespace
+  const { t } = useTranslation('serviceServiceForm');
   const formRef = useRef(null);
+  const { categories } = useServicesContext();
 
   useEffect(() => {
     if (formRef.current) {
@@ -111,6 +113,45 @@ const ServiceForm = ({ title, newService, setNewService, handleAction, handleCan
           },
         }}
       />
+      {/* Dropdown for Category */}
+      <FormControl
+        fullWidth
+        margin="dense"
+        sx={{
+          backgroundColor: '#ffffff',
+          borderRadius: '12px',
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              border: 'none', // Removing the default border
+            },
+          },
+        }}
+      >
+        <InputLabel>{t('categoryLabel')}</InputLabel>
+        <Select
+          value={newService.categoryId || ''} // Ensure categoryId is set properly
+          onChange={(e) => setNewService({ ...newService, categoryId: e.target.value })}
+          label={t('categoryLabel')}
+          sx={{
+            backgroundColor: '#ffffff',
+            borderRadius: '12px',
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                border: 'none', // Removing the default border
+              },
+            },
+          }}
+        >
+          {categories.map((category) => (
+            <MenuItem key={category.categoryId} value={category.categoryId}>
+              {category.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
       <Box mt={3} display="flex" justifyContent="space-between">
         <Button
           onClick={handleCancelForm}
