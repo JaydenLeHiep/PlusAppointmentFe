@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 
 export const BusinessInfoContainer = styled(Box)(({ theme }) => ({
   maxWidth: '100%',
-  backgroundColor: '#f0f8ff',
+  backgroundColor: '#E0F7FA',
   padding: theme.spacing(2, 3), 
   display: 'flex',
   flexDirection: 'column',
