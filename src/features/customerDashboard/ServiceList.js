@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { CircularProgress, Box, Alert, Typography, IconButton, Collapse } from '@mui/material';
+import { CircularProgress, Alert, Collapse, List } from '@mui/material';
 import { useServicesContext } from '../../context/ServicesContext';
-import { ListItem, ItemBoldText, ItemText } from '../../styles/CustomerStyle/ListItemStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import {
+  CategoryHeader,
+  ServiceItem,
+  CategoryText,
+  ServiceText,
+  ServiceListContainer,
+  ExpandIcon,
+} from '../../styles/CustomerStyle/ServiceListStyle';
+import { IconButton, Typography } from '@mui/material';
 
-const ServiceList = ({ businessId, onServiceSelect, searchQuery, selectedServices, onServiceDeselect }) => {
+const ServiceList = ({ businessId, onServiceSelect, searchQuery, selectedServices, onServiceDeselect, category }) => {
   const { services, fetchServices, loading, error } = useServicesContext();
+  const [expandedCategoryId, setExpandedCategoryId] = useState(null);
   const [expandedService, setExpandedService] = useState(null);
   const isMobile = useMediaQuery('(max-width:500px)');
 
@@ -31,8 +41,8 @@ const ServiceList = ({ businessId, onServiceSelect, searchQuery, selectedService
     return selectedServices.some(selectedService => selectedService.serviceId === service.serviceId);
   };
 
-  const handleToggleExpand = (serviceId) => {
-    setExpandedService(prev => (prev === serviceId ? null : serviceId));
+  const handleCategoryToggle = (categoryId) => {
+    setExpandedCategoryId(prevCategoryId => prevCategoryId === categoryId ? null : categoryId);
   };
 
   const handleServiceClick = (service) => {
@@ -43,40 +53,53 @@ const ServiceList = ({ businessId, onServiceSelect, searchQuery, selectedService
     }
   };
 
+  const handleToggleExpand = (serviceId) => {
+    setExpandedService(prev => (prev === serviceId ? null : serviceId));
+  };
+
   return (
-    <React.Fragment>
-      {filteredServices.map(service => (
-        <ListItem
-          key={service.serviceId}
-          selected={isServiceSelected(service)}
-          onClick={() => handleServiceClick(service)} // Toggle selection on click
-        >
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            width="100%"
-          >
-            <ItemBoldText>{service.name}</ItemBoldText>
-            {isMobile && (
-              <IconButton onClick={(e) => { e.stopPropagation(); handleToggleExpand(service.serviceId); }}>
-                <ExpandMoreIcon
-                  style={{
-                    transform: expandedService === service.serviceId ? 'rotate(180deg)' : 'rotate(0deg)',
-                    transition: 'transform 0.3s ease',
-                  }}
-                />
-              </IconButton>
-            )}
-          </Box>
-          <Collapse in={!isMobile || expandedService === service.serviceId}>
-            <ItemText>{service.duration}</ItemText>
-            <ItemText>€{service.price}</ItemText>
-            <ItemText>{service.description}</ItemText>
-          </Collapse>
-        </ListItem>
-      ))}
-    </React.Fragment>
+    <List>
+      <React.Fragment key={category.categoryId}>
+        <CategoryHeader button onClick={() => handleCategoryToggle(category.categoryId)}>
+          <CategoryText>
+            {category.name}
+          </CategoryText>
+          <ExpandIcon expanded={expandedCategoryId === category.categoryId}>
+            {expandedCategoryId === category.categoryId ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </ExpandIcon>
+        </CategoryHeader>
+        <Collapse in={expandedCategoryId === category.categoryId}>
+          {filteredServices
+            .filter(service => service.categoryId === category.categoryId)
+            .map(service => (
+              <ServiceItem
+                key={service.serviceId}
+                selected={isServiceSelected(service)}
+                onClick={() => handleServiceClick(service)}
+              >
+                <ServiceListContainer>
+                  <CategoryText>{service.name}</CategoryText>
+                  {isMobile && (
+                    <IconButton onClick={(e) => { e.stopPropagation(); handleToggleExpand(service.serviceId); }}>
+                      <ExpandMoreIcon
+                        style={{
+                          transform: expandedService === service.serviceId ? 'rotate(180deg)' : 'rotate(0deg)',
+                          transition: 'transform 0.3s ease',
+                        }}
+                      />
+                    </IconButton>
+                  )}
+                </ServiceListContainer>
+                <Collapse in={!isMobile || expandedService === service.serviceId}>
+                  <ServiceText>{service.duration}</ServiceText>
+                  <ServiceText>€{service.price}</ServiceText>
+                  <ServiceText>{service.description}</ServiceText>
+                </Collapse>
+              </ServiceItem>
+            ))}
+        </Collapse>
+      </React.Fragment>
+    </List>
   );
 };
 

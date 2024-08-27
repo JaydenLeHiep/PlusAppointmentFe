@@ -78,18 +78,7 @@ export const TimeSlotsGrid = styled(Grid)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-export const NoSlotsMessage = styled(Typography)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-  color: theme.palette.error.main,
-}));
-
 export const ConfirmButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(4),
   fontWeight: 'bold',
-}));
-
-export const SelectedTimeMessage = styled(Typography)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  fontWeight: 'bold',
-  color: theme.palette.primary.main,
 }));
