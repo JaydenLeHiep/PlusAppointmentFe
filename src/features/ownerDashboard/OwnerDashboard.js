@@ -17,17 +17,14 @@ const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 const OwnerDashboard = () => {
   const { appointments, fetchAppointmentsForBusiness } = useAppointmentsContext();
   const { staff, fetchAllStaff } = useStaffsContext();
-
-  const {customers, fetchCustomersForBusiness } = useCustomersContext();
-
+  const { customers, fetchCustomersForBusiness } = useCustomersContext();
   const { services, fetchServices, fetchCategories } = useServicesContext();
-
 
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const connectionRef = useRef(null); 
+  const connectionRef = useRef(null);
 
   useEffect(() => {
     const loadBusinesses = async () => {
@@ -61,14 +58,11 @@ const OwnerDashboard = () => {
         await fetchAppointmentsForBusiness(selectedBusiness.businessId);
         await fetchAllStaff(selectedBusiness.businessId);
         await fetchServices(selectedBusiness.businessId);
-
-        await fetchCustomersForBusiness(selectedBusiness.businessId); 
-
+        await fetchCustomersForBusiness(selectedBusiness.businessId);
         await fetchCategories();
-
       }
     };
-  
+
     if (selectedBusiness) {
       localStorage.setItem('selectedBusiness', JSON.stringify(selectedBusiness));
       localStorage.setItem('selectedBusinessId', selectedBusiness.businessId);
@@ -77,9 +71,14 @@ const OwnerDashboard = () => {
       localStorage.removeItem('selectedBusiness');
       localStorage.removeItem('selectedBusinessId');
     }
-
-  }, [selectedBusiness, fetchAppointmentsForBusiness, fetchAllStaff, fetchServices, fetchCategories, fetchCustomersForBusiness]);
-
+  }, [
+    selectedBusiness,
+    fetchAppointmentsForBusiness,
+    fetchAllStaff,
+    fetchServices,
+    fetchCategories,
+    fetchCustomersForBusiness,
+  ]);
 
   // Setup SignalR connection
   useEffect(() => {
@@ -93,9 +92,31 @@ const OwnerDashboard = () => {
         await newConnection.start();
         connectionRef.current = newConnection;
 
+        // Listen for appointment updates
         newConnection.on('ReceiveAppointmentUpdate', async (message) => {
           if (selectedBusiness && selectedBusiness.businessId) {
             await fetchAppointmentsForBusiness(selectedBusiness.businessId); // Refresh the appointments
+          }
+        });
+
+        // Listen for service updates
+        newConnection.on('ReceiveServiceUpdate', async (message) => {
+          if (selectedBusiness && selectedBusiness.businessId) {
+            await fetchServices(selectedBusiness.businessId); // Refresh the services
+          }
+        });
+
+        // Listen for staff updates
+        newConnection.on('ReceiveStaffUpdate', async (message) => {
+          if (selectedBusiness && selectedBusiness.businessId) {
+            await fetchAllStaff(selectedBusiness.businessId); // Refresh the staff
+          }
+        });
+
+        // Listen for customer updates
+        newConnection.on('ReceiveCustomerUpdate', async (message) => {
+          if (selectedBusiness && selectedBusiness.businessId) {
+            await fetchCustomersForBusiness(selectedBusiness.businessId); // Refresh the customers
           }
         });
       } catch (error) {
@@ -110,7 +131,13 @@ const OwnerDashboard = () => {
         connectionRef.current.stop();
       }
     };
-  }, [selectedBusiness, fetchAppointmentsForBusiness]);
+  }, [
+    selectedBusiness,
+    fetchAppointmentsForBusiness,
+    fetchAllStaff,
+    fetchServices,
+    fetchCustomersForBusiness,
+  ]);
 
   const handleBusinessClick = (business) => {
     setSelectedBusiness(business);
@@ -172,7 +199,7 @@ const OwnerDashboard = () => {
                   staff={staff}
                   services={services}
                   appointments={appointments}
-                  customers= {customers}
+                  customers={customers}
                 />
                 <AppointmentList
                   appointments={appointments}
