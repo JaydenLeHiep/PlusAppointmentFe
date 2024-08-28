@@ -44,6 +44,7 @@ const CustomerDashboard = () => {
   const [, setRedirectingToOldCustomerForm] = useState(false);
 
   const { services, categories, fetchServices, fetchCategories } = useServicesContext();
+  const [expandedCategoryId, setExpandedCategoryId] = useState(null);
 
   const connectionRef = useRef(null);
 
@@ -226,6 +227,22 @@ const CustomerDashboard = () => {
     setView('thankYou');
   };
 
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+
+    if (query) {
+      const matchingService = services.find(service =>
+        service.name.toLowerCase().includes(query.toLowerCase())
+      );
+
+      if (matchingService) {
+        setExpandedCategoryId(matchingService.categoryId);
+      }
+    } else {
+      setExpandedCategoryId(null); // Collapse all if the search query is cleared
+    }
+  };
+
   if (!businessInfo.businessId) { // Check for businessId from the fetched data
     return (
       <ErrorContainer>
@@ -290,7 +307,7 @@ const CustomerDashboard = () => {
             (view === 'calendar' && (!selectedDate || !selectedTime))
           }
           searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
+          onSearchChange={handleSearchChange}
           view={view}
           isAddingNewCustomer={isAddingNewCustomer}
         />
@@ -309,6 +326,8 @@ const CustomerDashboard = () => {
                     selectedServices={selectedServices}
                     onServiceSelect={handleServiceSelect}
                     onServiceDeselect={handleServiceDeselect}
+                    expandedCategoryId={expandedCategoryId}
+                    setExpandedCategoryId={setExpandedCategoryId}
                   />
                 ))}
               </div>
