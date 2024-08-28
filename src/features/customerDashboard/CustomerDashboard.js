@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import CustomerBusinessInfo from './CustomerBusinessInfo';
 import ServiceList from './ServiceList';
@@ -10,6 +10,7 @@ import NewCustomerForm from './NewCustomerForm';
 import ThankYou from './ThankYou';
 import { fetchBusinessesByName } from '../../lib/apiClientBusiness';
 import { useServicesContext } from '../../context/ServicesContext';
+import * as signalR from '@microsoft/signalr';
 import {
   DashboardContainer,
   ErrorContainer,
@@ -20,6 +21,9 @@ import {
   CustomerListContainer,
 } from '../../styles/CustomerStyle/CustomerDashboardStyle';
 import BackAndNextButtons from './BackNextButtons';
+import { fetchStaff } from '../../lib/apiClientStaff';
+
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const CustomerDashboard = () => {
   const location = useLocation();
@@ -40,6 +44,8 @@ const CustomerDashboard = () => {
   const [, setRedirectingToOldCustomerForm] = useState(false);
 
   const { services, categories, fetchServices, fetchCategories } = useServicesContext();
+
+  const connectionRef = useRef(null);
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -63,6 +69,45 @@ const CustomerDashboard = () => {
 
     fetchBusiness();
   }, [businessName, fetchServices, fetchCategories]);
+
+  useEffect(() => {
+    const connectToHub = async () => {
+      const newConnection = new signalR.HubConnectionBuilder()
+        .withUrl(`${apiBaseUrl}/appointmentHub`)
+        .withAutomaticReconnect()
+        .build();
+
+      try {
+        await newConnection.start();
+        connectionRef.current = newConnection;
+
+        // Listen for service updates
+        newConnection.on('ReceiveServiceUpdate', async (message) => {
+          if (businessInfo.businessId) {
+            await fetchServices(businessInfo.businessId); // Refresh the services
+          }
+        });
+
+        // Listen for staff updates
+        newConnection.on('ReceiveStaffUpdate', async (message) => {
+          if (businessInfo.businessId) {
+            await fetchStaff(businessInfo.businessId); // Refresh the staff
+          }
+        });
+
+      } catch (error) {
+        console.error('Error connecting to SignalR hub:', error);
+      }
+    };
+
+    connectToHub();
+
+    return () => {
+      if (connectionRef.current) {
+        connectionRef.current.stop();
+      }
+    };
+  }, [businessInfo.businessId, fetchServices, fetchCategories]);
 
   const handleServiceSelect = (service) => {
     setSelectedServices([...selectedServices, service]);
@@ -227,16 +272,8 @@ const CustomerDashboard = () => {
 
   const columns = [[], [], []];
   categories.forEach((category, index) => {
-  console.log('Current Category:', category); // Log the current category object
-  console.log('Current Index:', index); // Log the current index
-  
-  // Distribute categories across the columns based on the index modulo the number of columns
-  columns[index % 3].push(category);
-  
-  console.log('Columns after push:', columns); // Log the state of columns after each push
-});
-
-console.log('Final Columns Distribution:', columns); // Log the final distribution of categories across columns
+    columns[index % 3].push(category);
+  });
 
   return (
     <DashboardContainer>
@@ -259,24 +296,24 @@ console.log('Final Columns Distribution:', columns); // Log the final distributi
         />
 
         {view === 'services' && (
-             <CustomerListContainer>
-             {columns.map((column, colIndex) => (
-               <div key={colIndex}>
-                 {column.map(category => (
-                   <ServiceList
-                     key={category.categoryId}
-                     category={category}
-                     services={services.filter(service => service.categoryId === category.categoryId)}
-                     businessId={businessInfo.businessId}
-                     searchQuery={searchQuery}
-                     selectedServices={selectedServices}
-                     onServiceSelect={handleServiceSelect}
-                     onServiceDeselect={handleServiceDeselect}
-                   />
-                 ))}
-               </div>
-             ))}
-           </CustomerListContainer>
+          <CustomerListContainer>
+            {columns.map((column, colIndex) => (
+              <div key={colIndex}>
+                {column.map(category => (
+                  <ServiceList
+                    key={category.categoryId}
+                    category={category}
+                    services={services.filter(service => service.categoryId === category.categoryId)}
+                    businessId={businessInfo.businessId}
+                    searchQuery={searchQuery}
+                    selectedServices={selectedServices}
+                    onServiceSelect={handleServiceSelect}
+                    onServiceDeselect={handleServiceDeselect}
+                  />
+                ))}
+              </div>
+            ))}
+          </CustomerListContainer>
         )}
 
         {view === 'staffs' && (
@@ -317,19 +354,19 @@ console.log('Final Columns Distribution:', columns); // Log the final distributi
               businessId={businessInfo.businessId} // Use businessId from fetched data
               onAppointmentSuccess={handleAppointmentSuccess}
               onNewCustomer={() => setIsAddingNewCustomer(true)}
-              />
-            ) : (
-              <NewCustomerForm
-                businessId={businessInfo.businessId} // Use businessId from fetched data
-                onCustomerAdded={handleNewCustomerSuccess}
-              />
-            )
-          )}
-  
-          {view === 'thankYou' && <ThankYou />}
-        </CustomContainer>
-      </DashboardContainer>
-    );
-  };
-  
-  export default CustomerDashboard;
+            />
+          ) : (
+            <NewCustomerForm
+              businessId={businessInfo.businessId} // Use businessId from fetched data
+              onCustomerAdded={handleNewCustomerSuccess}
+            />
+          )
+        )}
+
+        {view === 'thankYou' && <ThankYou />}
+      </CustomContainer>
+    </DashboardContainer>
+  );
+};
+
+export default CustomerDashboard;
