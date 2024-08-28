@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Snackbar, Alert, Box } from '@mui/material';
-import { fetchCustomerByEmailOrPhone } from '../../lib/apiClientCustomer';
+import {fetchCustomerByEmailOrPhoneAndBusinessId } from '../../lib/apiClientCustomer';
 import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import {
   CustomButton,          
@@ -31,7 +31,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
     e.preventDefault();
   
     try {
-      const customerId = await fetchCustomerByEmailOrPhone(emailOrPhone);
+      const customerId = await fetchCustomerByEmailOrPhoneAndBusinessId(emailOrPhone, businessId);
   
       if (customerId) {
         if (!Array.isArray(selectedAppointments)) {
