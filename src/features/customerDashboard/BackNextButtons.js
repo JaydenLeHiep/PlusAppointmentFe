@@ -3,7 +3,22 @@ import { Box, InputAdornment } from '@mui/material';
 import { ButtonContainer, StyledButton, StyledTextFieldContainer, StyledTextField } from '../../styles/CustomerStyle/BackNextButtonsStyle';
 import SearchIcon from '@mui/icons-material/Search';
 
-const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext, searchQuery, onSearchChange, view, isAddingNewCustomer }) => {
+const BackAndNextButtons = ({
+  onBackClick,
+  onNextClick,
+  disableBack,
+  disableNext,
+  searchQuery,
+  onSearchChange,
+  view,
+  isAddingNewCustomer,
+}) => {
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    onSearchChange(query);
+  };
+
   return (
     <ButtonContainer>
       {view !== 'thankYou' && (
@@ -24,12 +39,12 @@ const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext
           <StyledTextField
             placeholder="Search..."
             value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={handleSearchChange}
             variant="outlined"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <SearchIcon style={{ color: '#1976d2' }} /> {/* Blue icon for brand consistency */}
+                  <SearchIcon style={{ color: '#1976d2' }} />
                 </InputAdornment>
               ),
             }}

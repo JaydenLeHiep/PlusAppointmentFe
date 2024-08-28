@@ -14,9 +14,17 @@ import {
 } from '../../styles/CustomerStyle/ServiceListStyle';
 import { IconButton, Typography } from '@mui/material';
 
-const ServiceList = ({ businessId, onServiceSelect, searchQuery, selectedServices, onServiceDeselect, category }) => {
+const ServiceList = ({
+  businessId,
+  onServiceSelect,
+  searchQuery,
+  selectedServices,
+  onServiceDeselect,
+  category,
+  expandedCategoryId,
+  setExpandedCategoryId,
+}) => {
   const { services, fetchServices, loading, error } = useServicesContext();
-  const [expandedCategoryId, setExpandedCategoryId] = useState(null);
   const [expandedService, setExpandedService] = useState(null);
   const isMobile = useMediaQuery('(max-width:500px)');
 
