@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 const views = ['dayGridMonth', 'timeGridDay', 'resourceTimeGridDay'];
 
-const FullCalendarComponent = ({ events, staff }) => {
+const FullCalendarComponent = ({ events, staff, services }) => {
   const { t } = useTranslation('fullCalendarComponent');
   const [currentView, setCurrentView] = useState(views[0]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -62,21 +62,21 @@ const FullCalendarComponent = ({ events, staff }) => {
 
   const updatedEvents = currentView === 'resourceTimeGridDay'
     ? events.map(event => {
-        const resource = resources.find(res => res.title === event.staffName);
-        return {
-          ...event,
-          resourceIds: [resource?.id],
-        };
-      })
+      const resource = resources.find(res => res.title === event.staffName);
+      return {
+        ...event,
+        resourceIds: [resource?.id],
+      };
+    })
     : events.reduce((acc, event) => {
-        const existingEvent = acc.find(e => e.appointmentId === event.appointmentId);
-        if (existingEvent && currentView === 'timeGridDay') {
-          existingEvent.end = new Date(Math.max(new Date(existingEvent.end), new Date(event.end))).toISOString();
-        } else {
-          acc.push({ ...event, resourceIds: [] });
-        }
-        return acc;
-      }, []);
+      const existingEvent = acc.find(e => e.appointmentId === event.appointmentId);
+      if (existingEvent && currentView === 'timeGridDay') {
+        existingEvent.end = new Date(Math.max(new Date(existingEvent.end), new Date(event.end))).toISOString();
+      } else {
+        acc.push({ ...event, resourceIds: [] });
+      }
+      return acc;
+    }, []);
 
   return (
     <Box
@@ -119,6 +119,8 @@ const FullCalendarComponent = ({ events, staff }) => {
           open={isModalOpen}
           appointment={selectedAppointment} // Pass the full appointment data
           onClose={handleCloseModal}
+          staff={staff}
+          services={services}
         />
       )}
     </Box>

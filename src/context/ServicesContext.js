@@ -26,7 +26,7 @@ export const ServicesProvider = ({ children }) => {
       }));
       setServices(mappedServices);
     } catch (error) {
-      console.error('Error fetching services:', error);
+      
       setAlert({ message: 'Failed to fetch services.', severity: 'error' });
     }
   }, []);
@@ -35,10 +35,10 @@ export const ServicesProvider = ({ children }) => {
 const fetchCategories = useCallback(async () => {
   try {
     const categoriesList = await apiFetchCategories();
-    console.log('Fetched Categories from Backend:', categoriesList); // Log the fetched categories
+  
     setCategories(categoriesList);
   } catch (error) {
-    console.error('Error fetching categories:', error);
+    
     setAlert({ message: 'Failed to fetch categories.', severity: 'error' });
   }
 }, []);
