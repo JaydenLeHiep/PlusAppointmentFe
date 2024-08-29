@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { TextField, Button, InputAdornment, IconButton, Alert } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { TextField, Button, InputAdornment, IconButton, Alert, Checkbox, FormControlLabel } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
@@ -7,14 +7,25 @@ import { loginUser } from '../../../lib/apiClient';
 import { useTranslation } from 'react-i18next';
 
 const LoginForm = () => {
-  const { t } = useTranslation('loginForm'); // Use the 'loginForm' namespace for translations
+  const { t } = useTranslation('loginForm');
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [message, setMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('info');
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedUsername = localStorage.getItem('savedUsername');
+    const savedRememberMe = localStorage.getItem('rememberMe') === 'true';
+
+    if (savedUsername) {
+      setUsernameOrEmail(savedUsername);
+      setRememberMe(savedRememberMe);
+    }
+  }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -24,14 +35,17 @@ const LoginForm = () => {
 
       setMessage(data.message || t('loginSuccessful'));
       setAlertVariant('success');
-      
-      // Store token in localStorage and update auth state
+
       login(data.token, { username: data.username, role: data.role });
 
-      // Set a flag indicating a new login
-      localStorage.setItem('isNewLogin', 'true');
+      if (rememberMe) {
+        localStorage.setItem('savedUsername', usernameOrEmail);
+        localStorage.setItem('rememberMe', 'true');
+      } else {
+        localStorage.removeItem('savedUsername');
+        localStorage.removeItem('rememberMe');
+      }
 
-      // Redirect based on user role or other criteria
       navigate('/owner-dashboard');
     } catch (error) {
       setMessage(error.message || t('loginFailed'));
@@ -70,6 +84,10 @@ const LoginForm = () => {
           )
         }}
         required
+      />
+      <FormControlLabel
+        control={<Checkbox checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />}
+        label={t('rememberMe')}
       />
       <Button variant="contained" color="primary" type="submit" fullWidth sx={{ mt: 2 }} disabled={!usernameOrEmail || !password}>
         {t('login')}

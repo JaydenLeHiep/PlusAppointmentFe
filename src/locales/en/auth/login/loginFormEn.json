@@ -3,5 +3,6 @@
   "password": "Password",
   "login": "Login",
   "loginSuccessful": "Login successful!",
-  "loginFailed": "Failed to login. Please try again."
+  "loginFailed": "Failed to login. Please try again.",
+  "rememberMe": "Remember Me"
 }
