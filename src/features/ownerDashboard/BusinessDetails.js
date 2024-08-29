@@ -61,9 +61,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
     });
   }).flat();
 
-  console.log("appointment" + appointments);
-  console.log("service" + services)
-  console.log("staff" + staff)
+
 
   return (
     <Box>
