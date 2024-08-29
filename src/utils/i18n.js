@@ -81,6 +81,9 @@ import customerListVi from '../locales/vi/customer/customerListVi.json';
 import footerEn from "../locales/en/components/footerEn.json"
 import footerVi from "../locales/vi/components/footerVi.json"
 
+import staffListEn from "../locales/en/staff/staffListEn.json"
+import staffListVi from "../locales/vi/staff/staffListVi.json"
+
 // Import other translation files similarly
 
 i18n
@@ -116,7 +119,8 @@ i18n
         dialogCustomerActions: dialogCustomerActionsEn,
         showCustomerDialog: showCustomerDialogEn,
         customerList: customerListEn,
-        footer: footerEn
+        footer: footerEn,
+        staffList: staffListEn
         // Add other namespaces for English
       },
       vi: {
@@ -148,7 +152,8 @@ i18n
         dialogCustomerActions: dialogCustomerActionsVi,
         showCustomerDialog: showCustomerDialogVi,
         customerList: customerListVi,
-        footer: footerVi
+        footer: footerVi,
+        staffList: staffListVi
         // Add other namespaces for Vietnamese
       },
     },

@@ -1,6 +1,7 @@
 import React, { Fragment, useRef, useEffect, useState } from 'react';
 import { List, ListItem, ListItemText, IconButton, Typography, Collapse, Box } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import StaffForm from './StaffForm';
 import SearchBar from '../SearchBarContainer'; // Ensure the correct path to the SearchBar component
 
@@ -14,6 +15,7 @@ const StaffList = ({
   handleUpdateStaff,
   handleCancelForm,
 }) => {
+  const { t } = useTranslation('staffList');
   const formRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -36,7 +38,7 @@ const StaffList = ({
       <SearchBar
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Search staff..."
+        placeholder={t('searchPlaceholder')}
       />
 
       <List>

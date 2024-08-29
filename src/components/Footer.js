@@ -25,6 +25,28 @@ const Footer = () => {
           gap: '1rem',
         }}
       >
+       <IconButton
+          component="a"
+          href="https://www.facebook.com/hiep.leduyy/"
+          target="_blank"
+          aria-label="Hiep's Facebook link"
+        >
+          <FacebookIcon sx={{ color: '#4267B2', fontSize: '32px' }} />
+        </IconButton>
+        <Link
+          href="https://www.facebook.com/hiep.leduyy/"
+          target="_blank"
+          sx={{
+            color: '#4267B2',
+            fontSize: '1rem',
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'underline',
+            },
+          }}
+        >
+          Hiệp
+        </Link>
         <IconButton
           component="a"
           href="https://www.facebook.com/profile.php?id=100007379317091"
@@ -56,28 +78,7 @@ const Footer = () => {
           gap: '1rem',
         }}
       >
-        <IconButton
-          component="a"
-          href="https://www.facebook.com/hiepprofile"
-          target="_blank"
-          aria-label="Hiep's Facebook link"
-        >
-          <FacebookIcon sx={{ color: '#4267B2', fontSize: '32px' }} />
-        </IconButton>
-        <Link
-          href="https://www.facebook.com/hiepprofile"
-          target="_blank"
-          sx={{
-            color: '#4267B2',
-            fontSize: '1rem',
-            textDecoration: 'none',
-            '&:hover': {
-              textDecoration: 'underline',
-            },
-          }}
-        >
-          Hiệp
-        </Link>
+       
       </Box>
     </Box>
   );

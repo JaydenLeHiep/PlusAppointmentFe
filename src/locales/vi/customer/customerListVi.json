@@ -5,6 +5,7 @@
     "customerName": "Tên",
     "customerEmail": "Email",
     "customerPhone": "Số điện thoại",
-    "cancel": "Hủy"
+    "cancel": "Hủy",
+    "searchCustomer": "Tìm kiếm khách hàng"
   }
   

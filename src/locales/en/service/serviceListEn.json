@@ -1,6 +1,7 @@
 {
     "edit": "Edit",
     "delete": "Delete",
-    "updateServiceButton": "Update Service"
+    "updateServiceButton": "Update Service",
+    "searchPlaceholder": "Find the service"
   }
   

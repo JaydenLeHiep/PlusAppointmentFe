@@ -15,7 +15,7 @@ const CustomerList = ({
   handleUpdateCustomer,
   handleCancelForm,
 }) => {
-  const { t } = useTranslation();  // Initialize the translation hook
+  const { t } = useTranslation("customerList");  // Initialize the translation hook
   const formRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState('');
 
