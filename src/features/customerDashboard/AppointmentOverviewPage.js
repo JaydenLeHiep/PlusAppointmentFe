@@ -6,6 +6,7 @@ import {
   OverviewText,
   OverviewButton,
   StyledListItemText,
+  ServiceNameText
 } from '../../styles/CustomerStyle/AppointmentOverViewPageStyle';
 
 const formatDate = (appointmentTime) => {
@@ -25,14 +26,24 @@ const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFi
 
   return (
     <OverviewContainer>
-      <Typography variant="h5" sx={{ marginBottom: 3, fontWeight: 'bold', color: '#1976d2', textAlign: 'center' }}>
+      <Typography
+        variant="h5"
+        sx={{
+          fontSize: '35px',
+          marginBottom: 3,
+          fontWeight: 'bold',
+          color: 'Black', // Updated to a strong pink-red color to match the theme
+          textAlign: 'center'
+        }}
+      >
         Appointment Overview
       </Typography>
       {selectedAppointments.map((appointment, index) => (
         <OverviewItem key={index}>
           <Box>
+            <ServiceNameText>Service: {appointment.serviceName}</ServiceNameText>
             <OverviewText>Staff: {appointment.staffName}</OverviewText>
-            <Typography variant="body2" sx={{ marginBottom: 2 }}>
+            <Typography variant="body2">
               Date: {formatDate(appointment.appointmentTime)} | Time: {formatTime(appointment.appointmentTime)}
             </Typography>
             <List dense>

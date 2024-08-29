@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 // DashboardContainer styling
 export const DashboardContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
-  backgroundColor: '#E0F7FA',
+  backgroundColor: '#ffffff',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
@@ -19,14 +19,13 @@ export const CustomerListContainer = styled(Box)(({ theme }) => ({
   flex: 1,
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 1fr)', 
-  backgroundColor: '#F5FBFF',
+  backgroundColor: '#ffffff',
   borderRadius: '16px',
   padding: theme.spacing(4),
   width: '100%',
   maxWidth: '1200px',
   margin: 'auto',
   boxSizing: 'border-box',
-  border: '1px solid #e5e5e5', 
   transition: 'box-shadow 0.3s ease, transform 0.3s ease',
   overflowY: 'auto',
   [theme.breakpoints.down('md')]: {

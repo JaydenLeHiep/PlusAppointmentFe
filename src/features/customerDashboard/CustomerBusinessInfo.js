@@ -18,13 +18,13 @@ const CustomerBusinessInfo = ({ businessInfo }) => {
       <InfoContainer>
         <AddressWrapper>
           <IconWrapper>
-            <LocationOnIcon />
+            <LocationOnIcon style={{ color: 'black' }} /> 
           </IconWrapper>
           <InfoText>{businessInfo.address}</InfoText>
         </AddressWrapper>
         <PhoneWrapper>
           <IconWrapper>
-            <PhoneIcon />
+            <PhoneIcon style={{ color: 'black' }} />
           </IconWrapper>
           <InfoText>{businessInfo.phone}</InfoText>
         </PhoneWrapper>

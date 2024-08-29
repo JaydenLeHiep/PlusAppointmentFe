@@ -18,7 +18,7 @@ import ServiceForm from './ServiceForm';
 
 const ShowServicesDialog = ({ open, onClose, businessId }) => {
   const { t } = useTranslation('showServicesDialog');
-  const { services, addService, updateService, deleteService } = useServicesContext();
+  const { services, addService, updateService, deleteService, fetchCategories } = useServicesContext();
 
   const [editServiceId, setEditServiceId] = useState(null);
   const [newService, setNewService] = useState({
@@ -48,6 +48,12 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
       return () => clearTimeout(timer);
     }
   }, [alert]);
+
+  useEffect(() => {
+    if (open) {
+      fetchCategories();  // Fetch categories only when the dialog is open
+    }
+  }, [open, fetchCategories]);
 
   const closeFormAndExecuteAction = async (action) => {
     setIsAddFormOpen(false);
