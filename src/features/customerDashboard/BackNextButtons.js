@@ -44,7 +44,7 @@ const BackAndNextButtons = ({
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <SearchIcon style={{ color: '#1976d2' }} />
+                  <SearchIcon style={{ color: 'black' }} />
                 </InputAdornment>
               ),
             }}

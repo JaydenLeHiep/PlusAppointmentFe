@@ -98,7 +98,7 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
               value={selectedDate}
               onChange={handleDateChangeWrapper}
               textField={(params) => (
-                <TextField {...params} fullWidth sx={{ fontSize: '1.2rem' }} />
+                <TextField {...params} fullWidth sx={{ fontSize: '1.3rem' }} />
               )}
               disablePast
             />
@@ -109,7 +109,7 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
                   variant="h6"
                   sx={{
                     fontWeight: 'bold',
-                    color: '#1976d2',
+                    color: 'black',
                     alignSelf: 'center',
                   }}
                 >

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgress, Box, Alert, Typography, IconButton, Collapse } from '@mui/material';
 import { useStaffsContext } from '../../context/StaffsContext';
-import { ListItem, ItemBoldText, ItemText } from '../../styles/CustomerStyle/ListItemStyles';
+import { ListItem, ItemBoldText, ItemText } from '../../styles/CustomerStyle/StaffStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const StaffList = ({ businessId, onStaffSelect, searchQuery, selectedStaff }) => {
   const { staff, fetchAllStaff } = useStaffsContext();
@@ -63,9 +63,9 @@ const StaffList = ({ businessId, onStaffSelect, searchQuery, selectedStaff }) =>
             <ItemBoldText>{staffMember.name}</ItemBoldText>
             {isMobile && (
               <IconButton onClick={(e) => { e.stopPropagation(); handleToggleExpand(staffMember.staffId); }}>
-                <ExpandMoreIcon
+                <ChevronRightIcon
                   style={{
-                    transform: expandedStaff === staffMember.staffId ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transform: expandedStaff === staffMember.staffId ? 'rotate(90deg)' : 'rotate(0deg)',
                     transition: 'transform 0.3s ease',
                   }}
                 />

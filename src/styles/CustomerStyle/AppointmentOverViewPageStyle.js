@@ -15,19 +15,15 @@ export const OverviewContainer = styled(Box)(({ theme }) => ({
 // Overview Item
 export const OverviewItem = styled(ListItem)(({ theme }) => ({
   borderRadius: '8px',
-  backgroundColor: '#f0f8ff',
+  backgroundColor: '#FFF2F4', 
   marginBottom: theme.spacing(2),
   boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-  border: '1px solid #1976d2',
-  '&:hover': {
-    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-    backgroundColor: '#e6f1ff',
-  },
+  border: '1px solid black', 
 }));
 
 // Overview Text
 export const OverviewText = styled(Typography)(({ theme }) => ({
-  color: theme.palette.text.primary,
+  color: '#333', // Dark text color for better readability on a light background
   fontWeight: 500,
   marginBottom: theme.spacing(1),
 }));
@@ -35,7 +31,7 @@ export const OverviewText = styled(Typography)(({ theme }) => ({
 // Overview Button
 export const OverviewButton = styled(Button)(({ theme }) => ({
   color: '#fff',
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: '#8c8c8c', 
   padding: theme.spacing(1.5, 4),
   borderRadius: '8px',
   fontWeight: 'bold',
@@ -43,22 +39,32 @@ export const OverviewButton = styled(Button)(({ theme }) => ({
   boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
   transition: 'background-color 0.3s ease, transform 0.2s ease',
   '&:hover': {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: '#514e4c',
     transform: 'translateY(-2px)',
   },
-  '&:active': {
-    backgroundColor: theme.palette.primary.darker,
-    boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
-    transform: 'translateY(0)',
+  '&:disabled': {
+    backgroundColor: '#CCCCCC', 
+    color: '#FFFFFF', 
+    boxShadow: 'none', 
   },
 }));
 
 // Styled ListItemText
 export const StyledListItemText = styled(ListItemText)(({ theme }) => ({
   '& .MuiTypography-root': {
-    color: theme.palette.text.secondary,
+    color: '#555', // Subtle text color for the secondary text
   },
   '& .MuiTypography-body2': {
-    color: theme.palette.text.primary,
+    color: '#333', // Stronger text color for the primary text
+  },
+}));
+
+export const ServiceNameText = styled(Typography)(({ theme }) => ({
+  fontWeight: 'bold',
+  color: '#D32F2F', // A strong color to make the service name stand out
+  fontSize: '1.2rem',
+  marginBottom: theme.spacing(1),
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '1rem',
   },
 }));

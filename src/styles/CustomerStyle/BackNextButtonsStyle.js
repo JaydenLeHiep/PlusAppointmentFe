@@ -23,14 +23,24 @@ export const StyledButton = styled(Button)(({ theme }) => ({
   fontSize: '1rem',
   borderRadius: '8px',
   boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-  transition: 'background-color 0.3s ease, box-shadow 0.3s ease',
+  transition: 'background-color 0.3s ease, box-shadow 0.3s ease, border 0.3s ease',
+  backgroundColor: '#8c8c8c', // A vibrant, more saturated pink for the active state
+  color: '#FFFFFF', // White text for contrast
+
   '&:hover': {
-    backgroundColor: theme.palette.primary.dark,
-    boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.2)',
+    backgroundColor: '#514e4c', // A darker pink for the hover state
+    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)', // A larger shadow for hover
   },
+
+  '&:disabled': {
+    backgroundColor: '#CCCCCC', // A lighter, muted pink for the disabled state
+    color: '#FFFFFF', // White text remains for consistency
+    boxShadow: 'none', // No shadow for disabled button
+  },
+
   [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(0.8, 1.8), 
-    fontSize: '0.875rem', 
+    padding: theme.spacing(0.8, 1.8),
+    fontSize: '0.875rem',
     boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
   },
 }));

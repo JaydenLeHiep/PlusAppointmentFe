@@ -2,15 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { CircularProgress, Alert, Collapse, List } from '@mui/material';
 import { useServicesContext } from '../../context/ServicesContext';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
   CategoryHeader,
   ServiceItem,
   CategoryText,
   ServiceText,
   ServiceListContainer,
-  ExpandIcon,
 } from '../../styles/CustomerStyle/ServiceListStyle';
 import { IconButton, Typography } from '@mui/material';
 
@@ -72,9 +70,12 @@ const ServiceList = ({
           <CategoryText>
             {category.name}
           </CategoryText>
-          <ExpandIcon expanded={expandedCategoryId === category.categoryId}>
-            {expandedCategoryId === category.categoryId ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          </ExpandIcon>
+          <ChevronRightIcon
+            style={{
+              transform: expandedCategoryId === category.categoryId ? 'rotate(90deg)' : 'rotate(0deg)',
+              transition: 'transform 0.3s ease',
+            }}
+          />
         </CategoryHeader>
         <Collapse in={expandedCategoryId === category.categoryId}>
           {filteredServices
@@ -89,9 +90,9 @@ const ServiceList = ({
                   <CategoryText>{service.name}</CategoryText>
                   {isMobile && (
                     <IconButton onClick={(e) => { e.stopPropagation(); handleToggleExpand(service.serviceId); }}>
-                      <ExpandMoreIcon
+                      <ChevronRightIcon
                         style={{
-                          transform: expandedService === service.serviceId ? 'rotate(180deg)' : 'rotate(0deg)',
+                          transform: expandedService === service.serviceId ? 'rotate(90deg)' : 'rotate(0deg)',
                           transition: 'transform 0.3s ease',
                         }}
                       />

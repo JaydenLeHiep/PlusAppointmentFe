@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Snackbar, Alert, Box } from '@mui/material';
-import {fetchCustomerByEmailOrPhoneAndBusinessId } from '../../lib/apiClientCustomer';
+import { fetchCustomerByEmailOrPhoneAndBusinessId } from '../../lib/apiClientCustomer';
 import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import {
   CustomButton,          
@@ -39,7 +39,6 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
           throw new Error('Selected appointments data is not in the correct format.');
         }
 
-        // Convert the selected appointment time from local time to UTC
         const localTime = new Date(selectedAppointments[0].appointmentTime);
         const utcAppointmentTime = localTime.toISOString();  // This will include the 'Z' at the end
 
@@ -99,15 +98,14 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
             type="submit"
             variant="contained"
             color="primary"
+            disabled={!emailOrPhone.trim()} // Disable if emailOrPhone is empty
           >
             Finish
           </CustomButton>
         </Box>
 
         <Box mt={2} textAlign="center">
-          <NewCustomerLink
-            onClick={onNewCustomer}
-          >
+          <NewCustomerLink onClick={onNewCustomer}>
             If you are a new customer, click here
           </NewCustomerLink>
         </Box>
