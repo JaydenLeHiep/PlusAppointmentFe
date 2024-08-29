@@ -74,7 +74,7 @@ export const StyledBox = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(4),
   marginBottom: theme.spacing(6),
   textAlign: 'center',
-  background: 'linear-gradient(135deg, #FFECEC, #ffffff)', // Very light pink gradient
+  background: ' #FFF8F9', // Very light pink gradient
   padding: theme.spacing(4),
   borderRadius: '20px',
   boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.1)',
@@ -97,7 +97,7 @@ export const ConfirmButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(4),
   fontWeight: 'bold',
   boxShadow: 'none',
-  backgroundColor: '#7b7d7b', // Updated pink background for the confirm button
+  backgroundColor: '#8c8c8c', // Updated pink background for the confirm button
   '&:hover': {
     backgroundColor: '#514e4c', // Slightly darker pink on hover
   },

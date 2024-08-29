@@ -24,7 +24,7 @@ export const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: '8px',
   boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
   transition: 'background-color 0.3s ease, box-shadow 0.3s ease, border 0.3s ease',
-  backgroundColor: '#7b7d7b', // A vibrant, more saturated pink for the active state
+  backgroundColor: '#8c8c8c', // A vibrant, more saturated pink for the active state
   color: '#FFFFFF', // White text for contrast
 
   '&:hover': {

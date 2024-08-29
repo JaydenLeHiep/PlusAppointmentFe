@@ -1,20 +1,12 @@
 import React from 'react';
-import { Box, Typography, IconButton } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import EnglishFlag from '../assets/united-kingdom.png';
-import VietnameseFlag from '../assets/vietnam.png';
+import { Box, IconButton, Link } from '@mui/material';
+import FacebookIcon from '@mui/icons-material/Facebook';  // Import Facebook icon
 
 const Footer = () => {
-  const { i18n, t } = useTranslation('footer');
-
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
-
   return (
     <Box
       sx={{
-        padding: '2.8rem 0',
+        padding: '1.8rem 0',
         textAlign: 'center',
         backgroundColor: '#fff',
         borderTop: '1px solid #e0e0e0',
@@ -22,36 +14,71 @@ const Footer = () => {
         mt: 'auto',
         fontSize: '1.25rem',
         display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '1rem',
+        justifyContent: 'center',
+        gap: '4rem',
       }}
     >
-      {/* Language Switcher */}
       <Box
         sx={{
           display: 'flex',
-          gap: '1rem',
           alignItems: 'center',
+          gap: '1rem',
         }}
       >
-        <IconButton onClick={() => changeLanguage('en')} aria-label="Change language to English">
-          <img src={EnglishFlag} alt="English" style={{ width: '32px', height: 'auto' }} />
+        <IconButton
+          component="a"
+          href="https://www.facebook.com/profile.php?id=100007379317091"
+          target="_blank"
+          aria-label="Duong's Facebook link"
+        >
+          <FacebookIcon sx={{ color: '#4267B2', fontSize: '32px' }} />
         </IconButton>
-        <IconButton onClick={() => changeLanguage('vi')} aria-label="Change language to Vietnamese">
-          <img src={VietnameseFlag} alt="Vietnamese" style={{ width: '32px', height: 'auto' }} />
-        </IconButton>
+        <Link
+          href="https://www.facebook.com/hiep.leduyy"
+          target="_blank"
+          sx={{
+            color: '#4267B2',
+            fontSize: '1rem',
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'underline',
+            },
+          }}
+        >
+          Dương
+        </Link>
       </Box>
 
-      <Typography
-        variant="body1"
+      <Box
         sx={{
-          color: '#000',
-          textDecoration: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1rem',
         }}
       >
-        {t('copyright', { year: new Date().getFullYear() })}
-      </Typography>
+        <IconButton
+          component="a"
+          href="https://www.facebook.com/hiepprofile"
+          target="_blank"
+          aria-label="Hiep's Facebook link"
+        >
+          <FacebookIcon sx={{ color: '#4267B2', fontSize: '32px' }} />
+        </IconButton>
+        <Link
+          href="https://www.facebook.com/hiepprofile"
+          target="_blank"
+          sx={{
+            color: '#4267B2',
+            fontSize: '1rem',
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'underline',
+            },
+          }}
+        >
+          Hiệp
+        </Link>
+      </Box>
     </Box>
   );
 };

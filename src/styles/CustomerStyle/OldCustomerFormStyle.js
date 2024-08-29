@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 
 // CustomButton styling for Old Customer Form
 export const CustomButton = styled(Button)({
-  backgroundColor: '#7b7d7b', // Updated to match the strong pink-red color
+  backgroundColor: '#999999', // Updated to match the strong pink-red color
   color: '#fff',
   padding: '8px 28px',
   fontSize: '18px',
@@ -29,7 +29,7 @@ export const FormContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  backgroundColor: '#FFF0EE', // Light pinkish background color
+  backgroundColor: '#FFF2F4', // Light pinkish background color
   padding: '32px',
   borderRadius: '16px',
   boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.1)',

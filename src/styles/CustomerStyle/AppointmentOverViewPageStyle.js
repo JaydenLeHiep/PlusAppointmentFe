@@ -15,7 +15,7 @@ export const OverviewContainer = styled(Box)(({ theme }) => ({
 // Overview Item
 export const OverviewItem = styled(ListItem)(({ theme }) => ({
   borderRadius: '8px',
-  backgroundColor: '#FFF0EE', 
+  backgroundColor: '#FFF2F4', 
   marginBottom: theme.spacing(2),
   boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
   border: '1px solid black', 
@@ -31,7 +31,7 @@ export const OverviewText = styled(Typography)(({ theme }) => ({
 // Overview Button
 export const OverviewButton = styled(Button)(({ theme }) => ({
   color: '#fff',
-  backgroundColor: '#7b7d7b', 
+  backgroundColor: '#8c8c8c', 
   padding: theme.spacing(1.5, 4),
   borderRadius: '8px',
   fontWeight: 'bold',
