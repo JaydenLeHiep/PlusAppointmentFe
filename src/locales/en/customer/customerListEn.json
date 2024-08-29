@@ -5,6 +5,7 @@
     "customerName": "Name",
     "customerEmail": "Email",
     "customerPhone": "Phone",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "searchCustomer": "Find the customer"
   }
   
