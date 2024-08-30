@@ -1,15 +1,18 @@
-image: ruby:3.1
+image: docker:20.10.16
+
+services:
+  - docker:20.10.16-dind
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_IMAGE: hieplecoding/plus_appointment_react:latest
 
 stages:
   - build
   - deploy
 
 before_script:
-  - apt-get update && apt-get install -y docker.io
-  - docker --version
-
-variables:
-  DOCKER_IMAGE: hieplecoding/plus_appointment_react:latest
+  - docker info
 
 build:
   stage: build
