@@ -13,7 +13,7 @@ export const CategoryHeader = styled(Paper)(({ theme, selected }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     boxSizing: 'border-box',
-    border: '1.8px solid #7b7d7b',
+    border: '1.2px solid #7b7d7b',
     boxShadow: 'none',
     '&:hover': {
         borderRadius: '12px',
