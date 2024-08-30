@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import CustomerBusinessInfo from './CustomerBusinessInfo';
 import ServiceList from './ServiceList';
@@ -8,7 +8,9 @@ import AppointmentOverviewPage from './AppointmentOverviewPage';
 import OldCustomerForm from './OldCustomerForm';
 import NewCustomerForm from './NewCustomerForm';
 import ThankYou from './ThankYou';
-import { fetchBusinessesById } from '../../lib/apiClientBusiness';
+import { fetchBusinessesByName } from '../../lib/apiClientBusiness';
+import { useServicesContext } from '../../context/ServicesContext';
+import * as signalR from '@microsoft/signalr';
 import {
   DashboardContainer,
   ErrorContainer,
@@ -19,12 +21,15 @@ import {
   CustomerListContainer,
 } from '../../styles/CustomerStyle/CustomerDashboardStyle';
 import BackAndNextButtons from './BackNextButtons';
+import { fetchStaff } from '../../lib/apiClientStaff';
+
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const CustomerDashboard = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const businessId = queryParams.get('business_id');
-
+  const businessName = queryParams.get('business_name');
+  const [customerId, setCustomerId] = useState(null);
   const [businessInfo, setBusinessInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -38,20 +43,23 @@ const CustomerDashboard = () => {
   const [isAddingNewCustomer, setIsAddingNewCustomer] = useState(false);
   const [, setRedirectingToOldCustomerForm] = useState(false);
 
+  const { services, categories, fetchServices, fetchCategories } = useServicesContext();
+  const [expandedCategoryId, setExpandedCategoryId] = useState(null);
+
+  const connectionRef = useRef(null);
+
   useEffect(() => {
     const fetchBusiness = async () => {
-      if (!businessId) {
-        setError('Business ID not provided');
+      if (!businessName) {
+        setError('Business name not provided');
         setLoading(false);
         return;
       }
       try {
-        const data = await fetchBusinessesById(businessId);
-        setBusinessInfo({
-          name: data.name,
-          address: data.address,
-          phone: data.phone,
-        });
+        const data = await fetchBusinessesByName(businessName);
+        setBusinessInfo(data); // Store the whole business object
+        await fetchServices(data.businessId); // Fetch services by business ID
+        await fetchCategories(); // Fetch categories
         setLoading(false);
       } catch (error) {
         setError('Error fetching business information');
@@ -61,7 +69,46 @@ const CustomerDashboard = () => {
     };
 
     fetchBusiness();
-  }, [businessId]);
+  }, [businessName, fetchServices, fetchCategories]);
+
+  useEffect(() => {
+    const connectToHub = async () => {
+      const newConnection = new signalR.HubConnectionBuilder()
+        .withUrl(`${apiBaseUrl}/appointmentHub`)
+        .withAutomaticReconnect()
+        .build();
+
+      try {
+        await newConnection.start();
+        connectionRef.current = newConnection;
+
+        // Listen for service updates
+        newConnection.on('ReceiveServiceUpdate', async (message) => {
+          if (businessInfo.businessId) {
+            await fetchServices(businessInfo.businessId); // Refresh the services
+          }
+        });
+
+        // Listen for staff updates
+        newConnection.on('ReceiveStaffUpdate', async (message) => {
+          if (businessInfo.businessId) {
+            await fetchStaff(businessInfo.businessId); // Refresh the staff
+          }
+        });
+
+      } catch (error) {
+        console.error('Error connecting to SignalR hub:', error);
+      }
+    };
+
+    connectToHub();
+
+    return () => {
+      if (connectionRef.current) {
+        connectionRef.current.stop();
+      }
+    };
+  }, [businessInfo.businessId, fetchServices, fetchCategories]);
 
   const handleServiceSelect = (service) => {
     setSelectedServices([...selectedServices, service]);
@@ -71,15 +118,14 @@ const CustomerDashboard = () => {
     setSelectedServices(selectedServices.filter(s => s.serviceId !== service.serviceId));
   };
 
+  const handleStaffSelect = (staff) => {
+    setSelectedStaff(staff);  // Only allow one staff to be selected
+  };
+
   const handleNextFromServices = () => {
     if (selectedServices.length > 0) {
       setView('staffs');
     }
-  };
-
-  const handleStaffSelect = (staff) => {
-    setSelectedStaff(staff);
-    setView('calendar');
   };
 
   const handleDateChange = (date) => {
@@ -160,6 +206,8 @@ const CustomerDashboard = () => {
   const handleNextClick = () => {
     if (view === 'services') {
       handleNextFromServices();
+    } else if (view === 'staffs') {
+      setView('calendar');
     } else if (view === 'calendar') {
       handleConfirmTime();
     }
@@ -167,7 +215,7 @@ const CustomerDashboard = () => {
 
   const handleNewCustomerSuccess = () => {
     setRedirectingToOldCustomerForm(true);
-  
+
     setTimeout(() => {
       setIsAddingNewCustomer(false);
       setView('customerForm');
@@ -175,11 +223,28 @@ const CustomerDashboard = () => {
     }, 5000);
   };
 
-  const handleAppointmentSuccess = () => {
+  const handleAppointmentSuccess = (customerId) => {
+    setCustomerId(customerId);
     setView('thankYou');
   };
 
-  if (!businessId) {
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+
+    if (query) {
+      const matchingService = services.find(service =>
+        service.name.toLowerCase().includes(query.toLowerCase())
+      );
+
+      if (matchingService) {
+        setExpandedCategoryId(matchingService.categoryId);
+      }
+    } else {
+      setExpandedCategoryId(null); // Collapse all if the search query is cleared
+    }
+  };
+
+  if (!businessInfo.businessId) { // Check for businessId from the fetched data
     return (
       <ErrorContainer>
         <ErrorTypography variant="h6">
@@ -223,6 +288,11 @@ const CustomerDashboard = () => {
     return sum + parsedDuration;
   }, 0);
 
+  const columns = [[], [], []];
+  categories.forEach((category, index) => {
+    columns[index % 3].push(category);
+  });
+
   return (
     <DashboardContainer>
       <CustomerBusinessInfo businessInfo={businessInfo} />
@@ -232,31 +302,47 @@ const CustomerDashboard = () => {
           onBackClick={handleBackClick}
           onNextClick={handleNextClick}
           disableBack={view === 'services'}
-          disableNext={view !== 'services' || selectedServices.length === 0}
+          disableNext={
+            (view === 'services' && selectedServices.length === 0) ||
+            (view === 'staffs' && !selectedStaff) ||
+            (view === 'calendar' && (!selectedDate || !selectedTime))
+          }
           searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
+          onSearchChange={handleSearchChange}
           view={view}
           isAddingNewCustomer={isAddingNewCustomer}
         />
 
         {view === 'services' && (
           <CustomerListContainer>
-            <ServiceList
-              businessId={businessId}
-              searchQuery={searchQuery}
-              selectedServices={selectedServices}
-              onServiceSelect={handleServiceSelect}
-              onServiceDeselect={handleServiceDeselect}
-            />
+            {columns.map((column, colIndex) => (
+              <div key={colIndex}>
+                {column.map(category => (
+                  <ServiceList
+                    key={category.categoryId}
+                    category={category}
+                    services={services.filter(service => service.categoryId === category.categoryId)}
+                    businessId={businessInfo.businessId}
+                    searchQuery={searchQuery}
+                    selectedServices={selectedServices}
+                    onServiceSelect={handleServiceSelect}
+                    onServiceDeselect={handleServiceDeselect}
+                    expandedCategoryId={expandedCategoryId}
+                    setExpandedCategoryId={setExpandedCategoryId}
+                  />
+                ))}
+              </div>
+            ))}
           </CustomerListContainer>
         )}
 
         {view === 'staffs' && (
           <CustomerListContainer>
             <StaffList
-              businessId={businessId}
+              businessId={businessInfo.businessId} // Use businessId from fetched data
               searchQuery={searchQuery}
-              onStaffSelect={handleStaffSelect}
+              selectedStaff={selectedStaff} // Pass the selectedStaff state
+              onStaffSelect={handleStaffSelect} // Use handleStaffSelect for selection
             />
           </CustomerListContainer>
         )}
@@ -285,22 +371,22 @@ const CustomerDashboard = () => {
           !isAddingNewCustomer ? (
             <OldCustomerForm
               selectedAppointments={selectedAppointments}
-              businessId={businessId}
+              businessId={businessInfo.businessId} // Use businessId from fetched data
               onAppointmentSuccess={handleAppointmentSuccess}
               onNewCustomer={() => setIsAddingNewCustomer(true)}
             />
           ) : (
             <NewCustomerForm
-            businessId={businessId}
-            onCustomerAdded={handleNewCustomerSuccess}
-          />
-        )
-      )}
+              businessId={businessInfo.businessId} // Use businessId from fetched data
+              onCustomerAdded={handleNewCustomerSuccess}
+            />
+          )
+        )}
 
-      {view === 'thankYou' && <ThankYou />}
-    </CustomContainer>
-  </DashboardContainer>
-);
+        {view === 'thankYou' && <ThankYou customerId={customerId} />}
+      </CustomContainer>
+    </DashboardContainer>
+  );
 };
 
 export default CustomerDashboard;

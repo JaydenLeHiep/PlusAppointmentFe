@@ -12,8 +12,10 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { TextField, Box, Grid, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTimeSelect, onConfirmTime, totalDuration }) => {
+  const { t } = useTranslation('myDatePicker');
   const [notAvailableTimeSlots, setNotAvailableTimeSlots] = useState([]);
 
   useEffect(() => {
@@ -81,94 +83,94 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
     const slotMoment = moment(timeSlot);
     const slotEnd = slotMoment.clone().add(totalDuration, 'minutes');
 
-        // Check if the end of the slot overlaps with any "not available" times
-        return !notAvailableTimeSlots.some(notAvailableSlot => {
-          const notAvailableStart = moment(notAvailableSlot);
-          const notAvailableEnd = notAvailableStart.clone().add(15, 'minutes');
-    
-          // Return true if there is any overlap
-          return slotEnd.isAfter(notAvailableStart) && slotMoment.isBefore(notAvailableEnd);
-        });
-      };
-    
-      return (
-        <LocalizationProvider dateAdapter={AdapterMoment}>
-          <StyledBox>
-            <StyledDatePicker
-              value={selectedDate}
-              onChange={handleDateChangeWrapper}
-              textField={(params) => (
-                <TextField {...params} fullWidth sx={{ fontSize: '1.2rem' }} />
-              )}
-              disablePast
-            />
-    
-            {selectedDate && (
-              <Box mt={2} textAlign="center">
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: 'bold',
-                    color: '#1976d2',
-                    alignSelf: 'center',
-                  }}
-                >
-                  Select a Time
-                </Typography>
-              </Box>
-            )}
-    
-            {selectedDate && (
-              <>
-                <SectionTitle variant="body1">Morning</SectionTitle>
-                <TimeSlotsGrid container justifyContent="center">
-                  {amTimeSlots.map((time) => {
-                    const isAvailable = !isNotAvailableTimeSlot(time) && isValidTimeSlot(time);
-                    return (
-                      <Grid item key={time}>
-                        <TimeSlotButton
-                          onClick={isAvailable ? () => handleTimeChangeWrapper(time) : null}
-                          selected={time === selectedTime}
-                          disabled={!isAvailable}
-                        >
-                          {time.substring(11, 16)} {/* HH:mm format */}
-                        </TimeSlotButton>
-                      </Grid>
-                    );
-                  })}
-                </TimeSlotsGrid>
-    
-                <SectionTitle variant="body1">Afternoon</SectionTitle>
-                <TimeSlotsGrid container justifyContent="center">
-                  {pmTimeSlots.map((time) => {
-                    const isAvailable = !isNotAvailableTimeSlot(time) && isValidTimeSlot(time);
-                    return (
-                      <Grid item key={time}>
-                        <TimeSlotButton
-                          onClick={isAvailable ? () => handleTimeChangeWrapper(time) : null}
-                          selected={time === selectedTime}
-                          disabled={!isAvailable}
-                        >
-                          {time.substring(11, 16)} {/* HH:mm format */}
-                        </TimeSlotButton>
-                      </Grid>
-                    );
-                  })}
-                </TimeSlotsGrid>
-    
-                <ConfirmButton
-                  variant="contained"
-                  color="primary"
-                  onClick={handleConfirmTime}
-                  disabled={!selectedTime}
-                >
-                  Confirm Time
-                </ConfirmButton>
-              </>
-            )}
-          </StyledBox>
-        </LocalizationProvider>
-      );
-    };
-    
-    export default MyDatePicker;
+    // Check if the end of the slot overlaps with any "not available" times
+    return !notAvailableTimeSlots.some(notAvailableSlot => {
+      const notAvailableStart = moment(notAvailableSlot);
+      const notAvailableEnd = notAvailableStart.clone().add(15, 'minutes');
+
+      // Return true if there is any overlap
+      return slotEnd.isAfter(notAvailableStart) && slotMoment.isBefore(notAvailableEnd);
+    });
+  };
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterMoment}>
+      <StyledBox>
+        <StyledDatePicker
+          value={selectedDate}
+          onChange={handleDateChangeWrapper}
+          textField={(params) => (
+            <TextField {...params} fullWidth sx={{ fontSize: '1.3rem' }} />
+          )}
+          disablePast
+        />
+
+        {selectedDate && (
+          <Box mt={2} textAlign="center">
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 'bold',
+                color: 'black',
+                alignSelf: 'center',
+              }}
+            >
+              {t('selectTimeLabel')}
+            </Typography>
+          </Box>
+        )}
+
+        {selectedDate && (
+          <>
+            <SectionTitle variant="body1">{t('morningSectionLabel')}</SectionTitle>
+            <TimeSlotsGrid container justifyContent="center">
+              {amTimeSlots.map((time) => {
+                const isAvailable = !isNotAvailableTimeSlot(time) && isValidTimeSlot(time);
+                return (
+                  <Grid item key={time}>
+                    <TimeSlotButton
+                      onClick={isAvailable ? () => handleTimeChangeWrapper(time) : null}
+                      selected={time === selectedTime}
+                      disabled={!isAvailable}
+                    >
+                      {time.substring(11, 16)} {/* HH:mm format */}
+                    </TimeSlotButton>
+                  </Grid>
+                );
+              })}
+            </TimeSlotsGrid>
+
+            <SectionTitle variant="body1">{t('afternoonSectionLabel')}</SectionTitle>
+            <TimeSlotsGrid container justifyContent="center">
+              {pmTimeSlots.map((time) => {
+                const isAvailable = !isNotAvailableTimeSlot(time) && isValidTimeSlot(time);
+                return (
+                  <Grid item key={time}>
+                    <TimeSlotButton
+                      onClick={isAvailable ? () => handleTimeChangeWrapper(time) : null}
+                      selected={time === selectedTime}
+                      disabled={!isAvailable}
+                    >
+                      {time.substring(11, 16)} {/* HH:mm format */}
+                    </TimeSlotButton>
+                  </Grid>
+                );
+              })}
+            </TimeSlotsGrid>
+
+            <ConfirmButton
+              variant="contained"
+              color="primary"
+              onClick={handleConfirmTime}
+              disabled={!selectedTime}
+            >
+              {t('confirmButtonLabel')}
+            </ConfirmButton>
+          </>
+        )}
+      </StyledBox>
+    </LocalizationProvider>
+  );
+};
+
+export default MyDatePicker;

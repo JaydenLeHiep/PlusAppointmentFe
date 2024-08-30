@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box} from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -12,12 +12,14 @@ import '@fontsource/roboto'; // Importing Roboto font
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
-  const { t } = useTranslation('navbar');
-  
+  const { t} = useTranslation('navbar');
+
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
+
+
 
   const theme = createTheme({
     typography: {
@@ -75,6 +77,8 @@ const Navbar = () => {
             Plus Appointment
           </Typography>
           <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
+
+
             {!isAuthenticated && (
               <Button
                 color="primary"
@@ -145,6 +149,7 @@ const Navbar = () => {
                 </Button>
               </>
             )}
+
           </Box>
         </Toolbar>
       </AppBar>

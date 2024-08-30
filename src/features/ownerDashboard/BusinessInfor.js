@@ -21,13 +21,13 @@ const BusinessInfo = ({
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Box display="flex" alignItems="center">
           <IconButton color="primary" onClick={onBack}>
-            <ArrowCircleLeftTwoToneIcon />
+            <ArrowCircleLeftTwoToneIcon sx={{ fontSize: 30 }}/>
           </IconButton>
           <IconButton color="secondary" onClick={onAddAppointment}>
-            <AddCircleTwoToneIcon />
+            <AddCircleTwoToneIcon sx={{ fontSize: 30 }}/>
           </IconButton>
           <IconButton color="primary" onClick={handleCustomerOpen}>
-            <Face2Icon />
+            <Face2Icon sx={{ fontSize: 30 }} />
           </IconButton>
         </Box>
         <Box display="flex" alignItems="center">
@@ -36,8 +36,7 @@ const BusinessInfo = ({
               onClick={handleStaffOpen}
               sx={{
                 cursor: 'pointer',
-                fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24",
-                fontSize: '24px',
+                fontSize: 30, // Changed to 30px
               }}
             />
           </Badge>
@@ -49,8 +48,7 @@ const BusinessInfo = ({
               onClick={handleServiceOpen}
               sx={{
                 cursor: 'pointer',
-                fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24",
-                fontSize: '24px',
+                fontSize: 30, // Changed to 30px
               }}
             />
           </Badge>
@@ -61,7 +59,7 @@ const BusinessInfo = ({
           variant="h3"
           gutterBottom
           sx={{
-            fontWeight: '500',           
+            fontWeight: '500',
             marginBottom: '10px',
             fontFamily: '"Poppins", "Roboto", sans-serif',
           }}

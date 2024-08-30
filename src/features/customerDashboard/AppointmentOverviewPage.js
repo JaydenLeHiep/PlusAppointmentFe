@@ -6,7 +6,9 @@ import {
   OverviewText,
   OverviewButton,
   StyledListItemText,
+  ServiceNameText
 } from '../../styles/CustomerStyle/AppointmentOverViewPageStyle';
+import { useTranslation } from 'react-i18next';
 
 const formatDate = (appointmentTime) => {
   const d = new Date(appointmentTime);
@@ -19,28 +21,40 @@ const formatTime = (appointmentTime) => {
 };
 
 const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFinish }) => {
+  const { t } = useTranslation('appointmentOverviewPage');
+
   const handleFinish = () => {
     onFinish(selectedAppointments);
   };
 
   return (
     <OverviewContainer>
-      <Typography variant="h5" sx={{ marginBottom: 3, fontWeight: 'bold', color: '#1976d2', textAlign: 'center' }}>
-        Appointment Overview
+      <Typography
+        variant="h5"
+        sx={{
+          fontSize: '35px',
+          marginBottom: 3,
+          fontWeight: 'bold',
+          color: 'Black',
+          textAlign: 'center'
+        }}
+      >
+        {t('appointmentOverviewTitle')}
       </Typography>
       {selectedAppointments.map((appointment, index) => (
         <OverviewItem key={index}>
           <Box>
-            <OverviewText>Staff: {appointment.staffName}</OverviewText>
-            <Typography variant="body2" sx={{ marginBottom: 2 }}>
-              Date: {formatDate(appointment.appointmentTime)} | Time: {formatTime(appointment.appointmentTime)}
+            <ServiceNameText>{t('serviceLabel')}: {appointment.serviceName}</ServiceNameText>
+            <OverviewText>{t('staffLabel')}: {appointment.staffName}</OverviewText>
+            <Typography variant="body2">
+              {t('dateLabel')}: {formatDate(appointment.appointmentTime)} | {t('timeLabel')}: {formatTime(appointment.appointmentTime)}
             </Typography>
             <List dense>
               {appointment.services.map((service, idx) => (
                 <StyledListItemText
                   key={idx}
                   primary={service.serviceName}
-                  secondary={`Duration: ${service.duration || 'N/A'} | Price: €${service.price || 'N/A'}`}
+                  secondary={`${t('durationLabel')}: ${service.duration || 'N/A'} | ${t('priceLabel')}: €${service.price || 'N/A'}`}
                 />
               ))}
             </List>
@@ -54,13 +68,13 @@ const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFi
           onClick={onAddMoreServices}
           sx={{ marginRight: 2 }}
         >
-          Add More Services
+          {t('addMoreServicesButton')}
         </OverviewButton>
         <OverviewButton
           variant="contained"
           onClick={handleFinish}
         >
-          Finish
+          {t('finishButton')}
         </OverviewButton>
       </Box>
     </OverviewContainer>

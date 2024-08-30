@@ -2,8 +2,23 @@ import React from 'react';
 import { Box, InputAdornment } from '@mui/material';
 import { ButtonContainer, StyledButton, StyledTextFieldContainer, StyledTextField } from '../../styles/CustomerStyle/BackNextButtonsStyle';
 import SearchIcon from '@mui/icons-material/Search';
+import { useTranslation } from 'react-i18next';
+const BackAndNextButtons = ({
+  onBackClick,
+  onNextClick,
+  disableBack,
+  disableNext,
+  searchQuery,
+  onSearchChange,
+  view,
+}) => {
+  const { t } = useTranslation('backNextButton'); 
 
-const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext, searchQuery, onSearchChange, view, isAddingNewCustomer }) => {
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    onSearchChange(query);
+  };
+
   return (
     <ButtonContainer>
       {view !== 'thankYou' && (
@@ -14,7 +29,7 @@ const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext
             onClick={onBackClick}
             disabled={disableBack}
           >
-            BACK
+            {t('back')}  {/* Use translation key for Back */}
           </StyledButton>
         </Box>
       )}
@@ -24,12 +39,12 @@ const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext
           <StyledTextField
             placeholder="Search..."
             value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={handleSearchChange}
             variant="outlined"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <SearchIcon />
+                  <SearchIcon style={{ color: 'black' }} />
                 </InputAdornment>
               ),
             }}
@@ -45,7 +60,7 @@ const BackAndNextButtons = ({ onBackClick, onNextClick, disableBack, disableNext
             onClick={onNextClick}
             disabled={disableNext}
           >
-            NEXT
+           {t('next')}  {/* Use translation key for Next */}
           </StyledButton>
         </Box>
       )}

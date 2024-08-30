@@ -15,14 +15,14 @@ import { useCustomersContext } from '../../../context/CustomerContext.js';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import CustomerList from './CustomerList.js';
 import CustomerForm from './CustomerForm';
-import * as signalR from '@microsoft/signalr';
 
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
-const ShowCustomerDialog = ({ open, onClose, businessId }) => {
+
+
+const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
   const { t } = useTranslation('showCustomerDialog');
 
-  const { customers, fetchCustomersForBusiness, addNewCustomer, updateExistingCustomer, deleteExistingCustomer } = useCustomersContext();
+  const { fetchCustomersForBusiness, addNewCustomer, updateExistingCustomer, deleteExistingCustomer } = useCustomersContext();
 
   const [editCustomerId, setEditCustomerId] = useState(null);
   const [newCustomer, setNewCustomer] = useState({
@@ -37,13 +37,14 @@ const ShowCustomerDialog = ({ open, onClose, businessId }) => {
 
   const alertRef = useRef(null);
   const formRef = useRef(null);
-  const connectionRef = useRef(null); // Use a ref for SignalR connection
+  
 
+  // Avoid fetching customers if they are already passed as a prop
   useEffect(() => {
-    if (open) {
+    if (open && !customers.length) {
       fetchCustomersForBusiness(businessId);
     }
-  }, [open, fetchCustomersForBusiness, businessId]);
+  }, [open, fetchCustomersForBusiness, businessId, customers]);
 
   useEffect(() => {
     if (alert.message) {
@@ -57,36 +58,7 @@ const ShowCustomerDialog = ({ open, onClose, businessId }) => {
     }
   }, [alert]);
 
-  // Setup SignalR connection
-  useEffect(() => {
-    const connectToHub = async () => {
-      const newConnection = new signalR.HubConnectionBuilder()
-        .withUrl(`${apiBaseUrl}/appointmentHub`)
-        .withAutomaticReconnect()
-        .build();
-
-      try {
-        await newConnection.start();
-        console.log('Connected to SignalR hub');
-        connectionRef.current = newConnection;
-
-        newConnection.on('ReceiveCustomerUpdate', async (message) => {
-          console.log('New customer update:', message);
-          await fetchCustomersForBusiness(businessId); // Refresh the customer list
-        });
-      } catch (error) {
-        console.error('Error connecting to SignalR hub:', error);
-      }
-    };
-
-    connectToHub();
-
-    return () => {
-      if (connectionRef.current) {
-        connectionRef.current.stop();
-      }
-    };
-  }, [businessId, fetchCustomersForBusiness]);
+  
 
   const closeFormAndExecuteAction = async (action) => {
     setIsFormOpen(false);
@@ -104,7 +76,7 @@ const ShowCustomerDialog = ({ open, onClose, businessId }) => {
           name: newCustomer.name,
           email: newCustomer.email,
           phone: newCustomer.phone,
-          BusinessId: String(businessId)
+          BusinessId: String(businessId),
         };
 
         await addNewCustomer(customerDetails, businessId);
@@ -130,7 +102,7 @@ const ShowCustomerDialog = ({ open, onClose, businessId }) => {
           name: newCustomer.name,
           email: newCustomer.email,
           phone: newCustomer.phone,
-          BusinessId: String(businessId)
+          BusinessId: String(businessId),
         };
 
         await updateExistingCustomer(businessId, customerId, customerDetails);
@@ -226,7 +198,7 @@ const ShowCustomerDialog = ({ open, onClose, businessId }) => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginLeft: '3px'
+            marginLeft: '3px',
           }}
         >
           {t('customerListTitle')}

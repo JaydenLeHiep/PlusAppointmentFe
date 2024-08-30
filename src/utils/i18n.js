@@ -81,6 +81,27 @@ import customerListVi from '../locales/vi/customer/customerListVi.json';
 import footerEn from "../locales/en/components/footerEn.json"
 import footerVi from "../locales/vi/components/footerVi.json"
 
+import staffListEn from "../locales/en/staff/staffListEn.json"
+import staffListVi from "../locales/vi/staff/staffListVi.json"
+
+// customer
+import backNextButtonEn from '../locales/en/customerDashboard/backNextButtonEn.json';
+import backNextButtonGe from '../locales/ge/customerDashboard/backNextButtonGe.json';
+
+import oldCustomerFormEn from '../locales/en/customerDashboard/oldCustomerFormEn.json';
+import oldCustomerFormDe from '../locales/ge/customerDashboard/oldCustomerFormGe.json';
+
+import newCustomerFormEn from '../locales/en/customerDashboard/newCustomerFormEn.json';
+import newCustomerFormGe from '../locales/ge/customerDashboard/newCustomerFormGe.json';
+
+import appointmentOverviewPageEn from '../locales/en/customerDashboard/appointmentOverviewPageEn.json';
+import appointmentOverviewPageGe from '../locales/ge/customerDashboard/appointmentOverviewPageGe.json';
+
+import myDatePickerEn from '../locales/en/customerDashboard/myDatePickerEn.json';
+import myDatePickerGe from '../locales/ge/customerDashboard/myDatePickerGe.json';
+
+import thankYouPageEn from '../locales/en/customerDashboard/thankYouPageEn.json';
+import thankYouPageGe from '../locales/ge/customerDashboard/thankYouPageGe.json';
 // Import other translation files similarly
 
 i18n
@@ -116,7 +137,14 @@ i18n
         dialogCustomerActions: dialogCustomerActionsEn,
         showCustomerDialog: showCustomerDialogEn,
         customerList: customerListEn,
-        footer: footerEn
+        footer: footerEn,
+        staffList: staffListEn,
+        backNextButton: backNextButtonEn,
+        oldCustomerForm: oldCustomerFormEn,
+        newCustomerForm: newCustomerFormEn,
+        appointmentOverviewPage: appointmentOverviewPageEn,
+        myDatePicker: myDatePickerEn,
+        thankYouPage: thankYouPageEn
         // Add other namespaces for English
       },
       vi: {
@@ -148,8 +176,17 @@ i18n
         dialogCustomerActions: dialogCustomerActionsVi,
         showCustomerDialog: showCustomerDialogVi,
         customerList: customerListVi,
-        footer: footerVi
+        footer: footerVi,
+        staffList: staffListVi
         // Add other namespaces for Vietnamese
+      },
+      ge: {  // Add a new language key for German
+        backNextButton: backNextButtonGe,
+        oldCustomerForm: oldCustomerFormDe,
+        newCustomerForm: newCustomerFormGe,
+        appointmentOverviewPage: appointmentOverviewPageGe,
+        myDatePicker: myDatePickerGe,
+        thankYouPage: thankYouPageGe
       },
     },
     lng: 'en', // default language

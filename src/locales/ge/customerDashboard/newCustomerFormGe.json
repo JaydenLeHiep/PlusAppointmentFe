@@ -1,0 +1,13 @@
+{
+    "formTitle": "Neuer Kunde",
+    "nameLabel": "Name",
+    "emailLabel": "E-Mail",
+    "phoneLabel": "Telefon",
+    "readAndAcceptTerms": "Lesen und akzeptieren Sie die Bedingungen",
+    "submitButton": "Einreichen",
+    "redirectMessage": "Daten erfolgreich hinzugefügt! Bitte kehren Sie zu Ihren Informationen zurück, um die Buchung abzuschließen.",
+    "redirectingIn": "Weiterleitung in",
+    "successSnackbar": "Kunde erfolgreich hinzugefügt!",
+    "errorSnackbar": "Kunde konnte nicht hinzugefügt werden."
+  }
+  

@@ -1,29 +1,47 @@
 import React, { useState } from 'react';
-import { Snackbar, Alert, Box, Checkbox, Typography, CircularProgress } from '@mui/material';
+import { Snackbar, Alert, Box, Typography, CircularProgress } from '@mui/material';
 import { useCustomersContext } from '../../context/CustomerContext';
 import {
   CustomButton,
   FormContainer,
   StyledTextField,
   FormTitle,
+  NewCustomerLink
 } from '../../styles/CustomerStyle/NewCustomerFormStyle';
+import Terms from './Terms';
+import { useTranslation } from 'react-i18next';
 
 const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
+  const { t } = useTranslation('newCustomerForm');
   const { addNewCustomer } = useCustomersContext();
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: ''
+    confirmEmail: '',
+    phone: '',
+    confirmPhone: ''
   });
+
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [showRedirectMessage, setShowRedirectMessage] = useState(false);
   const [countdown, setCountdown] = useState(5);
+  const [termsOpen, setTermsOpen] = useState(false);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.email !== formData.confirmEmail) {
+      setSubmitError(t('emailMismatchError'));
+      return;
+    }
+
+    if (formData.phone !== formData.confirmPhone) {
+      setSubmitError(t('phoneMismatchError'));
+      return;
+    }
 
     try {
       const customerDetails = {
@@ -33,29 +51,26 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
         BusinessId: String(businessId)
       };
 
-      // Add the new customer
       const newCustomer = await addNewCustomer(customerDetails, businessId);
 
-      // Trigger success state and inform the parent component
       setSubmitSuccess(true);
       setSubmitError('');
       onCustomerAdded(newCustomer);
 
-      // Reset form data after successful addition
       setFormData({
         name: '',
         email: '',
+        confirmEmail: '',
         phone: ''
       });
 
-      // Show the redirect message and start countdown
       setShowRedirectMessage(true);
       const countdownInterval = setInterval(() => {
         setCountdown((prevCount) => {
           if (prevCount <= 1) {
             clearInterval(countdownInterval);
             setShowRedirectMessage(false);
-            onCustomerAdded(newCustomer); 
+            onCustomerAdded(newCustomer);
           }
           return prevCount - 1;
         });
@@ -63,17 +78,27 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
 
     } catch (error) {
       console.error('Failed to add customer:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to add customer.';
+      const errorMessage = error.response?.data?.message || error.message || t('errorSnackbar');
       setSubmitError(errorMessage);
     }
   };
 
+
+
+  const handleOpenTerms = () => {
+    setTermsOpen(true);
+  };
+
+  const handleCloseTerms = () => {
+    setTermsOpen(false);
+  };
+
   return (
     <FormContainer>
-      <FormTitle>New Customer</FormTitle>
+      <FormTitle>{t('formTitle')}</FormTitle>
       <form onSubmit={handleFormSubmit} style={{ width: '100%', maxWidth: '400px' }}>
         <StyledTextField
-          label="Name"
+          label={t('nameLabel')}
           name="name"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -82,7 +107,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           required
         />
         <StyledTextField
-          label="Email"
+          label={t('emailLabel')}
           name="email"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -91,7 +116,16 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           required
         />
         <StyledTextField
-          label="Phone"
+          label={t('confirm Email')}
+          name="confirmEmail"
+          value={formData.confirmEmail}
+          onChange={(e) => setFormData({ ...formData, confirmEmail: e.target.value })}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <StyledTextField
+          label={t('phoneLabel')}
           name="phone"
           value={formData.phone}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -99,26 +133,30 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           margin="normal"
           required
         />
-
-        <Box display="flex" alignItems="center" mt={2}>
-          <Checkbox
-            checked={acceptTerms}
-            onChange={(e) => setAcceptTerms(e.target.checked)}
-            color="primary"
-          />
-          <Typography variant="body2">
-            I accept to provide my email and phone number to book a new appointment
-          </Typography>
-        </Box>
+        <StyledTextField
+          label={t('confirm Phone')}
+          name="confirmPhone"
+          value={formData.confirmPhone}
+          onChange={(e) => setFormData({ ...formData, confirmPhone: e.target.value })}
+          fullWidth
+          margin="normal"
+          required
+        />
 
         <Box display="flex" justifyContent="center" mt={2}>
+          <NewCustomerLink onClick={handleOpenTerms}>
+            {t('readAndAcceptTerms')}
+          </NewCustomerLink>
+        </Box>
+
+        <Box display="flex" justifyContent="center">
           <CustomButton
             type="submit"
             variant="contained"
             color="primary"
-            disabled={!acceptTerms}  // Disable the button if the checkbox is not checked
+            disabled={!acceptTerms}
           >
-            Submit
+            {t('submitButton')}
           </CustomButton>
         </Box>
       </form>
@@ -126,7 +164,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
       {showRedirectMessage && (
         <Box mt={2} textAlign="center">
           <Typography variant="body2" color="success.main" mb={2}>
-            Add your data successfully! Please come back to Your Information to finish booking.
+            {t('redirectMessage')}
           </Typography>
           <CircularProgress
             variant="determinate"
@@ -135,7 +173,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
             thickness={4}
           />
           <Typography variant="body2" mt={1}>
-            Redirecting in {countdown}...
+            {t('redirectingIn')} {countdown}...
           </Typography>
         </Box>
       )}
@@ -146,7 +184,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
         onClose={() => setSubmitSuccess(false)}
       >
         <Alert severity="success" sx={{ width: '100%' }}>
-          Customer added successfully!
+          {t('successSnackbar')}
         </Alert>
       </Snackbar>
       <Snackbar
@@ -158,6 +196,12 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           {submitError}
         </Alert>
       </Snackbar>
+
+      <Terms
+        open={termsOpen}
+        handleClose={handleCloseTerms}
+        setAcceptTerms={setAcceptTerms}
+      />
     </FormContainer>
   );
 };

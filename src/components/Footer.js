@@ -1,11 +1,12 @@
 import React from 'react';
-import { Box, Typography, IconButton } from '@mui/material';
-import { useTranslation } from 'react-i18next';
+import { Box, IconButton, Link } from '@mui/material';
+import FacebookIcon from '@mui/icons-material/Facebook';
 import EnglishFlag from '../assets/united-kingdom.png';
 import VietnameseFlag from '../assets/vietnam.png';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
-  const { i18n, t } = useTranslation('footer');
+  const { i18n } = useTranslation();
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -14,25 +15,24 @@ const Footer = () => {
   return (
     <Box
       sx={{
-        padding: '2.8rem 0',
+        padding: '1.8rem 0',
         textAlign: 'center',
         backgroundColor: '#fff',
         borderTop: '1px solid #e0e0e0',
         boxShadow: '0px -2px 10px rgba(0, 0, 0, 0.1)',
         mt: 'auto',
-        fontSize: '1.25rem',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: '1rem',
       }}
     >
-      {/* Language Switcher */}
+      {/* Language Flags */}
       <Box
         sx={{
           display: 'flex',
+          justifyContent: 'center',
           gap: '1rem',
-          alignItems: 'center',
         }}
       >
         <IconButton onClick={() => changeLanguage('en')} aria-label="Change language to English">
@@ -43,15 +43,38 @@ const Footer = () => {
         </IconButton>
       </Box>
 
-      <Typography
-        variant="body1"
+      {/* Facebook Link for Hiệp */}
+      <Box
         sx={{
-          color: '#000',
-          textDecoration: 'none',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '0.5rem',
         }}
       >
-        {t('copyright', { year: new Date().getFullYear() })}
-      </Typography>
+        <IconButton
+          component="a"
+          href="https://www.facebook.com/hiep.leduyy/"
+          target="_blank"
+          aria-label="Hiep's Facebook link"
+        >
+          <FacebookIcon sx={{ color: '#4267B2', fontSize: '32px' }} />
+        </IconButton>
+        <Link
+          href="https://www.facebook.com/hiep.leduyy/"
+          target="_blank"
+          sx={{
+            color: '#4267B2',
+            fontSize: '1rem',
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'underline',
+            },
+          }}
+        >
+          Hiệp
+        </Link>
+      </Box>
     </Box>
   );
 };
