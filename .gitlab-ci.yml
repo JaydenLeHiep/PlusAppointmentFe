@@ -1,0 +1,35 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  DOCKER_IMAGE: hieplecoding/plus_appointment_react:latest
+
+build:
+  stage: build
+  script:
+    - echo "Building Docker image..."
+    - docker build -t $DOCKER_IMAGE .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $DOCKER_IMAGE
+  only:
+    - develop
+
+deploy_production:
+  stage: deploy
+  script:
+    - echo "Setting up SSH key..."
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - echo "Deploying Docker image to EC2..."
+    - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@18.159.214.207 << 'EOF'
+        docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        docker pull $DOCKER_IMAGE
+        docker system prune -a -f || true
+        docker stop frontend-container || true
+        docker rm frontend-container || true
+        docker run -d --name frontend-container -p 80:3000 $DOCKER_IMAGE
+      EOF
+  only:
+    - main
