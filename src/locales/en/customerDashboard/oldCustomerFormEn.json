@@ -1,0 +1,10 @@
+{
+    "formTitle": "Your Information",
+    "emailOrPhoneLabel": "Email or Phone",
+    "commentLabel": "Comment",
+    "finishButton": "Finish",
+    "newCustomerLink": "If you are a new customer, click here",
+    "successMessage": "Appointment successfully created!",
+    "errorMessage": "Failed to find customer or add appointment"
+  }
+  

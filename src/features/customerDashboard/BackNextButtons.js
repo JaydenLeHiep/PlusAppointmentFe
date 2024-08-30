@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, InputAdornment } from '@mui/material';
 import { ButtonContainer, StyledButton, StyledTextFieldContainer, StyledTextField } from '../../styles/CustomerStyle/BackNextButtonsStyle';
 import SearchIcon from '@mui/icons-material/Search';
-
+import { useTranslation } from 'react-i18next';
 const BackAndNextButtons = ({
   onBackClick,
   onNextClick,
@@ -13,6 +13,7 @@ const BackAndNextButtons = ({
   view,
   isAddingNewCustomer,
 }) => {
+  const { t } = useTranslation('backNextButton'); 
 
   const handleSearchChange = (e) => {
     const query = e.target.value;
@@ -29,7 +30,7 @@ const BackAndNextButtons = ({
             onClick={onBackClick}
             disabled={disableBack}
           >
-            BACK
+            {t('back')}  {/* Use translation key for Back */}
           </StyledButton>
         </Box>
       )}
@@ -60,7 +61,7 @@ const BackAndNextButtons = ({
             onClick={onNextClick}
             disabled={disableNext}
           >
-            NEXT
+           {t('next')}  {/* Use translation key for Next */}
           </StyledButton>
         </Box>
       )}

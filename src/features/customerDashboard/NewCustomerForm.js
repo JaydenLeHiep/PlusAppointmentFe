@@ -6,11 +6,13 @@ import {
   FormContainer,
   StyledTextField,
   FormTitle,
-  NewCustomerLink // Importing the NewCustomerLink styled component
+  NewCustomerLink
 } from '../../styles/CustomerStyle/NewCustomerFormStyle';
 import Terms from './Terms';
+import { useTranslation } from 'react-i18next';
 
 const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
+  const { t } = useTranslation('newCustomerForm');
   const { addNewCustomer } = useCustomersContext();
 
   const [formData, setFormData] = useState({
@@ -62,7 +64,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
 
     } catch (error) {
       console.error('Failed to add customer:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to add customer.';
+      const errorMessage = error.response?.data?.message || error.message || t('errorSnackbar');
       setSubmitError(errorMessage);
     }
   };
@@ -77,10 +79,10 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
 
   return (
     <FormContainer>
-      <FormTitle>New Customer</FormTitle>
+      <FormTitle>{t('formTitle')}</FormTitle>
       <form onSubmit={handleFormSubmit} style={{ width: '100%', maxWidth: '400px' }}>
         <StyledTextField
-          label="Name"
+          label={t('nameLabel')}
           name="name"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -89,7 +91,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           required
         />
         <StyledTextField
-          label="Email"
+          label={t('emailLabel')}
           name="email"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -98,7 +100,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           required
         />
         <StyledTextField
-          label="Phone"
+          label={t('phoneLabel')}
           name="phone"
           value={formData.phone}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -109,7 +111,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
 
         <Box display="flex" justifyContent="center" mt={2}>
           <NewCustomerLink onClick={handleOpenTerms}>
-            Read and Accept Terms
+            {t('readAndAcceptTerms')}
           </NewCustomerLink>
         </Box>
 
@@ -118,9 +120,9 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
             type="submit"
             variant="contained"
             color="primary"
-            disabled={!acceptTerms}  // Disable the button if the terms are not accepted
+            disabled={!acceptTerms}
           >
-            Submit
+            {t('submitButton')}
           </CustomButton>
         </Box>
       </form>
@@ -128,7 +130,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
       {showRedirectMessage && (
         <Box mt={2} textAlign="center">
           <Typography variant="body2" color="success.main" mb={2}>
-            Add your data successfully! Please come back to Your Information to finish booking.
+            {t('redirectMessage')}
           </Typography>
           <CircularProgress
             variant="determinate"
@@ -137,7 +139,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
             thickness={4}
           />
           <Typography variant="body2" mt={1}>
-            Redirecting in {countdown}...
+            {t('redirectingIn')} {countdown}...
           </Typography>
         </Box>
       )}
@@ -148,7 +150,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
         onClose={() => setSubmitSuccess(false)}
       >
         <Alert severity="success" sx={{ width: '100%' }}>
-          Customer added successfully!
+          {t('successSnackbar')}
         </Alert>
       </Snackbar>
       <Snackbar

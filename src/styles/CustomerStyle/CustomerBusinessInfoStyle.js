@@ -40,11 +40,11 @@ export const BusinessName = styled(Typography)(({ theme }) => ({
 export const InfoContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'flex-end', 
+  alignItems: 'center', // Centered to match BusinessName
   justifyContent: 'center',
-  gap: theme.spacing(0.5), 
+  gap: theme.spacing(1), // Slightly larger gap for better spacing
   [theme.breakpoints.up('md')]: {
-    alignItems: 'flex-end',
+    alignItems: 'center', // Aligning center on larger screens
   },
   [theme.breakpoints.down('sm')]: {
     alignItems: 'center', 
@@ -54,17 +54,20 @@ export const InfoContainer = styled(Box)(({ theme }) => ({
 export const AddressWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(0.5), 
-  marginBottom: theme.spacing(0.5), 
+  justifyContent: 'center', // Centered to align with the rest of the text
+  gap: theme.spacing(1), 
+  marginBottom: theme.spacing(1), 
   flexWrap: 'wrap', 
 }));
 
 export const PhoneWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(0.5), 
+  justifyContent: 'center', // Centered to align with the rest of the text
+  gap: theme.spacing(1), 
   flexWrap: 'wrap',
 }));
+
 
 export const IconWrapper = styled(Box)(({ theme }) => ({
   color: theme.palette.primary.main,

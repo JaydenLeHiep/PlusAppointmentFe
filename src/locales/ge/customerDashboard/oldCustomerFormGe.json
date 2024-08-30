@@ -1,0 +1,10 @@
+{
+    "formTitle": "Ihre Informationen",
+    "emailOrPhoneLabel": "E-Mail oder Telefon",
+    "commentLabel": "Kommentar",
+    "finishButton": "Fertig",
+    "newCustomerLink": "Wenn Sie ein neuer Kunde sind, klicken Sie hier",
+    "successMessage": "Termin erfolgreich erstellt!",
+    "errorMessage": "Kunde nicht gefunden oder Termin konnte nicht hinzugefügt werden"
+  }
+  
