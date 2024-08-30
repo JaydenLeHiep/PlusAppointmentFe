@@ -30,7 +30,8 @@ deploy_production:
     - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
-    - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@18.159.214.207 << 'EOF'
+    - |
+      ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@18.159.214.207 << 'EOF'
         docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
         docker pull $DOCKER_IMAGE
         docker system prune -a -f || true
