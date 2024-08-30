@@ -1,6 +1,12 @@
+image: ruby:3.1
+
 stages:
   - build
   - deploy
+
+before_script:
+  - apt-get update && apt-get install -y docker.io
+  - docker --version
 
 variables:
   DOCKER_IMAGE: hieplecoding/plus_appointment_react:latest
@@ -10,7 +16,7 @@ build:
   script:
     - echo "Building Docker image..."
     - docker build -t $DOCKER_IMAGE .
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
     - docker push $DOCKER_IMAGE
   only:
     - develop
@@ -18,13 +24,11 @@ build:
 deploy_production:
   stage: deploy
   script:
-    - echo "Setting up SSH key..."
     - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
-    - echo "Deploying Docker image to EC2..."
     - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@18.159.214.207 << 'EOF'
-        docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
         docker pull $DOCKER_IMAGE
         docker system prune -a -f || true
         docker stop frontend-container || true
