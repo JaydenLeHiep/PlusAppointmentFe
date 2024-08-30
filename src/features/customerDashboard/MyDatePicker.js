@@ -93,6 +93,11 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
     });
   };
 
+  // Disable Sundays
+  const shouldDisableDate = (date) => {
+    return date.day() === 0; // 0 corresponds to Sunday in moment.js
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <StyledBox>
@@ -103,6 +108,7 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
             <TextField {...params} fullWidth sx={{ fontSize: '1.3rem' }} />
           )}
           disablePast
+          shouldDisableDate={shouldDisableDate} // Disable Sundays
         />
 
         {selectedDate && (
