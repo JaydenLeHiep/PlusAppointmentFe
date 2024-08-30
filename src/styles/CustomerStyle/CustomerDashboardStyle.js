@@ -52,7 +52,7 @@ export const LoadingContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   height: '100vh',
   [theme.breakpoints.down('sm')]: {
-    height: '80vh', // Adjust height for mobile to allow space for other elements
+    height: '80vh',
   },
 }));
 

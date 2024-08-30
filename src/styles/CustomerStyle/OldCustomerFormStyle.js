@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 
 // CustomButton styling for Old Customer Form
 export const CustomButton = styled(Button)({
-  backgroundColor: '#999999', // Updated to match the strong pink-red color
+  backgroundColor: '#999999', 
   color: '#fff',
   padding: '8px 28px',
   fontSize: '18px',
@@ -13,14 +13,14 @@ export const CustomButton = styled(Button)({
   textTransform: 'none',
   transition: 'background-color 0.3s ease, transform 0.2s ease',
   '&:hover': {
-    backgroundColor: '#514e4c', // Slightly darker shade for hover
+    backgroundColor: '#514e4c', 
     boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
     transform: 'translateY(-2px)',
   },
   '&:disabled': {
-    backgroundColor: '#CCCCCC', // A lighter, muted pink for the disabled state
-    color: '#FFFFFF', // White text remains for consistency
-    boxShadow: 'none', // No shadow for disabled button
+    backgroundColor: '#CCCCCC', 
+    color: '#FFFFFF', 
+    boxShadow: 'none',
   },
 });
 
@@ -29,7 +29,7 @@ export const FormContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  backgroundColor: '#FFF2F4', // Light pinkish background color
+  backgroundColor: '#FFF2F4',
   padding: '32px',
   borderRadius: '16px',
   boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.1)',
@@ -40,7 +40,7 @@ export const FormContainer = styled(Box)({
 
 // StyledTextField styling for Old Customer Form
 export const StyledTextField = styled(TextField)({
-  backgroundColor: '#FFFFFF', // Keeping the text field background white
+  backgroundColor: '#FFFFFF', 
   borderRadius: '8px',
   marginBottom: '16px',
   boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',

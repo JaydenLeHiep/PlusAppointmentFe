@@ -29,21 +29,29 @@ const CustomerBusinessInfo = ({ businessInfo }) => {
       <LanguageSwitcherContainer>
         <LanguageText
           onClick={() => changeLanguage('en')}
-          active={i18n.language === 'en'}
+          isActive={i18n.language === 'en'}
         >
           EN
         </LanguageText>
         <DividerText>|</DividerText>
         <LanguageText
           onClick={() => changeLanguage('ge')}
-          active={i18n.language === 'ge'}
+          isActive={i18n.language === 'ge'}
         >
           DE
         </LanguageText>
       </LanguageSwitcherContainer>
 
       {/* Centered business info */}
-      <Box sx={{ flex: 3, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box
+        sx={{
+          flex: 3,
+          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
         <BusinessName>{businessInfo.name}</BusinessName>
         <InfoContainer>
           <AddressWrapper>
