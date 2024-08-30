@@ -9,6 +9,7 @@ export const BusinessInfoContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   textAlign: 'center',
+  position: 'relative',  // Important for language switcher absolute positioning
   [theme.breakpoints.up('md')]: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -34,6 +35,7 @@ export const BusinessName = styled(Typography)(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     fontSize: '2.5rem', 
+    marginTop: theme.spacing(2), 
   },
 }));
 
@@ -83,4 +85,24 @@ export const InfoText = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     fontSize: '0.875rem', 
   },
+}));
+
+export const LanguageSwitcherContainer = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: theme.spacing(1),  // Adjusts the distance from the top
+  right: theme.spacing(1),  // Adjusts the distance from the right
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+}));
+
+export const LanguageText = styled(Typography)(({ theme, active }) => ({
+  cursor: 'pointer',
+  fontSize: '0.875rem',
+  color: active ? theme.palette.text.primary : 'gray',
+}));
+
+export const DividerText = styled(Typography)(({ theme }) => ({
+  fontSize: '0.875rem',
 }));

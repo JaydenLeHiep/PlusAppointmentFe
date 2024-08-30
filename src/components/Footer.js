@@ -72,8 +72,32 @@ const Footer = () => {
             },
           }}
         >
-          Hiep Le
-        </Link>
+          <IconButton onClick={() => changeLanguage('vi')} aria-label="Change language to Vietnamese">
+            <img src={VietnameseFlag} alt="Vietnamese" style={{ width: '32px', height: 'auto' }} />
+          </IconButton>
+          <IconButton
+            component="a"
+            href="https://www.facebook.com/profile.php?id=100007379317091"
+            target="_blank"
+            aria-label="Duong's Facebook link"
+          >
+            <FacebookIcon sx={{ color: '#4267B2', fontSize: '32px' }} />
+          </IconButton>
+          <Link
+            href="https://www.facebook.com/profile.php?id=100007379317091"
+            target="_blank"
+            sx={{
+              color: '#4267B2',
+              fontSize: '1rem',
+              textDecoration: 'none',
+              '&:hover': {
+                textDecoration: 'underline',
+              },
+            }}
+          >
+            Dương
+          </Link>
+        </Box>
       </Box>
     </Box>
   );
