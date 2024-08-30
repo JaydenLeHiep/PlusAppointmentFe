@@ -62,7 +62,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
 
         await addAppointmentAndUpdateList(combinedAppointmentDetails);
         setSuccess(true);
-        onAppointmentSuccess();
+        onAppointmentSuccess(customerId);
       } else {
         throw new Error(t('errorMessage'));
       }

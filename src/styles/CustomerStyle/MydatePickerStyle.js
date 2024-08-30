@@ -4,9 +4,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export const StyledDatePicker = styled(DatePicker)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
-    backgroundColor: '#ffffff', // White background for the input field
+    backgroundColor: '#ffffff', 
     '& fieldset': {
-      borderColor: '#ccc', // Border color of the input
+      borderColor: '#ccc',
     },
     '&:hover fieldset': {
       borderColor: '#bbb',
@@ -16,10 +16,10 @@ export const StyledDatePicker = styled(DatePicker)(({ theme }) => ({
     },
   },
   '& .MuiInputBase-input': {
-    backgroundColor: '#ffffff', // Ensure the input area inside is white
+    backgroundColor: '#ffffff', 
   },
   '& .MuiPickersCalendarHeader-root': {
-    backgroundColor: '#ffffff', // White background for the calendar header
+    backgroundColor: '#ffffff', 
     color: '#555',
     '& .MuiPickersArrowSwitcher-root button': {
       color: '#555',
@@ -30,20 +30,20 @@ export const StyledDatePicker = styled(DatePicker)(({ theme }) => ({
     height: '50px',
     fontSize: '1.2rem',
     '&.Mui-selected': {
-      backgroundColor: '#FF4C4C !important', // Pink color for selected days
+      backgroundColor: '#FF4C4C !important',
       color: '#fff',
       '&:hover': {
-        backgroundColor: '#FF2B2B', // Slightly darker pink on hover
+        backgroundColor: '#FF2B2B', 
       },
     },
     '&.MuiPickersDay-dayOutsideMonth': {
       color: '#B3B3B3',
     },
     '&.MuiPickersDay-today': {
-      border: '2px solid #FF4C4C', // Pink border for today's date
+      border: '2px solid #FF4C4C', 
     },
     '&:hover': {
-      backgroundColor: '#FFECEC', // Light pink hover effect
+      backgroundColor: '#FFECEC',
     },
   },
   '& .MuiPickersCalendarHeader-switchHeader': {
@@ -61,12 +61,12 @@ export const TimeSlotButton = styled(Button)(({ theme, selected }) => ({
   margin: theme.spacing(1),
   padding: theme.spacing(1, 2),
   borderRadius: '8px',
-  border: selected ? '2px solid #FFC0CB' : '1px solid #ccc', // Pink border when selected
-  backgroundColor: selected ? '#FFC0CB' : '#fff', // Pink background when selected
+  border: selected ? '2px solid #FFC0CB' : '1px solid #ccc', 
+  backgroundColor: selected ? '#FFC0CB' : '#fff',
   color: selected ? 'black' : '#000',
   minWidth: '75px',
   '&:hover': {
-    backgroundColor: selected ? '#FF9AA2' : '#FFECEC', // Pinker hover for selected, light pink for unselected
+    backgroundColor: selected ? '#FF9AA2' : '#FFECEC', 
   },
 }));
 
@@ -74,13 +74,13 @@ export const StyledBox = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(4),
   marginBottom: theme.spacing(6),
   textAlign: 'center',
-  background: ' #FFF8F9', // Very light pink gradient
+  background: '#FFF8F9', 
   padding: theme.spacing(4),
   borderRadius: '20px',
   boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.1)',
   maxWidth: '550px',
   margin: 'auto',
-  border: '2px solid #FFD7D7', // Subtle pink border
+  border: '2px solid #FFD7D7', 
 }));
 
 export const SectionTitle = styled(Typography)(({ theme }) => ({
@@ -97,14 +97,14 @@ export const ConfirmButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(4),
   fontWeight: 'bold',
   boxShadow: 'none',
-  backgroundColor: '#8c8c8c', // Updated pink background for the confirm button
+  backgroundColor: '#8c8c8c', 
   '&:hover': {
-    backgroundColor: '#514e4c', // Slightly darker pink on hover
+    backgroundColor: '#514e4c', 
   },
 
   '&:disabled': {
-    backgroundColor: '#CCCCCC', // A lighter, muted pink for the disabled state
-    color: '#FFFFFF', // White text remains for consistency
-    boxShadow: 'none', // No shadow for disabled button
+    backgroundColor: '#CCCCCC',
+    color: '#FFFFFF', 
+    boxShadow: 'none', 
   },
 }));

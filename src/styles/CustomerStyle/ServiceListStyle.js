@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 export const CategoryHeader = styled(Paper)(({ theme, selected }) => ({
     padding: theme.spacing(1.2, 3),
     margin: theme.spacing(0, 1),
-    background: '#ffd2d9', // Lighter pink when not selected, darker when selected
+    background: '#ffd2d9', 
     borderRadius: '12px',
     textAlign: 'left',
     cursor: 'pointer',
@@ -14,7 +14,7 @@ export const CategoryHeader = styled(Paper)(({ theme, selected }) => ({
     alignItems: 'center',
     boxSizing: 'border-box',
     border: '1.8px solid #7b7d7b',
-    boxShadow: 'none', // Ensure no shadow is applied
+    boxShadow: 'none',
     '&:hover': {
         borderRadius: '12px',
     },
@@ -40,24 +40,24 @@ export const ServiceItem = styled(Paper)(({ theme, selected }) => ({
     boxSizing: 'border-box',
     margin: theme.spacing(1, 'auto'),
     border: selected ? '2.3px solid #ffe0e5' : '1.8px solid #ffe0e5', 
-    boxShadow: 'none', // Ensure no shadow is applied
+    boxShadow: 'none',
     '&:hover': {
         borderRadius: '12px',
-        boxShadow: 'none', // No shadow on hover
+        boxShadow: 'none', 
     },
     '&:active': {
         borderRadius: '12px',
-        boxShadow: 'none', // No shadow on active state
+        boxShadow: 'none', 
     },
     [theme.breakpoints.down('sm')]: {
         padding: theme.spacing(0.5, 3),
         '&:hover': {
             borderRadius: '12px',
-            boxShadow: 'none', // No shadow on hover for mobile
+            boxShadow: 'none', 
         },
         '&:active': {
             borderRadius: '12px',
-            boxShadow: 'none', // No shadow on active state for mobile
+            boxShadow: 'none', 
         },
     },
 }));
@@ -94,6 +94,6 @@ export const ExpandIcon = styled('div')(({ theme, expanded }) => ({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: '50%',
-    backgroundColor: expanded ? '#FFB3B3' : '#FFD7D7', // Subtle but distinct colors for expanded and default states
+    backgroundColor: expanded ? '#FFB3B3' : '#FFD7D7',
     transition: 'background-color 0.3s ease, transform 0.3s ease',
 }));

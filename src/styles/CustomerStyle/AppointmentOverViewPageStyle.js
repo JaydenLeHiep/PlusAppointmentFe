@@ -23,7 +23,7 @@ export const OverviewItem = styled(ListItem)(({ theme }) => ({
 
 // Overview Text
 export const OverviewText = styled(Typography)(({ theme }) => ({
-  color: '#333', // Dark text color for better readability on a light background
+  color: '#333',
   fontWeight: 500,
   marginBottom: theme.spacing(1),
 }));
@@ -52,16 +52,16 @@ export const OverviewButton = styled(Button)(({ theme }) => ({
 // Styled ListItemText
 export const StyledListItemText = styled(ListItemText)(({ theme }) => ({
   '& .MuiTypography-root': {
-    color: '#555', // Subtle text color for the secondary text
+    color: '#555', 
   },
   '& .MuiTypography-body2': {
-    color: '#333', // Stronger text color for the primary text
+    color: '#333', 
   },
 }));
 
 export const ServiceNameText = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
-  color: '#D32F2F', // A strong color to make the service name stand out
+  color: '#D32F2F', 
   fontSize: '1.2rem',
   marginBottom: theme.spacing(1),
   [theme.breakpoints.down('sm')]: {

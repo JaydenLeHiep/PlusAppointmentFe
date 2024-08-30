@@ -18,8 +18,11 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: ''
+    confirmEmail: '',
+    phone: '',
+    confirmPhone: ''
   });
+
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
@@ -29,6 +32,16 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.email !== formData.confirmEmail) {
+      setSubmitError(t('emailMismatchError'));
+      return;
+    }
+
+    if (formData.phone !== formData.confirmPhone) {
+      setSubmitError(t('phoneMismatchError'));
+      return;
+    }
 
     try {
       const customerDetails = {
@@ -47,6 +60,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
       setFormData({
         name: '',
         email: '',
+        confirmEmail: '',
         phone: ''
       });
 
@@ -56,7 +70,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           if (prevCount <= 1) {
             clearInterval(countdownInterval);
             setShowRedirectMessage(false);
-            onCustomerAdded(newCustomer); 
+            onCustomerAdded(newCustomer);
           }
           return prevCount - 1;
         });
@@ -68,6 +82,8 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
       setSubmitError(errorMessage);
     }
   };
+
+
 
   const handleOpenTerms = () => {
     setTermsOpen(true);
@@ -100,10 +116,28 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           required
         />
         <StyledTextField
+          label={t('confirm Email')}
+          name="confirmEmail"
+          value={formData.confirmEmail}
+          onChange={(e) => setFormData({ ...formData, confirmEmail: e.target.value })}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <StyledTextField
           label={t('phoneLabel')}
           name="phone"
           value={formData.phone}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <StyledTextField
+          label={t('confirm Phone')}
+          name="confirmPhone"
+          value={formData.confirmPhone}
+          onChange={(e) => setFormData({ ...formData, confirmPhone: e.target.value })}
           fullWidth
           margin="normal"
           required

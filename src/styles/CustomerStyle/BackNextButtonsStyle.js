@@ -6,9 +6,9 @@ export const ButtonContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   width: '100%',
-  maxWidth: '1200px', // Limit the width to match the content container's max-width
-  height: '60px', // Increased height for PC
-  margin: '0 auto', // Center the button container within the content
+  maxWidth: '1200px', 
+  height: '60px', 
+  margin: '0 auto', 
   marginBottom: theme.spacing(2.5),
   [theme.breakpoints.down('sm')]: {
     height: '50px', // Default height for mobile
@@ -19,23 +19,23 @@ export const ButtonContainer = styled(Box)(({ theme }) => ({
 
 export const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: 'bold',
-  padding: theme.spacing(1.3, 4), // Default padding for PC
+  padding: theme.spacing(1.3, 4), 
   fontSize: '1rem',
   borderRadius: '8px',
   boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
   transition: 'background-color 0.3s ease, box-shadow 0.3s ease, border 0.3s ease',
-  backgroundColor: '#8c8c8c', // A vibrant, more saturated pink for the active state
-  color: '#FFFFFF', // White text for contrast
+  backgroundColor: '#8c8c8c', 
+  color: '#FFFFFF', 
 
   '&:hover': {
-    backgroundColor: '#514e4c', // A darker pink for the hover state
-    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)', // A larger shadow for hover
+    backgroundColor: '#514e4c',
+    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)', 
   },
 
   '&:disabled': {
-    backgroundColor: '#CCCCCC', // A lighter, muted pink for the disabled state
-    color: '#FFFFFF', // White text remains for consistency
-    boxShadow: 'none', // No shadow for disabled button
+    backgroundColor: '#CCCCCC',
+    color: '#FFFFFF', 
+    boxShadow: 'none', 
   },
 
   [theme.breakpoints.down('sm')]: {

@@ -15,24 +15,24 @@ export const ListItem = styled(Paper)(({ theme, selected }) => ({
   boxSizing: 'border-box',
   margin: theme.spacing(1, 1),
   border: selected ? '2.3px solid #ffe0e5' : '1.8px solid #ffe0e5', 
-  boxShadow: 'none', // Ensure no shadow is applied
+  boxShadow: 'none', 
   '&:hover': {
       borderRadius: '12px',
-      boxShadow: 'none', // No shadow on hover
+      boxShadow: 'none', 
   },
   '&:active': {
       borderRadius: '12px',
-      boxShadow: 'none', // No shadow on active state
+      boxShadow: 'none',
   },
   [theme.breakpoints.down('sm')]: {
       padding: theme.spacing(0.5, 3),
       '&:hover': {
           borderRadius: '12px',
-          boxShadow: 'none', // No shadow on hover for mobile
+          boxShadow: 'none', 
       },
       '&:active': {
           borderRadius: '12px',
-          boxShadow: 'none', // No shadow on active state for mobile
+          boxShadow: 'none',
       },
   },
 }));
@@ -40,9 +40,9 @@ export const ListItem = styled(Paper)(({ theme, selected }) => ({
 export const ItemBoldText = styled(Typography)(({ theme }) => ({
   color: 'black',
   fontSize: '1.4rem',
-  marginBottom: theme.spacing(0.5), // Slightly reduced margin on mobile
+  marginBottom: theme.spacing(0.5), 
   [theme.breakpoints.down('sm')]: {
-    fontSize: '1.2rem', // Slightly smaller font size on mobile
+    fontSize: '1.2rem', 
   },
 }));
 
@@ -51,6 +51,6 @@ export const ItemText = styled(Typography)(({ theme }) => ({
   fontSize: '1rem',
   marginBottom: theme.spacing(0.5),
   [theme.breakpoints.down('sm')]: {
-    fontSize: '1rem', // Slightly smaller font size on mobile
+    fontSize: '1rem',
   },
 }));

@@ -29,7 +29,7 @@ const CustomerDashboard = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const businessName = queryParams.get('business_name');
-
+  const [customerId, setCustomerId] = useState(null);
   const [businessInfo, setBusinessInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -223,7 +223,8 @@ const CustomerDashboard = () => {
     }, 5000);
   };
 
-  const handleAppointmentSuccess = () => {
+  const handleAppointmentSuccess = (customerId) => {
+    setCustomerId(customerId);
     setView('thankYou');
   };
 
@@ -382,7 +383,7 @@ const CustomerDashboard = () => {
           )
         )}
 
-        {view === 'thankYou' && <ThankYou />}
+        {view === 'thankYou' && <ThankYou customerId={customerId} />}
       </CustomContainer>
     </DashboardContainer>
   );

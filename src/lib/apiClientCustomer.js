@@ -187,3 +187,17 @@ export const fetchCustomersByBusinessId = async (businessId) => {
   // Ensure you extract the actual customer data from the $values array
   return data || [];
 };
+
+// Fetch a customer by their ID without authorization
+export const fetchCustomerById = async (customerId) => {
+  const customerDetailsApiUrl = `${apiBaseUrl}/api/customer/customer_id=${customerId}`;
+  
+  const response = await fetch(customerDetailsApiUrl, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return await handleApiResponse(response);
+};
