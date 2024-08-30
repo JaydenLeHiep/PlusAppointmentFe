@@ -1,0 +1,13 @@
+{
+    "formTitle": "New Customer",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone",
+    "readAndAcceptTerms": "Read and Accept Terms",
+    "submitButton": "Submit",
+    "redirectMessage": "Add your data successfully! Please come back to Your Information to finish booking.",
+    "redirectingIn": "Redirecting in",
+    "successSnackbar": "Customer added successfully!",
+    "errorSnackbar": "Failed to add customer."
+  }
+  

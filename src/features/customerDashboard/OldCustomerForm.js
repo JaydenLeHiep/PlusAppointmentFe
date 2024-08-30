@@ -9,8 +9,10 @@ import {
   FormTitle,
   NewCustomerLink,     
 } from '../../styles/CustomerStyle/OldCustomerFormStyle'; 
+import { useTranslation } from 'react-i18next';
 
 const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSuccess, onNewCustomer }) => {
+  const { t } = useTranslation('oldCustomerForm');
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
@@ -40,12 +42,12 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
         }
 
         const localTime = new Date(selectedAppointments[0].appointmentTime);
-        const utcAppointmentTime = localTime.toISOString();  // This will include the 'Z' at the end
+        const utcAppointmentTime = localTime.toISOString();
 
         const combinedAppointmentDetails = {
           customerId: parseInt(customerId, 10),
           businessId: parseInt(businessId, 10),
-          appointmentTime: utcAppointmentTime, // Use the UTC time here
+          appointmentTime: utcAppointmentTime,
           status: 'Pending',
           comment: comment || '',
           services: selectedAppointments.flatMap(appointment => 
@@ -62,20 +64,20 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
         setSuccess(true);
         onAppointmentSuccess();
       } else {
-        throw new Error('Customer not found');
+        throw new Error(t('errorMessage'));
       }
     } catch (error) {
       console.error("Error during form submission:", error.message || error);
-      setError(error.message || 'Failed to find customer or add appointment');
+      setError(error.message || t('errorMessage'));
     }
   };
 
   return (
     <FormContainer>
-      <FormTitle>Your Information</FormTitle>
+      <FormTitle>{t('formTitle')}</FormTitle>
       <form onSubmit={handleFormSubmit}>
         <StyledTextField
-          label="Email or Phone"
+          label={t('emailOrPhoneLabel')}
           name="emailOrPhone"
           value={emailOrPhone}
           onChange={handleInputChange}
@@ -84,7 +86,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
         />
 
         <StyledTextField
-          label="Comment"
+          label={t('commentLabel')}
           name="comment"
           value={comment}
           onChange={handleInputChange}
@@ -98,15 +100,15 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
             type="submit"
             variant="contained"
             color="primary"
-            disabled={!emailOrPhone.trim()} // Disable if emailOrPhone is empty
+            disabled={!emailOrPhone.trim()}
           >
-            Finish
+            {t('finishButton')}
           </CustomButton>
         </Box>
 
         <Box mt={2} textAlign="center">
           <NewCustomerLink onClick={onNewCustomer}>
-            If you are a new customer, click here
+            {t('newCustomerLink')}
           </NewCustomerLink>
         </Box>
       </form>
@@ -117,7 +119,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
         onClose={() => setSuccess(false)}
       >
         <Alert onClose={() => setSuccess(false)} severity="success">
-          Appointment successfully created!
+          {t('successMessage')}
         </Alert>
       </Snackbar>
 
