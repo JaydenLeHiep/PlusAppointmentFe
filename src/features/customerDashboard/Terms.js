@@ -15,7 +15,7 @@ const ModalContainer = styled(Box)(({ theme }) => ({
   boxShadow: 24,
   padding: theme.spacing(4), // theme is passed here
   borderRadius: '12px',
-  outline: 'none',
+  outline: 'none', 
 }));
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
