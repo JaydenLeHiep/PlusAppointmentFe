@@ -90,7 +90,7 @@ const Footer = () => {
             <FacebookIcon sx={{ color: '#4267B2', fontSize: '32px' }} />
           </IconButton>
           <Link
-            href="https://www.facebook.com/hiep.leduyy"
+            href="https://www.facebook.com/profile.php?id=100007379317091"
             target="_blank"
             sx={{
               color: '#4267B2',

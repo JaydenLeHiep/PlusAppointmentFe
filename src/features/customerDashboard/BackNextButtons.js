@@ -11,7 +11,6 @@ const BackAndNextButtons = ({
   searchQuery,
   onSearchChange,
   view,
-  isAddingNewCustomer,
 }) => {
   const { t } = useTranslation('backNextButton'); 
 
