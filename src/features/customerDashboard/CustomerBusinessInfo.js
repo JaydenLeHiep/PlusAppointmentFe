@@ -38,7 +38,7 @@ const CustomerBusinessInfo = ({ businessInfo }) => {
           onClick={() => changeLanguage('ge')}
           isActive={i18n.language === 'ge'}
         >
-          DE
+          GE
         </LanguageText>
       </LanguageSwitcherContainer>
 
