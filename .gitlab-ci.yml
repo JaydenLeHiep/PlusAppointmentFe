@@ -31,13 +31,14 @@ deploy_production:
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - |
-      ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@18.159.214.207 <<EOF
+      ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@18.159.214.207 << 'EOF'
         docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+        CONTAINER_ID=$(docker ps -q --filter name=react_app)
+        if [ ! -z "$CONTAINER_ID" ]; then
+          docker stop $CONTAINER_ID
+          docker rm $CONTAINER_ID
+        fi
         docker pull $DOCKER_IMAGE
-        docker system prune -a -f || true
-        docker stop frontend-container || true
-        docker rm frontend-container || true
-        docker run -d --name frontend-container -p 80:3000 $DOCKER_IMAGE
-        EOF
+        docker run -d -p 80:3000 --name react_app $DOCKER_IMAGE
   only:
     - main
