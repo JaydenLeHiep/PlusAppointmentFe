@@ -38,7 +38,7 @@ deploy_production:
           docker stop \$CONTAINER_ID
           docker rm \$CONTAINER_ID
         fi
-        docker pull $DOCKER_IMAGE
-        docker run -d -p 80:3000 --name react_app $DOCKER_IMAGE
+        docker pull \$DOCKER_IMAGE
+        docker run -d -p 80:3000 --name react_app \$DOCKER_IMAGE
   only:
     - main
