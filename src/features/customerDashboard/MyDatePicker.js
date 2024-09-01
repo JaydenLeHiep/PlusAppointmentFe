@@ -13,10 +13,18 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { TextField, Box, Grid, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext';
 
-const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTimeSelect, onConfirmTime, totalDuration }) => {
+const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selectedTime, onTimeSelect, onConfirmTime, totalDuration }) => {
   const { t } = useTranslation('myDatePicker');
   const [notAvailableTimeSlots, setNotAvailableTimeSlots] = useState([]);
+  const { notAvailableDates, fetchAllNotAvailableDatesByStaff } = useNotAvailableDateContext();
+
+  useEffect(() => {
+    if (staffId) {
+      fetchAllNotAvailableDatesByStaff(businessId, staffId); 
+    }
+  }, [businessId, staffId, fetchAllNotAvailableDatesByStaff]);
 
   useEffect(() => {
     if (staffId && selectedDate) {
@@ -93,9 +101,16 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
     });
   };
 
-  // Disable Sundays
+  // Disable dates that are not available based on intervals
   const shouldDisableDate = (date) => {
-    return date.day() === 0; // 0 corresponds to Sunday in moment.js
+    const formattedDate = date.format('YYYY-MM-DD');
+    const isInUnavailableRange = notAvailableDates.some(({ startDate, endDate }) => {
+      const start = moment(startDate);
+      const end = moment(endDate);
+      return date.isBetween(start, end, null, '[]'); // Inclusive of start and end date
+    });
+
+    return isInUnavailableRange || date.day() === 0; // Disable Sundays and dates within unavailable intervals
   };
 
   return (
@@ -108,7 +123,7 @@ const MyDatePicker = ({ staffId, selectedDate, onDateChange, selectedTime, onTim
             <TextField {...params} fullWidth sx={{ fontSize: '1.3rem' }} />
           )}
           disablePast
-          shouldDisableDate={shouldDisableDate} // Disable Sundays
+          shouldDisableDate={shouldDisableDate}
         />
 
         {selectedDate && (

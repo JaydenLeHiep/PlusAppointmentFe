@@ -339,16 +339,17 @@ const CustomerDashboard = () => {
         {view === 'staffs' && (
           <CustomerListContainer>
             <StaffList
-              businessId={businessInfo.businessId} // Use businessId from fetched data
+              businessId={businessInfo.businessId} 
               searchQuery={searchQuery}
-              selectedStaff={selectedStaff} // Pass the selectedStaff state
-              onStaffSelect={handleStaffSelect} // Use handleStaffSelect for selection
+              selectedStaff={selectedStaff} 
+              onStaffSelect={handleStaffSelect} 
             />
           </CustomerListContainer>
         )}
 
         {view === 'calendar' && (
           <MyDatePicker
+            businessId={businessInfo.businessId} 
             selectedDate={selectedDate}
             onDateChange={handleDateChange}
             selectedTime={selectedTime}

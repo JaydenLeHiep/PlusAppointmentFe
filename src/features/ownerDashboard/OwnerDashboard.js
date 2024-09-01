@@ -10,6 +10,7 @@ import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import { useStaffsContext } from '../../context/StaffsContext';
 import { useServicesContext } from '../../context/ServicesContext';
 import { useCustomersContext } from '../../context/CustomerContext';
+import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext'; // Import the context
 import * as signalR from '@microsoft/signalr';
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
@@ -19,6 +20,7 @@ const OwnerDashboard = () => {
   const { staff, fetchAllStaff } = useStaffsContext();
   const { customers, fetchCustomersForBusiness } = useCustomersContext();
   const { services, fetchServices } = useServicesContext();
+  const { fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext(); // Destructure the fetch function
 
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
@@ -59,6 +61,7 @@ const OwnerDashboard = () => {
         await fetchAllStaff(selectedBusiness.businessId);
         await fetchServices(selectedBusiness.businessId);
         await fetchCustomersForBusiness(selectedBusiness.businessId);
+        await fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId); // Fetch all not available dates for the business
       }
     };
 
@@ -76,6 +79,7 @@ const OwnerDashboard = () => {
     fetchAllStaff,
     fetchServices,
     fetchCustomersForBusiness,
+    fetchAllNotAvailableDatesByBusiness, // Add this to dependencies
   ]);
 
   // Setup SignalR connection
@@ -117,6 +121,13 @@ const OwnerDashboard = () => {
             await fetchCustomersForBusiness(selectedBusiness.businessId); // Refresh the customers
           }
         });
+
+        // Listen for not available date updates
+        newConnection.on('ReceiveNotAvailableDateUpdate', async (message) => {
+          if (selectedBusiness && selectedBusiness.businessId) {
+            await fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId); // Refresh not available dates
+          }
+        });
       } catch (error) {
         console.error('Error connecting to SignalR hub:', error);
       }
@@ -135,6 +146,7 @@ const OwnerDashboard = () => {
     fetchAllStaff,
     fetchServices,
     fetchCustomersForBusiness,
+    fetchAllNotAvailableDatesByBusiness, // Add this to dependencies
   ]);
 
   const handleBusinessClick = (business) => {

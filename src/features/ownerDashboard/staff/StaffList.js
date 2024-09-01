@@ -1,9 +1,9 @@
 import React, { Fragment, useRef, useEffect, useState } from 'react';
 import { List, ListItem, ListItemText, IconButton, Typography, Collapse, Box } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+import { Delete, Edit, Event as EventIcon } from '@mui/icons-material'; 
 import { useTranslation } from 'react-i18next';
 import StaffForm from './StaffForm';
-import SearchBar from '../SearchBarContainer'; // Ensure the correct path to the SearchBar component
+import SearchBar from '../SearchBarContainer';
 
 const StaffList = ({
   staff,
@@ -14,6 +14,7 @@ const StaffList = ({
   setNewStaff,
   handleUpdateStaff,
   handleCancelForm,
+  handleCalendarIconClick // Receive the calendar icon click handler
 }) => {
   const { t } = useTranslation('staffList');
   const formRef = useRef(null);
@@ -34,7 +35,6 @@ const StaffList = ({
 
   return (
     <Box>
-      {/* Integrate the SearchBar */}
       <SearchBar
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
@@ -58,10 +58,13 @@ const StaffList = ({
               }}
               secondaryAction={
                 <>
-                  <IconButton edge="end" aria-label="edit" onClick={() => handleEditStaff(member)}>
+                  <IconButton sx={{padding: 2}} edge="end" aria-label="calendar" onClick={() => handleCalendarIconClick(member.staffId)}>
+                    <EventIcon />
+                  </IconButton>
+                  <IconButton sx={{padding: 2}} edge="end" aria-label="edit" onClick={() => handleEditStaff(member)}>
                     <Edit />
                   </IconButton>
-                  <IconButton edge="end" aria-label="delete" onClick={() => confirmDeleteStaff(member.staffId)}>
+                  <IconButton sx={{padding: 2}} edge="end" aria-label="delete" onClick={() => confirmDeleteStaff(member.staffId)}>
                     <Delete />
                   </IconButton>
                 </>
