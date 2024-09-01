@@ -1,8 +1,17 @@
 import React, { useRef, useEffect } from 'react';
-import { Box, Typography, TextField, Button, IconButton, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { Box, MenuItem, Select, InputLabel } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useServicesContext } from '../../../context/ServicesContext';
+import {
+  FormContainer,
+  CloseButtonStyled,
+  TitleStyled,
+  TextFieldStyled,
+  FormControlStyled,
+  CancelButtonStyled,
+  ActionButtonStyled
+} from '../../../styles/OwnerStyle/ServiceComponent/ServiceFormStyles';
 
 const ServiceForm = ({ title, newService, setNewService, handleAction, handleCancelForm, buttonText, buttonColor }) => {
   const { t } = useTranslation('serviceServiceForm');
@@ -16,66 +25,32 @@ const ServiceForm = ({ title, newService, setNewService, handleAction, handleCan
   }, []);
 
   return (
-    <Box
-      ref={formRef}
-      mt={2}
-      p={2}
-      mb={3}
-      sx={{
-        borderRadius: '12px',
-        backgroundColor: '#f9f9f9',
-        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-        position: 'relative',
-        transition: 'all 0.3s ease-in-out', // Smooth transition
-      }}
-    >
-      <IconButton
-        onClick={handleCancelForm}
-        sx={{ position: 'absolute', top: '8px', right: '8px', color: '#6c757d' }}
-      >
+    <FormContainer ref={formRef}>
+      <CloseButtonStyled onClick={handleCancelForm}>
         <CloseIcon />
-      </IconButton>
+      </CloseButtonStyled>
 
-      <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+      <TitleStyled variant="h6">
         {title}
-      </Typography>
-      <TextField
+      </TitleStyled>
+      
+      <TextFieldStyled
         margin="dense"
         label={t('nameLabel')}
         type="text"
         fullWidth
         value={newService.name}
         onChange={(e) => setNewService({ ...newService, name: e.target.value })}
-        sx={{
-          backgroundColor: '#ffffff',
-          borderRadius: '12px',
-          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              border: 'none', // Removing the default border
-            },
-          },
-        }}
       />
-      <TextField
+      <TextFieldStyled
         margin="dense"
         label={t('descriptionLabel')}
         type="text"
         fullWidth
         value={newService.description}
         onChange={(e) => setNewService({ ...newService, description: e.target.value })}
-        sx={{
-          backgroundColor: '#ffffff',
-          borderRadius: '12px',
-          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              border: 'none', // Removing the default border
-            },
-          },
-        }}
       />
-      <TextField
+      <TextFieldStyled
         margin="dense"
         label={t('durationLabel')}
         type="time"
@@ -84,65 +59,22 @@ const ServiceForm = ({ title, newService, setNewService, handleAction, handleCan
         InputLabelProps={{ shrink: true }}
         inputProps={{ step: 300 }} // 5 min steps
         onChange={(e) => setNewService({ ...newService, duration: e.target.value })}
-        sx={{
-          backgroundColor: '#ffffff',
-          borderRadius: '12px',
-          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              border: 'none', // Removing the default border
-            },
-          },
-        }}
       />
-      <TextField
+      <TextFieldStyled
         margin="dense"
         label={t('priceLabel')}
         type="number"
         fullWidth
         value={newService.price}
         onChange={(e) => setNewService({ ...newService, price: e.target.value })}
-        sx={{
-          backgroundColor: '#ffffff',
-          borderRadius: '12px',
-          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              border: 'none', // Removing the default border
-            },
-          },
-        }}
       />
-      {/* Dropdown for Category */}
-      <FormControl
-        fullWidth
-        margin="dense"
-        sx={{
-          backgroundColor: '#ffffff',
-          borderRadius: '12px',
-          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              border: 'none', // Removing the default border
-            },
-          },
-        }}
-      >
+
+      <FormControlStyled fullWidth margin="dense">
         <InputLabel>{t('categoryLabel')}</InputLabel>
         <Select
-          value={newService.categoryId || ''} // Ensure categoryId is set properly
+          value={newService.categoryId || ''}
           onChange={(e) => setNewService({ ...newService, categoryId: e.target.value })}
           label={t('categoryLabel')}
-          sx={{
-            backgroundColor: '#ffffff',
-            borderRadius: '12px',
-            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                border: 'none', // Removing the default border
-              },
-            },
-          }}
         >
           {categories.map((category) => (
             <MenuItem key={category.categoryId} value={category.categoryId}>
@@ -150,41 +82,17 @@ const ServiceForm = ({ title, newService, setNewService, handleAction, handleCan
             </MenuItem>
           ))}
         </Select>
-      </FormControl>
+      </FormControlStyled>
 
       <Box mt={3} display="flex" justifyContent="space-between">
-        <Button
-          onClick={handleCancelForm}
-          sx={{
-            width: '120px',
-            height: '40px',
-            fontSize: '0.875rem',
-            fontWeight: 'bold',
-            borderRadius: '8px',
-            backgroundColor: '#6c757d',
-            color: '#fff',
-            '&:hover': { backgroundColor: '#5a6268' },
-          }}
-        >
+        <CancelButtonStyled onClick={handleCancelForm}>
           {t('cancelButton')}
-        </Button>
-        <Button
-          onClick={handleAction}
-          sx={{
-            width: '150px',
-            height: '40px',
-            fontSize: '0.875rem',
-            fontWeight: 'bold',
-            borderRadius: '8px',
-            backgroundColor: buttonColor,
-            color: '#fff',
-            '&:hover': { backgroundColor: buttonColor === '#007bff' ? '#0056b3' : '#218838' },
-          }}
-        >
+        </CancelButtonStyled>
+        <ActionButtonStyled onClick={handleAction} buttonColor={buttonColor}>
           {t(buttonText)}
-        </Button>
+        </ActionButtonStyled>
       </Box>
-    </Box>
+    </FormContainer>
   );
 };
 

@@ -2,12 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogTitle,
-  IconButton,
-  Box,
-  Typography,
   Collapse,
-  Alert
 } from '@mui/material';
 import { Add, Close as CloseIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +11,14 @@ import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import StaffList from './StaffList';
 import StaffForm from './StaffForm';
 import CalendarDialog from './CalendarDialog';
+
+import {
+  DialogTitleStyled,
+  CloseIconButtonStyled,
+  AlertStyled,
+  AddNewStaffTypographyStyled,
+  BoxStyled,
+} from '../../../styles/OwnerStyle/StaffComPonent/showStaffDialogStyles';
 
 const ShowStaffDialog = ({ open, onClose, businessId }) => {
   const { t } = useTranslation('showStaffDialog');
@@ -26,7 +29,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
     name: '',
     email: '',
     phone: '',
-    password: ''
+    password: '',
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [alert, setAlert] = useState({ message: '', severity: '' });
@@ -73,7 +76,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
           email: newStaff.email,
           phone: newStaff.phone,
           password: newStaff.password,
-          BusinessId: String(businessId)
+          BusinessId: String(businessId),
         };
 
         await addStaff(String(businessId), staffDetails);
@@ -83,7 +86,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
           name: '',
           email: '',
           phone: '',
-          password: ''
+          password: '',
         });
       } catch (error) {
         console.error('Failed to add staff:', error);
@@ -101,7 +104,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
           email: newStaff.email,
           phone: newStaff.phone,
           password: newStaff.password,
-          BusinessId: String(businessId)
+          BusinessId: String(businessId),
         };
 
         await updateStaff(String(businessId), staffId, staffDetails);
@@ -111,7 +114,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
           name: '',
           email: '',
           phone: '',
-          password: ''
+          password: '',
         });
       } catch (error) {
         console.error('Failed to update staff:', error);
@@ -148,7 +151,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
       name: staff.name,
       email: staff.email,
       phone: staff.phone,
-      password: ''
+      password: '',
     });
     setIsFormOpen(false);
   };
@@ -159,7 +162,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
       name: '',
       email: '',
       phone: '',
-      password: ''
+      password: '',
     });
     setEditStaffId(null);
     setAlert({ message: '', severity: '' });
@@ -178,7 +181,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
       name: '',
       email: '',
       phone: '',
-      password: ''
+      password: '',
     });
   };
 
@@ -191,54 +194,30 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
   return (
     <>
       <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-        <DialogTitle
-          sx={{
-            fontWeight: '550',
-            fontSize: '1.75rem',
-            color: '#1a1a1a',
-            textAlign: 'center',
-            padding: '16px 24px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginLeft: '3px'
-          }}
-        >
+        <DialogTitleStyled>
           {t('staffListTitle')}
-          <IconButton aria-label="close" onClick={onClose} sx={{ color: '#808080', fontSize: '1.5rem' }}>
+          <CloseIconButtonStyled aria-label="close" onClick={onClose}>
             <CloseIcon />
-          </IconButton>
-        </DialogTitle>
+          </CloseIconButtonStyled>
+        </DialogTitleStyled>
         {alert.message && (
-          <Alert
+          <AlertStyled
             severity={alert.severity}
             onClose={() => setAlert({ message: '', severity: '' })}
             ref={alertRef}
-            sx={{ mt: 2 }}
           >
             {alert.message}
-          </Alert>
+          </AlertStyled>
         )}
         <DialogContent dividers>
-          <Box mt={1} mb={3} display="flex" justifyContent="center">
-            <Typography
+          <BoxStyled>
+            <AddNewStaffTypographyStyled
               variant="h7"
               onClick={handleAddNewStaffClick}
-              sx={{
-                cursor: 'pointer',
-                textDecoration: 'underline',
-                color: '#1976d2',
-                '&:hover': {
-                  color: '#115293',
-                },
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-              }}
             >
               <Add sx={{ fontSize: '40px' }} /> {t('addNewStaff')}
-            </Typography>
-          </Box>
+            </AddNewStaffTypographyStyled>
+          </BoxStyled>
           <Collapse in={isFormOpen}>
             <StaffForm
               title={t('addNewStaff')}
@@ -258,7 +237,6 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
             newStaff={newStaff}
             setNewStaff={setNewStaff}
             handleUpdateStaff={handleUpdateStaff}
-            handleCancelForm={handleCancelForm}
             handleCalendarIconClick={handleCalendarIconClick}
           />
         </DialogContent>
