@@ -7,19 +7,19 @@ import {
   Box,
   Typography,
   Collapse,
-  Alert,
+  Alert
 } from '@mui/material';
 import { Add, Close as CloseIcon } from '@mui/icons-material';
-import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
+import { useTranslation } from 'react-i18next';
 import { useStaffsContext } from '../../../context/StaffsContext';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import StaffList from './StaffList';
 import StaffForm from './StaffForm';
+import CalendarDialog from './CalendarDialog';
 
 const ShowStaffDialog = ({ open, onClose, businessId }) => {
-  const { t } = useTranslation('showStaffDialog'); // Use the 'showStaffDialog' namespace
-
-  const { staff, fetchAllStaff, addStaff, updateStaff, deleteStaff } = useStaffsContext();
+  const { t } = useTranslation('showStaffDialog');
+  const { staff, addStaff, updateStaff, deleteStaff } = useStaffsContext();
 
   const [editStaffId, setEditStaffId] = useState(null);
   const [newStaff, setNewStaff] = useState({
@@ -33,14 +33,11 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [staffToDelete, setStaffToDelete] = useState(null);
 
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [selectedStaffId, setSelectedStaffId] = useState(null);
+
   const alertRef = useRef(null);
   const formRef = useRef(null);
-
-  useEffect(() => {
-    if (open && staff.length === 0) {
-      fetchAllStaff(String(businessId));
-    }
-  }, [open, fetchAllStaff, businessId, staff.length]);
 
   useEffect(() => {
     if (alert.message) {
@@ -53,6 +50,11 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
       return () => clearTimeout(timer);
     }
   }, [alert]);
+
+  const handleCalendarIconClick = (staffId) => {
+    setSelectedStaffId(staffId);
+    setCalendarOpen(true);
+  };
 
   const closeFormAndExecuteAction = async (action) => {
     setIsFormOpen(false);
@@ -75,7 +77,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
         };
 
         await addStaff(String(businessId), staffDetails);
-        setAlert({ message: t('staffAddedSuccess'), severity: 'success' }); // Use translation for success message
+        setAlert({ message: t('staffAddedSuccess'), severity: 'success' });
 
         setNewStaff({
           name: '',
@@ -85,7 +87,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
         });
       } catch (error) {
         console.error('Failed to add staff:', error);
-        const errorMessage = error.response?.data?.message || error.message || t('staffAddedError'); // Use translation for error message
+        const errorMessage = error.response?.data?.message || error.message || t('staffAddedError');
         setAlert({ message: errorMessage, severity: 'error' });
       }
     });
@@ -103,7 +105,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
         };
 
         await updateStaff(String(businessId), staffId, staffDetails);
-        setAlert({ message: t('staffUpdatedSuccess'), severity: 'success' }); // Use translation for success message
+        setAlert({ message: t('staffUpdatedSuccess'), severity: 'success' });
 
         setNewStaff({
           name: '',
@@ -113,7 +115,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
         });
       } catch (error) {
         console.error('Failed to update staff:', error);
-        const errorMessage = error.response?.data?.message || error.message || t('staffUpdatedError'); // Use translation for error message
+        const errorMessage = error.response?.data?.message || error.message || t('staffUpdatedError');
         setAlert({ message: errorMessage, severity: 'error' });
       }
     });
@@ -128,10 +130,10 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
     closeFormAndExecuteAction(async () => {
       try {
         await deleteStaff(String(businessId), staffToDelete);
-        setAlert({ message: t('staffDeletedSuccess'), severity: 'success' }); // Use translation for success message
+        setAlert({ message: t('staffDeletedSuccess'), severity: 'success' });
       } catch (error) {
         console.error('Failed to delete staff:', error);
-        const errorMessage = error.response?.data?.message || error.message || t('staffDeletedError'); // Use translation for error message
+        const errorMessage = error.response?.data?.message || error.message || t('staffDeletedError');
         setAlert({ message: errorMessage, severity: 'error' });
       } finally {
         setConfirmDialogOpen(false);
@@ -257,9 +259,18 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
             setNewStaff={setNewStaff}
             handleUpdateStaff={handleUpdateStaff}
             handleCancelForm={handleCancelForm}
+            handleCalendarIconClick={handleCalendarIconClick}
           />
         </DialogContent>
       </Dialog>
+
+      {/* CalendarDialog Component for managing not available dates */}
+      <CalendarDialog
+        open={calendarOpen}
+        onClose={() => setCalendarOpen(false)}
+        businessId={businessId}
+        staffId={selectedStaffId}
+      />
 
       <ConfirmationDialog
         open={confirmDialogOpen}
