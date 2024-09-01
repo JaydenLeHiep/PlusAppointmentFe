@@ -103,7 +103,6 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
 
   // Disable dates that are not available based on intervals
   const shouldDisableDate = (date) => {
-    const formattedDate = date.format('YYYY-MM-DD');
     const isInUnavailableRange = notAvailableDates.some(({ startDate, endDate }) => {
       const start = moment(startDate);
       const end = moment(endDate);

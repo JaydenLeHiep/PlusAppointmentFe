@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Card, Box, CircularProgress, Alert } from '@mui/material';
+import { CircularProgress, Alert } from '@mui/material';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import BusinessList from './BusinessList';
@@ -10,8 +10,15 @@ import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import { useStaffsContext } from '../../context/StaffsContext';
 import { useServicesContext } from '../../context/ServicesContext';
 import { useCustomersContext } from '../../context/CustomerContext';
-import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext'; // Import the context
+import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext'; 
 import * as signalR from '@microsoft/signalr';
+import {
+  RootContainer,
+  MainContainer,
+  ContentContainer,
+  StyledCard,
+  LoadingContainer,
+} from '../../styles/OwnerStyle/OwnerDashboardStyles';
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -20,7 +27,7 @@ const OwnerDashboard = () => {
   const { staff, fetchAllStaff } = useStaffsContext();
   const { customers, fetchCustomersForBusiness } = useCustomersContext();
   const { services, fetchServices } = useServicesContext();
-  const { fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext(); // Destructure the fetch function
+  const { fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext();
 
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
@@ -61,7 +68,7 @@ const OwnerDashboard = () => {
         await fetchAllStaff(selectedBusiness.businessId);
         await fetchServices(selectedBusiness.businessId);
         await fetchCustomersForBusiness(selectedBusiness.businessId);
-        await fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId); // Fetch all not available dates for the business
+        await fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId);
       }
     };
 
@@ -79,7 +86,7 @@ const OwnerDashboard = () => {
     fetchAllStaff,
     fetchServices,
     fetchCustomersForBusiness,
-    fetchAllNotAvailableDatesByBusiness, // Add this to dependencies
+    fetchAllNotAvailableDatesByBusiness,
   ]);
 
   // Setup SignalR connection
@@ -146,7 +153,7 @@ const OwnerDashboard = () => {
     fetchAllStaff,
     fetchServices,
     fetchCustomersForBusiness,
-    fetchAllNotAvailableDatesByBusiness, // Add this to dependencies
+    fetchAllNotAvailableDatesByBusiness,
   ]);
 
   const handleBusinessClick = (business) => {
@@ -154,51 +161,15 @@ const OwnerDashboard = () => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" minHeight="100vh">
+    <RootContainer>
       <Navbar />
-      <Box
-        sx={{
-          backgroundColor: '#f0f8ff',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          textAlign: 'center',
-          padding: { xs: '0 1rem', md: '0 2rem' },
-          flex: 1,
-        }}
-      >
-        <Container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '82vh',
-            paddingTop: 0,
-            marginTop: 0,
-          }}
-        >
-          <Card
-            sx={{
-              width: '100%',
-              maxWidth: '100%',
-              padding: { xs: '1rem', md: '2rem' },
-              backgroundColor: 'rgba(255, 255, 255, 0.9)',
-              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-              borderRadius: '8px',
-              marginTop: { xs: '10px', md: '30px' },
-              marginBottom: { xs: '10px', md: '30px' },
-              textAlign: 'left',
-              display: 'flex',
-              flexDirection: 'column',
-              flexGrow: 1,
-            }}
-          >
+      <MainContainer>
+        <ContentContainer>
+          <StyledCard>
             {loading ? (
-              <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+              <LoadingContainer>
                 <CircularProgress />
-              </Box>
+              </LoadingContainer>
             ) : error ? (
               <Alert severity="error">{error}</Alert>
             ) : selectedBusiness ? (
@@ -219,13 +190,13 @@ const OwnerDashboard = () => {
                 />
               </>
             ) : (
-              <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />
+              <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick}/>
             )}
-          </Card>
-        </Container>
-      </Box>
+          </StyledCard>
+        </ContentContainer>
+      </MainContainer>
       <Footer />
-    </Box>
+    </RootContainer>
   );
 };
 

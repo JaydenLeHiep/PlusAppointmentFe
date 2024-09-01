@@ -3,7 +3,7 @@ import { List, ListItem, ListItemText, Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 const BusinessList = ({ businesses, onBusinessClick }) => {
-  const { t } = useTranslation('businessList'); // Use the 'businessList' namespace for translations
+  const { t } = useTranslation('businessList');
 
   return (
     <Box>
@@ -25,10 +25,10 @@ const BusinessList = ({ businesses, onBusinessClick }) => {
           <Fragment key={business.businessId}>
             <ListItem
               sx={{
-                borderRadius: '12px',  // Slightly larger border radius
+                borderRadius: '12px',  
                 backgroundColor: '#f0f8ff',
-                mb: 3,  // Larger margin-bottom for spacing
-                padding: '20px',  // Added padding for larger appearance
+                mb: 3,  
+                padding: '20px', 
                 boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
                 border: '1px solid #1976d2',
                 cursor: 'pointer',
@@ -42,7 +42,7 @@ const BusinessList = ({ businesses, onBusinessClick }) => {
               <ListItemText
                 primary={
                   <Typography 
-                    variant="h5"  // Larger font size for the business name
+                    variant="h5"  
                     component="span" 
                     sx={{ 
                       fontWeight: 'bold', 
@@ -54,12 +54,12 @@ const BusinessList = ({ businesses, onBusinessClick }) => {
                 }
                 secondary={
                   <Typography 
-                    variant="body1"  // Slightly larger font size for the address
+                    variant="body1" 
                     component="span" 
                     sx={{ 
-                      display: 'block',  // Forces the address to a new line
-                      color: '#555',  // Darker color for contrast
-                      marginTop: '8px'  // Adds space between the name and address
+                      display: 'block',  
+                      color: '#555',
+                      marginTop: '8px' 
                     }}
                   >
                     {business.address}
