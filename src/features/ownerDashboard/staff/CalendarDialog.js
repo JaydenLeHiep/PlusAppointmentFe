@@ -27,8 +27,8 @@ import {
     addOrUpdateButtonStyle,
     cancelButtonStyle,
     inlineCalendarBoxStyle,
-    dateRangePickerStyle, // new style for DateRangePicker
-} from '../../../styles/OwnerStyle/StaffComPonent/CalendarDialogStyle';
+    dateRangePickerStyle, 
+} from '../../../styles/OwnerStyle/StaffComPonent/CalendarDialogStyles';
 import moment from 'moment-timezone';
 import { DateRangePicker } from 'react-date-range';
 import { addDays } from 'date-fns';
@@ -147,7 +147,7 @@ const CalendarDialog = ({ open, onClose, businessId, staffId }) => {
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
             <DialogTitle sx={dialogTitleStyle}>
-                {t('selectNotAvailableDates')}
+                {t('Select not available dates')}
                 <IconButton aria-label="close" onClick={onClose} sx={closeIconButtonStyle}>
                     <CloseIcon />
                 </IconButton>
@@ -235,11 +235,10 @@ const CalendarDialog = ({ open, onClose, businessId, staffId }) => {
                                                 onChange={item => setState([item.selection])}
                                                 showSelectionPreview={true}
                                                 moveRangeOnFirstSelection={false}
-                                                months={1} // Show only one month
+                                                months={1} 
                                                 ranges={state}
                                                 direction="horizontal"
-                                                sx={dateRangePickerStyle} // Apply custom style
-                                                showMonthAndYearPickers={false}
+                                                sx={dateRangePickerStyle}                                        
                                             />
                                             <Box display="flex" justifyContent="space-between" width="100%" mb={1}>
                                                 <button
