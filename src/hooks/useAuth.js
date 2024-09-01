@@ -86,6 +86,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('username');
+    localStorage.removeItem('selectedBusiness');
+    localStorage.removeItem('selectedBusinessId');
     setIsAuthenticated(false);
     setUser(null);
     if (refreshTimeout.current) {
