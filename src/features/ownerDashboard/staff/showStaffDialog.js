@@ -236,6 +236,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
             confirmDeleteStaff={confirmDeleteStaff}
             newStaff={newStaff}
             setNewStaff={setNewStaff}
+            handleCancelForm={handleCancelForm}
             handleUpdateStaff={handleUpdateStaff}
             handleCalendarIconClick={handleCalendarIconClick}
           />

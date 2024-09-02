@@ -15,13 +15,10 @@ import { useCustomersContext } from '../../../context/CustomerContext.js';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import CustomerList from './CustomerList.js';
 import CustomerForm from './CustomerForm';
-
-
-
+import { dialogTitleStyles, addNewCustomerTypographyStyles, alertStyles, closeIconButtonStyles } from '../../../styles/OwnerStyle/CustomerComponent/ShowCustomerDialogStyles';
 
 const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
   const { t } = useTranslation('showCustomerDialog');
-
   const { fetchCustomersForBusiness, addNewCustomer, updateExistingCustomer, deleteExistingCustomer } = useCustomersContext();
 
   const [editCustomerId, setEditCustomerId] = useState(null);
@@ -37,9 +34,7 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
 
   const alertRef = useRef(null);
   const formRef = useRef(null);
-  
 
-  // Avoid fetching customers if they are already passed as a prop
   useEffect(() => {
     if (open && !customers.length) {
       fetchCustomersForBusiness(businessId);
@@ -57,8 +52,6 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
       return () => clearTimeout(timer);
     }
   }, [alert]);
-
-  
 
   const closeFormAndExecuteAction = async (action) => {
     setIsFormOpen(false);
@@ -188,21 +181,9 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
   return (
     <>
       <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-        <DialogTitle
-          sx={{
-            fontWeight: '550',
-            fontSize: '1.75rem',
-            color: '#1a1a1a',
-            textAlign: 'center',
-            padding: '16px 24px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginLeft: '3px',
-          }}
-        >
+        <DialogTitle sx={dialogTitleStyles}>
           {t('customerListTitle')}
-          <IconButton aria-label="close" onClick={onClose} sx={{ color: '#808080', fontSize: '1.5rem' }}>
+          <IconButton aria-label="close" onClick={onClose} sx={closeIconButtonStyles}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
@@ -211,7 +192,7 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
             severity={alert.severity}
             onClose={() => setAlert({ message: '', severity: '' })}
             ref={alertRef}
-            sx={{ mt: 2 }}
+            sx={alertStyles}
           >
             {alert.message}
           </Alert>
@@ -221,17 +202,7 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
             <Typography
               variant="h7"
               onClick={handleAddNewCustomerClick}
-              sx={{
-                cursor: 'pointer',
-                textDecoration: 'underline',
-                color: '#1976d2',
-                '&:hover': {
-                  color: '#115293',
-                },
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-              }}
+              sx={addNewCustomerTypographyStyles}
             >
               <Add sx={{ fontSize: '40px' }} /> {t('addNewCustomer')}
             </Typography>
