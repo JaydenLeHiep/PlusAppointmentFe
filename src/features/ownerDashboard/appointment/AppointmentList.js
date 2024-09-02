@@ -5,25 +5,34 @@ import { useTranslation } from 'react-i18next';
 import { AppointmentPaper, AppointmentButtonBase, AppointmentBox, AppointmentInfoBox, TimeInfo, TimeText, CustomerInfo, BadgeContent } 
 from '../../../styles/OwnerStyle/AppointmentListStyles';
 
-const AppointmentList = ({ appointments, staff, services }) => {
+const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }) => {
   const { t } = useTranslation('appointmentList');
   const [sortCriteria, setSortCriteria] = useState('date');
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [needToFetch, setNeedToFetch] = useState(false); // New state to track if fetching is required
 
   useEffect(() => {
-    if (selectedAppointment !== null) {
-      setModalOpen(true);
+    if (modalOpen && needToFetch && selectedAppointment) {
+      fetchAppointmentById(selectedAppointment.appointmentId).then((updatedAppointment) => {
+        setSelectedAppointment(updatedAppointment);
+        setNeedToFetch(false); // Reset the fetch requirement after fetching
+      });
     }
-  }, [selectedAppointment]);
+  }, [modalOpen, needToFetch, selectedAppointment, fetchAppointmentById]);
 
   const handleAppointmentClick = (appointment) => {
     setSelectedAppointment(appointment);
+    setModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
     setSelectedAppointment(null);
+  };
+
+  const handleAfterUpdate = () => {
+    setNeedToFetch(true); // Mark that we need to fetch the data again after an update
   };
 
   const sortedAppointments = appointments?.filter(appt => appt.status !== 'Delete') || [];
@@ -57,6 +66,7 @@ const AppointmentList = ({ appointments, staff, services }) => {
         onClose={handleCloseModal}
         staff={staff}
         services={services}
+        afterUpdate={handleAfterUpdate} // Callback to trigger fetching after an update
       />
       <List>
         {sortedAppointments.map((appointment) => {
