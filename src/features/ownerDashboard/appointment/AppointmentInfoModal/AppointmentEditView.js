@@ -14,6 +14,7 @@ import {
     StyledTextField,
     AddServiceTypography,
     CustomerNameWrapper,
+    CenteredContainer
 } from '../../../../styles/OwnerStyle/AppointmentInfoModal/AppointmentEditViewStyles';
 
 const AppointmentEditView = ({
@@ -30,11 +31,13 @@ const AppointmentEditView = ({
 
     return (
         <>
-            <CustomerNameWrapper>
-                <CustomerNameTypography variant="h6">
-                    {updatedAppointment.customerName || t('noCustomerName')}
-                </CustomerNameTypography>
-            </CustomerNameWrapper>
+            <CenteredContainer>
+                <CustomerNameWrapper>
+                    <CustomerNameTypography variant="h6">
+                        {updatedAppointment.customerName || t('noCustomerName')}
+                    </CustomerNameTypography>
+                </CustomerNameWrapper>
+            </CenteredContainer>
 
             <StyledFormControl fullWidth margin="dense">
                 <InputLabel>{t('customer')}</InputLabel>

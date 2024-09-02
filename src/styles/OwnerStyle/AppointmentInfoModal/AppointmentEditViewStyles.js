@@ -1,9 +1,16 @@
 import { styled } from '@mui/material/styles';
 import { Typography, FormControl, Select, TextField, Box } from '@mui/material';
 
+export const CenteredContainer = styled(Box)({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%', 
+});
+
 export const CustomerNameWrapper = styled(Box)(({ theme }) => ({
-    maxWidth: '25%',
-    padding: theme.spacing(1.1),
+    display: 'inline-block',  
+    padding: theme.spacing(1, 3),
     backgroundColor: '#a6d4fa',  
     borderRadius: '8px',
     textAlign: 'center',
