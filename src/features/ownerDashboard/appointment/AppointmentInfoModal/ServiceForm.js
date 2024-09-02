@@ -1,7 +1,12 @@
 import React from 'react';
-import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, IconButton, Box } from '@mui/material';
+import {  Grid, IconButton, Box, MenuItem, InputLabel } from '@mui/material';
 import { Remove as RemoveIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
+import {
+    StyledFormControl,
+    StyledSelect,
+    StyledTextField,
+} from '../../../../styles/OwnerStyle/AppointmentInfoModal/ServiceFormStyles';
 
 const ServiceForm = ({ service, index, services, staff, handleServiceChange, handleRemoveService, editMode }) => {
     const { t } = useTranslation('serviceForm');
@@ -10,51 +15,41 @@ const ServiceForm = ({ service, index, services, staff, handleServiceChange, han
         <Box mb={2} mt={2}>
             <Grid container spacing={2} alignItems="center">
                 <Grid item xs={3}>
-                    <FormControl fullWidth margin="dense" sx={{ mb: 0.5 }}>
+                    <StyledFormControl fullWidth margin="dense">
                         <InputLabel>{t('service')}</InputLabel>
-                        <Select
+                        <StyledSelect
                             value={service.serviceId}
                             onChange={(e) => handleServiceChange(index, 'serviceId', e.target.value)}
                             label={t('service')}
                             disabled={!editMode}
-                            sx={{
-                                backgroundColor: '#ffffff',
-                                borderRadius: '8px',
-                                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                            }}
                         >
                             {services.map((availableService) => (
                                 <MenuItem key={availableService.serviceId} value={availableService.serviceId}>
                                     {availableService.name}
                                 </MenuItem>
                             ))}
-                        </Select>
-                    </FormControl>
+                        </StyledSelect>
+                    </StyledFormControl>
                 </Grid>
                 <Grid item xs={3}>
-                    <FormControl fullWidth margin="dense" sx={{ mb: 0.5 }}>
+                    <StyledFormControl fullWidth margin="dense">
                         <InputLabel>{t('staff')}</InputLabel>
-                        <Select
+                        <StyledSelect
                             value={service.staffId || ''}
                             onChange={(e) => handleServiceChange(index, 'staffId', e.target.value)}
                             label={t('staff')}
                             disabled={!editMode}
-                            sx={{
-                                backgroundColor: '#ffffff',
-                                borderRadius: '8px',
-                                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                            }}
                         >
                             {staff.map((staffMember) => (
                                 <MenuItem key={staffMember.staffId} value={staffMember.staffId}>
                                     {staffMember.name}
                                 </MenuItem>
                             ))}
-                        </Select>
-                    </FormControl>
+                        </StyledSelect>
+                    </StyledFormControl>
                 </Grid>
                 <Grid item xs={3}>
-                    <TextField
+                    <StyledTextField
                         margin="dense"
                         label={t('duration')}
                         type="time"
@@ -67,11 +62,6 @@ const ServiceForm = ({ service, index, services, staff, handleServiceChange, han
                             step: 300, // step of 5 minutes
                         }}
                         onChange={(e) => handleServiceChange(index, 'duration', e.target.value)}
-                        sx={{
-                            backgroundColor: '#ffffff',
-                            borderRadius: '8px',
-                            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                        }}
                     />
                 </Grid>
                 <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -85,3 +75,4 @@ const ServiceForm = ({ service, index, services, staff, handleServiceChange, han
 };
 
 export default ServiceForm;
+                       

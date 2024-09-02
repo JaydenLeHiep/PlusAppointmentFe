@@ -34,6 +34,7 @@ import { DateRangePicker } from 'react-date-range';
 import { addDays } from 'date-fns';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+import { TextField } from '@mui/material';
 
 const CalendarDialog = ({ open, onClose, businessId, staffId }) => {
     const { t } = useTranslation('calendarDialog');
@@ -52,8 +53,20 @@ const CalendarDialog = ({ open, onClose, businessId, staffId }) => {
     const [editingDateId, setEditingDateId] = useState(null);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [dateToDelete, setDateToDelete] = useState(null);
+    const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 600);
 
     const alertRef = useRef(null);
+
+    // Handle screen resize
+    useEffect(() => {
+        const handleResize = () => {
+            setIsSmallScreen(window.innerWidth <= 600);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         if (alert.message) {
@@ -173,15 +186,34 @@ const CalendarDialog = ({ open, onClose, businessId, staffId }) => {
 
                 <Collapse in={isFormOpen && !editDateId}>
                     <Box mt={2} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-                        <DateRangePicker
-                            onChange={item => setState([item.selection])}
-                            showSelectionPreview={true}
-                            moveRangeOnFirstSelection={false}
-                            months={1}
-                            ranges={state}
-                            direction="horizontal"
-                            sx={dateRangePickerStyle}
-                        />
+                        {isSmallScreen ? (
+                            <>
+                                <TextField
+                                    label={t('Start Date')}
+                                    type="date"
+                                    value={moment(state[0].startDate).format('YYYY-MM-DD')}
+                                    onChange={(e) => setState([{ ...state[0], startDate: new Date(e.target.value) }])}
+                                    sx={{ marginBottom: 2 }}
+                                />
+                                <TextField
+                                    label={t('End Date')}
+                                    type="date"
+                                    value={moment(state[0].endDate).format('YYYY-MM-DD')}
+                                    onChange={(e) => setState([{ ...state[0], endDate: new Date(e.target.value) }])}
+                                    sx={{ marginBottom: 2 }}
+                                />
+                            </>
+                        ) : (
+                            <DateRangePicker
+                                onChange={item => setState([item.selection])}
+                                showSelectionPreview={true}
+                                moveRangeOnFirstSelection={false}
+                                months={1}
+                                ranges={state}
+                                direction="horizontal"
+                                sx={dateRangePickerStyle}
+                            />
+                        )}
                         <Box display="flex" justifyContent="space-between" width="100%" mt={2}>
                             <button
                                 onClick={handleAddOrUpdateNotAvailableDate}
@@ -231,15 +263,34 @@ const CalendarDialog = ({ open, onClose, businessId, staffId }) => {
 
                                     <Collapse in={editingDateId === date.notAvailableDateId}>
                                         <Box sx={inlineCalendarBoxStyle} mt={1}>
-                                            <DateRangePicker
-                                                onChange={item => setState([item.selection])}
-                                                showSelectionPreview={true}
-                                                moveRangeOnFirstSelection={false}
-                                                months={1} 
-                                                ranges={state}
-                                                direction="horizontal"
-                                                sx={dateRangePickerStyle}                                        
-                                            />
+                                            {isSmallScreen ? (
+                                                <>
+                                                    <TextField
+                                                        label={t('Start Date')}
+                                                        type="date"
+                                                        value={moment(state[0].startDate).format('YYYY-MM-DD')}
+                                                        onChange={(e) => setState([{ ...state[0], startDate: new Date(e.target.value) }])}
+                                                        sx={{ marginBottom: 2 }}
+                                                    />
+                                                    <TextField
+                                                        label={t('End Date')}
+                                                        type="date"
+                                                        value={moment(state[0].endDate).format('YYYY-MM-DD')}
+                                                        onChange={(e) => setState([{ ...state[0], endDate: new Date(e.target.value) }])}
+                                                        sx={{ marginBottom: 2 }}
+                                                    />
+                                                </>
+                                            ) : (
+                                                <DateRangePicker
+                                                    onChange={item => setState([item.selection])}
+                                                    showSelectionPreview={true}
+                                                    moveRangeOnFirstSelection={false}
+                                                    months={1} 
+                                                    ranges={state}
+                                                    direction="horizontal"
+                                                    sx={dateRangePickerStyle}                                        
+                                                />
+                                            )}
                                             <Box display="flex" justifyContent="space-between" width="100%" mb={1}>
                                                 <button
                                                     onClick={handleAddOrUpdateNotAvailableDate}

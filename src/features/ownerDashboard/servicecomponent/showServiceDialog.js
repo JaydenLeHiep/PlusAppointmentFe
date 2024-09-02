@@ -151,7 +151,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
       price: service.price,
       categoryId: service.categoryId || null,
     });
-    setIsAddFormOpen(false); // Close add form when editing
+    setIsAddFormOpen(false);
   };
 
   const handleAddNewServiceClick = () => {

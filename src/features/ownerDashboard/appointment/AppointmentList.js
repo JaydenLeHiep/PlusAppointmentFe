@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { List, ListItem, Typography, Paper, MenuItem, Select, FormControl, InputLabel, ButtonBase, Box, Badge } from '@mui/material';
+import { List, ListItem, Typography, MenuItem, Select, FormControl, InputLabel, Badge } from '@mui/material';
 import AppointmentInfoModal from '../appointment/AppointmentInfoModal/AppointmentInfoModal.js';
 import { useTranslation } from 'react-i18next';
+import { AppointmentPaper, AppointmentButtonBase, AppointmentBox, AppointmentInfoBox, TimeInfo, TimeText, CustomerInfo, BadgeContent } 
+from '../../../styles/OwnerStyle/AppointmentListStyles';
 
 const AppointmentList = ({ appointments, staff, services }) => {
   const { t } = useTranslation('appointmentList');
@@ -63,66 +65,38 @@ const AppointmentList = ({ appointments, staff, services }) => {
           const minutes = String(appointmentTime.getMinutes()).padStart(2, '0');
           const day = String(appointmentTime.getDate()).padStart(2, '0');
           const month = String(appointmentTime.getMonth() + 1).padStart(2, '0');
-          
 
           return (
             <ListItem key={appointment.appointmentId} sx={{ p: 0 }}>
-              <ButtonBase onClick={() => handleAppointmentClick(appointment)} sx={{ width: '100%' }}>
-                <Paper
-                  elevation={3}
-                  sx={{
-                    width: '100%',
-                    padding: '16px',
-                    marginBottom: '8px',
-                    borderRadius: '12px',
-                    backgroundColor: '#f0f8ff',
-                    border: '1px solid #1976d2',
-                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                    '&:hover': {
-                      boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-                      backgroundColor: '#e6f1ff',
-                    }
-                  }}
-                >
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Box sx={{ display: 'flex', gap: '16px', alignItems: 'center', flexGrow: 1 }}>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: '120px', textAlign: 'center' }}>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+              <AppointmentButtonBase onClick={() => handleAppointmentClick(appointment)}>
+                <AppointmentPaper elevation={3}>
+                  <AppointmentBox>
+                    <AppointmentInfoBox>
+                      <TimeInfo>
+                        <TimeText variant="h6">
                           {`${hours}:${minutes}`}
-                        </Typography>
+                        </TimeText>
                         <Typography variant="body2" color="textSecondary">
                           {`${day}/${month}`}
                         </Typography>
-                      </Box>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', flexGrow: 1 }}>
+                      </TimeInfo>
+                      <CustomerInfo>
                         <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
                           {appointment.customerName}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
                           {appointment.customerPhone}
                         </Typography>
-                      </Box>
-                    </Box>
+                      </CustomerInfo>
+                    </AppointmentInfoBox>
                     <Badge
                       badgeContent={t(appointment.status.toLowerCase())}
                       color={appointment.status.toLowerCase() === 'confirmed' ? 'success' : appointment.status.toLowerCase() === 'pending' ? 'warning' : 'error'}
-                      sx={{
-                        '& .MuiBadge-badge': {
-                          fontSize: '0.75rem',
-                          padding: '0 8px',
-                          borderRadius: '8px',
-                          height: '24px',
-                          lineHeight: '24px',
-                          minWidth: '60px',
-                          textAlign: 'center',
-                          backgroundColor: appointment.status.toLowerCase() === 'confirmed' ? '#4caf50' : appointment.status.toLowerCase() === 'pending' ? '#ff9800' : '#f44336',
-                          color: '#fff'
-                        }
-                      }}
+                      sx={BadgeContent(appointment.status.toLowerCase())}
                     />
-                  </Box>
-                </Paper>
-              </ButtonBase>
+                  </AppointmentBox>
+                </AppointmentPaper>
+              </AppointmentButtonBase>
             </ListItem>
           );
         })}

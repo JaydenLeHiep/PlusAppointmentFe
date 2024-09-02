@@ -1,130 +1,61 @@
 import React from 'react';
-import { Typography, Divider, Box, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
+import {
+    DetailsContainer,
+    DetailsBox,
+    TitleTypography,
+    SectionDivider,
+    InfoTypography,
+    IconButtonContainer,
+    ServiceBox,
+    ServiceTitleTypography,
+    ServiceTypography
+} from '../../../../styles/OwnerStyle/AppointmentInfoModal/AppointmentDetailsViewStyles';
 
 const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleToggleEditMode, handleDeleteAppointment }) => {
     const { t } = useTranslation('appointmentDetailsView');
 
     return (
-        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <Box
-                sx={{
-                    flexGrow: 1,
-                    padding: '16px',
-                    backgroundColor: '#e6f2ff',
-                    borderRadius: '12px',
-                    position: 'relative',
-                    marginBottom: '16px',
-                    boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
-                }}
-            >
-                <Typography
-                    variant="h5"
-                    gutterBottom
-                    sx={{
-                        fontWeight: 'bold',
-                        color: '#007bff',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.1em',
-                        marginBottom: '8px',
-                    }}
-                >
+        <DetailsContainer>
+            <DetailsBox>
+                <TitleTypography variant="h5" gutterBottom>
                     {t('client')}: {appointment.customerName}
-                </Typography>
-                <Divider sx={{ borderBottomWidth: 2, borderColor: '#007bff', marginBottom: '16px' }} />
-                <Typography
-                    variant="body1"
-                    sx={{
-                        color: '#333',
-                        fontSize: '1.1rem',
-                        marginBottom: '12px',
-                    }}
-                >
+                </TitleTypography>
+                <SectionDivider />
+                <InfoTypography variant="body1">
                     <strong>{t('phone')}:</strong> {appointment.customerPhone}
-                </Typography>
-                <Typography
-                    variant="body1"
-                    sx={{
-                        color: '#333',
-                        fontSize: '1.1rem',
-                        marginBottom: '12px',
-                    }}
-                >
+                </InfoTypography>
+                <InfoTypography variant="body1">
                     <strong>{t('time')}:</strong> {formatAppointmentTime(appointment.appointmentTime, appointment.duration)}
-                </Typography>
-                <Typography
-                    variant="body1"
-                    sx={{
-                        color: '#333',
-                        fontSize: '1.1rem',
-                        marginBottom: '12px',
-                    }}
-                >
+                </InfoTypography>
+                <InfoTypography variant="body1">
                     <strong>{t('comment')}:</strong> {appointment.comment}
-                </Typography>
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: '16px',
-                        right: '16px',
-                        display: 'flex',
-                        gap: '8px',
-                    }}
-                >
-                    <IconButton aria-label={t('edit')} onClick={handleToggleEditMode} sx={{ color: '#1976d2', '&:hover': { color: '#115293' } }}>
+                </InfoTypography>
+                <IconButtonContainer>
+                    <IconButton aria-label={t('edit')} onClick={handleToggleEditMode}>
                         <EditIcon />
                     </IconButton>
-                    <IconButton aria-label={t('delete')} onClick={handleDeleteAppointment} sx={{ color: '#d32f2f', '&:hover': { color: '#9a0007' } }}>
+                    <IconButton aria-label={t('delete')} onClick={handleDeleteAppointment}>
                         <DeleteIcon />
                     </IconButton>
-                </Box>
-            </Box>
+                </IconButtonContainer>
+            </DetailsBox>
 
-            <Box
-                sx={{
-                    padding: '16px',
-                    backgroundColor: '#f0fff0',
-                    borderRadius: '12px',
-                    boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
-                    flexShrink: 0,
-                }}
-            >
-                <Typography
-                    variant="h6"
-                    gutterBottom
-                    sx={{
-                        fontWeight: 'bold',
-                        color: '#1a1a1a',
-                        marginBottom: '12px',
-                        fontSize: '1.2rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.1em',
-                    }}
-                >
+            <ServiceBox>
+                <ServiceTitleTypography variant="h6" gutterBottom>
                     {t('servicesAndStaff')}
-                </Typography>
-                <Divider sx={{ borderBottomWidth: 2, borderColor: '#28a745', marginBottom: '16px' }} />
+                </ServiceTitleTypography>
+                <SectionDivider sx={{ borderColor: '#28a745' }} />
                 {appointment.services.$values.map((service, index) => (
-                    <Typography
-                        key={index}
-                        variant="body2"
-                        gutterBottom
-                        sx={{
-                            color: '#555',
-                            fontSize: '1.05rem',
-                            marginLeft: '16px',
-                            marginBottom: '6px',
-                            display: 'flex',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <strong style={{ marginRight: '6px', color: '#333' }}>{index + 1}.</strong>
-                        {service.name} - <strong style={{ marginLeft: '6px', color: '#007bff' }}>{service.staffName}</strong>
-                    </Typography>
+                    <ServiceTypography key={index} variant="body2" gutterBottom>
+                        <strong>{index + 1}.</strong>
+                        {service.name} - <strong>{service.staffName}</strong>
+                    </ServiceTypography>
                 ))}
-            </Box>
-        </Box>
+            </ServiceBox>
+        </DetailsContainer>
     );
 };
 

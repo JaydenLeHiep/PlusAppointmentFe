@@ -3,7 +3,7 @@ import { Box, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 const DialogActions = ({ onClose, onSubmit }) => {
-  const { t } = useTranslation('dialogCustomerActions'); // Use the 'dialogCustomerActions' namespace
+  const { t } = useTranslation('dialogCustomerActions'); 
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
