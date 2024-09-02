@@ -23,7 +23,7 @@ import {
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const OwnerDashboard = () => {
-  const { appointments, fetchAppointmentsForBusiness } = useAppointmentsContext();
+  const { appointments, fetchAppointmentsForBusiness, fetchAppointmentById } = useAppointmentsContext();
   const { staff, fetchAllStaff } = useStaffsContext();
   const { customers, fetchCustomersForBusiness } = useCustomersContext();
   const { services, fetchServices } = useServicesContext();
@@ -187,6 +187,7 @@ const OwnerDashboard = () => {
                   staff={staff}
                   services={services}
                   businessId={selectedBusiness.businessId}
+                  fetchAppointmentById={fetchAppointmentById} 
                 />
               </>
             ) : (
