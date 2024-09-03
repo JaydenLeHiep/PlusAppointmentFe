@@ -1,16 +1,21 @@
 import React from 'react';
 import {
-    FormControl,
     InputLabel,
-    Select,
     MenuItem,
-    TextField,
     Box,
-    Typography,
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import ServiceForm from './ServiceForm';
 import { useTranslation } from 'react-i18next';
+import {
+    CustomerNameTypography,
+    StyledFormControl,
+    StyledSelect,
+    StyledTextField,
+    AddServiceTypography,
+    CustomerNameWrapper,
+    CenteredContainer
+} from '../../../../styles/OwnerStyle/AppointmentInfoModal/AppointmentEditViewStyles';
 
 const AppointmentEditView = ({
     updatedAppointment,
@@ -26,23 +31,21 @@ const AppointmentEditView = ({
 
     return (
         <>
-            {/* Display the customer name prominently */}
-            <Typography variant="h6" sx={{ mb: 2.5, fontWeight: 'bold', textAlign: 'center' }}>
-                {updatedAppointment.customerName || t('noCustomerName')}
-            </Typography>
+            <CenteredContainer>
+                <CustomerNameWrapper>
+                    <CustomerNameTypography variant="h6">
+                        {updatedAppointment.customerName || t('noCustomerName')}
+                    </CustomerNameTypography>
+                </CustomerNameWrapper>
+            </CenteredContainer>
 
-            <FormControl fullWidth margin="dense" sx={{ mb: 2.5 }}>
+            <StyledFormControl fullWidth margin="dense">
                 <InputLabel>{t('customer')}</InputLabel>
-                <Select
+                <StyledSelect
                     value={updatedAppointment.customerId || ''}
                     onChange={(e) => handleInputChange(e, 'customerId')}
                     label={t('customer')}
                     disabled
-                    sx={{
-                        backgroundColor: '#ffffff',
-                        borderRadius: '8px',
-                        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                    }}
                 >
                     <MenuItem value={updatedAppointment.customerId}>
                         <Box component="span" fontWeight="bold">
@@ -50,10 +53,10 @@ const AppointmentEditView = ({
                         </Box>{' '}
                         - {updatedAppointment.customerPhone}
                     </MenuItem>
-                </Select>
-            </FormControl>
+                </StyledSelect>
+            </StyledFormControl>
 
-            <TextField
+            <StyledTextField
                 margin="dense"
                 label={t('appointmentTime')}
                 type="datetime-local"
@@ -63,15 +66,9 @@ const AppointmentEditView = ({
                     shrink: true,
                 }}
                 onChange={(e) => handleInputChange(e, 'appointmentTime')}
-                sx={{
-                    backgroundColor: '#ffffff',
-                    borderRadius: '8px',
-                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                    mb: 2.5,
-                }}
             />
 
-            <TextField
+            <StyledTextField
                 margin="dense"
                 label={t('status')}
                 type="text"
@@ -79,15 +76,9 @@ const AppointmentEditView = ({
                 value={updatedAppointment.status}
                 onChange={(e) => handleInputChange(e, 'status')}
                 disabled
-                sx={{
-                    backgroundColor: '#ffffff',
-                    borderRadius: '8px',
-                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                    mb: 2.5,
-                }}
             />
 
-            <TextField
+            <StyledTextField
                 margin="dense"
                 label={t('comment')}
                 type="text"
@@ -95,15 +86,8 @@ const AppointmentEditView = ({
                 multiline
                 value={updatedAppointment.comment}
                 onChange={(e) => handleInputChange(e, 'comment')}
-                sx={{
-                    backgroundColor: '#ffffff',
-                    borderRadius: '8px',
-                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                    mb: 1,
-                }}
             />
 
-            {/* Render each service form with the correct staff and service options */}
             {updatedAppointment.services.map((service, index) => (
                 <ServiceForm
                     key={index}
@@ -117,26 +101,10 @@ const AppointmentEditView = ({
                 />
             ))}
 
-            {/* Option to add a new service to the appointment */}
             <Box mt={2}>
-                <Typography
-                    variant="h7"
-                    onClick={handleAddService}
-                    sx={{
-                        cursor: 'pointer',
-                        textDecoration: 'underline',
-                        color: '#1976d2',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        mt: '16px',
-                        '&:hover': {
-                            color: '#115293',
-                        },
-                    }}
-                >
+                <AddServiceTypography variant="h7" onClick={handleAddService}>
                     <Add sx={{ fontSize: '40px' }} /> {t('addService')}
-                </Typography>
+                </AddServiceTypography>
             </Box>
         </>
     );

@@ -2,12 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogTitle,
-  IconButton,
-  Box,
-  Typography,
   Collapse,
-  Alert,
 } from '@mui/material';
 import { Add, Close as CloseIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +10,13 @@ import { useServicesContext } from '../../../context/ServicesContext';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import ServiceList from './ServiceList';
 import ServiceForm from './ServiceForm';
+import {
+  DialogTitleStyled,
+  AlertStyled,
+  AddNewServiceTypography,
+  DialogContentBoxStyled,
+  IconButtonStyled,
+} from '../../../styles/OwnerStyle/ServiceComponent/ShowServicesDialogStyles';
 
 const ShowServicesDialog = ({ open, onClose, businessId }) => {
   const { t } = useTranslation('showServicesDialog');
@@ -149,7 +151,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
       price: service.price,
       categoryId: service.categoryId || null,
     });
-    setIsAddFormOpen(false); // Close add form when editing
+    setIsAddFormOpen(false);
   };
 
   const handleAddNewServiceClick = () => {
@@ -192,54 +194,27 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
   return (
     <>
       <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-        <DialogTitle
-          sx={{
-            fontWeight: '550',
-            fontSize: '1.75rem',
-            color: '#1a1a1a',
-            textAlign: 'center',
-            padding: '16px 24px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginLeft: '3px',
-          }}
-        >
+        <DialogTitleStyled>
           {t('serviceListTitle')}
-          <IconButton aria-label="close" onClick={onClose} sx={{ color: '#808080', fontSize: '1.5rem' }}>
+          <IconButtonStyled aria-label="close" onClick={onClose}>
             <CloseIcon />
-          </IconButton>
-        </DialogTitle>
+          </IconButtonStyled>
+        </DialogTitleStyled>
         {alert.message && (
-          <Alert
+          <AlertStyled
             severity={alert.severity}
             onClose={() => setAlert({ message: '', severity: '' })}
             ref={alertRef}
-            sx={{ mt: 2 }}
           >
             {alert.message}
-          </Alert>
+          </AlertStyled>
         )}
         <DialogContent dividers>
-          <Box mt={1} mb={3} display="flex" justifyContent="center">
-            <Typography
-              variant="h7"
-              onClick={handleAddNewServiceClick}
-              sx={{
-                cursor: 'pointer',
-                textDecoration: 'underline',
-                color: '#1976d2',
-                '&:hover': {
-                  color: '#115293',
-                },
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-              }}
-            >
+          <DialogContentBoxStyled>
+            <AddNewServiceTypography onClick={handleAddNewServiceClick}>
               <Add sx={{ fontSize: '40px' }} /> {t('addNewService')}
-            </Typography>
-          </Box>
+            </AddNewServiceTypography>
+          </DialogContentBoxStyled>
           <Collapse in={isAddFormOpen}>
             <ServiceForm
               title={t('addNewService')}

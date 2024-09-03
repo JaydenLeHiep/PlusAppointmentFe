@@ -1,5 +1,13 @@
 import React from 'react';
-import { Typography, Box, Badge, IconButton } from '@mui/material';
+import {
+  BusinessInfoContainer,
+  BusinessInfoHeader,
+  IconButtonGroup,
+  CustomBadge,
+  BusinessName,
+  IconStyle,
+} from '../../styles/OwnerStyle/BusinessInfoStyles';
+import { Box,IconButton } from '@mui/material';
 import AutoAwesomeTwoToneIcon from '@mui/icons-material/AutoAwesomeTwoTone';
 import InsertEmoticonTwoToneIcon from '@mui/icons-material/InsertEmoticonTwoTone';
 import ArrowCircleLeftTwoToneIcon from '@mui/icons-material/ArrowCircleLeftTwoTone';
@@ -17,57 +25,43 @@ const BusinessInfo = ({
   onAddAppointment,
 }) => {
   return (
-    <Box textAlign="center" mb={4}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Box display="flex" alignItems="center">
+    <BusinessInfoContainer>
+      <BusinessInfoHeader>
+        <IconButtonGroup>
           <IconButton color="primary" onClick={onBack}>
-            <ArrowCircleLeftTwoToneIcon sx={{ fontSize: 30 }}/>
+            <ArrowCircleLeftTwoToneIcon sx={IconStyle} />
           </IconButton>
           <IconButton color="secondary" onClick={onAddAppointment}>
-            <AddCircleTwoToneIcon sx={{ fontSize: 30 }}/>
+            <AddCircleTwoToneIcon sx={IconStyle} />
           </IconButton>
           <IconButton color="primary" onClick={handleCustomerOpen}>
-            <Face2Icon sx={{ fontSize: 30 }} />
+            <Face2Icon sx={IconStyle} />
           </IconButton>
-        </Box>
-        <Box display="flex" alignItems="center">
-          <Badge badgeContent={staffCount} color="primary" sx={{ marginRight: 2 }}>
+        </IconButtonGroup>
+        <IconButtonGroup>
+          <CustomBadge badgeContent={staffCount} color="primary">
             <InsertEmoticonTwoToneIcon
               onClick={handleStaffOpen}
-              sx={{
-                cursor: 'pointer',
-                fontSize: 30, // Changed to 30px
-              }}
+              sx={IconStyle}
             />
-          </Badge>
-          <Badge
+          </CustomBadge>
+          <CustomBadge
             badgeContent={servicesCount}
             sx={{ "& .MuiBadge-badge": { backgroundColor: 'green', color: 'white' } }}
           >
             <AutoAwesomeTwoToneIcon
               onClick={handleServiceOpen}
-              sx={{
-                cursor: 'pointer',
-                fontSize: 30, // Changed to 30px
-              }}
+              sx={IconStyle}
             />
-          </Badge>
-        </Box>
-      </Box>
+          </CustomBadge>
+        </IconButtonGroup>
+      </BusinessInfoHeader>
       <Box mt={2}>
-        <Typography
-          variant="h3"
-          gutterBottom
-          sx={{
-            fontWeight: '500',
-            marginBottom: '10px',
-            fontFamily: '"Poppins", "Roboto", sans-serif',
-          }}
-        >
+        <BusinessName variant="h3" gutterBottom>
           {selectedBusiness.name}
-        </Typography>
+        </BusinessName>
       </Box>
-    </Box>
+    </BusinessInfoContainer>
   );
 };
 

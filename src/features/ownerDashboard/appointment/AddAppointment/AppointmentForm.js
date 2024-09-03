@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Grid, TextField, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useStaffsContext } from '../../../../context/StaffsContext';
 import { useServicesContext } from '../../../../context/ServicesContext';
 import ServiceForm from './ServiceForm';
 import CustomerSearch from './CustomerSearch';
 import { useTranslation } from 'react-i18next';
+import { StyledTextField, StyledTypography } from '../../../../styles/OwnerStyle/AddAppointment/AppointmentFormStyles';
 
 const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, businessId }) => {
-    const { t } = useTranslation('appointmentForm'); // Use the 'appointmentForm' namespace for translations
+    const { t } = useTranslation('appointmentForm');
     const { staff, fetchAllStaff } = useStaffsContext();
     const { services, fetchServices } = useServicesContext();
     const [customerSearch, setCustomerSearch] = useState('');
@@ -51,9 +52,8 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
         }
     
         if (field === 'duration') {
-            // Convert duration (HH:MM) to a proper TimeSpan format (HH:MM:SS)
             const formattedDuration = value.length === 5 ? `${value}:00` : value;
-            updatedService.updatedDuration = formattedDuration; // Update the updatedDuration field
+            updatedService.updatedDuration = formattedDuration;
         }
     
         const updatedServices = newAppointment.services.map((service, i) =>
@@ -93,25 +93,19 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
             </Grid>
 
             <Grid item xs={12}>
-                <TextField
+                <StyledTextField
                     margin="dense"
                     label={t('appointmentTime')}
                     type="datetime-local"
                     fullWidth
                     value={newAppointment.appointmentTime || ''}
                     onChange={(e) => handleInputChange(e, 'appointmentTime')}
-                    InputLabelProps={{
-                        shrink: true
-                    }}
-                    sx={{
-                        backgroundColor: '#ffffff',
-                        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)'
-                    }}
+                    InputLabelProps={{ shrink: true }}
                 />
             </Grid>
 
             <Grid item xs={12}>
-                <TextField
+                <StyledTextField
                     margin="dense"
                     label={t('status')}
                     type="text"
@@ -119,16 +113,11 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
                     value={newAppointment.status || ''}
                     onChange={(e) => handleInputChange(e, 'status')}
                     disabled
-                    sx={{
-                        backgroundColor: '#ffffff',
-                        borderRadius: '8px',
-                        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)'
-                    }}
                 />
             </Grid>
 
             <Grid item xs={12}>
-                <TextField
+                <StyledTextField
                     margin="dense"
                     label={t('comment')}
                     type="text"
@@ -136,11 +125,6 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
                     multiline
                     value={newAppointment.comment || ''}
                     onChange={(e) => handleInputChange(e, 'comment')}
-                    sx={{
-                        backgroundColor: '#ffffff',
-                        borderRadius: '8px',
-                        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)'
-                    }}
                 />
             </Grid>
 
@@ -151,7 +135,7 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
                         service={service}
                         index={index}
                         services={services}
-                        staff={staff}  // Passing staff data
+                        staff={staff}
                         handleServiceChange={handleServiceChange}
                         handleRemoveService={handleRemoveService}
                         lastServiceRef={index === newAppointment.services.length - 1 ? lastServiceRef : null}
@@ -160,23 +144,12 @@ const AppointmentForm = ({ newAppointment, setNewAppointment, alert, setAlert, b
             </Grid>
 
             <Grid item xs={12}>
-                <Typography
+                <StyledTypography
                     variant="body1"
                     onClick={handleAddService}
-                    sx={{
-                        cursor: 'pointer',
-                        textDecoration: 'underline',
-                        color: '#1976d2',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        '&:hover': {
-                            color: '#115293'
-                        }
-                    }}
                 >
                     <Add sx={{ fontSize: '35px' }} /> {t('addService')}
-                </Typography>
+                </StyledTypography>
             </Grid>
         </Grid>
     );

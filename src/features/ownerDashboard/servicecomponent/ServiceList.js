@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, Fragment, useState } from 'react';
-import { List, ListItem, ListItemText, IconButton, Typography, Collapse, Box } from '@mui/material';
+import { List, IconButton, Typography, Collapse, Box } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import ServiceForm from './ServiceForm';
 import SearchBar from '../SearchBarContainer';
+import { ListItemStyled, ListItemTextStyled } from '../../../styles/OwnerStyle/ServiceComponent/ServiceListStyles';
 
 const ServiceList = ({
   services,
@@ -43,18 +44,7 @@ const ServiceList = ({
       <List>
         {filteredServices.map((service) => (
           <Fragment key={service.serviceId}>
-            <ListItem
-              sx={{
-                borderRadius: '8px',
-                backgroundColor: '#f0f8ff',
-                mb: 2,
-                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #1976d2',
-                '&:hover': {
-                  boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-                  backgroundColor: '#e6f1ff',
-                },
-              }}
+            <ListItemStyled
               secondaryAction={
                 <>
                   <IconButton edge="end" aria-label={t('edit')} onClick={() => handleEditService(service)}>
@@ -66,7 +56,7 @@ const ServiceList = ({
                 </>
               }
             >
-              <ListItemText
+              <ListItemTextStyled
                 primary={
                   <Typography variant="body1" component="span" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
                     {service.name}
@@ -84,7 +74,7 @@ const ServiceList = ({
                   </>
                 }
               />
-            </ListItem>
+            </ListItemStyled>
             {editServiceId === service.serviceId && (
               <Collapse in={editServiceId === service.serviceId}>
                 <Box ref={formRef}>

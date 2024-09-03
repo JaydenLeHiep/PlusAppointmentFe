@@ -1,9 +1,15 @@
 import React, { Fragment, useRef, useEffect, useState } from 'react';
-import { List, ListItem, ListItemText, IconButton, Typography, Collapse, Box } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+import { List, Typography, Collapse, Box } from '@mui/material';
+import { Delete, Edit, Event as EventIcon } from '@mui/icons-material'; 
 import { useTranslation } from 'react-i18next';
 import StaffForm from './StaffForm';
-import SearchBar from '../SearchBarContainer'; // Ensure the correct path to the SearchBar component
+import SearchBar from '../SearchBarContainer';
+import { 
+  StyledListItem, 
+  StyledListItemText, 
+  StyledTypography, 
+  StyledIconButton 
+} from '../../../styles/OwnerStyle/StaffComPonent/StaffListStyles';
 
 const StaffList = ({
   staff,
@@ -14,6 +20,7 @@ const StaffList = ({
   setNewStaff,
   handleUpdateStaff,
   handleCancelForm,
+  handleCalendarIconClick 
 }) => {
   const { t } = useTranslation('staffList');
   const formRef = useRef(null);
@@ -34,7 +41,6 @@ const StaffList = ({
 
   return (
     <Box>
-      {/* Integrate the SearchBar */}
       <SearchBar
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
@@ -44,34 +50,12 @@ const StaffList = ({
       <List>
         {filteredStaff.map((member) => (
           <Fragment key={member.staffId}>
-            <ListItem
-              sx={{
-                borderRadius: '8px',
-                backgroundColor: '#f0f8ff',
-                mb: 2,
-                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #1976d2',
-                '&:hover': {
-                  boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-                  backgroundColor: '#e6f1ff',
-                },
-              }}
-              secondaryAction={
-                <>
-                  <IconButton edge="end" aria-label="edit" onClick={() => handleEditStaff(member)}>
-                    <Edit />
-                  </IconButton>
-                  <IconButton edge="end" aria-label="delete" onClick={() => confirmDeleteStaff(member.staffId)}>
-                    <Delete />
-                  </IconButton>
-                </>
-              }
-            >
-              <ListItemText
+            <StyledListItem>
+              <StyledListItemText
                 primary={
-                  <Typography variant="body1" component="span" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+                  <StyledTypography variant="body1">
                     {member.name}
-                  </Typography>
+                  </StyledTypography>
                 }
                 secondary={
                   <>
@@ -85,7 +69,18 @@ const StaffList = ({
                   </>
                 }
               />
-            </ListItem>
+              <Box display="flex">
+                <StyledIconButton aria-label="calendar" onClick={() => handleCalendarIconClick(member.staffId)}>
+                  <EventIcon />
+                </StyledIconButton>
+                <StyledIconButton aria-label="edit" onClick={() => handleEditStaff(member)}>
+                  <Edit />
+                </StyledIconButton>
+                <StyledIconButton aria-label="delete" onClick={() => confirmDeleteStaff(member.staffId)}>
+                  <Delete />
+                </StyledIconButton>
+              </Box>
+            </StyledListItem>
             {editStaffId === member.staffId && (
               <Collapse in={editStaffId === member.staffId}>
                 <Box ref={formRef}>

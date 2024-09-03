@@ -1,10 +1,18 @@
 import React, { useRef, useEffect } from 'react';
-import { Box, Typography, TextField, Button, IconButton } from '@mui/material';
+import { useTranslation } from 'react-i18next'; 
+import { 
+  FormContainer, 
+  StyledIconButton, 
+  StyledTypography, 
+  StyledTextField, 
+  CancelButton, 
+  ActionButton 
+} from '../../../styles/OwnerStyle/StaffComPonent/StaffFormStyles'; 
 import { Close as CloseIcon } from '@mui/icons-material';
-import { useTranslation } from 'react-i18next'; // Import useTranslation hook
+import { Box } from '@mui/material';
 
 const StaffForm = ({ title, newStaff, setNewStaff, handleAction, handleCancelForm, buttonText, buttonColor }) => {
-    const { t } = useTranslation('staffForm'); // Use the 'staffForm' namespace
+    const { t } = useTranslation('staffForm'); 
     const formRef = useRef(null);
 
     useEffect(() => {
@@ -14,134 +22,59 @@ const StaffForm = ({ title, newStaff, setNewStaff, handleAction, handleCancelFor
     }, []);
 
     return (
-        <Box
-            ref={formRef}
-            mt={2}
-            p={2}
-            mb={3}
-            sx={{
-                borderRadius: '12px',
-                backgroundColor: '#f9f9f9',
-                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                position: 'relative',
-                transition: 'all 0.3s ease-in-out',
-            }}
-        >
-            <IconButton
+        <FormContainer ref={formRef}>
+            <StyledIconButton
                 onClick={handleCancelForm}
-                sx={{ position: 'absolute', top: '8px', right: '8px', color: '#6c757d' }}
             >
                 <CloseIcon />
-            </IconButton>
+            </StyledIconButton>
 
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+            <StyledTypography variant="h6">
                 {title}
-            </Typography>
-            <TextField
+            </StyledTypography>
+
+            <StyledTextField
                 margin="dense"
-                label={t('name')} // Translate label
+                label={t('name')} 
                 type="text"
                 fullWidth
                 value={newStaff.name}
                 onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
-                sx={{
-                    backgroundColor: '#ffffff',
-                    borderRadius: '12px',
-                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                    '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                            border: 'none',
-                        },
-                    },
-                }}
             />
-            <TextField
+            <StyledTextField
                 margin="dense"
-                label={t('email')} // Translate label
+                label={t('email')} 
                 type="email"
                 fullWidth
                 value={newStaff.email}
                 onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
-                sx={{
-                    backgroundColor: '#ffffff',
-                    borderRadius: '12px',
-                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                    '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                            border: 'none',
-                        },
-                    },
-                }}
             />
-            <TextField
+            <StyledTextField
                 margin="dense"
-                label={t('phone')} // Translate label
+                label={t('phone')}
                 type="text"
                 fullWidth
                 value={newStaff.phone}
                 onChange={(e) => setNewStaff({ ...newStaff, phone: e.target.value })}
-                sx={{
-                    backgroundColor: '#ffffff',
-                    borderRadius: '12px',
-                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                    '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                            border: 'none',
-                        },
-                    },
-                }}
             />
-            <TextField
+            <StyledTextField
                 margin="dense"
-                label={t('password')} // Translate label
+                label={t('password')} 
                 type="password"
                 fullWidth
                 value={newStaff.password}
                 onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
-                sx={{
-                    backgroundColor: '#ffffff',
-                    borderRadius: '12px',
-                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                    '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                            border: 'none',
-                        },
-                    },
-                }}
             />
+
             <Box mt={3} display="flex" justifyContent="space-between">
-                <Button
-                    onClick={handleCancelForm}
-                    sx={{
-                        width: '120px',
-                        height: '40px',
-                        fontSize: '0.875rem',
-                        fontWeight: 'bold',
-                        borderRadius: '8px',
-                        backgroundColor: '#6c757d',
-                        color: '#fff',
-                        '&:hover': { backgroundColor: '#5a6268' },
-                    }}
-                >
-                    {t('cancel')} {/* Translate button text */}
-                </Button>
-                <Button
-                    onClick={handleAction}
-                    sx={{
-                        width: '150px',
-                        height: '40px',
-                        fontSize: '0.875rem',
-                        fontWeight: 'bold',
-                        borderRadius: '8px',
-                        backgroundColor: buttonColor,
-                        color: '#fff',
-                        '&:hover': { backgroundColor: buttonColor === '#007bff' ? '#0056b3' : '#218838' },
-                    }}
-                >
+                <CancelButton onClick={handleCancelForm}>
+                    {t('cancel')}
+                </CancelButton>
+                <ActionButton onClick={handleAction} buttonColor={buttonColor}>
                     {buttonText}
-                </Button>
+                </ActionButton>
             </Box>
-        </Box>
+        </FormContainer>
     );
 };
 

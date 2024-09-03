@@ -1,85 +1,76 @@
 import React from 'react';
-import { Box, Button, Container, Grid, Typography } from '@mui/material';
+import {
+  PageContainer,
+  HeroSection,
+  HeroTitle,
+  HeroSubtitle,
+  HeroButton,
+  ServicesContainer,
+  ServiceGrid,
+  ServiceItem,
+  ServiceTitle,
+  ServiceDescription,
+} from '../../styles/HomeStyle/BusinessHomePageStyles';
 import { Link as RouterLink } from 'react-router-dom';
+import { Box } from '@mui/material';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
-const heroImage = require('../../assets/hero-image.jpg');
-
 const BusinessHomePage = () => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-      }}
-    >
+    <PageContainer>
       <Navbar />
-      <Box
-        sx={{
-          backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${heroImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          height: '80vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: '#fff',
-          textAlign: 'center',
-        }}
-      >
-        <Box sx={{ padding: '2rem' }}>
-          <Typography variant="h2" component="h1" gutterBottom>
+      <HeroSection>
+        <Box>
+          <HeroTitle>
             Welcome to Nail Store
-          </Typography>
-          <Typography variant="h5" component="p" gutterBottom>
+          </HeroTitle>
+          <HeroSubtitle>
             Experience the best nail care services with us.
-          </Typography>
-          <Button
+          </HeroSubtitle>
+          <HeroButton
             variant="contained"
             color="primary"
             component={RouterLink}
             to="/register"
-            sx={{ mt: 2, padding: '10px 20px', fontSize: '1rem' }}
           >
             Get Started
-          </Button>
+          </HeroButton>
         </Box>
-      </Box>
-      <Container sx={{ padding: '4rem 0', flex: '1', backgroundColor: '#fdf2f4' }}>
-        <Typography variant="h4" component="h2" gutterBottom>
+      </HeroSection>
+      <ServicesContainer>
+        <HeroTitle>
           Our Services
-        </Typography>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
-            <Typography variant="h6" component="h3">
+        </HeroTitle>
+        <ServiceGrid container spacing={4}>
+          <ServiceItem item xs={12} md={4}>
+            <ServiceTitle>
               Manicure
-            </Typography>
-            <Typography variant="body1">
+            </ServiceTitle>
+            <ServiceDescription>
               Professional manicure services to keep your hands looking their best.
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Typography variant="h6" component="h3">
+            </ServiceDescription>
+          </ServiceItem>
+          <ServiceItem item xs={12} md={4}>
+            <ServiceTitle>
               Pedicure
-            </Typography>
-            <Typography variant="body1">
+            </ServiceTitle>
+            <ServiceDescription>
               Enjoy our relaxing pedicure services for beautiful feet.
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Typography variant="h6" component="h3">
+            </ServiceDescription>
+          </ServiceItem>
+          <ServiceItem item xs={12} md={4}>
+            <ServiceTitle>
               Nail Art
-            </Typography>
-            <Typography variant="body1">
+            </ServiceTitle>
+            <ServiceDescription>
               Creative and stunning nail art designs for any occasion.
-            </Typography>
-          </Grid>
-        </Grid>
-      </Container>
+            </ServiceDescription>
+          </ServiceItem>
+        </ServiceGrid>
+      </ServicesContainer>
       <Footer />
-    </Box>
+    </PageContainer>
   );
 };
 
