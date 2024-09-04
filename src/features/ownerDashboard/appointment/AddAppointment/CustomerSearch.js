@@ -6,16 +6,24 @@ import { useTranslation } from 'react-i18next';
 
 const CustomerSearch = ({ newAppointment, customerSearch, setCustomerSearch, setNewAppointment, alert, setAlert }) => {
     const { t } = useTranslation('customerSearch');
-    const { searchCustomers, customers } = useCustomersContext();
+    const { customers } = useCustomersContext();
     const [searchPerformed, setSearchPerformed] = useState(false);
+    const [filteredCustomers, setFilteredCustomers] = useState([]);
 
-    const handleCustomerSearch = async () => {
+    const handleCustomerSearch = () => {
         setSearchPerformed(true);
-        try {
-            await searchCustomers(customerSearch);
-        } catch (error) {
-            setAlert({ message: t('searchFailed'), severity: 'error' });
+
+        if (customerSearch.trim() === '') {
+            setFilteredCustomers([]);
+            return;
         }
+
+        const filtered = customers.filter((customer) =>
+            customer.name.toLowerCase().includes(customerSearch.toLowerCase()) ||
+            customer.phone.includes(customerSearch)
+        );
+
+        setFilteredCustomers(filtered);
     };
 
     const handleSelectCustomer = (customer) => {
@@ -65,11 +73,11 @@ const CustomerSearch = ({ newAppointment, customerSearch, setCustomerSearch, set
                         }
                     }}
                 >
-                    {customers.length === 0 ? (
+                    {filteredCustomers.length === 0 ? (
                         <Typography>{t('noCustomerFound')}</Typography>
                     ) : (
                         <List>
-                            {customers.slice(0, 3).map((customer) => (
+                            {filteredCustomers.slice(0, 3).map((customer) => (
                                 <ListItem key={customer.customerId} button onClick={() => handleSelectCustomer(customer)}>
                                     <ListItemText primary={`${customer.name} - ${customer.phone}`} />
                                 </ListItem>
