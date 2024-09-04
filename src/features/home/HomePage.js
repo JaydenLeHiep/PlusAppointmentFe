@@ -1,6 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Box, IconButton } from '@mui/material';
+import EnglishFlag from '../../assets/united-kingdom.png';
+import VietnameseFlag from '../../assets/vietnam.png';
 import {
   PageContainer,
   StyledPaper,
@@ -13,10 +16,33 @@ import {
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation('homePage');
+  const { t, i18n } = useTranslation('homePage');
+
+  // Function to change language
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
 
   return (
     <PageContainer>
+      {/* Language Flags */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '1rem',
+          padding: '1rem 0',
+        }}
+      >
+        <IconButton onClick={() => changeLanguage('en')} aria-label="Change language to English">
+          <img src={EnglishFlag} alt="English" style={{ width: '70px', height: 'auto' }} />
+        </IconButton>
+        <IconButton onClick={() => changeLanguage('vi')} aria-label="Change language to Vietnamese">
+          <img src={VietnameseFlag} alt="Vietnamese" style={{ width: '70px', height: 'auto' }} />
+        </IconButton>
+      </Box>
+
+      {/* Main Content */}
       <StyledPaper>
         <TitleTypography variant="h3" gutterBottom>
           {t('welcomeMessage')}
