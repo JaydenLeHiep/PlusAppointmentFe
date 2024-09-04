@@ -41,7 +41,7 @@ export const HeroButton = styled(Button)(({ theme }) => ({
 export const ServicesContainer = styled(Container)(({ theme }) => ({
   padding: '4rem 0',
   flex: '1',
-  backgroundColor: '#fdf2f4',
+  backgroundColor: '#white',
 }));
 
 export const ServiceGrid = styled(Grid)({
