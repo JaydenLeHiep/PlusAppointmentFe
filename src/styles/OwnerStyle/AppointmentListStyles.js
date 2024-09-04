@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Paper, ButtonBase, Box, Typography } from '@mui/material';
+import { Paper, ButtonBase, Box, Typography, List } from '@mui/material';
 
 export const AppointmentPaper = styled(Paper)(({ theme }) => ({
   width: '100%',
@@ -65,3 +65,9 @@ export const BadgeContent = (status) => ({
     color: '#fff',
   },
 });
+
+export const ScrollableAppointmentList = styled(List)(({ theme }) => ({
+    maxHeight: '250px',  
+    overflowY: 'auto',
+    paddingRight: theme.spacing(2),  
+  }));
