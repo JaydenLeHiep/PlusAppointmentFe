@@ -1,26 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { fetchCustomerById } from '../../lib/apiClientCustomer';
 
-const ThankYou = ({ customerId }) => {
+const ThankYou = ({ customer }) => {
   const { t } = useTranslation('thankYouPage');
   const [customerName, setCustomerName] = useState('');
-
+console.log(customer)
   useEffect(() => {
     const getCustomerDetails = async () => {
-      if (customerId) {
+      if (customer) {
         try {
-          const customer = await fetchCustomerById(customerId);
           setCustomerName(customer.name);
         } catch (error) {
           console.error('Failed to fetch customer details:', error);
         }
       }
     };
-
     getCustomerDetails();
-  }, [customerId]);
+  }, [customer]);
 
   return (
     <Container sx={{ textAlign: 'center', paddingTop: '50px', paddingBottom: '50px' }}>

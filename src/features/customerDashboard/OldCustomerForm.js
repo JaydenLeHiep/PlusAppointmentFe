@@ -1,29 +1,32 @@
-import React, { useState } from 'react';
-import { Snackbar, Alert, Box } from '@mui/material';
+import React, { useState, useRef } from 'react';
+import { Snackbar, Alert, Box, Typography, CircularProgress } from '@mui/material';
 import { fetchCustomerByEmailOrPhoneAndBusinessId } from '../../lib/apiClientCustomer';
 import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import {
-  CustomButton,          
-  FormContainer,         
+  CustomButton,
+  FormContainer,
   StyledTextField,
   FormTitle,
-  NewCustomerLink,     
-} from '../../styles/CustomerStyle/OldCustomerFormStyle'; 
+  NewCustomerLink,
+} from '../../styles/CustomerStyle/OldCustomerFormStyle';
 import { useTranslation } from 'react-i18next';
 
-const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSuccess, onNewCustomer }) => {
+const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSuccess, onNewCustomer, customer }) => {
   const { t } = useTranslation('oldCustomerForm');
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [showRedirectMessage, setShowRedirectMessage] = useState(false);
+  const [countdown, setCountdown] = useState(5);
+  const loadingMessageRef = useRef(null);
 
   const { addAppointmentAndUpdateList } = useAppointmentsContext();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === 'emailOrPhone') {
-      setEmailOrPhone(value); 
+      setEmailOrPhone(value);
     } else if (name === 'comment') {
       setComment(value);
     }
@@ -31,11 +34,11 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
-      const customerId = await fetchCustomerByEmailOrPhoneAndBusinessId(emailOrPhone, businessId);
-  
-      if (customerId) {
+      const customer = await fetchCustomerByEmailOrPhoneAndBusinessId(emailOrPhone, businessId);
+
+      if (customer.customerId) {
         if (!Array.isArray(selectedAppointments)) {
           console.error('Received selectedAppointments:', selectedAppointments);
           throw new Error('Selected appointments data is not in the correct format.');
@@ -45,24 +48,40 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
         const utcAppointmentTime = localTime.toISOString();
 
         const combinedAppointmentDetails = {
-          customerId: parseInt(customerId, 10),
+          customerId: parseInt(customer.customerId, 10),
           businessId: parseInt(businessId, 10),
           appointmentTime: utcAppointmentTime,
           status: 'Pending',
           comment: comment || '',
-          services: selectedAppointments.flatMap(appointment => 
-            appointment.services.map(service => ({
+          services: selectedAppointments.flatMap((appointment) =>
+            appointment.services.map((service) => ({
               serviceId: service.serviceId,
               staffId: service.staffId,
               duration: service.duration,
               price: service.price,
             }))
-          )
+          ),
         };
 
         await addAppointmentAndUpdateList(combinedAppointmentDetails);
         setSuccess(true);
-        onAppointmentSuccess(customerId);
+        setShowRedirectMessage(true);
+
+        // Scroll to the loading message
+        if (loadingMessageRef.current) {
+          loadingMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        const countdownInterval = setInterval(() => {
+          setCountdown((prevCount) => {
+            if (prevCount <= 1) {
+              clearInterval(countdownInterval);
+              setShowRedirectMessage(false);
+              onAppointmentSuccess(customer);
+            }
+            return prevCount - 1;
+          });
+        }, 1000);
       } else {
         throw new Error(t('errorMessage'));
       }
@@ -113,9 +132,23 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
         </Box>
       </form>
 
+      {showRedirectMessage && (
+        <Box mt={2} textAlign="center" ref={loadingMessageRef}>
+          <CircularProgress
+            variant="determinate"
+            value={(countdown / 5) * 100}
+            size={40}
+            thickness={4}
+          />
+          <Typography variant="body2" mt={1}>
+            {t('Loading')} {countdown}...
+          </Typography>
+        </Box>
+      )}
+
       <Snackbar
         open={success}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={() => setSuccess(false)}
       >
         <Alert onClose={() => setSuccess(false)} severity="success">
