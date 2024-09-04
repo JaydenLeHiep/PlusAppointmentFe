@@ -1,0 +1,21 @@
+{
+    "heroTitle": "Welcome to Plus Appointment",
+    "heroSubtitle": "Experience the best nail care services with us.",
+    "getStartedButton": "Get Started",
+    "servicesTitle": "Welcome to Plus Appointment",
+    "services": {
+      "appointment": {
+        "title": "Effortless Appointments",
+        "description": "Manage your appointments with ease using our simple and reliable scheduling system. Stay organized, on time, and never miss a booking."
+      },
+      "support": {
+        "title": "24/7 Vietnamese Support",
+        "description": "We provide round-the-clock support in Vietnamese, ensuring you have help whenever you need it to keep your business running smoothly."
+      },
+      "dataOwnership": {
+        "title": "You Own Your Data",
+        "description": "You control what you save in the system, ensuring the highest level of privacy and security. Your business, your rules."
+      }
+    }
+  }
+  

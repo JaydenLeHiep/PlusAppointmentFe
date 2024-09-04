@@ -15,18 +15,21 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Box } from '@mui/material';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { useTranslation } from 'react-i18next';
 
 const BusinessHomePage = () => {
+  const { t } = useTranslation('businessHomePage');
+
   return (
     <PageContainer>
       <Navbar />
       <HeroSection>
         <Box>
           <HeroTitle>
-            Welcome to Nail Store
+            {t('heroTitle')}
           </HeroTitle>
           <HeroSubtitle>
-            Experience the best nail care services with us.
+            {t('heroSubtitle')}
           </HeroSubtitle>
           <HeroButton
             variant="contained"
@@ -34,41 +37,42 @@ const BusinessHomePage = () => {
             component={RouterLink}
             to="/register"
           >
-            Get Started
+            {t('getStartedButton')}
           </HeroButton>
         </Box>
       </HeroSection>
       <ServicesContainer>
         <HeroTitle>
-          Hello to Our Services
+          {t('servicesTitle')}
         </HeroTitle>
         <ServiceGrid container spacing={4}>
           <ServiceItem item xs={12} md={4}>
             <ServiceTitle>
-              Manicure
+              {t('services.appointment.title')}
             </ServiceTitle>
             <ServiceDescription>
-              Professional manicure services to keep your hands looking their best.
+              {t('services.appointment.description')}
             </ServiceDescription>
           </ServiceItem>
           <ServiceItem item xs={12} md={4}>
             <ServiceTitle>
-              Pedicure
+              {t('services.support.title')}
             </ServiceTitle>
             <ServiceDescription>
-              Enjoy our relaxing pedicure services for beautiful feet.
+              {t('services.support.description')}
             </ServiceDescription>
           </ServiceItem>
           <ServiceItem item xs={12} md={4}>
             <ServiceTitle>
-              Nail Art
+              {t('services.dataOwnership.title')}
             </ServiceTitle>
             <ServiceDescription>
-              Creative and stunning nail art designs for any occasion.
+              {t('services.dataOwnership.description')}
             </ServiceDescription>
           </ServiceItem>
         </ServiceGrid>
       </ServicesContainer>
+
       <Footer />
     </PageContainer>
   );

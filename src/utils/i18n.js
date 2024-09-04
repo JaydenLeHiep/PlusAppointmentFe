@@ -102,6 +102,9 @@ import myDatePickerGe from '../locales/ge/customerDashboard/myDatePickerGe.json'
 
 import thankYouPageEn from '../locales/en/customerDashboard/thankYouPageEn.json';
 import thankYouPageGe from '../locales/ge/customerDashboard/thankYouPageGe.json';
+
+import businessHomePageEn from '../locales/en/home/businessHomePageEn.json'
+import businessHomePageVi from '../locales/vi/home/businessHomePageVi.json'
 // Import other translation files similarly
 
 i18n
@@ -144,7 +147,8 @@ i18n
         newCustomerForm: newCustomerFormEn,
         appointmentOverviewPage: appointmentOverviewPageEn,
         myDatePicker: myDatePickerEn,
-        thankYouPage: thankYouPageEn
+        thankYouPage: thankYouPageEn,
+        businessHomePage: businessHomePageEn
         // Add other namespaces for English
       },
       vi: {
@@ -177,7 +181,8 @@ i18n
         showCustomerDialog: showCustomerDialogVi,
         customerList: customerListVi,
         footer: footerVi,
-        staffList: staffListVi
+        staffList: staffListVi,
+        businessHomePage: businessHomePageVi
         // Add other namespaces for Vietnamese
       },
       ge: {  // Add a new language key for German
