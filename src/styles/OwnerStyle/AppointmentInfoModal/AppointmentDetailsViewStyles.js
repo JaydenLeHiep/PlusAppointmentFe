@@ -19,11 +19,16 @@ export const DetailsBox = styled(Box)(({ theme }) => ({
 }));
 
 export const TitleTypography = styled(Typography)(({ theme }) => ({
+    fontSize: '1.3rem',
     fontWeight: 'bold',
     color: '#007bff',
     textTransform: 'uppercase',
     letterSpacing: '0.1em',
     marginBottom: '8px',
+    whiteSpace: 'nowrap',       
+    overflow: 'hidden',         
+    textOverflow: 'ellipsis', 
+    maxWidth: 'calc(100% - 70px)',
 }));
 
 export const SectionDivider = styled(Divider)(({ theme }) => ({
@@ -40,10 +45,9 @@ export const InfoTypography = styled(Typography)(({ theme }) => ({
 
 export const IconButtonContainer = styled(Box)(({ theme }) => ({
     position: 'absolute',
-    top: '16px',
-    right: '16px',
+    top: '10px',
+    right: '5px',
     display: 'flex',
-    gap: '8px',
 }));
 
 export const ServiceBox = styled(Box)(({ theme }) => ({
