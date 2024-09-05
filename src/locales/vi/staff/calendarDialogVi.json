@@ -1,0 +1,21 @@
+{
+    "Select not available dates": "Chọn ngày không có sẵn",
+    "Add new not available date": "Thêm ngày không có sẵn mới",
+    "Start Date": "Ngày bắt đầu",
+    "End Date": "Ngày kết thúc",
+    "Add": "Thêm",
+    "Update": "Cập nhật",
+    "Cancel": "Hủy",
+    "Not available date added success": "Ngày không có sẵn đã được thêm thành công!",
+    "Not available date updated success": "Ngày không có sẵn đã được cập nhật thành công!",
+    "notAvailableDateAddedError": "Thêm ngày không có sẵn thất bại.",
+    "notAvailableDateUpdatedError": "Cập nhật ngày không có sẵn thất bại.",
+    "Start date": "Ngày bắt đầu",
+    "End date": "Ngày kết thúc",
+    "No not available dates": "Không có ngày không có sẵn",
+    "Confirm Delete": "Xác nhận xóa",
+    "Are you sure you want to delete?": "Bạn có chắc muốn xóa không?",
+    "Not available date deleted successfully!": "Ngày không có sẵn đã được xóa thành công!",
+    "Failed to delete not available date.": "Xóa ngày không có sẵn thất bại."
+  }
+  
