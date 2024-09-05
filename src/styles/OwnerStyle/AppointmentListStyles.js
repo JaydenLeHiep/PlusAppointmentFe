@@ -70,4 +70,5 @@ export const ScrollableAppointmentList = styled(List)(({ theme }) => ({
     maxHeight: '250px',  
     overflowY: 'auto',
     paddingRight: theme.spacing(2),  
+    overflowX: 'hidden', 
   }));
