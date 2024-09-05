@@ -164,7 +164,7 @@ export const fetchCustomerByEmailOrPhoneAndBusinessId = async (emailOrPhone, bus
   });
 
   const data = await response.json();
-  return data.customerId;
+  return data;
 };
 
 // Fetch customers by business ID

@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { List, ListItem, Typography, MenuItem, Select, FormControl, InputLabel, Badge } from '@mui/material';
+import { ListItem, Typography, MenuItem, Select, FormControl, InputLabel, Badge } from '@mui/material';
 import AppointmentInfoModal from '../appointment/AppointmentInfoModal/AppointmentInfoModal.js';
 import { useTranslation } from 'react-i18next';
-import { AppointmentPaper, AppointmentButtonBase, AppointmentBox, AppointmentInfoBox, TimeInfo, TimeText, CustomerInfo, BadgeContent } 
-from '../../../styles/OwnerStyle/AppointmentListStyles';
+
+import { AppointmentPaper, AppointmentButtonBase, AppointmentBox, AppointmentInfoBox, TimeInfo, TimeText, CustomerInfo, BadgeContent, ScrollableAppointmentList }
+  from '../../../styles/OwnerStyle/AppointmentListStyles';
+
+
+
 
 const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }) => {
   const { t } = useTranslation('appointmentList');
@@ -68,13 +72,30 @@ const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }
         services={services}
         afterUpdate={handleAfterUpdate} // Callback to trigger fetching after an update
       />
-      <List>
+      <ScrollableAppointmentList>
         {sortedAppointments.map((appointment) => {
+          // Parse the appointment start time
           const appointmentTime = new Date(appointment.appointmentTime);
           const hours = String(appointmentTime.getHours()).padStart(2, '0');
           const minutes = String(appointmentTime.getMinutes()).padStart(2, '0');
           const day = String(appointmentTime.getDate()).padStart(2, '0');
           const month = String(appointmentTime.getMonth() + 1).padStart(2, '0');
+
+          // Function to parse the duration in HH:MM:SS format into milliseconds
+          const parseDuration = (duration) => {
+            const [hours, minutes, seconds] = duration.split(':').map(Number);
+            return (hours * 60 * 60 + minutes * 60 + (seconds || 0)) * 1000;
+          };
+
+          // Calculate total duration by summing all service durations
+          const totalDurationInMs = appointment.services.$values.reduce((total, service) => {
+            return total + parseDuration(service.duration);
+          }, 0);
+
+          // Calculate the appointment end time
+          const appointmentEndTime = new Date(appointmentTime.getTime() + totalDurationInMs);
+          const endHours = String(appointmentEndTime.getHours()).padStart(2, '0');
+          const endMinutes = String(appointmentEndTime.getMinutes()).padStart(2, '0');
 
           return (
             <ListItem key={appointment.appointmentId} sx={{ p: 0 }}>
@@ -83,8 +104,8 @@ const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }
                   <AppointmentBox>
                     <AppointmentInfoBox>
                       <TimeInfo>
-                        <TimeText variant="h6">
-                          {`${hours}:${minutes}`}
+                        <TimeText >
+                          {`${hours}:${minutes}`} - {`${endHours}:${endMinutes}`} {/* Display start and end time */}
                         </TimeText>
                         <Typography variant="body2" color="textSecondary">
                           {`${day}/${month}`}
@@ -110,7 +131,7 @@ const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }
             </ListItem>
           );
         })}
-      </List>
+        </ScrollableAppointmentList>
     </div>
   );
 };

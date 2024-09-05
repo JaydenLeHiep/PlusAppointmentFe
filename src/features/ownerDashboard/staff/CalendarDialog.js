@@ -27,7 +27,7 @@ import {
     addOrUpdateButtonStyle,
     cancelButtonStyle,
     inlineCalendarBoxStyle,
-    dateRangePickerStyle, 
+    dateRangePickerStyle,
 } from '../../../styles/OwnerStyle/StaffComPonent/CalendarDialogStyles';
 import moment from 'moment-timezone';
 import { DateRangePicker } from 'react-date-range';
@@ -36,10 +36,9 @@ import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { TextField } from '@mui/material';
 
-const CalendarDialog = ({ open, onClose, businessId, staffId }) => {
+const CalendarDialog = ({ open, onClose, businessId, staffId, notAvailableDates }) => {
     const { t } = useTranslation('calendarDialog');
-    const { notAvailableDates, addNotAvailableDate, updateNotAvailableDate, deleteNotAvailableDate } = useNotAvailableDateContext();
-
+    const { addNotAvailableDate, updateNotAvailableDate, deleteNotAvailableDate } = useNotAvailableDateContext();
     const [state, setState] = useState([
         {
             startDate: new Date(),
@@ -233,82 +232,84 @@ const CalendarDialog = ({ open, onClose, businessId, staffId }) => {
 
                 <Box mt={4} width="100%">
                     <List>
-                        {Array.isArray(notAvailableDates) && notAvailableDates.length > 0 ? (
-                            notAvailableDates.map((date) => (
-                                <React.Fragment key={date.notAvailableDateId}>
-                                    <ListItem sx={listItemStyle}>
-                                        <ListItemText
-                                            primary={`${t('Start date')}: ${new Date(date.startDate).toLocaleDateString()} - ${t('End date')}: ${new Date(date.endDate).toLocaleDateString()}`}
-                                            secondary={date.reason}
-                                        />
-                                        <Box display="flex" alignItems="center">
-                                            <IconButton
-                                                edge="end"
-                                                aria-label="edit"
-                                                onClick={() => handleEditNotAvailableDate(date)}
-                                                sx={editButtonStyle}
-                                            >
-                                                <Edit />
-                                            </IconButton>
-                                            <IconButton
-                                                edge="end"
-                                                aria-label="delete"
-                                                onClick={() => confirmDeleteDate(date.notAvailableDateId)}
-                                                sx={deleteButtonStyle}
-                                            >
-                                                <Delete />
-                                            </IconButton>
-                                        </Box>
-                                    </ListItem>
-
-                                    <Collapse in={editingDateId === date.notAvailableDateId}>
-                                        <Box sx={inlineCalendarBoxStyle} mt={1}>
-                                            {isSmallScreen ? (
-                                                <>
-                                                    <TextField
-                                                        label={t('Start Date')}
-                                                        type="date"
-                                                        value={moment(state[0].startDate).format('YYYY-MM-DD')}
-                                                        onChange={(e) => setState([{ ...state[0], startDate: new Date(e.target.value) }])}
-                                                        sx={{ marginBottom: 2 }}
-                                                    />
-                                                    <TextField
-                                                        label={t('End Date')}
-                                                        type="date"
-                                                        value={moment(state[0].endDate).format('YYYY-MM-DD')}
-                                                        onChange={(e) => setState([{ ...state[0], endDate: new Date(e.target.value) }])}
-                                                        sx={{ marginBottom: 2 }}
-                                                    />
-                                                </>
-                                            ) : (
-                                                <DateRangePicker
-                                                    onChange={item => setState([item.selection])}
-                                                    showSelectionPreview={true}
-                                                    moveRangeOnFirstSelection={false}
-                                                    months={1} 
-                                                    ranges={state}
-                                                    direction="horizontal"
-                                                    sx={dateRangePickerStyle}                                        
-                                                />
-                                            )}
-                                            <Box display="flex" justifyContent="space-between" width="100%" mb={1}>
-                                                <button
-                                                    onClick={handleAddOrUpdateNotAvailableDate}
-                                                    style={addOrUpdateButtonStyle}
+                    {Array.isArray(notAvailableDates) && notAvailableDates.length > 0 ? (
+                            notAvailableDates
+                                .filter(date => date.staffId === staffId) // Filter dates specific to the selected staff
+                                .map((date) => (
+                                    <React.Fragment key={date.notAvailableDateId}>
+                                        <ListItem sx={listItemStyle}>
+                                            <ListItemText
+                                                primary={`${t('Start date')}: ${new Date(date.startDate).toLocaleDateString()} - ${t('End date')}: ${new Date(date.endDate).toLocaleDateString()}`}
+                                                secondary={date.reason}
+                                            />
+                                            <Box display="flex" alignItems="center">
+                                                <IconButton
+                                                    edge="end"
+                                                    aria-label="edit"
+                                                    onClick={() => handleEditNotAvailableDate(date)}
+                                                    sx={editButtonStyle}
                                                 >
-                                                    {t('Update')}
-                                                </button>
-                                                <button
-                                                    onClick={() => setEditingDateId(null)}
-                                                    style={cancelButtonStyle}
+                                                    <Edit />
+                                                </IconButton>
+                                                <IconButton
+                                                    edge="end"
+                                                    aria-label="delete"
+                                                    onClick={() => confirmDeleteDate(date.notAvailableDateId)}
+                                                    sx={deleteButtonStyle}
                                                 >
-                                                    {t('Cancel')}
-                                                </button>
+                                                    <Delete />
+                                                </IconButton>
                                             </Box>
-                                        </Box>
-                                    </Collapse>
-                                </React.Fragment>
-                            ))
+                                        </ListItem>
+
+                                        <Collapse in={editingDateId === date.notAvailableDateId}>
+                                            <Box sx={inlineCalendarBoxStyle} mt={1}>
+                                                {isSmallScreen ? (
+                                                    <>
+                                                        <TextField
+                                                            label={t('Start Date')}
+                                                            type="date"
+                                                            value={moment(state[0].startDate).format('YYYY-MM-DD')}
+                                                            onChange={(e) => setState([{ ...state[0], startDate: new Date(e.target.value) }])}
+                                                            sx={{ marginBottom: 2 }}
+                                                        />
+                                                        <TextField
+                                                            label={t('End Date')}
+                                                            type="date"
+                                                            value={moment(state[0].endDate).format('YYYY-MM-DD')}
+                                                            onChange={(e) => setState([{ ...state[0], endDate: new Date(e.target.value) }])}
+                                                            sx={{ marginBottom: 2 }}
+                                                        />
+                                                    </>
+                                                ) : (
+                                                    <DateRangePicker
+                                                        onChange={item => setState([item.selection])}
+                                                        showSelectionPreview={true}
+                                                        moveRangeOnFirstSelection={false}
+                                                        months={1} 
+                                                        ranges={state}
+                                                        direction="horizontal"
+                                                        sx={dateRangePickerStyle}                                        
+                                                    />
+                                                )}
+                                                <Box display="flex" justifyContent="space-between" width="100%" mb={1}>
+                                                    <button
+                                                        onClick={handleAddOrUpdateNotAvailableDate}
+                                                        style={addOrUpdateButtonStyle}
+                                                    >
+                                                        {t('Update')}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setEditingDateId(null)}
+                                                        style={cancelButtonStyle}
+                                                    >
+                                                        {t('Cancel')}
+                                                    </button>
+                                                </Box>
+                                            </Box>
+                                        </Collapse>
+                                    </React.Fragment>
+                                ))
                         ) : (
                             <Typography variant="body2">{t('No not available dates')}</Typography>
                         )}

@@ -8,7 +8,7 @@ import ShowServicesDialog from './servicecomponent/showServiceDialog';
 import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import ShowCustomerDialog from '../ownerDashboard/customer/ShowCustomerDialog';
 
-const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments, customers }) => {
+const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments, customers, notAvailableDates }) => {
   const { fetchAppointmentsForBusiness } = useAppointmentsContext();
 
   const [staffOpen, setStaffOpen] = useState(false);
@@ -61,8 +61,6 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
     });
   }).flat();
 
-
-
   return (
     <Box>
       <BusinessInfo
@@ -87,7 +85,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
         />
       </Box>
 
-      <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} />
+      <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} notAvailableDates={notAvailableDates}/>
       <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={fetchAppointmentsForBusiness} />
       <ShowServicesDialog open={servicesOpen} onClose={handleServicesClose} businessId={selectedBusiness.businessId} />
       <ShowCustomerDialog open={customerOpen} onClose={handleCustomerClose} businessId={selectedBusiness.businessId} customers={customers} />
