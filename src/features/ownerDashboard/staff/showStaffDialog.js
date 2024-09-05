@@ -20,7 +20,7 @@ import {
   BoxStyled,
 } from '../../../styles/OwnerStyle/StaffComPonent/showStaffDialogStyles';
 
-const ShowStaffDialog = ({ open, onClose, businessId }) => {
+const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates  }) => {
   const { t } = useTranslation('showStaffDialog');
   const { staff, addStaff, updateStaff, deleteStaff } = useStaffsContext();
 
@@ -249,6 +249,7 @@ const ShowStaffDialog = ({ open, onClose, businessId }) => {
         onClose={() => setCalendarOpen(false)}
         businessId={businessId}
         staffId={selectedStaffId}
+        notAvailableDates={notAvailableDates} 
       />
 
       <ConfirmationDialog

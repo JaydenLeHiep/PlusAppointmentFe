@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import {
   fetchServices as apiFetchServices,
   addService as apiAddService,
@@ -42,11 +42,6 @@ const fetchCategories = useCallback(async () => {
     setAlert({ message: 'Failed to fetch categories.', severity: 'error' });
   }
 }, []);
-
-  // Fetch all data on initialization
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
 
   // Add service
   const addService = useCallback(async (businessId, serviceDetails) => {

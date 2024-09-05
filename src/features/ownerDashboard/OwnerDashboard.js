@@ -26,8 +26,8 @@ const OwnerDashboard = () => {
   const { appointments, fetchAppointmentsForBusiness, fetchAppointmentById } = useAppointmentsContext();
   const { staff, fetchAllStaff } = useStaffsContext();
   const { customers, fetchCustomersForBusiness } = useCustomersContext();
-  const { services, fetchServices } = useServicesContext();
-  const { fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext();
+  const { services, fetchServices, fetchCategories } = useServicesContext();
+  const { notAvailableDates, fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext();
 
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
@@ -67,6 +67,7 @@ const OwnerDashboard = () => {
         await fetchAppointmentsForBusiness(selectedBusiness.businessId);
         await fetchAllStaff(selectedBusiness.businessId);
         await fetchServices(selectedBusiness.businessId);
+        await fetchCategories(); 
         await fetchCustomersForBusiness(selectedBusiness.businessId);
         await fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId);
       }
@@ -85,6 +86,7 @@ const OwnerDashboard = () => {
     fetchAppointmentsForBusiness,
     fetchAllStaff,
     fetchServices,
+    fetchCategories,
     fetchCustomersForBusiness,
     fetchAllNotAvailableDatesByBusiness,
   ]);
@@ -181,6 +183,7 @@ const OwnerDashboard = () => {
                   services={services}
                   appointments={appointments}
                   customers={customers}
+                  notAvailableDates={notAvailableDates}
                 />
                 <AppointmentList
                   appointments={appointments}

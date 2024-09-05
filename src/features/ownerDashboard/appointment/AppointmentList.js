@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { List, ListItem, Typography, MenuItem, Select, FormControl, InputLabel, Badge } from '@mui/material';
+import { ListItem, Typography, MenuItem, Select, FormControl, InputLabel, Badge } from '@mui/material';
 import AppointmentInfoModal from '../appointment/AppointmentInfoModal/AppointmentInfoModal.js';
 import { useTranslation } from 'react-i18next';
+
 import { AppointmentPaper, AppointmentButtonBase, AppointmentBox, AppointmentInfoBox, TimeInfo, TimeText, CustomerInfo, BadgeContent }
   from '../../../styles/OwnerStyle/AppointmentListStyles';
+
+import { AppointmentPaper, AppointmentButtonBase, AppointmentBox, AppointmentInfoBox, 
+  TimeInfo, TimeText, CustomerInfo, BadgeContent, ScrollableAppointmentList} 
+from '../../../styles/OwnerStyle/AppointmentListStyles';
+
 
 const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }) => {
   const { t } = useTranslation('appointmentList');
@@ -68,7 +74,7 @@ const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }
         services={services}
         afterUpdate={handleAfterUpdate} // Callback to trigger fetching after an update
       />
-      <List>
+      <ScrollableAppointmentList>
         {sortedAppointments.map((appointment) => {
           // Parse the appointment start time
           const appointmentTime = new Date(appointment.appointmentTime);
@@ -127,7 +133,7 @@ const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }
             </ListItem>
           );
         })}
-      </List>
+        </ScrollableAppointmentList>
     </div>
   );
 };
