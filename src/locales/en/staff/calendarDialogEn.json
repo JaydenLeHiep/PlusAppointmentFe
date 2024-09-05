@@ -1,0 +1,21 @@
+{
+    "Select not available dates": "Select not available dates",
+    "Add new not available date": "Add new not available date",
+    "Start Date": "Start Date",
+    "End Date": "End Date",
+    "Add": "Add",
+    "Update": "Update",
+    "Cancel": "Cancel",
+    "Not available date added success": "Not available date added successfully!",
+    "Not available date updated success": "Not available date updated successfully!",
+    "notAvailableDateAddedError": "Failed to add not available date.",
+    "notAvailableDateUpdatedError": "Failed to update not available date.",
+    "Start date": "Start date",
+    "End date": "End date",
+    "No not available dates": "No not available dates",
+    "Confirm Delete": "Confirm Delete",
+    "Are you sure you want to delete?": "Are you sure you want to delete?",
+    "Not available date deleted successfully!": "Not available date deleted successfully!",
+    "Failed to delete not available date.": "Failed to delete not available date."
+  }
+  

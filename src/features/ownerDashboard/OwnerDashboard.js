@@ -64,12 +64,21 @@ const OwnerDashboard = () => {
   useEffect(() => {
     const fetchAllData = async () => {
       if (selectedBusiness && selectedBusiness.businessId) {
-        await fetchAppointmentsForBusiness(selectedBusiness.businessId);
-        await fetchAllStaff(selectedBusiness.businessId);
-        await fetchServices(selectedBusiness.businessId);
-        await fetchCategories(); 
-        await fetchCustomersForBusiness(selectedBusiness.businessId);
-        await fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId);
+        setLoading(true);  // Set loading to true before fetching data
+        try {
+          await Promise.all([
+            fetchAppointmentsForBusiness(selectedBusiness.businessId),
+            fetchAllStaff(selectedBusiness.businessId),
+            fetchServices(selectedBusiness.businessId),
+            fetchCategories(),
+            fetchCustomersForBusiness(selectedBusiness.businessId),
+            fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId),
+          ]);
+        } catch (error) {
+          setError(error.message);
+        } finally {
+          setLoading(false);  // Set loading to false after fetching data
+        }
       }
     };
 

@@ -20,7 +20,7 @@ const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleTogg
     return (
         <DetailsContainer>
             <DetailsBox>
-                <TitleTypography variant="h5" gutterBottom>
+                <TitleTypography gutterBottom>
                     {t('client')}: {appointment.customerName}
                 </TitleTypography>
                 <SectionDivider />
