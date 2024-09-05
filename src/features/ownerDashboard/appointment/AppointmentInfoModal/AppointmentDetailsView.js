@@ -27,9 +27,9 @@ const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleTogg
                 <InfoTypography variant="body1">
                     <strong>{t('phone')}:</strong> {appointment.customerPhone}
                 </InfoTypography>
-                <InfoTypography variant="body1">
+                {/* <InfoTypography variant="body1">
                     <strong>{t('time')}:</strong> {formatAppointmentTime(appointment.appointmentTime, appointment.duration)}
-                </InfoTypography>
+                </InfoTypography> */}
                 <InfoTypography variant="body1">
                     <strong>{t('comment')}:</strong> {appointment.comment}
                 </InfoTypography>
