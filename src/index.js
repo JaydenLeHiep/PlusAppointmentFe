@@ -5,6 +5,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './hooks/useAuth';
 import { BrowserRouter as Router } from 'react-router-dom';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
