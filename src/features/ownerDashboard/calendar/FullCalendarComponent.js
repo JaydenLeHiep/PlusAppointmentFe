@@ -17,8 +17,10 @@ const FullCalendarComponent = ({ events, staff, services }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const staffPerPage = 4; // Number of staff to display per view
 
-  const handleDateClick = () => {
-    setCurrentView('timeGridDay');
+  const handleDateClick = (info) => {
+    setCurrentView('timeGridDay'); // Change the view to timeGridDay
+    const calendarApi = info.view.calendar; // Access the FullCalendar API
+    calendarApi.gotoDate(info.date); // Jump to the clicked date
   };
 
   const handleEventClick = (clickInfo) => {

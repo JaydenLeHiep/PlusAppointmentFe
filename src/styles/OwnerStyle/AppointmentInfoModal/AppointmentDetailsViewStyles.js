@@ -25,10 +25,14 @@ export const TitleTypography = styled(Typography)(({ theme }) => ({
     textTransform: 'uppercase',
     letterSpacing: '0.1em',
     marginBottom: '8px',
-    whiteSpace: 'nowrap',       
-    overflow: 'hidden',         
-    textOverflow: 'ellipsis', 
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     maxWidth: 'calc(100% - 70px)',
+
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '1.0rem', 
+    },
 }));
 
 export const SectionDivider = styled(Divider)(({ theme }) => ({
