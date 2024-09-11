@@ -10,7 +10,7 @@ import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import { useStaffsContext } from '../../context/StaffsContext';
 import { useServicesContext } from '../../context/ServicesContext';
 import { useCustomersContext } from '../../context/CustomerContext';
-import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext'; 
+import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext';
 import * as signalR from '@microsoft/signalr';
 import {
   RootContainer,
@@ -23,7 +23,7 @@ import {
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const OwnerDashboard = () => {
-  const { appointments, fetchAppointmentsForBusiness, fetchAppointmentById } = useAppointmentsContext();
+  const { appointments, fetchAppointmentsForBusiness, setAppointments } = useAppointmentsContext();
   const { staff, fetchAllStaff } = useStaffsContext();
   const { customers, fetchCustomersForBusiness } = useCustomersContext();
   const { services, fetchServices, fetchCategories } = useServicesContext();
@@ -113,10 +113,32 @@ const OwnerDashboard = () => {
         connectionRef.current = newConnection;
 
         // Listen for appointment updates
+        // Listen for appointment addition
         newConnection.on('ReceiveAppointmentUpdate', async (message) => {
+          console.log('New appointment id received via SignalR:', message);
           if (selectedBusiness && selectedBusiness.businessId) {
             await fetchAppointmentsForBusiness(selectedBusiness.businessId); // Refresh the appointments
           }
+        });
+
+        // Listen for appointment deletion
+        newConnection.on('ReceiveAppointmentDeleted', (appointmentId) => {
+          console.log('New appointment id received via SignalR:', appointmentId);
+          setAppointments(prevAppointments =>
+            prevAppointments.filter(appt => appt.appointmentId !== appointmentId)  // Remove deleted appointment
+          );
+        });
+
+        // Listen for appointment status change
+        newConnection.on('ReceiveAppointmentStatusChanged', (appointmentUpdate) => {
+          console.log('New appointment id changed received via SignalR:', appointmentUpdate);
+          setAppointments(prevAppointments =>
+            prevAppointments.map(appt =>
+              appt.appointmentId === appointmentUpdate.appointmentId
+                ? { ...appt, status: appointmentUpdate.status }  // Update the status of the appointment
+                : appt
+            )
+          );
         });
 
         // Listen for service updates
@@ -165,6 +187,7 @@ const OwnerDashboard = () => {
     fetchServices,
     fetchCustomersForBusiness,
     fetchAllNotAvailableDatesByBusiness,
+    setAppointments
   ]);
 
   const handleBusinessClick = (business) => {
@@ -199,11 +222,11 @@ const OwnerDashboard = () => {
                   staff={staff}
                   services={services}
                   businessId={selectedBusiness.businessId}
-                  fetchAppointmentById={fetchAppointmentById} 
+                  
                 />
               </>
             ) : (
-              <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick}/>
+              <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />
             )}
           </StyledCard>
         </ContentContainer>
