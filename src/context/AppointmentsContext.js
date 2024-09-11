@@ -58,22 +58,22 @@ export const AppointmentsProvider = ({ children }) => {
   const changeStatusAppointments = useCallback(async (appointmentId, status, businessId) => {
     try {
       await apiChangeStatusAppointments(appointmentId, status);
-      await fetchAppointmentsForBusiness(businessId);
+      // await fetchAppointmentsForBusiness(businessId);
     } catch (error) {
       console.error('Error changing appointment status:', error);
       throw error;
     }
-  }, [fetchAppointmentsForBusiness]);
+  },[]);
 
   const deleteAppointmentAndUpdateList = useCallback(async (appointmentId, businessId) => {
     try {
       await apiDeleteAppointment(appointmentId);
-      await fetchAppointmentsForBusiness(businessId);
+      // await fetchAppointmentsForBusiness(businessId);
     } catch (error) {
       console.error('Error deleting appointment:', error);
       throw error;
     }
-  }, [fetchAppointmentsForBusiness]);
+  }, []);
 
   const updateAppointmentAndRefresh = useCallback(async (appointmentId, updateData, businessId) => {
     try {
@@ -102,6 +102,7 @@ export const AppointmentsProvider = ({ children }) => {
 
   const contextValue = {
     appointments,
+    setAppointments,
     services,
     customers,
     staff,
@@ -116,6 +117,7 @@ export const AppointmentsProvider = ({ children }) => {
     fetchAllStaff,
     fetchServiceById,
     getAppointmentById
+
   };
 
   return (

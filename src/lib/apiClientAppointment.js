@@ -38,7 +38,7 @@ export const fetchAppointments = async (businessId) => {
 
 // for add Appointment
 export const addAppointment = async (appointmentDetails) => {
-  const response = await fetch(`${appointmentApiUrl}/add`, {
+  const response = await fetch(`${appointmentApiUrl}/add-appointment`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export const changeStatusAppointments = async (appointmentId, status) => {
   if (!token) {
     throw new Error('User not authenticated');
   }
-  const appointmentBusinessApiUrl = `${appointmentApiUrl}/appointment_id=${appointmentId}/status`;
+  const appointmentBusinessApiUrl = `${appointmentApiUrl}/appointment_id=${appointmentId}/status-appointment`;
   const response = await fetch(appointmentBusinessApiUrl, {
     method: 'PUT',
     headers: {
@@ -84,7 +84,7 @@ export const deleteAppointment = async (appointmentId) => {
   if (!token) {
     throw new Error('User not authenticated');
   }
-  const appointmentBusinessApiUrl = `${appointmentApiUrl}/appointment_id=${appointmentId}`;
+  const appointmentBusinessApiUrl = `${appointmentApiUrl}/appointment_id=${appointmentId}/delete-appointment`;
   const response = await fetch(appointmentBusinessApiUrl, {
     method: 'DELETE',
     headers: {
@@ -125,7 +125,7 @@ export const updateAppointment = async (appointmentId, updateData) => {
   if (!token) {
     throw new Error('User not authenticated');
   }
-  const response = await fetch(`${appointmentApiUrl}/appointment_id=${appointmentId}`, {
+  const response = await fetch(`${appointmentApiUrl}/appointment_id=${appointmentId}/update-appointment`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
