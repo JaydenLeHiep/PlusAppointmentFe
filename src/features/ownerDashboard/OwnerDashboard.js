@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { CircularProgress, Alert } from '@mui/material';
+import { CircularProgress, Alert, Snackbar } from '@mui/material';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import BusinessList from './BusinessList';
@@ -35,6 +35,8 @@ const OwnerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const connectionRef = useRef(null);
+  const [newNotificationMessage, setNewNotificationMessage] = useState(''); // For Snackbar
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // To control the snackbar
 
   useEffect(() => {
     const loadBusinesses = async () => {
@@ -135,6 +137,8 @@ const OwnerDashboard = () => {
           console.log('New notification message received:', message);
           if (selectedBusiness && selectedBusiness.businessId) {
             await fetchAllNotifications(selectedBusiness.businessId) // Refresh the appointments
+            setNewNotificationMessage(message); // Set the message for the snackbar
+            setSnackbarOpen(true);
           }
         });
 
@@ -205,12 +209,19 @@ const OwnerDashboard = () => {
     fetchCustomersForBusiness,
     fetchAllNotAvailableDatesByBusiness,
     setAppointments,
+    fetchAllNotifications
   ]);
 
   const handleBusinessClick = (business) => {
     console.log('Business clicked:', business);
     setSelectedBusiness(business);
   };
+
+  // Snackbar close handler
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
 
   return (
     <RootContainer>
@@ -252,6 +263,14 @@ const OwnerDashboard = () => {
         </ContentContainer>
       </MainContainer>
       <Footer />
+      {/* Snackbar for notification */}
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+        message={newNotificationMessage}
+        autoHideDuration={10000} // Auto hide after 6 seconds
+      />
     </RootContainer>
   );
 };
