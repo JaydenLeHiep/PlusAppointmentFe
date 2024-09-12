@@ -9,7 +9,7 @@ import { AppointmentPaper, AppointmentButtonBase, AppointmentBox, AppointmentInf
 
 
 
-const AppointmentList = ({ appointments, staff, services}) => {
+const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }) => {
   const { t } = useTranslation('appointmentList');
   const [sortCriteria, setSortCriteria] = useState('date');
   const [selectedAppointment, setSelectedAppointment] = useState(null);
@@ -18,12 +18,12 @@ const AppointmentList = ({ appointments, staff, services}) => {
 
   useEffect(() => {
     if (modalOpen && needToFetch && selectedAppointment) {
-      // fetchAppointmentById(selectedAppointment.appointmentId).then((updatedAppointment) => {
-      //   setSelectedAppointment(updatedAppointment);
-      //   setNeedToFetch(false); // Reset the fetch requirement after fetching
-      // });
+      fetchAppointmentById(selectedAppointment.appointmentId).then((updatedAppointment) => {
+      setSelectedAppointment(updatedAppointment);
+      setNeedToFetch(false); // Reset the fetch requirement after fetching
+      });
     }
-  }, [modalOpen, needToFetch, selectedAppointment]);
+  }, [modalOpen, needToFetch, selectedAppointment, fetchAppointmentById]);
 
   const handleAppointmentClick = (appointment) => {
     setSelectedAppointment(appointment);
@@ -131,7 +131,7 @@ const AppointmentList = ({ appointments, staff, services}) => {
             </ListItem>
           );
         })}
-        </ScrollableAppointmentList>
+      </ScrollableAppointmentList>
     </div>
   );
 };
