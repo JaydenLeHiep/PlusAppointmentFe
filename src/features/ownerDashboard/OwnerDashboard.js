@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CircularProgress, Alert, Snackbar } from '@mui/material';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { useTranslation } from 'react-i18next';
 import BusinessList from './BusinessList';
 import BusinessDetails from './BusinessDetails';
 import AppointmentList from '../ownerDashboard/appointment/AppointmentList';
@@ -37,7 +38,7 @@ const OwnerDashboard = () => {
   const connectionRef = useRef(null);
   const [newNotificationMessage, setNewNotificationMessage] = useState(''); // For Snackbar
   const [snackbarOpen, setSnackbarOpen] = useState(false); // To control the snackbar
-
+  const { t } = useTranslation('ownerDashboard');
   useEffect(() => {
     const loadBusinesses = async () => {
       try {
@@ -137,7 +138,7 @@ const OwnerDashboard = () => {
           console.log('New notification message received:', message);
           if (selectedBusiness && selectedBusiness.businessId) {
             await fetchAllNotifications(selectedBusiness.businessId) // Refresh the appointments
-            setNewNotificationMessage(message); // Set the message for the snackbar
+            setNewNotificationMessage(t('notifications.newNotification')); // Set the message for the snackbar
             setSnackbarOpen(true);
           }
         });
@@ -209,7 +210,8 @@ const OwnerDashboard = () => {
     fetchCustomersForBusiness,
     fetchAllNotAvailableDatesByBusiness,
     setAppointments,
-    fetchAllNotifications
+    fetchAllNotifications, 
+    t
   ]);
 
   const handleBusinessClick = (business) => {
