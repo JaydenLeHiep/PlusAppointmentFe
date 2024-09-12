@@ -19,6 +19,7 @@ import {
   StyledCard,
   LoadingContainer,
 } from '../../styles/OwnerStyle/OwnerDashboardStyles';
+import { useNotificationsContext } from '../../context/NotificationsContext';
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -28,7 +29,7 @@ const OwnerDashboard = () => {
   const { customers, fetchCustomersForBusiness } = useCustomersContext();
   const { services, fetchServices, fetchCategories } = useServicesContext();
   const { notAvailableDates, fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext();
-
+  const { notifications, fetchAllNotifications } = useNotificationsContext();
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -40,8 +41,10 @@ const OwnerDashboard = () => {
       try {
         const businessList = await fetchBusinesses();
         setBusinesses(businessList);
+
       } catch (error) {
         setError(error.message);
+        console.error('Error loading businesses:', error);
       } finally {
         setLoading(false);
       }
@@ -73,9 +76,12 @@ const OwnerDashboard = () => {
             fetchCategories(),
             fetchCustomersForBusiness(selectedBusiness.businessId),
             fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId),
+            fetchAllNotifications(selectedBusiness.businessId)
           ]);
+
         } catch (error) {
           setError(error.message);
+          console.error('Error fetching data:', error);
         } finally {
           setLoading(false);  // Set loading to false after fetching data
         }
@@ -83,6 +89,7 @@ const OwnerDashboard = () => {
     };
 
     if (selectedBusiness) {
+
       localStorage.setItem('selectedBusiness', JSON.stringify(selectedBusiness));
       localStorage.setItem('selectedBusinessId', selectedBusiness.businessId);
       fetchAllData();
@@ -98,7 +105,10 @@ const OwnerDashboard = () => {
     fetchCategories,
     fetchCustomersForBusiness,
     fetchAllNotAvailableDatesByBusiness,
+    fetchAllNotifications,
   ]);
+
+
 
   // Setup SignalR connection
   useEffect(() => {
@@ -113,7 +123,6 @@ const OwnerDashboard = () => {
         connectionRef.current = newConnection;
 
         // Listen for appointment updates
-        // Listen for appointment addition
         newConnection.on('ReceiveAppointmentUpdate', async (message) => {
           console.log('New appointment id received via SignalR:', message);
           if (selectedBusiness && selectedBusiness.businessId) {
@@ -121,9 +130,17 @@ const OwnerDashboard = () => {
           }
         });
 
+        // Listen for notification updates
+        newConnection.on('ReceiveNotificationUpdate', async (message) => {
+          console.log('New notification message received:', message);
+          if (selectedBusiness && selectedBusiness.businessId) {
+            await fetchAllNotifications(selectedBusiness.businessId) // Refresh the appointments
+          }
+        });
+
         // Listen for appointment deletion
         newConnection.on('ReceiveAppointmentDeleted', (appointmentId) => {
-          console.log('New appointment id received via SignalR:', appointmentId);
+          console.log('Appointment deleted via SignalR:', appointmentId);
           setAppointments(prevAppointments =>
             prevAppointments.filter(appt => appt.appointmentId !== appointmentId)  // Remove deleted appointment
           );
@@ -131,7 +148,7 @@ const OwnerDashboard = () => {
 
         // Listen for appointment status change
         newConnection.on('ReceiveAppointmentStatusChanged', (appointmentUpdate) => {
-          console.log('New appointment id changed received via SignalR:', appointmentUpdate);
+          console.log('Appointment status changed via SignalR:', appointmentUpdate);
           setAppointments(prevAppointments =>
             prevAppointments.map(appt =>
               appt.appointmentId === appointmentUpdate.appointmentId
@@ -187,10 +204,11 @@ const OwnerDashboard = () => {
     fetchServices,
     fetchCustomersForBusiness,
     fetchAllNotAvailableDatesByBusiness,
-    setAppointments
+    setAppointments,
   ]);
 
   const handleBusinessClick = (business) => {
+    console.log('Business clicked:', business);
     setSelectedBusiness(business);
   };
 
@@ -216,13 +234,15 @@ const OwnerDashboard = () => {
                   appointments={appointments}
                   customers={customers}
                   notAvailableDates={notAvailableDates}
+                  notifications={notifications} // Pass notifications here
                 />
+
                 <AppointmentList
                   appointments={appointments}
                   staff={staff}
                   services={services}
                   businessId={selectedBusiness.businessId}
-                  fetchAppointmentById={fetchAppointmentById} 
+                  fetchAppointmentById={fetchAppointmentById}
                 />
               </>
             ) : (
