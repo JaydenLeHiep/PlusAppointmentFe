@@ -111,6 +111,9 @@ import calendarDialogVi from '../locales/vi/staff/calendarDialogVi.json'
 
 import ownerDashboardEn from '../locales/en/ownerDashboard/ownerDashboardEn.json'
 import ownerDashboardVi from '../locales/vi/ownerDashboard/ownerDashboardVi.json'
+
+import notAvailableTimeEn from '../locales/en/staff/notAvailableTimeEn.json';
+import notAvailableTimeVi from '../locales/vi/staff/notAvailableTimeVi.json';
 // Import other translation files similarly
 
 i18n
@@ -156,7 +159,8 @@ i18n
         thankYouPage: thankYouPageEn,
         businessHomePage: businessHomePageEn,
         calendarDialog: calendarDialogEn,
-        ownerDashboard: ownerDashboardEn
+        ownerDashboard: ownerDashboardEn,
+        notAvailableTime: notAvailableTimeEn
         // Add other namespaces for English
       },
       vi: {
@@ -192,7 +196,8 @@ i18n
         staffList: staffListVi,
         businessHomePage: businessHomePageVi,
         calendarDialog: calendarDialogVi,
-        ownerDashboard: ownerDashboardVi
+        ownerDashboard: ownerDashboardVi,
+        notAvailableTime: notAvailableTimeVi
         // Add other namespaces for Vietnamese
       },
       ge: {  // Add a new language key for German
