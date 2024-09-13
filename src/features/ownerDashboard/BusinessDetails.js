@@ -8,7 +8,7 @@ import ShowServicesDialog from './servicecomponent/showServiceDialog';
 import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import ShowCustomerDialog from '../ownerDashboard/customer/ShowCustomerDialog';
 
-const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments, customers, notAvailableDates, notAvailableTimes }) => {
+const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments, customers, notAvailableDates, notifications, notAvailableTimes }) => {
   const { fetchAppointmentsForBusiness } = useAppointmentsContext();
 
   const [staffOpen, setStaffOpen] = useState(false);
@@ -75,6 +75,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
         appointmentsCount={appointments.length}
         onBack={() => setSelectedBusiness(null)}
         onAddAppointment={handleAppointmentOpen}
+        notifications={notifications}
       />
 
       <Box style={{ marginBottom: '10px' }}>

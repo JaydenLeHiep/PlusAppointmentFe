@@ -1,0 +1,12 @@
+{
+    "notifications": {
+      "newAppointment": "Một lịch hẹn mới đã được đặt.",
+      "appointmentDeleted": "Một lịch hẹn đã bị xóa.",
+      "appointmentUpdated": "Lịch hẹn đã được cập nhật.",
+      "newNotification": "Bạn có thông báo mới.",
+      "newServiceAdded": "Một dịch vụ mới đã được thêm.",
+      "staffUpdated": "Thông tin nhân viên đã được cập nhật.",
+      "customerUpdated": "Thông tin khách hàng đã được cập nhật."
+    }
+  }
+  

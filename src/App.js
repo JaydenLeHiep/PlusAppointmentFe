@@ -13,6 +13,7 @@ import { StaffsProvider } from './context/StaffsContext';
 import { ServicesProvider } from './context/ServicesContext';
 import { CustomersProvider } from './context/CustomerContext';
 import { NotAvailableDateProvider } from './context/NotAvailableDateContext';
+import { NotificationsProvider } from './context/NotificationsContext';
 import { NotAvailableTimeProvider } from './context/NotAvailableTimeContext';
 import './utils/i18n'
 
@@ -38,16 +39,16 @@ const App = () => {
             <NotAvailableDateProvider>
               <NotAvailableTimeProvider>
                 <AppointmentsProvider>
-
-                  <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
-                    <Route path="/customer-dashboard" element={<PCDashboard />} />
-                    <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
-                    <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
-                    <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
-                  </Routes>
-
+                <NotificationsProvider>
+                    <Routes>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
+                      <Route path="/customer-dashboard" element={<PCDashboard />} />
+                      <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
+                      <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
+                      <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
+                    </Routes>
+                </NotificationsProvider>
                 </AppointmentsProvider>
               </NotAvailableTimeProvider>
             </NotAvailableDateProvider>

@@ -19,8 +19,8 @@ const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }
   useEffect(() => {
     if (modalOpen && needToFetch && selectedAppointment) {
       fetchAppointmentById(selectedAppointment.appointmentId).then((updatedAppointment) => {
-        setSelectedAppointment(updatedAppointment);
-        setNeedToFetch(false); // Reset the fetch requirement after fetching
+      setSelectedAppointment(updatedAppointment);
+      setNeedToFetch(false); // Reset the fetch requirement after fetching
       });
     }
   }, [modalOpen, needToFetch, selectedAppointment, fetchAppointmentById]);
@@ -131,7 +131,7 @@ const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }
             </ListItem>
           );
         })}
-        </ScrollableAppointmentList>
+      </ScrollableAppointmentList>
     </div>
   );
 };

@@ -22,6 +22,7 @@ import {
 } from '../../styles/CustomerStyle/CustomerDashboardStyle';
 import BackAndNextButtons from './BackNextButtons';
 import { fetchStaff } from '../../lib/apiClientStaff';
+import ShopPicturesCarousel from './ShopPicturesCarousel';
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -296,7 +297,7 @@ const CustomerDashboard = () => {
   return (
     <DashboardContainer>
       <CustomerBusinessInfo businessInfo={businessInfo} />
-
+      <ShopPicturesCarousel businessId={businessInfo.businessId}/>
       <CustomContainer>
         <BackAndNextButtons
           onBackClick={handleBackClick}
