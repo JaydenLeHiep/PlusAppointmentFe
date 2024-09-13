@@ -22,6 +22,7 @@ import { fetchNotAvailableTimeSlots } from '../../../lib/apiClientAppointment';
 import moment from 'moment-timezone';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
 
 import {
     dialogTitleStyle,
@@ -41,13 +42,15 @@ import {
 
 const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailableTimes, notAvailableDates }) => {
     const { addNotAvailableTime, updateNotAvailableTime, deleteNotAvailableTime } = useNotAvailableTimeContext();
+    const { t } = useTranslation('notAvailableTime'); // Load the 'notAvailableTime' namespace
+
     const [alert, setAlert] = useState({ message: '', severity: '' });
     const [editTimeId, setEditTimeId] = useState(null);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [timeToDelete, setTimeToDelete] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedIntervals, setSelectedIntervals] = useState([]);
-    const [disabledTimeSlots, setDisabledTimeSlots] = useState([]); // New state for disabled time slots
+    const [disabledTimeSlots, setDisabledTimeSlots] = useState([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingTimeId, setEditingTimeId] = useState(null);
 
@@ -81,15 +84,11 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
     const handleAddOrUpdateNotAvailableTime = async () => {
         if (!selectedIntervals.length || !selectedDate || !staffId) return;
 
-        // Get the selected date in UTC format
         const formattedDate = moment(selectedDate).tz('UTC').toISOString();
-
-        // Combine the selected date with the "From" and "To" times, converting to UTC
         const fromDateTime = moment(selectedDate).set({
             hour: parseInt(selectedIntervals[0].split(':')[0]),
             minute: parseInt(selectedIntervals[0].split(':')[1])
         }).tz('UTC').toISOString();
-
         const toDateTime = moment(selectedDate).set({
             hour: parseInt(selectedIntervals[1].split(':')[0]),
             minute: parseInt(selectedIntervals[1].split(':')[1])
@@ -107,10 +106,10 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
         try {
             if (editTimeId) {
                 await updateNotAvailableTime(businessId, staffId, editTimeId, notAvailableTimeData);
-                setAlert({ message: 'Not available time updated successfully!', severity: 'success' });
+                setAlert({ message: t('successUpdate'), severity: 'success' });
             } else {
                 await addNotAvailableTime(businessId, staffId, notAvailableTimeData);
-                setAlert({ message: 'Not available time added successfully!', severity: 'success' });
+                setAlert({ message: t('successAdd'), severity: 'success' });
             }
             setIsFormOpen(false);
             setEditTimeId(null);
@@ -118,7 +117,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
             setSelectedDate(null);
             setSelectedIntervals([]);
         } catch (error) {
-            setAlert({ message: editTimeId ? 'Failed to update not available time.' : 'Failed to add not available time.', severity: 'error' });
+            setAlert({ message: editTimeId ? t('errorUpdate') : t('errorAdd'), severity: 'error' });
         }
     };
 
@@ -126,9 +125,9 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
         if (!timeToDelete) return;
         try {
             await deleteNotAvailableTime(businessId, staffId, timeToDelete);
-            setAlert({ message: 'Not available time deleted successfully!', severity: 'success' });
+            setAlert({ message: t('successDelete'), severity: 'success' });
         } catch (error) {
-            setAlert({ message: 'Failed to delete not available time.', severity: 'error' });
+            setAlert({ message: t('errorDelete'), severity: 'error' });
         } finally {
             setConfirmDialogOpen(false);
             setTimeToDelete(null);
@@ -182,7 +181,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
             <DialogTitle sx={dialogTitleStyle}>
-                {'Manage Not Available Times'}
+                {t('manageNotAvailableTimes')}
                 <IconButton aria-label="close" onClick={onClose} sx={closeIconButtonStyle}>
                     <CloseIcon />
                 </IconButton>
@@ -202,7 +201,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
             <DialogContent dividers>
                 <Box sx={addButtonContainerStyle}>
                     <Typography variant="h7" onClick={handleAddNewClick} sx={addNewDateTypographyStyle}>
-                        <Add sx={{ fontSize: '40px' }} /> {'Add new not available time'}
+                        <Add sx={{ fontSize: '40px' }} /> {t('addNewNotAvailableTime')}
                     </Typography>
                 </Box>
 
@@ -210,7 +209,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                     <Box sx={gridBasedTimePickerWrapperStyle}>
                         <LocalizationProvider dateAdapter={AdapterMoment}>
                             <StyledDatePicker
-                                label="Select Date"
+                                label={t('selectDate')}
                                 value={selectedDate ? moment(selectedDate) : null}
                                 onChange={(newDate) => setSelectedDate(newDate ? moment(newDate).toDate() : null)}
                                 shouldDisableDate={shouldDisableDate} 
@@ -235,7 +234,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                 onClick={handleAddOrUpdateNotAvailableTime}
                                 sx={addOrUpdateButtonStyle}
                             >
-                                {editTimeId ? 'Update' : 'Add'}
+                                {editTimeId ? t('update') : t('add')}
                             </Button>
                             <Button
                                 variant="outlined"
@@ -243,7 +242,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                 onClick={() => setIsFormOpen(false)}
                                 sx={cancelButtonStyle}
                             >
-                                Cancel
+                                {t('cancel')}
                             </Button>
                         </Box>
                     </Box>
@@ -262,10 +261,10 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                                 secondary={
                                                     <>
                                                         <Typography variant="body2" component="div">
-                                                            From: {moment(time.from).local().format('HH:mm')}
+                                                            {t('from')}: {moment(time.from).local().format('HH:mm')}
                                                         </Typography>
                                                         <Typography variant="body2" component="div">
-                                                            To: {moment(time.to).local().format('HH:mm')}
+                                                            {t('to')}: {moment(time.to).local().format('HH:mm')}
                                                         </Typography>
                                                     </>
                                                 }
@@ -294,7 +293,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                             <Box sx={gridBasedTimePickerWrapperStyle}>
                                                 <LocalizationProvider dateAdapter={AdapterMoment}>
                                                     <StyledDatePicker
-                                                        label="Select Date"
+                                                        label={t('selectDate')}
                                                         value={selectedDate ? moment(selectedDate) : null}
                                                         onChange={(newDate) => setSelectedDate(newDate ? moment(newDate).toDate() : null)}
                                                         shouldDisableDate={shouldDisableDate}
@@ -319,7 +318,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                                         onClick={handleAddOrUpdateNotAvailableTime}
                                                         sx={addOrUpdateButtonStyle}
                                                     >
-                                                        {editTimeId ? 'Update' : 'Add'}
+                                                        {editTimeId ? t('update') : t('add')}
                                                     </Button>
                                                     <Button
                                                         variant="outlined"
@@ -330,7 +329,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                                         }}
                                                         sx={cancelButtonStyle}
                                                     >
-                                                        Cancel
+                                                        {t('cancel')}
                                                     </Button>
                                                 </Box>
                                             </Box>
@@ -338,7 +337,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                     </React.Fragment>
                                 ))
                         ) : (
-                            <Typography variant="body2">No not available times</Typography>
+                            <Typography variant="body2">{t('noNotAvailableTimes')}</Typography>
                         )}
                     </List>
                 </Box>
@@ -346,8 +345,8 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
 
             <ConfirmationDialog
                 open={confirmDialogOpen}
-                title={'Confirm Delete'}
-                content={'Are you sure you want to delete this not available time?'}
+                title={t('confirmDelete')}
+                content={t('deleteMessage')}
                 onConfirm={handleDeleteNotAvailableTime}
                 onCancel={() => setConfirmDialogOpen(false)}
             />
@@ -356,4 +355,3 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
 };
 
 export default NotAvailableTimeDialog;
-           

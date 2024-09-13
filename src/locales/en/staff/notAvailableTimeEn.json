@@ -1,0 +1,20 @@
+{
+    "manageNotAvailableTimes": "Manage Not Available Times",
+    "addNewNotAvailableTime": "Add new not available time",
+    "selectDate": "Select Date",
+    "from": "From",
+    "to": "To",
+    "add": "Add",
+    "update": "Update",
+    "cancel": "Cancel",
+    "noNotAvailableTimes": "No not available times",
+    "confirmDelete": "Confirm Delete",
+    "deleteMessage": "Are you sure you want to delete this not available time?",
+    "successAdd": "Not available time added successfully!",
+    "successUpdate": "Not available time updated successfully!",
+    "successDelete": "Not available time deleted successfully!",
+    "errorAdd": "Failed to add not available time.",
+    "errorUpdate": "Failed to update not available time.",
+    "errorDelete": "Failed to delete not available time."
+  }
+  
