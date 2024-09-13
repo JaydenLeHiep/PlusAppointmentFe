@@ -12,6 +12,7 @@ import { useStaffsContext } from '../../context/StaffsContext';
 import { useServicesContext } from '../../context/ServicesContext';
 import { useCustomersContext } from '../../context/CustomerContext';
 import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext';
+import { useNotAvailableTimeContext } from '../../context/NotAvailableTimeContext';
 import * as signalR from '@microsoft/signalr';
 import {
   RootContainer,
@@ -30,7 +31,8 @@ const OwnerDashboard = () => {
   const { customers, fetchCustomersForBusiness } = useCustomersContext();
   const { services, fetchServices, fetchCategories } = useServicesContext();
   const { notAvailableDates, fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext();
-  const { notifications, fetchAllNotifications } = useNotificationsContext();
+  const { notifications, fetchAllNotifications } = useNotificationsContext();  const { notAvailableTimes, fetchAllNotAvailableTimesByBusiness } = useNotAvailableTimeContext();
+
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -79,6 +81,7 @@ const OwnerDashboard = () => {
             fetchCategories(),
             fetchCustomersForBusiness(selectedBusiness.businessId),
             fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId),
+            fetchAllNotAvailableTimesByBusiness(selectedBusiness.businessId),
             fetchAllNotifications(selectedBusiness.businessId)
           ]);
 
@@ -108,6 +111,7 @@ const OwnerDashboard = () => {
     fetchCategories,
     fetchCustomersForBusiness,
     fetchAllNotAvailableDatesByBusiness,
+    fetchAllNotAvailableTimesByBusiness,
     fetchAllNotifications,
   ]);
 
@@ -190,6 +194,13 @@ const OwnerDashboard = () => {
             await fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId); // Refresh not available dates
           }
         });
+
+        // Listen for not available time updates
+        newConnection.on('ReceiveNotAvailableTimeUpdate', async (message) => {
+          if (selectedBusiness && selectedBusiness.businessId) {
+            await fetchAllNotAvailableTimesByBusiness(selectedBusiness.businessId); // Refresh not available times
+          }
+        });
       } catch (error) {
         console.error('Error connecting to SignalR hub:', error);
       }
@@ -209,6 +220,7 @@ const OwnerDashboard = () => {
     fetchServices,
     fetchCustomersForBusiness,
     fetchAllNotAvailableDatesByBusiness,
+    fetchAllNotAvailableTimesByBusiness,
     setAppointments,
     fetchAllNotifications, 
     t
@@ -247,6 +259,7 @@ const OwnerDashboard = () => {
                   appointments={appointments}
                   customers={customers}
                   notAvailableDates={notAvailableDates}
+                  notAvailableTimes={notAvailableTimes}
                   notifications={notifications} // Pass notifications here
                 />
 
@@ -259,7 +272,7 @@ const OwnerDashboard = () => {
                 />
               </>
             ) : (
-              <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />
+              <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick}  />
             )}
           </StyledCard>
         </ContentContainer>

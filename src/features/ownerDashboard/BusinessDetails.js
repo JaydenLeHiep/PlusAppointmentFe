@@ -8,7 +8,7 @@ import ShowServicesDialog from './servicecomponent/showServiceDialog';
 import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import ShowCustomerDialog from '../ownerDashboard/customer/ShowCustomerDialog';
 
-const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments, customers, notAvailableDates, notifications }) => {
+const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments, customers, notAvailableDates, notifications, notAvailableTimes }) => {
   const { fetchAppointmentsForBusiness } = useAppointmentsContext();
 
   const [staffOpen, setStaffOpen] = useState(false);
@@ -82,11 +82,11 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
         <FullCalendarComponent
           events={events}
           staff={staff}
-          services= {services}
+          services={services}
         />
       </Box>
 
-      <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} notAvailableDates={notAvailableDates}/>
+      <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} notAvailableDates={notAvailableDates} notAvailableTimes={notAvailableTimes}/>
       <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={fetchAppointmentsForBusiness} />
       <ShowServicesDialog open={servicesOpen} onClose={handleServicesClose} businessId={selectedBusiness.businessId} />
       <ShowCustomerDialog open={customerOpen} onClose={handleCustomerClose} businessId={selectedBusiness.businessId} customers={customers} />
