@@ -40,7 +40,7 @@ import {
     formActionButtonsStyle,
 } from '../../../styles/OwnerStyle/StaffComPonent/NotAvailableTimeDialogStyles';
 
-const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailableTimes, notAvailableDates }) => {
+const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailableTimes, notAvailableDates, staffName }) => {
     const { addNotAvailableTime, updateNotAvailableTime, deleteNotAvailableTime } = useNotAvailableTimeContext();
     const { t } = useTranslation('notAvailableTime'); // Load the 'notAvailableTime' namespace
 
@@ -181,7 +181,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
             <DialogTitle sx={dialogTitleStyle}>
-                {t('manageNotAvailableTimes')}
+                {t('Not available times for')} {staffName ? staffName : ''}
                 <IconButton aria-label="close" onClick={onClose} sx={closeIconButtonStyle}>
                     <CloseIcon />
                 </IconButton>
@@ -212,7 +212,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                 label={t('selectDate')}
                                 value={selectedDate ? moment(selectedDate) : null}
                                 onChange={(newDate) => setSelectedDate(newDate ? moment(newDate).toDate() : null)}
-                                shouldDisableDate={shouldDisableDate} 
+                                shouldDisableDate={shouldDisableDate}
                                 renderInput={(params) => <TextField {...params} />}
                                 disablePast
                                 sx={{ marginBottom: 2 }}
