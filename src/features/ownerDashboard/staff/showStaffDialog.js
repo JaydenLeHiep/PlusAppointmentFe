@@ -36,7 +36,8 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates, notAvai
   const [alert, setAlert] = useState({ message: '', severity: '' });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [staffToDelete, setStaffToDelete] = useState(null);
-
+  const [selectedStaffName, setSelectedStaffName] = useState(null);
+  
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [selectedStaffId, setSelectedStaffId] = useState(null);
 
@@ -58,12 +59,18 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates, notAvai
   }, [alert]);
 
   const handleCalendarIconClick = (staffId) => {
+    const selectedStaff = staff.find((staffMember) => staffMember.staffId === staffId);
+    const staffName = selectedStaff ? selectedStaff.name : ''; 
     setSelectedStaffId(staffId);
+    setSelectedStaffName(staffName); 
     setCalendarOpen(true);
   };
-
+  
   const handleClockIconClick = (staffId) => {
+    const selectedStaff = staff.find((staffMember) => staffMember.staffId === staffId);
+    const staffName = selectedStaff ? selectedStaff.name : ''; 
     setSelectedStaffId(staffId);
+    setSelectedStaffName(staffName); 
     setNotAvailableTimeOpen(true);
   };
 
@@ -259,6 +266,7 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates, notAvai
         businessId={businessId}
         staffId={selectedStaffId}
         notAvailableDates={notAvailableDates}
+        staffName={selectedStaffName}
       />
 
       <NotAvailableTimeDialog
@@ -266,6 +274,7 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates, notAvai
         onClose={() => setNotAvailableTimeOpen(false)}
         notAvailableTimes={notAvailableTimes}
         notAvailableDates={notAvailableDates}
+        staffName={selectedStaffName}
         staffId={selectedStaffId}
         businessId={businessId}
       />
