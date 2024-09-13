@@ -11,6 +11,7 @@ import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import StaffList from './StaffList';
 import StaffForm from './StaffForm';
 import CalendarDialog from './CalendarDialog';
+import NotAvailableTimeDialog from './NotAvailableTimeDialog';
 
 import {
   DialogTitleStyled,
@@ -20,7 +21,7 @@ import {
   BoxStyled,
 } from '../../../styles/OwnerStyle/StaffComPonent/showStaffDialogStyles';
 
-const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates  }) => {
+const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates, notAvailableTimes }) => {
   const { t } = useTranslation('showStaffDialog');
   const { staff, addStaff, updateStaff, deleteStaff } = useStaffsContext();
 
@@ -38,6 +39,8 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates  }) => {
 
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [selectedStaffId, setSelectedStaffId] = useState(null);
+
+  const [notAvailableTimeOpen, setNotAvailableTimeOpen] = useState(false);
 
   const alertRef = useRef(null);
   const formRef = useRef(null);
@@ -57,6 +60,11 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates  }) => {
   const handleCalendarIconClick = (staffId) => {
     setSelectedStaffId(staffId);
     setCalendarOpen(true);
+  };
+
+  const handleClockIconClick = (staffId) => {
+    setSelectedStaffId(staffId);
+    setNotAvailableTimeOpen(true);
   };
 
   const closeFormAndExecuteAction = async (action) => {
@@ -239,6 +247,7 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates  }) => {
             handleCancelForm={handleCancelForm}
             handleUpdateStaff={handleUpdateStaff}
             handleCalendarIconClick={handleCalendarIconClick}
+            handleClockIconClick={handleClockIconClick}
           />
         </DialogContent>
       </Dialog>
@@ -249,7 +258,16 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates  }) => {
         onClose={() => setCalendarOpen(false)}
         businessId={businessId}
         staffId={selectedStaffId}
-        notAvailableDates={notAvailableDates} 
+        notAvailableDates={notAvailableDates}
+      />
+
+      <NotAvailableTimeDialog
+        open={notAvailableTimeOpen}
+        onClose={() => setNotAvailableTimeOpen(false)}
+        notAvailableTimes={notAvailableTimes}
+        notAvailableDates={notAvailableDates}
+        staffId={selectedStaffId}
+        businessId={businessId}
       />
 
       <ConfirmationDialog
