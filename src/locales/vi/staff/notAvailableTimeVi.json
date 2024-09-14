@@ -1,0 +1,20 @@
+{
+    "Not available times for": "Khoá giờ cho: ",
+    "addNewNotAvailableTime": "Thêm thời gian không có sẵn mới",
+    "selectDate": "Chọn ngày",
+    "from": "Từ",
+    "to": "Đến",
+    "add": "Thêm",
+    "update": "Cập nhật",
+    "cancel": "Hủy",
+    "noNotAvailableTimes": "Không có thời gian không có sẵn",
+    "confirmDelete": "Xác nhận xóa",
+    "deleteMessage": "Bạn có chắc muốn xóa thời gian không có sẵn này không?",
+    "successAdd": "Thêm thời gian không có sẵn thành công!",
+    "successUpdate": "Cập nhật thời gian không có sẵn thành công!",
+    "successDelete": "Xóa thời gian không có sẵn thành công!",
+    "errorAdd": "Thêm thời gian không có sẵn thất bại.",
+    "errorUpdate": "Cập nhật thời gian không có sẵn thất bại.",
+    "errorDelete": "Xóa thời gian không có sẵn thất bại."
+  }
+  

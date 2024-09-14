@@ -36,7 +36,7 @@ import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { TextField } from '@mui/material';
 
-const CalendarDialog = ({ open, onClose, businessId, staffId, notAvailableDates }) => {
+const CalendarDialog = ({ open, onClose, businessId, staffId, notAvailableDates, staffName }) => {
     const { t } = useTranslation('calendarDialog');
     const { addNotAvailableDate, updateNotAvailableDate, deleteNotAvailableDate } = useNotAvailableDateContext();
     const [state, setState] = useState([
@@ -159,7 +159,7 @@ const CalendarDialog = ({ open, onClose, businessId, staffId, notAvailableDates 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
             <DialogTitle sx={dialogTitleStyle}>
-                {t('Select not available dates')}
+                {t('Not available dates for')} {staffName ? staffName : ''}
                 <IconButton aria-label="close" onClick={onClose} sx={closeIconButtonStyle}>
                     <CloseIcon />
                 </IconButton>

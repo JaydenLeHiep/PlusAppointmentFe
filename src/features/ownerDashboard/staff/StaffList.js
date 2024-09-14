@@ -1,6 +1,6 @@
 import React, { Fragment, useRef, useEffect, useState } from 'react';
 import { List, Typography, Collapse, Box } from '@mui/material';
-import { Delete, Edit, Event as EventIcon } from '@mui/icons-material'; 
+import { Delete, Edit, Event as EventIcon, AccessTime as ClockIcon } from '@mui/icons-material'; 
 import { useTranslation } from 'react-i18next';
 import StaffForm from './StaffForm';
 import SearchBar from '../SearchBarContainer';
@@ -20,7 +20,8 @@ const StaffList = ({
   setNewStaff,
   handleUpdateStaff,
   handleCancelForm,
-  handleCalendarIconClick 
+  handleCalendarIconClick, 
+  handleClockIconClick 
 }) => {
   const { t } = useTranslation('staffList');
   const formRef = useRef(null);
@@ -59,7 +60,7 @@ const StaffList = ({
                 }
                 secondary={
                   <>
-                    <Typography variant="body2" component="span">
+                    <Typography variant="body2" component="span" noWrap>
                       {member.email}
                     </Typography>
                     <br />
@@ -69,7 +70,10 @@ const StaffList = ({
                   </>
                 }
               />
-              <Box display="flex">
+              <Box display="flex" alignItems="center">
+                <StyledIconButton aria-label="clock" onClick={() => handleClockIconClick(member.staffId)}>
+                  <ClockIcon />
+                </StyledIconButton>
                 <StyledIconButton aria-label="calendar" onClick={() => handleCalendarIconClick(member.staffId)}>
                   <EventIcon />
                 </StyledIconButton>

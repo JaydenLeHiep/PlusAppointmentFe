@@ -51,7 +51,7 @@ export const NotAvailableDateProvider = ({ children }) => {
     try {
       await apiUpdateNotAvailableDate(String(businessId), staffId, notAvailableDateId, notAvailableDateDetails);
       setAlert({ message: 'Not available date updated successfully!', severity: 'success' });
-      await  fetchAllNotAvailableDatesByBusiness(businessId); // Refresh the not available dates list
+      await  fetchAllNotAvailableDatesByBusiness(businessId); 
     } catch (error) {
       console.error('Error updating not available date:', error);
       setAlert({ message: 'Failed to update not available date.', severity: 'error' });
@@ -63,13 +63,13 @@ export const NotAvailableDateProvider = ({ children }) => {
     try {
       await apiDeleteNotAvailableDate(String(businessId), staffId, notAvailableDateId);
       setAlert({ message: 'Not available date deleted successfully!', severity: 'success' });
-      await fetchAllNotAvailableDatesByStaff(businessId, staffId); // Refresh the not available dates list
+      await fetchAllNotAvailableDatesByBusiness(businessId); 
     } catch (error) {
       console.error('Error deleting not available date:', error);
       setAlert({ message: 'Failed to delete not available date.', severity: 'error' });
       throw error;
     }
-  }, [fetchAllNotAvailableDatesByStaff]);
+  }, [fetchAllNotAvailableDatesByBusiness]);
 
   const contextValue = {
     notAvailableDates,

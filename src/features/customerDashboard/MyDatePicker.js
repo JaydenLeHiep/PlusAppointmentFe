@@ -14,18 +14,27 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { TextField, Box, Grid, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext';
+import { useNotAvailableTimeContext } from '../../context/NotAvailableTimeContext';
 
 const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selectedTime, onTimeSelect, onConfirmTime, totalDuration }) => {
   const { t } = useTranslation('myDatePicker');
   const [notAvailableTimeSlots, setNotAvailableTimeSlots] = useState([]);
   const { notAvailableDates, fetchAllNotAvailableDatesByStaff } = useNotAvailableDateContext();
+  const { fetchAllNotAvailableTimesByStaff, notAvailableTimes } = useNotAvailableTimeContext();
 
+  useEffect(() => {
+    if (staffId && selectedDate) {
+      fetchAllNotAvailableTimesByStaff(businessId, staffId);
+    }
+  }, [businessId, staffId, selectedDate, fetchAllNotAvailableTimesByStaff]);
+  
   useEffect(() => {
     if (staffId) {
       fetchAllNotAvailableDatesByStaff(businessId, staffId); 
     }
   }, [businessId, staffId, fetchAllNotAvailableDatesByStaff]);
 
+  
   useEffect(() => {
     if (staffId && selectedDate) {
       const fetchSlots = async () => {
@@ -83,7 +92,12 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
 
   // Determine if a time slot is available
   const isNotAvailableTimeSlot = (timeSlot) => {
-    return notAvailableTimeSlots.includes(timeSlot);
+    const slotMoment = moment(timeSlot);
+    return notAvailableTimes.some(({ from, to }) => {
+      const fromTime = moment(from);
+      const toTime = moment(to);
+      return slotMoment.isBetween(fromTime, toTime, null, '[)');
+    });
   };
 
   // Check if the selected time slot is valid considering the total duration

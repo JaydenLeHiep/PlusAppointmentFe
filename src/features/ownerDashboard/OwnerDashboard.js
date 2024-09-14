@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { CircularProgress, Alert } from '@mui/material';
+import { CircularProgress, Alert, Snackbar } from '@mui/material';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { useTranslation } from 'react-i18next';
 import BusinessList from './BusinessList';
 import BusinessDetails from './BusinessDetails';
 import AppointmentList from '../ownerDashboard/appointment/AppointmentList';
@@ -10,7 +11,8 @@ import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import { useStaffsContext } from '../../context/StaffsContext';
 import { useServicesContext } from '../../context/ServicesContext';
 import { useCustomersContext } from '../../context/CustomerContext';
-import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext'; 
+import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext';
+import { useNotAvailableTimeContext } from '../../context/NotAvailableTimeContext';
 import * as signalR from '@microsoft/signalr';
 import {
   RootContainer,
@@ -19,29 +21,35 @@ import {
   StyledCard,
   LoadingContainer,
 } from '../../styles/OwnerStyle/OwnerDashboardStyles';
+import { useNotificationsContext } from '../../context/NotificationsContext';
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const OwnerDashboard = () => {
-  const { appointments, fetchAppointmentsForBusiness, fetchAppointmentById } = useAppointmentsContext();
+  const { appointments, fetchAppointmentsForBusiness, setAppointments, fetchAppointmentById } = useAppointmentsContext();
   const { staff, fetchAllStaff } = useStaffsContext();
   const { customers, fetchCustomersForBusiness } = useCustomersContext();
   const { services, fetchServices, fetchCategories } = useServicesContext();
   const { notAvailableDates, fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext();
+  const { notifications, fetchAllNotifications } = useNotificationsContext();  const { notAvailableTimes, fetchAllNotAvailableTimesByBusiness } = useNotAvailableTimeContext();
 
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const connectionRef = useRef(null);
-
+  const [newNotificationMessage, setNewNotificationMessage] = useState(''); // For Snackbar
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // To control the snackbar
+  const { t } = useTranslation('ownerDashboard');
   useEffect(() => {
     const loadBusinesses = async () => {
       try {
         const businessList = await fetchBusinesses();
         setBusinesses(businessList);
+
       } catch (error) {
         setError(error.message);
+        console.error('Error loading businesses:', error);
       } finally {
         setLoading(false);
       }
@@ -73,9 +81,13 @@ const OwnerDashboard = () => {
             fetchCategories(),
             fetchCustomersForBusiness(selectedBusiness.businessId),
             fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId),
+            fetchAllNotAvailableTimesByBusiness(selectedBusiness.businessId),
+            fetchAllNotifications(selectedBusiness.businessId)
           ]);
+
         } catch (error) {
           setError(error.message);
+          console.error('Error fetching data:', error);
         } finally {
           setLoading(false);  // Set loading to false after fetching data
         }
@@ -83,6 +95,7 @@ const OwnerDashboard = () => {
     };
 
     if (selectedBusiness) {
+
       localStorage.setItem('selectedBusiness', JSON.stringify(selectedBusiness));
       localStorage.setItem('selectedBusinessId', selectedBusiness.businessId);
       fetchAllData();
@@ -98,7 +111,11 @@ const OwnerDashboard = () => {
     fetchCategories,
     fetchCustomersForBusiness,
     fetchAllNotAvailableDatesByBusiness,
+    fetchAllNotAvailableTimesByBusiness,
+    fetchAllNotifications,
   ]);
+
+
 
   // Setup SignalR connection
   useEffect(() => {
@@ -114,9 +131,40 @@ const OwnerDashboard = () => {
 
         // Listen for appointment updates
         newConnection.on('ReceiveAppointmentUpdate', async (message) => {
+          console.log('New appointment id received via SignalR:', message);
           if (selectedBusiness && selectedBusiness.businessId) {
             await fetchAppointmentsForBusiness(selectedBusiness.businessId); // Refresh the appointments
           }
+        });
+
+        // Listen for notification updates
+        newConnection.on('ReceiveNotificationUpdate', async (message) => {
+          console.log('New notification message received:', message);
+          if (selectedBusiness && selectedBusiness.businessId) {
+            await fetchAllNotifications(selectedBusiness.businessId) // Refresh the appointments
+            setNewNotificationMessage(t('notifications.newNotification')); // Set the message for the snackbar
+            setSnackbarOpen(true);
+          }
+        });
+
+        // Listen for appointment deletion
+        newConnection.on('ReceiveAppointmentDeleted', (appointmentId) => {
+          console.log('Appointment deleted via SignalR:', appointmentId);
+          setAppointments(prevAppointments =>
+            prevAppointments.filter(appt => appt.appointmentId !== appointmentId)  // Remove deleted appointment
+          );
+        });
+
+        // Listen for appointment status change
+        newConnection.on('ReceiveAppointmentStatusChanged', (appointmentUpdate) => {
+          console.log('Appointment status changed via SignalR:', appointmentUpdate);
+          setAppointments(prevAppointments =>
+            prevAppointments.map(appt =>
+              appt.appointmentId === appointmentUpdate.appointmentId
+                ? { ...appt, status: appointmentUpdate.status }  // Update the status of the appointment
+                : appt
+            )
+          );
         });
 
         // Listen for service updates
@@ -146,6 +194,13 @@ const OwnerDashboard = () => {
             await fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId); // Refresh not available dates
           }
         });
+
+        // Listen for not available time updates
+        newConnection.on('ReceiveNotAvailableTimeUpdate', async (message) => {
+          if (selectedBusiness && selectedBusiness.businessId) {
+            await fetchAllNotAvailableTimesByBusiness(selectedBusiness.businessId); // Refresh not available times
+          }
+        });
       } catch (error) {
         console.error('Error connecting to SignalR hub:', error);
       }
@@ -165,11 +220,22 @@ const OwnerDashboard = () => {
     fetchServices,
     fetchCustomersForBusiness,
     fetchAllNotAvailableDatesByBusiness,
+    fetchAllNotAvailableTimesByBusiness,
+    setAppointments,
+    fetchAllNotifications, 
+    t
   ]);
 
   const handleBusinessClick = (business) => {
+    console.log('Business clicked:', business);
     setSelectedBusiness(business);
   };
+
+  // Snackbar close handler
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
 
   return (
     <RootContainer>
@@ -193,22 +259,33 @@ const OwnerDashboard = () => {
                   appointments={appointments}
                   customers={customers}
                   notAvailableDates={notAvailableDates}
+                  notAvailableTimes={notAvailableTimes}
+                  notifications={notifications} // Pass notifications here
                 />
+
                 <AppointmentList
                   appointments={appointments}
                   staff={staff}
                   services={services}
                   businessId={selectedBusiness.businessId}
-                  fetchAppointmentById={fetchAppointmentById} 
+                  fetchAppointmentById={fetchAppointmentById}
                 />
               </>
             ) : (
-              <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick}/>
+              <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick}  />
             )}
           </StyledCard>
         </ContentContainer>
       </MainContainer>
       <Footer />
+      {/* Snackbar for notification */}
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+        message={newNotificationMessage}
+        autoHideDuration={10000} // Auto hide after 6 seconds
+      />
     </RootContainer>
   );
 };
