@@ -39,14 +39,16 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # Step 6: Deploy to EC2 via SSH
+      # Step 6: List SSH Keys (Debugging Step)
+      - name: List SSH Keys
+        run: |
+          ssh-add -l
+
+      # Step 7: Deploy to EC2 via SSH with Verbose Logging
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             echo "SSH Connection Successful"
-            # Navigate to the application directory if necessary
-            # cd /path/to/application
-
             # Prune unused Docker data
             docker system prune -f
 
