@@ -33,13 +33,21 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_IMAGE_NAME }}:latest
 
-      # Step 5: Deploy to EC2
+      # Step 5: Debug SSH Key
+      - name: Debug SSH Key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/private_key
+          chmod 600 /tmp/private_key
+          cat /tmp/private_key | wc -l # Output key length
+          ssh -i /tmp/private_key -o StrictHostKeyChecking=no ec2-user@${{ secrets.SERVER_IP }} echo "SSH Connection Successful"
+
+      # Step 6: Deploy to EC2
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.2
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Use the key directly from the secret
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
             # Prune unused Docker data
