@@ -41,6 +41,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22  # Default SSH port
+          debug: true
           script: |
             echo "SSH Connection Successful"
             # Prune unused Docker data
