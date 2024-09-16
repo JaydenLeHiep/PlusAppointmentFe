@@ -61,6 +61,40 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
     });
   }).flat();
 
+  const notAvailableEvents = notAvailableDates.map(date => {
+    // Find the staff name from staff list by matching staffId
+    const staffMember = staff.find(s => s.staffId === date.staffId);
+    const staffName = staffMember ? staffMember.name : 'Unknown Staff';
+
+    // Adjust end date to cover the whole day
+    const adjustedEndDate = new Date(date.endDate);
+    adjustedEndDate.setHours(23, 59, 59, 999);
+
+    return {
+      title: 'Not Available',
+      start: new Date(date.startDate).toISOString(),
+      end: adjustedEndDate.toISOString(),
+      staffName: staffName,
+      staffId: date.staffId,
+    };
+  });
+
+  // Process notAvailableTimes before sending it to FullCalendarComponent
+  const notAvailableTimeEvents = notAvailableTimes.map(time => {
+    const staffMember = staff.find(s => s.staffId === time.staffId);
+    const staffName = staffMember ? staffMember.name : 'Unknown Staff';
+
+    return {
+      title: time.reason || 'Unavailable',
+      start: new Date(time.from).toISOString(),
+      end: new Date(time.to).toISOString(),
+      staffName: staffName,
+      staffId: time.staffId,
+      backgroundColor: 'gray',
+      display: 'background',
+    };
+  });
+
   return (
     <Box>
       <BusinessInfo
@@ -83,10 +117,12 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
           events={events}
           staff={staff}
           services={services}
+          notAvailableDates={notAvailableEvents}
+          notAvailableTimes={notAvailableTimeEvents}
         />
       </Box>
 
-      <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} notAvailableDates={notAvailableDates} notAvailableTimes={notAvailableTimes}/>
+      <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} notAvailableDates={notAvailableDates} notAvailableTimes={notAvailableTimes} />
       <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={fetchAppointmentsForBusiness} />
       <ShowServicesDialog open={servicesOpen} onClose={handleServicesClose} businessId={selectedBusiness.businessId} />
       <ShowCustomerDialog open={customerOpen} onClose={handleCustomerClose} businessId={selectedBusiness.businessId} customers={customers} />
