@@ -36,15 +36,16 @@ jobs:
       # Step 5: Set up SSH key and Deploy to EC2
       - name: Set up SSH key and deploy
         run: |
-          # Create the SSH key file
+          # Create the SSH key file using the existing plus_appointment_key.pem
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/private_key
           chmod 600 /tmp/private_key
 
           # Debug: Check if the key file was created successfully
           ls -l /tmp/private_key
 
-          # Perform the deployment using SSH
+          # Attempt to SSH into the server using the old key
           ssh -i /tmp/private_key -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            echo "SSH Connection Successful"
             # Prune unused Docker data
             docker system prune -f
             
