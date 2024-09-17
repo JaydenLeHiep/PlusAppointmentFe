@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Typography, List } from '@mui/material';
+import { Box, Typography, List, IconButton } from '@mui/material';
+import { Delete } from '@mui/icons-material'; // Import the Delete icon
 import {
   OverviewContainer,
   OverviewItem,
@@ -20,7 +21,7 @@ const formatTime = (appointmentTime) => {
   return t.toTimeString().substring(0, 5);
 };
 
-const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFinish }) => {
+const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFinish, onDeleteAppointment }) => {
   const { t } = useTranslation('appointmentOverviewPage');
 
   const handleFinish = () => {
@@ -42,7 +43,7 @@ const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFi
         {t('appointmentOverviewTitle')}
       </Typography>
       {selectedAppointments.map((appointment, index) => (
-        <OverviewItem key={index}>
+        <OverviewItem key={index} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box>
             <ServiceNameText>{t('serviceLabel')}: {appointment.serviceName}</ServiceNameText>
             <OverviewText>{t('staffLabel')}: {appointment.staffName}</OverviewText>
@@ -59,6 +60,12 @@ const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFi
               ))}
             </List>
           </Box>
+          <IconButton
+            onClick={() => onDeleteAppointment(index)} // Call the delete function with the index
+            aria-label="delete"
+          >
+            <Delete />
+          </IconButton>
         </OverviewItem>
       ))}
 

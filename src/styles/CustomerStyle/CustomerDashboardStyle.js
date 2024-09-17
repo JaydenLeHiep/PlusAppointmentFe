@@ -74,3 +74,16 @@ export const CustomContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
   },
 }));
+
+export const StyledCarouselContainer = styled(Box)(({ theme }) => ({
+  width: '100%', 
+  margin: '0 auto',
+  [theme.breakpoints.up('md')]: {
+    width: '870px',
+    height: '550px',
+  },
+  [theme.breakpoints.down('md')]: {
+    width: '398px',
+    height: '252px',
+  },
+}));

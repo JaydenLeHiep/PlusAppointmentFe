@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Slider from 'react-slick'; // Import react-slick
-import { CircularProgress, Container, Typography } from '@mui/material';
-import { fetchPictureBusiness } from '../../lib/apiClientShopPictures'; // Import the API function
+import { CircularProgress, Container, Typography, Box } from '@mui/material';
+import { fetchPictureBusiness } from '../../lib/apiClientShopPictures';
 
 // Custom Left Arrow
 const PrevArrow = (props) => {
@@ -103,7 +103,15 @@ const ShopPicturesCarousel = ({ businessId }) => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ paddingBottom: { xs: 2, sm: 4, md: 6 } }}>
+    <Box
+      sx={{
+        width: { xs: '398px', md: '870px' }, // Responsive width
+        height: { xs: '252px', md: '550px' },  // Maintain height ratio
+        maxHeight: '550px', // Max height on larger screens
+        margin: '0 auto',
+        overflow: 'hidden', // Prevents overflow in case of long images
+      }}
+    >
       <Slider {...settings}>
         {pictures.map((picture) => (
           <div key={picture.shopPictureId}>
@@ -113,7 +121,6 @@ const ShopPicturesCarousel = ({ businessId }) => {
               style={{
                 width: '100%',
                 height: 'auto',
-                maxHeight: '90vh',
                 objectFit: 'cover',
                 borderRadius: '10px',
               }}
@@ -121,7 +128,7 @@ const ShopPicturesCarousel = ({ businessId }) => {
           </div>
         ))}
       </Slider>
-    </Container>
+    </Box>
   );
 };
 
