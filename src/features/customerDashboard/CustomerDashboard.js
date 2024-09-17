@@ -19,6 +19,7 @@ import {
   CustomCircularProgress,
   CustomContainer,
   CustomerListContainer,
+  StyledCarouselContainer
 } from '../../styles/CustomerStyle/CustomerDashboardStyle';
 import BackAndNextButtons from './BackNextButtons';
 import { fetchStaff } from '../../lib/apiClientStaff';
@@ -120,7 +121,9 @@ const CustomerDashboard = () => {
   };
 
   const handleStaffSelect = (staff) => {
-    setSelectedStaff(staff);  // Only allow one staff to be selected
+    setSelectedStaff(staff);
+    setSelectedDate(null);
+    setSelectedTime(null);
   };
 
   const handleNextFromServices = () => {
@@ -190,6 +193,8 @@ const CustomerDashboard = () => {
           setView('services');
           break;
         case 'calendar':
+          setSelectedDate(null);
+          setSelectedTime(null);
           setView('staffs');
           break;
         case 'overview':
@@ -294,10 +299,17 @@ const CustomerDashboard = () => {
     columns[index % 3].push(category);
   });
 
+  // Function to delete the appointment by index
+  const handleDeleteAppointment = (index) => {
+    setSelectedAppointments(prevAppointments => prevAppointments.filter((_, i) => i !== index));
+  };
+
   return (
     <DashboardContainer>
       <CustomerBusinessInfo businessInfo={businessInfo} />
-      <ShopPicturesCarousel businessId={businessInfo.businessId}/>
+      <StyledCarouselContainer>
+        <ShopPicturesCarousel businessId={businessInfo.businessId} />
+      </StyledCarouselContainer>
       <CustomContainer>
         <BackAndNextButtons
           onBackClick={handleBackClick}
@@ -340,17 +352,17 @@ const CustomerDashboard = () => {
         {view === 'staffs' && (
           <CustomerListContainer>
             <StaffList
-              businessId={businessInfo.businessId} 
+              businessId={businessInfo.businessId}
               searchQuery={searchQuery}
-              selectedStaff={selectedStaff} 
-              onStaffSelect={handleStaffSelect} 
+              selectedStaff={selectedStaff}
+              onStaffSelect={handleStaffSelect}
             />
           </CustomerListContainer>
         )}
 
         {view === 'calendar' && (
           <MyDatePicker
-            businessId={businessInfo.businessId} 
+            businessId={businessInfo.businessId}
             selectedDate={selectedDate}
             onDateChange={handleDateChange}
             selectedTime={selectedTime}
@@ -366,6 +378,7 @@ const CustomerDashboard = () => {
             selectedAppointments={selectedAppointments}
             onAddMoreServices={() => setView('services')}
             onFinish={handleFinish}
+            onDeleteAppointment={handleDeleteAppointment}
           />
         )}
 
