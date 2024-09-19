@@ -36,7 +36,7 @@ const LoginForm = () => {
       setMessage(data.message || t('loginSuccessful'));
       setAlertVariant('success');
 
-      login(data.token, { username: data.username, role: data.role });
+      login(data.token, { username: data.username, role: data.role, userId: data.userId });
 
       if (rememberMe) {
         localStorage.setItem('savedUsername', usernameOrEmail);
@@ -97,7 +97,7 @@ const LoginForm = () => {
           {message}
         </Alert>
       )}
-    </form>
+    </form> 
   );
 };
 
