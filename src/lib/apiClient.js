@@ -71,3 +71,21 @@ export const refreshToken = async () => {
   
   return data;
 };
+
+export const changePassword = async (changePasswordDetails) => {
+  const response = await fetch(`${userApiUrl}/change-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(changePasswordDetails)
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
+
+  return data;
+};
