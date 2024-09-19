@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useCallback, useRef } from 'react';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { refreshToken as fetchNewToken } from '../lib/apiClient';
 
 const AuthContext = createContext(null);
@@ -16,11 +16,11 @@ export const AuthProvider = ({ children }) => {
     if (delay > 0) {
       refreshTimeout.current = setTimeout(async () => {
         try {
-          
+
           const data = await fetchNewToken();
           localStorage.setItem('token', data.token); // Ensure 'token' matches the key in your response
           const newDecodedToken = jwtDecode(data.token); // Ensure 'token' matches the key in your response
-          
+
           setIsAuthenticated(true);
           setUser({ username: newDecodedToken.name, role: newDecodedToken.role });
           setAuthTimeout(newDecodedToken.exp * 1000);
@@ -76,6 +76,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', token);
     localStorage.setItem('role', user.role);
     localStorage.setItem('username', user.username);
+    localStorage.setItem('userId', user.userId)
     setIsAuthenticated(true);
     setUser(user);
     const decodedToken = jwtDecode(token);
@@ -88,6 +89,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('username');
     localStorage.removeItem('selectedBusiness');
     localStorage.removeItem('selectedBusinessId');
+    localStorage.removeItem('userId')
     setIsAuthenticated(false);
     setUser(null);
     if (refreshTimeout.current) {

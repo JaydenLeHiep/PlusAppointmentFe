@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
-import { List, ListItemText, Box } from '@mui/material';
+import { List, ListItemText, Box, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+
 import {
   ContainerTypography,
   CustomListItem,
@@ -9,15 +11,32 @@ import {
   NoBusinessesFoundTypography,
 } from '../../styles/OwnerStyle/BusinessListStyles';
 
+
 const BusinessList = ({ businesses, onBusinessClick }) => {
   const { t } = useTranslation('businessList');
 
+  const navigate = useNavigate(); // React Router's hook for navigation
+
+  const handleChangePasswordClick = () => {
+    navigate('/change-password');
+  };
+
   return (
     <Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleChangePasswordClick}
+        >
+           {t('changePassword')}
+        </Button>
+      </Box>
+
       <ContainerTypography variant="h5" gutterBottom>
         {t('myBusinesses')}
       </ContainerTypography>
-      
+
       <List>
         {businesses.map((business) => (
           <Fragment key={business.businessId}>
