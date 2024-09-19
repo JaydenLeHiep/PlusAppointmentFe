@@ -26,22 +26,22 @@ export const ServicesProvider = ({ children }) => {
       }));
       setServices(mappedServices);
     } catch (error) {
-      
+
       setAlert({ message: 'Failed to fetch services.', severity: 'error' });
     }
   }, []);
 
   // Fetch categories
-const fetchCategories = useCallback(async () => {
-  try {
-    const categoriesList = await apiFetchCategories();
-  
-    setCategories(categoriesList);
-  } catch (error) {
-    
-    setAlert({ message: 'Failed to fetch categories.', severity: 'error' });
-  }
-}, []);
+  const fetchCategories = useCallback(async () => {
+    try {
+      const categoriesList = await apiFetchCategories();
+
+      setCategories(categoriesList);
+    } catch (error) {
+
+      setAlert({ message: 'Failed to fetch categories.', severity: 'error' });
+    }
+  }, []);
 
   // Add service
   const addService = useCallback(async (businessId, serviceDetails) => {
@@ -82,9 +82,9 @@ const fetchCategories = useCallback(async () => {
   // Delete service
   const deleteService = useCallback(async (businessId, serviceId) => {
     try {
-      await apiDeleteService(String(businessId), serviceId);  
+      await apiDeleteService(String(businessId), serviceId);
       setAlert({ message: 'Service deleted successfully!', severity: 'success' });
-      await fetchServices(businessId); 
+      await fetchServices(businessId);
     } catch (error) {
       console.error('Error deleting service:', error);
       setAlert({ message: 'Failed to delete service.', severity: 'error' });

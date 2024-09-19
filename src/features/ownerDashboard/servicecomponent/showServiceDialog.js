@@ -18,7 +18,7 @@ import {
   IconButtonStyled,
 } from '../../../styles/OwnerStyle/ServiceComponent/ShowServicesDialogStyles';
 
-const ShowServicesDialog = ({ open, onClose, businessId }) => {
+const ShowServicesDialog = ({ open, onClose, businessId, categories }) => {
   const { t } = useTranslation('showServicesDialog');
   const { services, addService, updateService, deleteService, fetchCategories } = useServicesContext();
 
@@ -228,6 +228,7 @@ const ShowServicesDialog = ({ open, onClose, businessId }) => {
           </Collapse>
           <ServiceList
             services={services}
+            categories={categories}
             editServiceId={editServiceId}
             handleEditService={handleEditService}
             confirmDeleteService={confirmDeleteService}

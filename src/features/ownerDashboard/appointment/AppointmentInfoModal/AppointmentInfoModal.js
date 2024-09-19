@@ -105,11 +105,11 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
             setAlert({ message: errorMessage, severity: 'error' });
         }
     };
-    
+
     const handleDeleteAppointment = () => {
         setShowConfirmDialog(true);
     };
-    
+
     const handleConfirmDelete = async () => {
         try {
             await deleteAppointmentAndUpdateList(appointment.appointmentId, appointment.businessId);
@@ -122,29 +122,29 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
             setAlert({ message: errorMessage, severity: 'error' });
         }
     };
-    
+
     const handleCancelDelete = () => {
         setShowConfirmDialog(false);
     };
-    
+
     const handleCloseDialog = () => {
         onClose();
         setAlert({ message: '', severity: '' });
         setEditMode(false);
     };
-    
+
     const handleToggleEditMode = () => {
         setEditMode(!editMode);
     };
-    
+
     const handleInputChange = (e, field) => {
         const value = e.target.value;
         setUpdatedAppointment({ ...updatedAppointment, [field]: value });
     };
-    
+
     const handleServiceChange = (index, field, value) => {
         let updatedService = { ...updatedAppointment.services[index], [field]: value };
-    
+
         if (field === 'serviceId') {
             const selectedService = services.find(service => service.serviceId === value);
             if (selectedService) {
@@ -158,35 +158,35 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
             const formattedDuration = value.length === 5 ? `${value}:00` : value;
             updatedService.duration = formattedDuration;
         }
-    
+
         const updatedServices = updatedAppointment.services.map((service, i) =>
             i === index ? updatedService : service
         );
-    
+
         setUpdatedAppointment({ ...updatedAppointment, services: updatedServices });
     };
-    
+
     const handleAddService = () => {
         setUpdatedAppointment({
             ...updatedAppointment,
             services: [...updatedAppointment.services, { serviceId: '', staffId: '', duration: '', price: '' }]
         });
-    
+
         hasAddedService.current = true;
     };
-    
+
     const handleRemoveService = (index) => {
         setUpdatedAppointment({
             ...updatedAppointment,
             services: updatedAppointment.services.filter((_, i) => i !== index)
         });
     };
-    
+
     const handleUpdateAppointment = async () => {
         try {
             const localAppointmentTime = new Date(updatedAppointment.appointmentTime);
             const utcAppointmentTime = localAppointmentTime.toISOString();
-    
+
             const updateData = {
                 businessId: appointment.businessId,
                 services: updatedAppointment.services
@@ -200,12 +200,12 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
                 appointmentTime: utcAppointmentTime,
                 comment: updatedAppointment.comment || ""
             };
-    
+
             await updateAppointmentAndRefresh(appointment.appointmentId, updateData, appointment.businessId);
-    
+
             // Trigger re-fetching of the appointment data after update
             afterUpdate();
-    
+
             setAlert({ message: t('updateSuccess'), severity: 'success' });
             setEditMode(false);
         } catch (error) {
@@ -214,26 +214,26 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
             setAlert({ message: errorMessage, severity: 'error' });
         }
     };
-    
+
     const formatAppointmentTime = (appointmentTime, duration) => {
         if (!appointmentTime || !duration) {
             return t('invalidDate');
         }
-    
+
         const startTime = new Date(appointmentTime);
         const [hours, minutes, seconds] = duration.split(':').map(Number);
         const durationInMinutes = hours * 60 + minutes + (seconds || 0) / 60;
         const endTime = new Date(startTime.getTime() + durationInMinutes * 60000);
-    
+
         const formatTime = (date) => {
             const hours = String(date.getHours()).padStart(2, '0');
             const minutes = String(date.getMinutes()).padStart(2, '0');
             return `${hours}:${minutes}`;
         };
-    
+
         return `${formatTime(startTime)} - ${formatTime(endTime)}`;
     };
-    
+
     return (
         <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
             <StyledDialogTitle>
@@ -279,7 +279,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
             </StyledDialogContent>
             {editMode && (
                 <StyledDialogActions>
-                    <StyledCancelButton onClick={handleToggleEditMode}>
+                    <StyledCancelButton onClick={handleCloseDialog}>
                         {t('cancel')}
                     </StyledCancelButton>
                     <StyledUpdateButton onClick={handleUpdateAppointment}>
@@ -294,7 +294,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
                     </StyledConfirmButton>
                 </StyledDialogActions>
             )}
-    
+
             <ConfirmationDialog
                 open={showConfirmDialog}
                 title={t('deleteAppointmentTitle')}
@@ -304,6 +304,6 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
             />
         </Dialog>
     );
-    };
-    
-    export default AppointmentInfoModal;
+};
+
+export default AppointmentInfoModal;
