@@ -61,6 +61,7 @@ const ServiceForm = ({ service, index, services, staff, handleServiceChange, han
                         inputProps={{
                             step: 300, // step of 5 minutes
                         }}
+                        disabled
                         onChange={(e) => handleServiceChange(index, 'duration', e.target.value)}
                     />
                 </Grid>

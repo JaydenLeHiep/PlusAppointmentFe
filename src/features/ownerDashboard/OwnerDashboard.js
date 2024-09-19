@@ -29,7 +29,7 @@ const OwnerDashboard = () => {
   const { appointments, fetchAppointmentsForBusiness, setAppointments, fetchAppointmentById } = useAppointmentsContext();
   const { staff, fetchAllStaff } = useStaffsContext();
   const { customers, fetchCustomersForBusiness } = useCustomersContext();
-  const { services, fetchServices, fetchCategories } = useServicesContext();
+  const { services, categories, fetchServices, fetchCategories } = useServicesContext();
   const { notAvailableDates, fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext();
   const { notifications, fetchAllNotifications } = useNotificationsContext();  const { notAvailableTimes, fetchAllNotAvailableTimesByBusiness } = useNotAvailableTimeContext();
 
@@ -38,8 +38,8 @@ const OwnerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const connectionRef = useRef(null);
-  const [newNotificationMessage, setNewNotificationMessage] = useState(''); // For Snackbar
-  const [snackbarOpen, setSnackbarOpen] = useState(false); // To control the snackbar
+  const [newNotificationMessage, setNewNotificationMessage] = useState(''); 
+  const [snackbarOpen, setSnackbarOpen] = useState(false); 
   const { t } = useTranslation('ownerDashboard');
   useEffect(() => {
     const loadBusinesses = async () => {
@@ -227,7 +227,6 @@ const OwnerDashboard = () => {
   ]);
 
   const handleBusinessClick = (business) => {
-    console.log('Business clicked:', business);
     setSelectedBusiness(business);
   };
 
@@ -256,11 +255,12 @@ const OwnerDashboard = () => {
                   setSelectedBusiness={setSelectedBusiness}
                   staff={staff}
                   services={services}
+                  categories={categories}
                   appointments={appointments}
                   customers={customers}
                   notAvailableDates={notAvailableDates}
                   notAvailableTimes={notAvailableTimes}
-                  notifications={notifications} // Pass notifications here
+                  notifications={notifications} 
                 />
 
                 <AppointmentList
@@ -284,7 +284,7 @@ const OwnerDashboard = () => {
         open={snackbarOpen}
         onClose={handleSnackbarClose}
         message={newNotificationMessage}
-        autoHideDuration={10000} // Auto hide after 6 seconds
+        autoHideDuration={10000} 
       />
     </RootContainer>
   );
