@@ -211,7 +211,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
         } catch (error) {
             console.error('Failed to update appointment:', error);
             const errorMessage = error.response?.data?.message || error.message || t('updateError');
-            setAlert({ message: errorMessage, severity: 'error' });
+            //setAlert({ message: errorMessage, severity: 'error' });
         }
     };
 
