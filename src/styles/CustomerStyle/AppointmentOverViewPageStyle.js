@@ -68,3 +68,10 @@ export const ServiceNameText = styled(Typography)(({ theme }) => ({
     fontSize: '1rem',
   },
 }));
+
+export const TotalPriceTypography = styled(Typography)(({ theme }) => ({
+  fontWeight: 'bold',
+  color: 'Black',
+  textAlign: 'center',
+  marginTop: theme.spacing(4),
+}));

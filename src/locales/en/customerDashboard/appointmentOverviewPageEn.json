@@ -7,6 +7,7 @@
     "addMoreServicesButton": "Add More Services",
     "finishButton": "Finish",
     "durationLabel": "Duration",
-    "priceLabel": "Price"
+    "priceLabel": "Price",
+    "TotalPriceLabel": "Total Price"
   }
   
