@@ -19,8 +19,8 @@ const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }
   useEffect(() => {
     if (modalOpen && needToFetch && selectedAppointment) {
       fetchAppointmentById(selectedAppointment.appointmentId).then((updatedAppointment) => {
-      setSelectedAppointment(updatedAppointment);
-      setNeedToFetch(false); // Reset the fetch requirement after fetching
+        setSelectedAppointment(updatedAppointment);
+        setNeedToFetch(false); // Reset the fetch requirement after fetching
       });
     }
   }, [modalOpen, needToFetch, selectedAppointment, fetchAppointmentById]);
@@ -88,9 +88,12 @@ const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }
           };
 
           // Calculate total duration by summing all service durations
-          const totalDurationInMs = appointment.services.$values.reduce((total, service) => {
-            return total + parseDuration(service.duration);
-          }, 0);
+          const totalDurationInMs = Array.isArray(appointment.services?.$values)
+            ? appointment.services.$values.reduce((total, service) => {
+              return total + parseDuration(service.duration);
+            }, 0)
+            : 0;
+
 
           // Calculate the appointment end time
           const appointmentEndTime = new Date(appointmentTime.getTime() + totalDurationInMs);
