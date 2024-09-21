@@ -1,13 +1,14 @@
 import React from 'react';
 import { Box, Typography, List, IconButton } from '@mui/material';
-import { Delete } from '@mui/icons-material'; // Import the Delete icon
+import { Delete } from '@mui/icons-material';
 import {
   OverviewContainer,
   OverviewItem,
   OverviewText,
   OverviewButton,
   StyledListItemText,
-  ServiceNameText
+  ServiceNameText,
+  TotalPriceTypography
 } from '../../styles/CustomerStyle/AppointmentOverViewPageStyle';
 import { useTranslation } from 'react-i18next';
 
@@ -27,6 +28,12 @@ const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFi
   const handleFinish = () => {
     onFinish(selectedAppointments);
   };
+
+  // Calculate total price of all selected services
+  const totalPrice = selectedAppointments.reduce((total, appointment) => {
+    const appointmentTotal = appointment.services.reduce((sum, service) => sum + (service.price || 0), 0);
+    return total + appointmentTotal;
+  }, 0);
 
   return (
     <OverviewContainer>
@@ -61,13 +68,18 @@ const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFi
             </List>
           </Box>
           <IconButton
-            onClick={() => onDeleteAppointment(index)} // Call the delete function with the index
+            onClick={() => onDeleteAppointment(index)}
             aria-label="delete"
           >
             <Delete />
           </IconButton>
         </OverviewItem>
       ))}
+
+      {/* Display total price */}
+      <TotalPriceTypography variant="h6">
+        {t('TotalPriceLabel')}: €{totalPrice.toFixed(2)}
+      </TotalPriceTypography>
 
       <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
         <OverviewButton
