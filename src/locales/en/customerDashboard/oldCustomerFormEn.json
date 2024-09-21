@@ -5,6 +5,7 @@
     "finishButton": "Finish",
     "newCustomerLink": "If you are a new customer, click here",
     "successMessage": "Appointment successfully created!",
-    "errorMessage": "Failed to find customer or add appointment"
+    "errorMessage": "Failed to find customer or add appointment",
+    "loading": "loading"
   }
   
