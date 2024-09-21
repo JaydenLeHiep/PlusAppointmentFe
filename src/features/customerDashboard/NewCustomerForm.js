@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Snackbar, Alert, Box, Typography, CircularProgress } from '@mui/material';
+import { Snackbar, Alert, Box, Typography, CircularProgress, Checkbox, FormControlLabel } from '@mui/material';
 import { useCustomersContext } from '../../context/CustomerContext';
 import {
   CustomButton,
@@ -61,10 +61,12 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
         name: '',
         email: '',
         confirmEmail: '',
-        phone: ''
+        phone: '',
+        confirmPhone: ''
       });
 
       setShowRedirectMessage(true);
+      setCountdown(5);
       const countdownInterval = setInterval(() => {
         setCountdown((prevCount) => {
           if (prevCount <= 1) {
@@ -143,7 +145,10 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           required
         />
 
-        <Box display="flex" justifyContent="center" mt={2}>
+        <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
+          <FormControlLabel
+            control={<Checkbox checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />}
+          />
           <NewCustomerLink onClick={handleOpenTerms}>
             {t('readAndAcceptTerms')}
           </NewCustomerLink>
@@ -154,7 +159,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
             type="submit"
             variant="contained"
             color="primary"
-            disabled={!acceptTerms}
+            disabled={!acceptTerms || !formData.name || !formData.email || !formData.confirmEmail || !formData.phone || !formData.confirmPhone}
           >
             {t('submitButton')}
           </CustomButton>
@@ -178,6 +183,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
         </Box>
       )}
 
+      {/* Snackbar and Terms components remain the same */}
       <Snackbar
         open={submitSuccess}
         autoHideDuration={3000}
@@ -200,7 +206,6 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
       <Terms
         open={termsOpen}
         handleClose={handleCloseTerms}
-        setAcceptTerms={setAcceptTerms}
       />
     </FormContainer>
   );

@@ -28,6 +28,7 @@ const ServiceList = ({
   const formRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [openCategories, setOpenCategories] = useState({});
+  const [userOpenedCategories, setUserOpenedCategories] = useState({});
 
   useEffect(() => {
     if (editServiceId !== null && formRef.current) {
@@ -35,11 +36,19 @@ const ServiceList = ({
     }
   }, [editServiceId]);
 
+  // Toggle open state for a category (only affecting user opened state)
+  const toggleCategory = (categoryId) => {
+    setUserOpenedCategories((prevState) => ({
+      ...prevState,
+      [categoryId]: !prevState[categoryId],
+    }));
+  };
+
   // Automatically open/close categories based on the search query
   useEffect(() => {
     if (searchQuery === '') {
-      // Reset openCategories to close all categories when search is cleared
-      setOpenCategories({});
+      // When the search query is empty, only retain the user-opened categories
+      setOpenCategories({ ...userOpenedCategories });
     } else {
       const updatedOpenCategories = {};
 
@@ -53,17 +62,12 @@ const ServiceList = ({
         }
       });
 
-      setOpenCategories((prevState) => ({ ...prevState, ...updatedOpenCategories }));
+      setOpenCategories({
+        ...updatedOpenCategories,
+        ...userOpenedCategories, // Ensure user opened categories are preserved
+      });
     }
-  }, [searchQuery, services]);
-
-  // Toggle open state for a category
-  const toggleCategory = (categoryId) => {
-    setOpenCategories((prevState) => ({
-      ...prevState,
-      [categoryId]: !prevState[categoryId],
-    }));
-  };
+  }, [searchQuery, services, userOpenedCategories]);
 
   // Filter services based on the search query
   const filteredServices = services.filter(service =>
@@ -172,5 +176,4 @@ const ServiceList = ({
     </Box>
   );
 };
-
 export default ServiceList;
