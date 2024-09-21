@@ -18,7 +18,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [showRedirectMessage, setShowRedirectMessage] = useState(false);
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(0);
   const loadingMessageRef = useRef(null);
 
   const { addAppointmentAndUpdateList } = useAppointmentsContext();
@@ -72,6 +72,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
           loadingMessageRef.current.scrollIntoView({ behavior: 'smooth' });
         }
 
+        setCountdown(5);
         const countdownInterval = setInterval(() => {
           setCountdown((prevCount) => {
             if (prevCount <= 1) {
@@ -119,7 +120,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
             type="submit"
             variant="contained"
             color="primary"
-            disabled={!emailOrPhone.trim()}
+            disabled={countdown > 0} 
           >
             {t('finishButton')}
           </CustomButton>

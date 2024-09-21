@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Modal, Box, Typography, Button, Checkbox, IconButton } from '@mui/material';
+import { Modal, Box, Typography, Button, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -24,15 +23,7 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
   right: theme.spacing(1),
 }));
 
-const Terms = ({ open, handleClose, setAcceptTerms }) => {
-  const [readTerms, setReadTerms] = useState(false);
-
-  const handleCheckboxChange = (e) => {
-    const isChecked = e.target.checked;
-    setReadTerms(isChecked);
-    setAcceptTerms(isChecked);
-  };
-
+const Terms = ({ open, handleClose }) => {
   const handleAccept = () => {
     handleClose();
   };
@@ -105,18 +96,10 @@ const Terms = ({ open, handleClose, setAcceptTerms }) => {
           </ul>
           Diese Daten werden ausschließlich für statistische Auswertungen und zur Verbesserung unserer Website verwendet.
         </Typography>
-        <Box display="flex" alignItems="center" mt={2}>
-          <Checkbox
-            checked={readTerms}
-            onChange={handleCheckboxChange}
-          />
-          <Typography variant="body2">I have read and accept the terms.</Typography>
-        </Box>
         <Box display="flex" justifyContent="center" mt={2}>
           <Button
             variant="contained"
             color="primary"
-            disabled={!readTerms}
             onClick={handleAccept}
           >
             Accept

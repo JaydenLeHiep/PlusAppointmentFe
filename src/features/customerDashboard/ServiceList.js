@@ -35,12 +35,19 @@ const ServiceList = ({
   if (loading) return <CircularProgress />;
   if (error) return <Alert severity="error">{error}</Alert>;
 
+  // Filter services based on the search query
   const filteredServices = services.filter(service =>
     service.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   if (filteredServices.length === 0) {
     return <Typography variant="body1">No services found</Typography>;
+  }
+
+  // Filter out categories that have no services
+  const servicesInCategory = filteredServices.filter(service => service.categoryId === category.categoryId);
+  if (servicesInCategory.length === 0) {
+    return null; // Don't render the category if there are no services in it
   }
 
   const isServiceSelected = (service) => {
@@ -78,34 +85,32 @@ const ServiceList = ({
           />
         </CategoryHeader>
         <Collapse in={expandedCategoryId === category.categoryId}>
-          {filteredServices
-            .filter(service => service.categoryId === category.categoryId)
-            .map(service => (
-              <ServiceItem
-                key={service.serviceId}
-                selected={isServiceSelected(service)}
-                onClick={() => handleServiceClick(service)}
-              >
-                <ServiceListContainer>
-                  <CategoryText>{service.name}</CategoryText>
-                  {isMobile && (
-                    <IconButton onClick={(e) => { e.stopPropagation(); handleToggleExpand(service.serviceId); }}>
-                      <ChevronRightIcon
-                        style={{
-                          transform: expandedService === service.serviceId ? 'rotate(90deg)' : 'rotate(0deg)',
-                          transition: 'transform 0.3s ease',
-                        }}
-                      />
-                    </IconButton>
-                  )}
-                </ServiceListContainer>
-                <Collapse in={!isMobile || expandedService === service.serviceId}>
-                  <ServiceText>{service.duration}</ServiceText>
-                  <ServiceText>€{service.price}</ServiceText>
-                  <ServiceText>{service.description}</ServiceText>
-                </Collapse>
-              </ServiceItem>
-            ))}
+          {servicesInCategory.map(service => (
+            <ServiceItem
+              key={service.serviceId}
+              selected={isServiceSelected(service)}
+              onClick={() => handleServiceClick(service)}
+            >
+              <ServiceListContainer>
+                <CategoryText>{service.name}</CategoryText>
+                {isMobile && (
+                  <IconButton onClick={(e) => { e.stopPropagation(); handleToggleExpand(service.serviceId); }}>
+                    <ChevronRightIcon
+                      style={{
+                        transform: expandedService === service.serviceId ? 'rotate(90deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.3s ease',
+                      }}
+                    />
+                  </IconButton>
+                )}
+              </ServiceListContainer>
+              <Collapse in={!isMobile || expandedService === service.serviceId}>
+                <ServiceText>{service.duration}</ServiceText>
+                <ServiceText>€{service.price}</ServiceText>
+                <ServiceText>{service.description}</ServiceText>
+              </Collapse>
+            </ServiceItem>
+          ))}
         </Collapse>
       </React.Fragment>
     </List>
