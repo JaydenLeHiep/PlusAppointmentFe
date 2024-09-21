@@ -65,7 +65,7 @@ const AppointmentDetailsView = ({ appointment, formatAppointmentTime, handleTogg
                 {appointment.services.$values.map((service, index) => (
                     <ServiceTypography key={index} variant="body2" gutterBottom>
                         <strong>{index + 1}.</strong>
-                        {service.name} - <strong>{service.staffName}</strong>
+                        {service.name} - {service.categoryName} - <strong>{service.staffName}</strong>
                     </ServiceTypography>
                 ))}
             </ServiceBox>

@@ -8,6 +8,7 @@
     "redirectMessage": "Daten erfolgreich hinzugefügt! Bitte kehren Sie zu Ihren Informationen zurück, um die Buchung abzuschließen.",
     "redirectingIn": "Weiterleitung in",
     "successSnackbar": "Kunde erfolgreich hinzugefügt!",
-    "errorSnackbar": "Kunde konnte nicht hinzugefügt werden."
+    "errorSnackbar": "Kunde konnte nicht hinzugefügt werden.",
+    "Submitting, please wait...": "Senden, bitte warten …"
   }
   
