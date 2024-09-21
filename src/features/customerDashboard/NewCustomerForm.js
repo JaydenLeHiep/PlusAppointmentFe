@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Snackbar, Alert, Box, Typography, CircularProgress, Checkbox, FormControlLabel } from '@mui/material';
+import { Snackbar, Alert, Box, Typography, CircularProgress, Checkbox, FormControlLabel, Backdrop } from '@mui/material';
 import { useCustomersContext } from '../../context/CustomerContext';
 import {
   CustomButton,
@@ -26,9 +26,9 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
-  const [showRedirectMessage, setShowRedirectMessage] = useState(false);
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(3);
   const [termsOpen, setTermsOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); 
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -42,6 +42,9 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
       setSubmitError(t('phoneMismatchError'));
       return;
     }
+
+    if (isSubmitting) return; 
+    setIsSubmitting(true); 
 
     try {
       const customerDetails = {
@@ -65,13 +68,12 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
         confirmPhone: ''
       });
 
-      setShowRedirectMessage(true);
-      setCountdown(5);
+      setCountdown(3);
       const countdownInterval = setInterval(() => {
         setCountdown((prevCount) => {
           if (prevCount <= 1) {
             clearInterval(countdownInterval);
-            setShowRedirectMessage(false);
+            setIsSubmitting(false); 
             onCustomerAdded(newCustomer);
           }
           return prevCount - 1;
@@ -82,10 +84,9 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
       console.error('Failed to add customer:', error);
       const errorMessage = error.response?.data?.message || error.message || t('errorSnackbar');
       setSubmitError(errorMessage);
+      setIsSubmitting(false);
     }
   };
-
-
 
   const handleOpenTerms = () => {
     setTermsOpen(true);
@@ -107,6 +108,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           fullWidth
           margin="normal"
           required
+          disabled={isSubmitting} // Disable input when submitting
         />
         <StyledTextField
           label={t('emailLabel')}
@@ -116,6 +118,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           fullWidth
           margin="normal"
           required
+          disabled={isSubmitting} // Disable input when submitting
         />
         <StyledTextField
           label={t('confirm Email')}
@@ -125,6 +128,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           fullWidth
           margin="normal"
           required
+          disabled={isSubmitting} // Disable input when submitting
         />
         <StyledTextField
           label={t('phoneLabel')}
@@ -134,6 +138,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           fullWidth
           margin="normal"
           required
+          disabled={isSubmitting} // Disable input when submitting
         />
         <StyledTextField
           label={t('confirm Phone')}
@@ -143,6 +148,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           fullWidth
           margin="normal"
           required
+          disabled={isSubmitting} // Disable input when submitting
         />
 
         <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
@@ -159,29 +165,12 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
             type="submit"
             variant="contained"
             color="primary"
-            disabled={!acceptTerms || !formData.name || !formData.email || !formData.confirmEmail || !formData.phone || !formData.confirmPhone}
+            disabled={!acceptTerms || !formData.name || !formData.email || !formData.confirmEmail || !formData.phone || !formData.confirmPhone || isSubmitting}
           >
             {t('submitButton')}
           </CustomButton>
         </Box>
       </form>
-
-      {showRedirectMessage && (
-        <Box mt={2} textAlign="center">
-          <Typography variant="body2" color="success.main" mb={2}>
-            {t('redirectMessage')}
-          </Typography>
-          <CircularProgress
-            variant="determinate"
-            value={(countdown / 5) * 100}
-            size={40}
-            thickness={4}
-          />
-          <Typography variant="body2" mt={1}>
-            {t('redirectingIn')} {countdown}...
-          </Typography>
-        </Box>
-      )}
 
       {/* Snackbar and Terms components remain the same */}
       <Snackbar
@@ -207,6 +196,14 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
         open={termsOpen}
         handleClose={handleCloseTerms}
       />
+
+      {/* Add the Backdrop component to disable interactions when submitting */}
+      <Backdrop open={isSubmitting} style={{ zIndex: 9999, color: '#fff', display: 'flex', flexDirection: 'column' }}>
+        <CircularProgress color="inherit" />
+        <Typography variant="h6" style={{ marginTop: '20px', color: '#fff' }}>
+          {t('Submitting, please wait...')} ({countdown}
+        </Typography>
+      </Backdrop>
     </FormContainer>
   );
 };

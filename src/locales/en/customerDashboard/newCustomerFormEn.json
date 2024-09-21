@@ -8,6 +8,7 @@
     "redirectMessage": "Add your data successfully! Please come back to Your Information to finish booking.",
     "redirectingIn": "Redirecting in",
     "successSnackbar": "Customer added successfully!",
-    "errorSnackbar": "Failed to add customer."
+    "errorSnackbar": "Failed to add customer.",
+    "Submitting, please wait...": "Submitting, please wait..."
   }
   

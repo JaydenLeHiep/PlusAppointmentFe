@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Snackbar, Alert, Box, Typography, CircularProgress } from '@mui/material';
+import React, { useState } from 'react';
+import { Snackbar, Alert, Box, Typography, CircularProgress, Backdrop } from '@mui/material';
 import { fetchCustomerByEmailOrPhoneAndBusinessId } from '../../lib/apiClientCustomer';
 import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import {
@@ -17,9 +17,8 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [showRedirectMessage, setShowRedirectMessage] = useState(false);
   const [countdown, setCountdown] = useState(0);
-  const loadingMessageRef = useRef(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { addAppointmentAndUpdateList } = useAppointmentsContext();
 
@@ -35,12 +34,15 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
     try {
       const customer = await fetchCustomerByEmailOrPhoneAndBusinessId(emailOrPhone, businessId);
 
       if (customer.customerId) {
         if (!Array.isArray(selectedAppointments)) {
-          console.error('Received selectedAppointments:', selectedAppointments);
           throw new Error('Selected appointments data is not in the correct format.');
         }
 
@@ -65,19 +67,13 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
 
         await addAppointmentAndUpdateList(combinedAppointmentDetails);
         setSuccess(true);
-        setShowRedirectMessage(true);
 
-        // Scroll to the loading message
-        if (loadingMessageRef.current) {
-          loadingMessageRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        setCountdown(5);
+        setCountdown(3);
         const countdownInterval = setInterval(() => {
           setCountdown((prevCount) => {
             if (prevCount <= 1) {
               clearInterval(countdownInterval);
-              setShowRedirectMessage(false);
+              setIsSubmitting(false); // Enable interactions again
               onAppointmentSuccess(customer);
             }
             return prevCount - 1;
@@ -89,7 +85,14 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
     } catch (error) {
       console.error("Error during form submission:", error.message || error);
       setError(error.message || t('errorMessage'));
+      setIsSubmitting(false);
     }
+  };
+
+  const handleNewCustomerClick = () => {
+    if (isSubmitting) return; // Prevent interaction when submitting
+    setCountdown(0); // Reset countdown to hide the Backdrop
+    onNewCustomer(); // Proceed to the NewCustomerForm
   };
 
   return (
@@ -103,6 +106,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
           onChange={handleInputChange}
           fullWidth
           required
+          disabled={isSubmitting}
         />
 
         <StyledTextField
@@ -113,6 +117,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
           fullWidth
           multiline
           rows={4}
+          disabled={isSubmitting}
         />
 
         <Box display="flex" justifyContent="center" mt={2}>
@@ -120,32 +125,18 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
             type="submit"
             variant="contained"
             color="primary"
-            disabled={countdown > 0} 
+            disabled={isSubmitting || countdown > 0}
           >
             {t('finishButton')}
           </CustomButton>
         </Box>
 
         <Box mt={2} textAlign="center">
-          <NewCustomerLink onClick={onNewCustomer}>
+          <NewCustomerLink onClick={handleNewCustomerClick} style={{ pointerEvents: isSubmitting ? 'none' : 'auto' }}>
             {t('newCustomerLink')}
           </NewCustomerLink>
         </Box>
       </form>
-
-      {showRedirectMessage && (
-        <Box mt={2} textAlign="center" ref={loadingMessageRef}>
-          <CircularProgress
-            variant="determinate"
-            value={(countdown / 5) * 100}
-            size={40}
-            thickness={4}
-          />
-          <Typography variant="body2" mt={1}>
-            {t('Loading')} {countdown}...
-          </Typography>
-        </Box>
-      )}
 
       <Snackbar
         open={success}
@@ -166,6 +157,19 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
           {error}
         </Alert>
       </Snackbar>
+
+      {/* Only show Backdrop during form submission or countdown */}
+      <Backdrop
+        open={isSubmitting || (countdown > 0 && success)} // Ensure it's only open during actual submission or successful countdown
+        style={{ zIndex: 9999, color: '#fff', display: 'flex', flexDirection: 'column' }}
+      >
+        <CircularProgress color="inherit" />
+        {countdown > 0 && (
+          <Typography variant="h6" style={{ marginTop: '20px', color: '#fff' }}>
+            {t('loading')} {countdown}
+          </Typography>
+        )}
+      </Backdrop>
     </FormContainer>
   );
 };
