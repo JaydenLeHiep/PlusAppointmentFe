@@ -68,7 +68,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
         await addAppointmentAndUpdateList(combinedAppointmentDetails);
         setSuccess(true);
 
-        setCountdown(3);
+        setCountdown(2);
         const countdownInterval = setInterval(() => {
           setCountdown((prevCount) => {
             if (prevCount <= 1) {

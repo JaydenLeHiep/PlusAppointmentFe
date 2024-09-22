@@ -26,7 +26,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(2);
   const [termsOpen, setTermsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false); 
 
@@ -68,7 +68,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
         confirmPhone: ''
       });
 
-      setCountdown(3);
+      setCountdown(2);
       const countdownInterval = setInterval(() => {
         setCountdown((prevCount) => {
           if (prevCount <= 1) {
