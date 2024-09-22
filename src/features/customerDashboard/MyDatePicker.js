@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchNotAvailableTimeSlots } from '../../lib/apiClientAppointment'; 
+import { fetchNotAvailableTimeSlots } from '../../lib/apiClientAppointment';
 import moment from 'moment-timezone';
 import {
   StyledDatePicker,
@@ -27,19 +27,19 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
       fetchAllNotAvailableTimesByStaff(businessId, staffId);
     }
   }, [businessId, staffId, selectedDate, fetchAllNotAvailableTimesByStaff]);
-  
+
   useEffect(() => {
     if (staffId) {
-      fetchAllNotAvailableDatesByStaff(businessId, staffId); 
+      fetchAllNotAvailableDatesByStaff(businessId, staffId);
     }
   }, [businessId, staffId, fetchAllNotAvailableDatesByStaff]);
 
-  
+
   useEffect(() => {
     if (staffId && selectedDate) {
       const fetchSlots = async () => {
         try {
-          const formattedDate = selectedDate.format('YYYY-MM-DD'); 
+          const formattedDate = selectedDate.format('YYYY-MM-DD');
           const slots = await fetchNotAvailableTimeSlots(staffId, formattedDate);
           if (Array.isArray(slots)) {
             const localNotAvailableTimeSlots = slots.map(slot => moment.utc(slot).tz(moment.tz.guess()).format('YYYY-MM-DDTHH:mm:ss'));
@@ -90,9 +90,24 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
   const amTimeSlots = generateAllTimeSlots(8, 12);
   const pmTimeSlots = generateAllTimeSlots(12, 20);
 
+  const isWithinNextThreeHours = (timeSlot) => {
+    const now = moment();
+    const slotMoment = moment(timeSlot);
+    // Check if the slot is on today's date and within the next 3 hours
+    return selectedDate.isSame(now, 'day') && slotMoment.isBetween(now, now.clone().add(3, 'hours'));
+  };
+
   // Determine if a time slot is available
   const isNotAvailableTimeSlot = (timeSlot) => {
+    const now = moment();
     const slotMoment = moment(timeSlot);
+
+    // Check if the time slot is within the next 3 hours
+    if (isWithinNextThreeHours(timeSlot)) return true;
+
+    // Check if the slot is today and before the current time
+    if (selectedDate.isSame(now, 'day') && slotMoment.isBefore(now)) return true;
+
     return notAvailableTimes.some(({ from, to }) => {
       const fromTime = moment(from);
       const toTime = moment(to);
@@ -104,6 +119,9 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
   const isValidTimeSlot = (timeSlot) => {
     const slotMoment = moment(timeSlot);
     const slotEnd = slotMoment.clone().add(totalDuration, 'minutes');
+
+    // Check if the time slot is within the next 3 hours
+    if (isWithinNextThreeHours(timeSlot)) return false;
 
     // Check if the end of the slot overlaps with any "not available" times
     return !notAvailableTimeSlots.some(notAvailableSlot => {
@@ -123,7 +141,7 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
       return date.isBetween(start, end, null, '[]'); // Inclusive of start and end date
     });
 
-    return isInUnavailableRange || date.day() === 0; // Disable Sundays and dates within unavailable intervals
+    return isInUnavailableRange; // Disable Sundays and dates within unavailable intervals
   };
 
   return (
