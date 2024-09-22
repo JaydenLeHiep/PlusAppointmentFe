@@ -3,6 +3,7 @@
     "selectTimeLabel": "Select a Time",
     "morningSectionLabel": "Morning",
     "afternoonSectionLabel": "Afternoon",
-    "confirmButtonLabel": "Confirm Time"
+    "confirmButtonLabel": "Confirm Time",
+    "noAvailableTimeSlots": "There is no available appointment."
   }
   

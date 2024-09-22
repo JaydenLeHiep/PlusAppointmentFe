@@ -16,6 +16,7 @@ import { NotAvailableDateProvider } from './context/NotAvailableDateContext';
 import { NotificationsProvider } from './context/NotificationsContext';
 import { NotAvailableTimeProvider } from './context/NotAvailableTimeContext';
 import ChangePasswordForm from './features/ownerDashboard/ChangePasswordForm';
+import { OpeningHoursProvider } from './context/OpeningHoursContext';
 import './utils/i18n'
 
 const App = () => {
@@ -40,17 +41,19 @@ const App = () => {
             <NotAvailableDateProvider>
               <NotAvailableTimeProvider>
                 <AppointmentsProvider>
-                <NotificationsProvider>
-                    <Routes>
-                      <Route path="/" element={<HomePage />} />
-                      <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
-                      <Route path="/customer-dashboard" element={<PCDashboard />} />
-                      <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
-                      <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
-                      <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
-                      <Route path="/change-password" element={isAuthenticated ? <ChangePasswordForm /> : <Navigate to="/login" />} />
-                    </Routes>
-                </NotificationsProvider>
+                  <NotificationsProvider>
+                    <OpeningHoursProvider>
+                      <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
+                        <Route path="/customer-dashboard" element={<PCDashboard />} />
+                        <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
+                        <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
+                        <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
+                        <Route path="/change-password" element={isAuthenticated ? <ChangePasswordForm /> : <Navigate to="/login" />} />
+                      </Routes>
+                    </OpeningHoursProvider>
+                  </NotificationsProvider>
                 </AppointmentsProvider>
               </NotAvailableTimeProvider>
             </NotAvailableDateProvider>
