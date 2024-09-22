@@ -10,6 +10,7 @@ import NewCustomerForm from './NewCustomerForm';
 import ThankYou from './ThankYou';
 import { fetchBusinessesByName } from '../../lib/apiClientBusiness';
 import { useServicesContext } from '../../context/ServicesContext';
+import { useOpeningHoursContext } from '../../context/OpeningHoursContext';
 import * as signalR from '@microsoft/signalr';
 import {
   DashboardContainer,
@@ -44,6 +45,7 @@ const CustomerDashboard = () => {
   const [selectedAppointments, setSelectedAppointments] = useState([]);
   const [isAddingNewCustomer, setIsAddingNewCustomer] = useState(false);
   const [, setRedirectingToOldCustomerForm] = useState(false);
+  const { openingHours, fetchOpeningHoursForBusiness } = useOpeningHoursContext();
 
   const { services, categories, fetchServices, fetchCategories } = useServicesContext();
   const [expandedCategoryId, setExpandedCategoryId] = useState(null);
@@ -62,6 +64,7 @@ const CustomerDashboard = () => {
         setBusinessInfo(data); // Store the whole business object
         await fetchServices(data.businessId); // Fetch services by business ID
         await fetchCategories(); // Fetch categories
+        await fetchOpeningHoursForBusiness(data.businessId); 
         setLoading(false);
       } catch (error) {
         setError('Error fetching business information');
@@ -71,7 +74,7 @@ const CustomerDashboard = () => {
     };
 
     fetchBusiness();
-  }, [businessName, fetchServices, fetchCategories]);
+  }, [businessName, fetchServices, fetchCategories, fetchOpeningHoursForBusiness]);
 
   useEffect(() => {
     const connectToHub = async () => {
@@ -370,6 +373,7 @@ const CustomerDashboard = () => {
             onConfirmTime={handleConfirmTime}
             staffId={selectedStaff?.staffId}
             totalDuration={totalDuration}
+            openingHours={openingHours} 
           />
         )}
 
