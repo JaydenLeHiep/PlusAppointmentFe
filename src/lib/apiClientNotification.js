@@ -35,3 +35,23 @@ export const fetchNotification = async (businessId) => {
     const data = await handleApiResponse(response);
     return Array.isArray(data.$values) ? data.$values : []; 
 };
+
+// API client function to mark notifications as seen
+export const markNotificationsAsSeen = async (businessId, notificationIds) => {
+  const token = getToken();
+  
+  const response = await fetch(`${notificationApiUrl}mark-as-seen`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      businessId: businessId,
+      notificationIds: notificationIds
+    })
+  });
+
+  const data = await handleApiResponse(response);
+  return data;
+};

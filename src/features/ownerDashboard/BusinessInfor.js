@@ -14,8 +14,8 @@ import ArrowCircleLeftTwoToneIcon from '@mui/icons-material/ArrowCircleLeftTwoTo
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 import Face2Icon from '@mui/icons-material/Face2';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-
-import NotificationPopover from './NotificationPopover'; // Import the new component
+import NotificationPopover from './NotificationPopover';
+import { useNotificationsContext } from '../../context/NotificationsContext';
 
 const BusinessInfo = ({
   selectedBusiness,
@@ -29,16 +29,28 @@ const BusinessInfo = ({
   notifications
 }) => {
   const [anchorEl, setAnchorEl] = useState(null); // State for popover anchor
+  const { markNotificationsAsSeen } = useNotificationsContext();
 
   const handleNotificationOpen = (event) => {
     setAnchorEl(event.currentTarget); // Set anchor element to the clicked icon
   };
 
   const handleNotificationClose = () => {
+    // When user closes the popover, mark notifications as seen
+    const unseenNotificationIds = notifications
+      .filter(notification => !notification.isSeen)
+      .map(notification => notification.notificationId);
+
+    if (unseenNotificationIds.length > 0) {
+      markNotificationsAsSeen(selectedBusiness.businessId, unseenNotificationIds);
+    }
+
     setAnchorEl(null); // Close the popover
   };
 
   const isNotificationPopoverOpen = Boolean(anchorEl); // Check if popover is open
+
+  const unseenNotificationCount = notifications.filter(notification => !notification.isSeen).length;
 
   return (
     <BusinessInfoContainer>
@@ -71,11 +83,11 @@ const BusinessInfo = ({
             />
           </CustomBadge>
           <CustomBadge
-            badgeContent={notifications.length} // Notification count
+            badgeContent={unseenNotificationCount} // Only count unseen notifications
             sx={{ "& .MuiBadge-badge": { backgroundColor: 'red', color: 'white' } }}
           >
             <NotificationsIcon
-              onClick={handleNotificationOpen} // Open notification dialog
+              onClick={handleNotificationOpen} // Open notification popover
               sx={IconStyle}
             />
           </CustomBadge>
