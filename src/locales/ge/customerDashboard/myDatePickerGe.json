@@ -3,6 +3,7 @@
     "selectTimeLabel": "Uhrzeit auswählen",
     "morningSectionLabel": "Morgen",
     "afternoonSectionLabel": "Nachmittag",
-    "confirmButtonLabel": "Zeit bestätigen"
+    "confirmButtonLabel": "Zeit bestätigen",
+    "noAvailableTimeSlots": "Es liegen keine verfügbaren Termine vor."
   }
   
