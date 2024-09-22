@@ -31,7 +31,8 @@ const OwnerDashboard = () => {
   const { customers, fetchCustomersForBusiness } = useCustomersContext();
   const { services, categories, fetchServices, fetchCategories } = useServicesContext();
   const { notAvailableDates, fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext();
-  const { notifications, fetchAllNotifications } = useNotificationsContext();  const { notAvailableTimes, fetchAllNotAvailableTimesByBusiness } = useNotAvailableTimeContext();
+  const { notifications, fetchAllNotifications } = useNotificationsContext(); 
+  const { notAvailableTimes, fetchAllNotAvailableTimesByBusiness } = useNotAvailableTimeContext();
 
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);

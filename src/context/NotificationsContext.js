@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { fetchNotification as apiFetchNotification } from '../lib/apiClientNotification';
+import { fetchNotification as apiFetchNotification, markNotificationsAsSeen as apiMarkNotificationsAsSeen } from '../lib/apiClientNotification';
 
 // Create a context for notifications
 const NotificationsContext = createContext();
@@ -22,12 +22,31 @@ export const NotificationsProvider = ({ children }) => {
       setAlert({ message: 'Failed to fetch notifications.', severity: 'error' });
     }
   }, []);
+  // Mark notifications as seen
+  const markNotificationsAsSeen = useCallback(async (businessId, notificationIds) => {
+    try {
+      await apiMarkNotificationsAsSeen(businessId, notificationIds);
+      // Update the local state to mark the notifications as seen
+      setNotifications(prevNotifications => 
+        prevNotifications.map(notification => 
+          notificationIds.includes(notification.notificationId) 
+            ? { ...notification, isSeen: true } 
+            : notification
+        )
+      );
+    } catch (error) {
+      console.error('Error marking notifications as seen:', error);
+      setAlert({ message: 'Failed to mark notifications as seen.', severity: 'error' });
+    }
+  }, []);
 
   const contextValue = {
     notifications,
     fetchAllNotifications,
+    markNotificationsAsSeen,
     alert,
   };
+  
 
   return (
     <NotificationsContext.Provider value={contextValue}>
