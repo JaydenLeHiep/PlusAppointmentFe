@@ -127,7 +127,7 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
     const now = moment();
     const slotMoment = moment(timeSlot);
     // Check if the slot is on today's date and within the next 3 hours
-    return selectedDate.isSame(now, 'day') && slotMoment.isBetween(now, now.clone().add(openingHours.minimumAdvanceBookingHours / 60, 'hours'));
+    return selectedDate.isSame(now, 'day') && slotMoment.isBetween(now, now.clone().add(openingHours.minimumAdvanceBookingMinutes / 60, 'hours'));
   };
 
   // Determine if a time slot is available
