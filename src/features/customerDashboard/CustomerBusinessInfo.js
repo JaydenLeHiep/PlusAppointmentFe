@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import {
   BusinessInfoContainer,
   BusinessName,
@@ -10,7 +11,9 @@ import {
   InfoText,
   LanguageSwitcherContainer,
   LanguageText,
-  DividerText
+  DividerText,
+  UpdateAppointmentButtonContainer,
+  UpdateAppointmentButton
 } from '../../styles/CustomerStyle/CustomerBusinessInfoStyle';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -18,13 +21,25 @@ import { useTranslation } from 'react-i18next';
 
 const CustomerBusinessInfo = ({ businessInfo }) => {
   const { i18n } = useTranslation();
+  const navigate = useNavigate();
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
   };
 
+  const handleUpdateAppointment = () => {
+    navigate('/update-appointment');
+  };
+
   return (
     <BusinessInfoContainer>
+      {/* Left "Update Appointment" button */}
+      <UpdateAppointmentButtonContainer>
+        <UpdateAppointmentButton variant="contained" color="primary" onClick={handleUpdateAppointment}>
+          Update Appointment
+        </UpdateAppointmentButton>
+      </UpdateAppointmentButtonContainer>
+
       {/* Right language selection */}
       <LanguageSwitcherContainer>
         <LanguageText

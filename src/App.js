@@ -17,6 +17,8 @@ import { NotificationsProvider } from './context/NotificationsContext';
 import { NotAvailableTimeProvider } from './context/NotAvailableTimeContext';
 import ChangePasswordForm from './features/ownerDashboard/ChangePasswordForm';
 import { OpeningHoursProvider } from './context/OpeningHoursContext';
+import UpdateAppointmentCustomer from './features/customerDashboard/UpdateAppointment/UpdateAppointmentCustomer';
+
 import './utils/i18n'
 
 const App = () => {
@@ -51,6 +53,7 @@ const App = () => {
                         <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
                         <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
                         <Route path="/change-password" element={isAuthenticated ? <ChangePasswordForm /> : <Navigate to="/login" />} />
+                        <Route path="/update-appointment" element={<UpdateAppointmentCustomer />} />
                       </Routes>
                     </OpeningHoursProvider>
                   </NotificationsProvider>
