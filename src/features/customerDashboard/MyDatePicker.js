@@ -115,13 +115,16 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
   // Retrieve the opening and closing times for the selected day
   const { openingTime, closingTime } = getOpeningAndClosingTimes();
 
+  // Check if the whole day is unavailable
+  const isDayUnavailable = openingTime === "00:00:00" && closingTime === "00:00:00";
+
   // Convert openingTime and closingTime to hours
   const openingHour = openingTime ? parseInt(openingTime.split(':')[0], 10) : 0;
   const closingHour = closingTime ? parseInt(closingTime.split(':')[0], 10) : 0;
 
   // Generate time slots for AM and PM based on the opening and closing times
-  const amTimeSlots = generateAllTimeSlots(openingHour, Math.min(12, closingHour));
-  const pmTimeSlots = generateAllTimeSlots(Math.max(12, openingHour), closingHour);
+  const amTimeSlots = !isDayUnavailable ? generateAllTimeSlots(openingHour, Math.min(12, closingHour)) : [];
+  const pmTimeSlots = !isDayUnavailable ? generateAllTimeSlots(Math.max(12, openingHour), closingHour) : [];
 
   const isWithinNextThreeHours = (timeSlot) => {
     const now = moment();
