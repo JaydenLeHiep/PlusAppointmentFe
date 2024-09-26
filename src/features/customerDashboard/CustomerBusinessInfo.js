@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   BusinessInfoContainer,
   BusinessName,
@@ -22,21 +22,28 @@ import { useTranslation } from 'react-i18next';
 const CustomerBusinessInfo = ({ businessInfo }) => {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
-
+  const location = useLocation();
+  
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
   };
 
-  const handleUpdateAppointment = () => {
-    navigate('/update-appointment');
+  const isUpdateAppointmentPath = location.pathname.includes('/update-appointment');
+
+  const handleButtonClick = () => {
+    if (isUpdateAppointmentPath) {
+      navigate(-1); // Go back to the previous page
+    } else {
+      navigate(`/update-appointment?business_name=${businessInfo.name}`);
+    }
   };
 
   return (
     <BusinessInfoContainer>
-      {/* Left "Update Appointment" button */}
+      {/* Left "Update Appointment" or "Back" button */}
       <UpdateAppointmentButtonContainer>
-        <UpdateAppointmentButton variant="contained" color="primary" onClick={handleUpdateAppointment}>
-          Update Appointment
+        <UpdateAppointmentButton variant="contained" color="primary" onClick={handleButtonClick}>
+          {isUpdateAppointmentPath ? 'Back' : 'Delete Appointment'}
         </UpdateAppointmentButton>
       </UpdateAppointmentButtonContainer>
 
