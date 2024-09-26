@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 
 export const BusinessInfoContainer = styled(Box)(({ theme }) => ({
   maxWidth: '100%',
@@ -29,13 +29,13 @@ export const BusinessName = styled(Typography)(({ theme }) => ({
   fontFamily: "'Dancing Script', cursive",
   fontSize: '2.5rem',
   marginBottom: theme.spacing(1),
+  marginTop: theme.spacing(4),
   [theme.breakpoints.up('md')]: {
     fontSize: '3rem',
     marginBottom: 0,
   },
   [theme.breakpoints.down('sm')]: {
     fontSize: '2.5rem',
-    marginTop: theme.spacing(2),
   },
 }));
 
@@ -106,4 +106,25 @@ export const LanguageText = styled(({ isActive, ...other }) => (
 
 export const DividerText = styled(Typography)(({ theme }) => ({
   fontSize: '0.875rem',
+}));
+
+export const UpdateAppointmentButtonContainer = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: theme.spacing(1),
+  left: theme.spacing(1), // Position it on the left side
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  [theme.breakpoints.down('sm')]: {
+    top: theme.spacing(1),  // Adjust top position for smaller screens
+    left: theme.spacing(1), // Ensure it's still on the left but more accessible
+  },
+}));
+
+export const UpdateAppointmentButton = styled(Button)(({ theme }) => ({
+  padding: theme.spacing(0.5, 1), // Adjust padding for smaller screens
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '0.75rem', // Smaller font size for mobile
+    padding: theme.spacing(0.25, 0.75),
+  },
 }));

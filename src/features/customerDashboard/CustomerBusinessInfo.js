@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   BusinessInfoContainer,
   BusinessName,
@@ -10,7 +11,9 @@ import {
   InfoText,
   LanguageSwitcherContainer,
   LanguageText,
-  DividerText
+  DividerText,
+  UpdateAppointmentButtonContainer,
+  UpdateAppointmentButton
 } from '../../styles/CustomerStyle/CustomerBusinessInfoStyle';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -18,13 +21,32 @@ import { useTranslation } from 'react-i18next';
 
 const CustomerBusinessInfo = ({ businessInfo }) => {
   const { i18n } = useTranslation();
-
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
   };
 
+  const isUpdateAppointmentPath = location.pathname.includes('/update-appointment');
+
+  const handleButtonClick = () => {
+    if (isUpdateAppointmentPath) {
+      navigate(-1); // Go back to the previous page
+    } else {
+      navigate(`/update-appointment?business_name=${businessInfo.name}`);
+    }
+  };
+
   return (
     <BusinessInfoContainer>
+      {/* Left "Update Appointment" or "Back" button */}
+      <UpdateAppointmentButtonContainer>
+        <UpdateAppointmentButton variant="contained" color="primary" onClick={handleButtonClick}>
+          {isUpdateAppointmentPath ? 'Back' : 'Delete Appointment'}
+        </UpdateAppointmentButton>
+      </UpdateAppointmentButtonContainer>
+
       {/* Right language selection */}
       <LanguageSwitcherContainer>
         <LanguageText
