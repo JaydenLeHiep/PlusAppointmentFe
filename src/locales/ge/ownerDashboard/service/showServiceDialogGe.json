@@ -1,0 +1,13 @@
+{
+    "serviceListTitle": "Dienstleistungsliste",
+    "addNewService": "Neue Dienstleistung hinzufügen",
+    "serviceAddedSuccess": "Dienstleistung erfolgreich hinzugefügt!",
+    "serviceUpdatedSuccess": "Dienstleistung erfolgreich aktualisiert!",
+    "serviceDeletedSuccess": "Dienstleistung erfolgreich gelöscht!",
+    "serviceAddedError": "Dienstleistung konnte nicht hinzugefügt werden. Bitte versuche es erneut.",
+    "serviceUpdatedError": "Dienstleistung konnte nicht aktualisiert werden. Bitte versuche es erneut.",
+    "serviceDeletedError": "Dienstleistung konnte nicht gelöscht werden. Bitte versuche es erneut.",
+    "confirmDeleteTitle": "Löschen bestätigen",
+    "confirmDeleteContent": "Bist du sicher, dass du diese Dienstleistung löschen möchtest?"
+  }
+  

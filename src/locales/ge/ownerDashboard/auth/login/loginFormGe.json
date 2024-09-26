@@ -1,0 +1,9 @@
+{
+    "usernameOrEmail": "Benutzername oder E-Mail",
+    "password": "Passwort",
+    "login": "Anmelden",
+    "loginSuccessful": "Anmeldung erfolgreich!",
+    "loginFailed": "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "rememberMe": "Angemeldet bleiben"
+  }
+  

@@ -1,0 +1,9 @@
+{
+    "customer": "Kunde",
+    "noCustomersAvailable": "Keine Kunden verfügbar",
+    "appointmentTime": "Terminzeit",
+    "status": "Status",
+    "comment": "Kommentar",
+    "addService": "Dienstleistung hinzufügen"
+  }
+  
