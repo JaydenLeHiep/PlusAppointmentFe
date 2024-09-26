@@ -1,0 +1,20 @@
+{
+    "manageNotAvailableTimes": "Nicht verfügbare Zeiten verwalten",
+    "addNewNotAvailableTime": "Neue nicht verfügbare Zeit hinzufügen",
+    "selectDate": "Datum auswählen",
+    "from": "Von",
+    "to": "Bis",
+    "add": "Hinzufügen",
+    "update": "Aktualisieren",
+    "cancel": "Abbrechen",
+    "noNotAvailableTimes": "Keine nicht verfügbaren Zeiten",
+    "confirmDelete": "Löschen bestätigen",
+    "deleteMessage": "Bist du sicher, dass du diese nicht verfügbare Zeit löschen möchtest?",
+    "successAdd": "Nicht verfügbare Zeit erfolgreich hinzugefügt!",
+    "successUpdate": "Nicht verfügbare Zeit erfolgreich aktualisiert!",
+    "successDelete": "Nicht verfügbare Zeit erfolgreich gelöscht!",
+    "errorAdd": "Nicht verfügbare Zeit konnte nicht hinzugefügt werden.",
+    "errorUpdate": "Nicht verfügbare Zeit konnte nicht aktualisiert werden.",
+    "errorDelete": "Nicht verfügbare Zeit konnte nicht gelöscht werden."
+  }
+  

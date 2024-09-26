@@ -1,0 +1,20 @@
+{
+    "heroTitle": "Willkommen bei Plus Appointment",
+    "heroSubtitle": "Erleben Sie die besten Nagelpflegedienste mit uns.",
+    "getStartedButton": "Loslegen",
+    "servicesTitle": "Willkommen bei Plus Appointment",
+    "services": {
+      "appointment": {
+        "title": "Mühelose Termine",
+        "description": "Verwalten Sie Ihre Termine einfach mit unserem zuverlässigen Planungssystem. Bleiben Sie organisiert, pünktlich und verpassen Sie keine Buchung."
+      },
+      "support": {
+        "title": "24/7 Vietnamesische Unterstützung",
+        "description": "Wir bieten rund um die Uhr Unterstützung auf Vietnamesisch an, damit Sie jederzeit die Hilfe erhalten, die Sie benötigen, um Ihr Geschäft reibungslos am Laufen zu halten."
+      },
+      "dataOwnership": {
+        "title": "Sie besitzen Ihre Daten",
+        "description": "Sie kontrollieren, was Sie im System speichern, und stellen damit das höchste Maß an Privatsphäre und Sicherheit sicher. Ihr Geschäft, Ihre Regeln."
+      }
+    }
+}

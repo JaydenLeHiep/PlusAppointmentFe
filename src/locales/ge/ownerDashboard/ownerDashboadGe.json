@@ -1,0 +1,11 @@
+{
+    "notifications": {
+      "newAppointment": "Ein neuer Termin wurde gebucht.",
+      "appointmentDeleted": "Ein Termin wurde gelöscht.",
+      "appointmentUpdated": "Ein Termin wurde aktualisiert.",
+      "newNotification": "Sie haben eine neue Benachrichtigung.",
+      "newServiceAdded": "Ein neuer Service wurde hinzugefügt.",
+      "staffUpdated": "Mitarbeiterdetails wurden aktualisiert.",
+      "customerUpdated": "Kundendetails wurden aktualisiert."
+    }
+}

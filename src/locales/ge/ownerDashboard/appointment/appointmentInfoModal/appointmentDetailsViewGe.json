@@ -1,0 +1,10 @@
+{
+    "client": "Kunde",
+    "phone": "Telefon",
+    "time": "Uhrzeit",
+    "comment": "Kommentar",
+    "servicesAndStaff": "Dienstleistungen & Mitarbeiter",
+    "edit": "Bearbeiten",
+    "delete": "Löschen"
+  }
+  
