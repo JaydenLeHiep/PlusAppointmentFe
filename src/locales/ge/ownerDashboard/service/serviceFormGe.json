@@ -1,0 +1,10 @@
+{
+    "nameLabel": "Name",
+    "descriptionLabel": "Beschreibung",
+    "durationLabel": "Dauer",
+    "priceLabel": "Preis",
+    "cancelButton": "Abbrechen",
+    "addButton": "Dienstleistung hinzufügen",
+    "updateButton": "Dienstleistung aktualisieren"
+  }
+  

@@ -1,0 +1,15 @@
+{
+    "staffListTitle": "Mitarbeiterliste",
+    "addNewStaff": "Neuen Mitarbeiter hinzufügen",
+    "staffAddedSuccess": "Mitarbeiter erfolgreich hinzugefügt!",
+    "staffUpdatedSuccess": "Mitarbeiter erfolgreich aktualisiert!",
+    "staffDeletedSuccess": "Mitarbeiter erfolgreich gelöscht!",
+    "staffAddedError": "Mitarbeiter konnte nicht hinzugefügt werden. Bitte versuche es erneut.",
+    "staffUpdatedError": "Mitarbeiter konnte nicht aktualisiert werden. Bitte versuche es erneut.",
+    "staffDeletedError": "Mitarbeiter konnte nicht gelöscht werden. Bitte versuche es erneut.",
+    "invalidPassword": "Ungültiges Passwortformat.",
+    "confirmDeleteTitle": "Löschen bestätigen",
+    "confirmDeleteContent": "Bist du sicher, dass du diesen Mitarbeiter löschen möchtest?",
+    "addStaff": "Mitarbeiter hinzufügen"
+  }
+  

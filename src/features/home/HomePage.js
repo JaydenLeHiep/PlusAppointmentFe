@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Box, IconButton } from '@mui/material';
 import EnglishFlag from '../../assets/united-kingdom.png';
 import VietnameseFlag from '../../assets/vietnam.png';
+import GermanFlag from '../../assets/germany.png'
 import {
   PageContainer,
   StyledPaper,
@@ -39,6 +40,9 @@ const HomePage = () => {
         </IconButton>
         <IconButton onClick={() => changeLanguage('vi')} aria-label="Change language to Vietnamese">
           <img src={VietnameseFlag} alt="Vietnamese" style={{ width: '70px', height: 'auto' }} />
+        </IconButton>
+        <IconButton onClick={() => changeLanguage('ge')} aria-label="Change language to German">
+          <img src={GermanFlag} alt="German" style={{ width: '70px', height: 'auto' }} />
         </IconButton>
       </Box>
 

@@ -3,6 +3,7 @@ import { Box, IconButton, Link } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import EnglishFlag from '../assets/united-kingdom.png';
 import VietnameseFlag from '../assets/vietnam.png';
+import GermanFlag from '../assets/germany.png'
 import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
@@ -40,6 +41,9 @@ const Footer = () => {
         </IconButton>
         <IconButton onClick={() => changeLanguage('vi')} aria-label="Change language to Vietnamese">
           <img src={VietnameseFlag} alt="Vietnamese" style={{ width: '32px', height: 'auto' }} />
+        </IconButton>
+        <IconButton onClick={() => changeLanguage('ge')} aria-label="Change language to German">
+          <img src={GermanFlag} alt="German" style={{ width: '32px', height: 'auto' }} />
         </IconButton>
       </Box>
 
