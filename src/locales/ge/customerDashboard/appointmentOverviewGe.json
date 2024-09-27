@@ -1,0 +1,14 @@
+{
+    "yourAppointments": "Ihre Termine:",
+    "noAppointmentsLabel": "Sie haben keinen Termin",
+    "customerNameLabel": "Kundenname",
+    "dateLabel": "Datum",
+    "timeLabel": "Uhrzeit",
+    "serviceLabel": "Dienstleistung",
+    "durationLabel": "Dauer",
+    "priceLabel": "Preis",
+    "staffLabel": "Mitarbeiter",
+    "appointmentTotalLabel": "Gesamt",
+    "deleteAppointmentTitle": "Termin löschen",
+    "deleteAppointmentContent": "Möchten Sie diesen Termin wirklich löschen?"
+}
