@@ -163,7 +163,6 @@ const OwnerDashboard = () => {
 
         // Listen for notification updates
         newConnection.on('ReceiveNotificationUpdate', async (message) => {
-          console.log('New notification message received:', message);
           if (selectedBusiness && selectedBusiness.businessId) {
             await fetchAllNotifications(selectedBusiness.businessId) // Refresh the appointments
             setNewNotificationMessage(t('notifications.newNotification')); // Set the message for the snackbar
@@ -225,6 +224,14 @@ const OwnerDashboard = () => {
             await fetchAllNotAvailableTimesByBusiness(selectedBusiness.businessId); // Refresh not available times
           }
         });
+
+        // Listen for appointment deletion in customer
+        newConnection.on('ReceiveAppointmentForCustomerDeleted', (appointmentId) => {
+          console.log('Appointment deleted via SignalR:', appointmentId);
+          setAppointments(prevAppointments =>
+              prevAppointments.filter(appt => appt.appointmentId !== appointmentId)  // Remove deleted appointment
+          );
+      });
       } catch (error) {
         console.error('Error connecting to SignalR hub:', error);
       }

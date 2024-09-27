@@ -6,6 +6,8 @@ import {
   deleteAppointment as apiDeleteAppointment,
   fetchAppointmentById as apiFetchAppointmentById,
   updateAppointment as apiUpdateAppointment,
+  fetchAppointmentsByCustomerId,
+  deleteAppointmentForCustomer as apiDeleteAppointmentForCustomer
 } from '../lib/apiClientAppointment';
 import { fetchCustomers as apiFetchAllCustomers } from '../lib/apiClientCustomer';
 import { useServicesContext } from '../context/ServicesContext';
@@ -75,6 +77,15 @@ export const AppointmentsProvider = ({ children }) => {
     }
   }, []);
 
+  const deleteAppointmentForCustomer = useCallback(async (appointmentId, businessId) => {
+    try {
+      await apiDeleteAppointmentForCustomer(appointmentId);
+    } catch (error) {
+      console.error('Error deleting appointment:', error);
+      throw error;
+    }
+  }, []);
+
   const updateAppointmentAndRefresh = useCallback(async (appointmentId, updateData, businessId) => {
     try {
         await apiUpdateAppointment(appointmentId, updateData);
@@ -116,8 +127,10 @@ export const AppointmentsProvider = ({ children }) => {
     fetchAllCustomers,
     fetchAllStaff,
     fetchServiceById,
+    getAppointmentById,
+    fetchAppointmentsForCustomer,
+    deleteAppointmentForCustomer
     getAppointmentById
-
   };
 
   return (
