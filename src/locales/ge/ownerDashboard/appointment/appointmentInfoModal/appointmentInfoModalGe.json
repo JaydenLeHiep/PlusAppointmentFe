@@ -1,0 +1,18 @@
+{
+    "appointmentDetails": "Termindetails",
+    "confirmStatusSuccess": "Termin erfolgreich bestätigt!",
+    "confirmStatusError": "Terminbestätigung fehlgeschlagen. Bitte versuche es erneut.",
+    "deleteSuccess": "Termin erfolgreich gelöscht!",
+    "deleteError": "Termin konnte nicht gelöscht werden. Bitte versuche es erneut.",
+    "updateSuccess": "Termin erfolgreich aktualisiert!",
+    "updateError": "Termin konnte nicht aktualisiert werden. Bitte versuche es erneut.",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "update": "Aktualisieren",
+    "deleteAppointmentTitle": "Termin löschen",
+    "deleteAppointmentContent": "Bist du sicher, dass du diesen Termin löschen möchtest?",
+    "close": "Schließen",
+    "invalidDate": "Ungültiges Datum",
+    "invalidTime": "Ungültige Uhrzeit"
+  }
+  

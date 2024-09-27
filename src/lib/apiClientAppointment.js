@@ -7,14 +7,6 @@ const appointmentApiUrl = `${apiBaseUrl}/api/appointments`;
 
 //Api appointments
 
-const handleApiResponse = async (response) => {
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message || 'API request failed');
-  }
-  return data;
-};
-
 export const fetchAppointments = async (businessId) => {
   if (!businessId) {
     throw new Error('Business ID is required');
@@ -177,7 +169,6 @@ export const fetchNotAvailableTimeSlots = async (staffId, date) => {
   } else {
     return []; // Return an empty array if not an array
   }
-};
 
 // Fetch appointments by customer ID
 export const fetchAppointmentsByCustomerId = async (customerId) => {

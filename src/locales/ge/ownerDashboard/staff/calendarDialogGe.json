@@ -1,0 +1,21 @@
+{
+    "Select not available dates": "Nicht verfügbare Daten auswählen",
+    "Add new not available date": "Neues nicht verfügbares Datum hinzufügen",
+    "Start Date": "Startdatum",
+    "End Date": "Enddatum",
+    "Add": "Hinzufügen",
+    "Update": "Aktualisieren",
+    "Cancel": "Abbrechen",
+    "Not available date added success": "Nicht verfügbares Datum erfolgreich hinzugefügt!",
+    "Not available date updated success": "Nicht verfügbares Datum erfolgreich aktualisiert!",
+    "notAvailableDateAddedError": "Nicht verfügbares Datum konnte nicht hinzugefügt werden.",
+    "notAvailableDateUpdatedError": "Nicht verfügbares Datum konnte nicht aktualisiert werden.",
+    "Start date": "Startdatum",
+    "End date": "Enddatum",
+    "No not available dates": "Keine nicht verfügbaren Daten",
+    "Confirm Delete": "Löschen bestätigen",
+    "Are you sure you want to delete?": "Bist du sicher, dass du löschen möchtest?",
+    "Not available date deleted successfully!": "Nicht verfügbares Datum erfolgreich gelöscht!",
+    "Failed to delete not available date.": "Nicht verfügbares Datum konnte nicht gelöscht werden."
+  }
+  

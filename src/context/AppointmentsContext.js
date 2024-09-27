@@ -50,12 +50,12 @@ export const AppointmentsProvider = ({ children }) => {
   const addAppointmentAndUpdateList = useCallback(async (appointmentData) => {
     try {
       await apiAddAppointment(appointmentData);
-      await fetchAppointmentsForBusiness(appointmentData.businessId);
+      //await fetchAppointmentsForBusiness(appointmentData.businessId);
     } catch (error) {
       console.error('Error adding appointment:', error);
       throw error;
     }
-  }, [fetchAppointmentsForBusiness]);
+  }, []);
 
   const changeStatusAppointments = useCallback(async (appointmentId, status, businessId) => {
     try {
@@ -65,11 +65,12 @@ export const AppointmentsProvider = ({ children }) => {
       console.error('Error changing appointment status:', error);
       throw error;
     }
-  }, []);
+  },[]);
 
   const deleteAppointmentAndUpdateList = useCallback(async (appointmentId, businessId) => {
     try {
       await apiDeleteAppointment(appointmentId);
+      // await fetchAppointmentsForBusiness(businessId);
     } catch (error) {
       console.error('Error deleting appointment:', error);
       throw error;
@@ -87,13 +88,15 @@ export const AppointmentsProvider = ({ children }) => {
 
   const updateAppointmentAndRefresh = useCallback(async (appointmentId, updateData, businessId) => {
     try {
-      await apiUpdateAppointment(appointmentId, updateData);
-      await fetchAppointmentsForBusiness(businessId);
+        await apiUpdateAppointment(appointmentId, updateData);
+        await fetchAppointmentsForBusiness(businessId);
     } catch (error) {
-      console.error('Error updating appointment:', error);
-      throw error;
+        console.error('Error updating appointment:', error);
+        throw error;
     }
-  }, [fetchAppointmentsForBusiness]);
+}, [fetchAppointmentsForBusiness]);
+
+
 
   const fetchAllCustomers = useCallback(async (businessId) => {
     try {
@@ -107,16 +110,6 @@ export const AppointmentsProvider = ({ children }) => {
   const getAppointmentById = (appointmentId) => {
     return appointments.find(appt => appt.appointmentId === appointmentId);
   };
-
-  const fetchAppointmentsForCustomer = useCallback(async (customerId) => {
-    try {
-      const appointments = await fetchAppointmentsByCustomerId(customerId);
-      return appointments;
-    } catch (error) {
-      console.error('Error fetching appointments for customer:', error);
-      throw error;
-    }
-  }, []);
 
   const contextValue = {
     appointments,
@@ -137,6 +130,7 @@ export const AppointmentsProvider = ({ children }) => {
     getAppointmentById,
     fetchAppointmentsForCustomer,
     deleteAppointmentForCustomer
+    getAppointmentById
   };
 
   return (

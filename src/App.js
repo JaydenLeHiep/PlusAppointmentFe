@@ -18,7 +18,6 @@ import { NotAvailableTimeProvider } from './context/NotAvailableTimeContext';
 import ChangePasswordForm from './features/ownerDashboard/ChangePasswordForm';
 import { OpeningHoursProvider } from './context/OpeningHoursContext';
 import DeleteAppointmentCustomer from './features/customerDashboard/DeleteAppointmentCustomer/DeleteAppointmentCustomer';
-
 import './utils/i18n'
 
 const App = () => {
