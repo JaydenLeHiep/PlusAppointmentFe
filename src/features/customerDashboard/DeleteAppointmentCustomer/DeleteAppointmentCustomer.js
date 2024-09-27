@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Snackbar, Alert } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { StyledTextField, CustomButton, FormContainer } from '../../../styles/CustomerStyle/UpdateAppointmentStyles/UpdateAppointmentCustomerStyles';
+import { StyledTextField, CustomButton, FormContainer } from '../../../styles/CustomerStyle/DeleteCustomerStyles/DeleteAppointmentCustomerStyles';
 import { useTranslation } from 'react-i18next';
 import CustomerBusinessInfo from '../CustomerBusinessInfo';
 import { fetchBusinessesByName } from '../../../lib/apiClientBusiness';
