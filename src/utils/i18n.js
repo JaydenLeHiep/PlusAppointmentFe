@@ -33,8 +33,11 @@ import showCustomerDialogVi from '../locales/vi/customer/showCustomerDialogVi.js
 import customerListEn from '../locales/en/customer/customerListEn.json';
 import customerListVi from '../locales/vi/customer/customerListVi.json';
 
+import deleteAppointmentCustomerEn from '../locales/en/customerDashboard/deleteAppointmentCustomerEn.json';
+import deleteAppointmentCustomerGe from '../locales/ge/customerDashboard/deleteAppointmentCustomerGe.json';
 
-
+import AppointmentOverViewEn from '../locales/en/customerDashboard/appointmentOverViewEn.json'
+import AppointmentOverViewGe from '../locales/ge/customerDashboard/appointmentOverviewGe.json';
 
 // owner dashboard
 
@@ -231,7 +234,9 @@ i18n
         calendarDialog: calendarDialogEn,
         ownerDashboard: ownerDashboardEn,
         notAvailableTime: notAvailableTimeEn,
-        changePasswordForm: changePasswordFormEn
+        changePasswordForm: changePasswordFormEn,
+        deleteAppointmentCustomer: deleteAppointmentCustomerEn,
+        appointmentOverview: AppointmentOverViewEn
         // Add other namespaces for English
       },
       vi: {
@@ -269,7 +274,7 @@ i18n
         calendarDialog: calendarDialogVi,
         ownerDashboard: ownerDashboardVi,
         notAvailableTime: notAvailableTimeVi,
-        changePasswordForm: changePasswordFormVi
+        changePasswordForm: changePasswordFormVi,
         // Add other namespaces for Vietnamese
       },
       ge: {  // Add a new language key for German
@@ -310,6 +315,8 @@ i18n
         showServicesDialog: showServicesDialogGe,
         changePasswordForm: changePasswordFormGe,
         confirmationDialog: confirmationDialogGe,
+        deleteAppointmentCustomer: deleteAppointmentCustomerGe,
+        appointmentOverview: AppointmentOverViewGe
       },
     },
     lng: 'en', // default language

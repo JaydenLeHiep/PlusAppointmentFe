@@ -45,7 +45,7 @@ const AppointmentOverview = ({ appointments, onDeleteAppointment }) => {
     return (
         <OverviewContainer>
             <Typography variant="h5" sx={{ fontSize: '25px', marginBottom: 3, fontWeight: 'bold', color: 'Black', textAlign: 'center' }}>
-                {t('Your Appointments:')}
+                {t('yourAppointments')}
             </Typography>
             {appointments.length === 0 ? (
                 <Typography variant="h6" sx={{ textAlign: 'center', color: 'grey' }}>
