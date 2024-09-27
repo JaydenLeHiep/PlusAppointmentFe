@@ -44,10 +44,12 @@ const AppointmentOverview = ({ appointments, onDeleteAppointment }) => {
 
     return (
         <OverviewContainer>
-            <Typography variant="h5" sx={{ fontSize: '35px', marginBottom: 3, fontWeight: 'bold', color: 'Black', textAlign: 'center' }}>
-                {t('YourAppointment')}
+            <Typography variant="h5" sx={{ fontSize: '35px', marginBottom: 1, fontWeight: 'bold', color: 'Black', textAlign: 'center' }}>
+                {t('Welcome back')} {appointments[0].customerName} !
             </Typography>
-
+            <Typography variant="h5" sx={{ fontSize: '25px', marginBottom: 3, fontWeight: 'bold', color: 'Black', textAlign: 'center' }}>
+                {t('Your Appointments:')}
+            </Typography>
             {appointments.length === 0 ? (
                 <Typography variant="h6" sx={{ textAlign: 'center', color: 'grey' }}>
                     {t('noAppointmentsLabel', 'You don\'t have any appointment')}

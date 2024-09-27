@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography, Snackbar, Alert } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { StyledTextField, CustomButton, FormContainer, FormTitle } from '../../../styles/CustomerStyle/UpdateAppointmentStyles/UpdateAppointmentCustomerStyles';
+import { StyledTextField, CustomButton, FormContainer } from '../../../styles/CustomerStyle/UpdateAppointmentStyles/UpdateAppointmentCustomerStyles';
 import { useTranslation } from 'react-i18next';
 import CustomerBusinessInfo from '../CustomerBusinessInfo';
 import { fetchBusinessesByName } from '../../../lib/apiClientBusiness';
@@ -13,8 +13,8 @@ import {
 import AppointmentOverview from './AppointmentOverview';
 import { useAppointmentsContext } from '../../../context/AppointmentsContext';
 
-const UpdateAppointmentCustomer = () => {
-    const { t } = useTranslation('updateAppointment');
+const DeleteAppointmentCustomer = () => {
+    const { t } = useTranslation('deleteAppointmentCustomer');
     const [emailOrPhone, setEmailOrPhone] = useState('');
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -24,7 +24,11 @@ const UpdateAppointmentCustomer = () => {
     const [error, setError] = useState('');
     const [appointments, setAppointments] = useState([]);
     const [viewState, setViewState] = useState('inputEmailOrPhone');
-    const { fetchAppointmentsForCustomer, deleteAppointmentAndUpdateList } = useAppointmentsContext();
+    const { fetchAppointmentsForCustomer, deleteAppointmentForCustomer } = useAppointmentsContext();
+
+    // State for handling the Snackbar
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     // Fetch business information when the component mounts
     useEffect(() => {
@@ -54,7 +58,7 @@ const UpdateAppointmentCustomer = () => {
     const handleRetrieveAppointment = async (e) => {
         e.preventDefault();
         if (!emailOrPhone) {
-            alert("Please enter customer email or phone number");
+            alert(t("insertEmailOrPhone"));
             return;
         }
         try {
@@ -66,18 +70,20 @@ const UpdateAppointmentCustomer = () => {
                 const actualAppointments = appointmentsData?.$values ? appointmentsData.$values : (Array.isArray(appointmentsData) ? appointmentsData : []);
 
                 if (actualAppointments.length === 0) {
-                    setError("No appointments found for this customer.");
+                    setError(t("noAppointmentsFound"));
                     setAppointments([]);
                 } else {
                     setAppointments(actualAppointments);
                     setViewState('viewAppointments');
                 }
             } else {
-                setError('Customer not found');
+                // Show the Snackbar message
+                setSnackbarMessage(t('customerNotFound'));
+                setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error retrieving appointment:', error.message);
-            setError('Error retrieving appointment');
+            console.error(t('errorRetrievingAppointment'), error.message);
+            setError(t('errorRetrievingAppointment'));
         } finally {
             setLoading(false);
         }
@@ -89,7 +95,7 @@ const UpdateAppointmentCustomer = () => {
 
     const handleDeleteAppointment = async (appointmentId, businessId) => {
         try {
-            await deleteAppointmentAndUpdateList(appointmentId, businessId);
+            await deleteAppointmentForCustomer(appointmentId, businessId);
             // Remove the deleted appointment from the state
             setAppointments((prevAppointments) => prevAppointments.filter(appointment => appointment.appointmentId !== appointmentId));
         } catch (error) {
@@ -97,12 +103,21 @@ const UpdateAppointmentCustomer = () => {
         }
     };
 
+    // Function to close the Snackbar
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+
     const renderContent = () => {
         switch (viewState) {
             case 'inputEmailOrPhone':
                 return (
-                    <FormContainer>
-                        <FormTitle>{t('retrieveAppointment')}</FormTitle>
+                    <FormContainer style={{ marginTop: '100px' }}>
+                        <Box mb={3} textAlign="center">
+                            <Typography variant="body1" style={{ fontSize: '20px', color: '#333', lineHeight: 1.5, fontWeight: 'bold' }}>
+                                {t('insertEmailOrPhone')}
+                            </Typography>
+                        </Box>
                         <form onSubmit={handleRetrieveAppointment} style={{ width: '100%', maxWidth: '400px' }}>
                             <StyledTextField
                                 label={t('emailOrPhoneLabel')}
@@ -132,6 +147,7 @@ const UpdateAppointmentCustomer = () => {
                 return null;
         }
     };
+
     if (loading) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -156,8 +172,19 @@ const UpdateAppointmentCustomer = () => {
             <CustomContainer>
                 {renderContent()}
             </CustomContainer>
+            {/* Snackbar Component */}
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={4000} // The Snackbar will close automatically after 4 seconds
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </DashboardContainer>
     );
 };
 
-export default UpdateAppointmentCustomer;
+export default DeleteAppointmentCustomer;
