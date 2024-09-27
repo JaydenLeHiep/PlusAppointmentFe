@@ -29,6 +29,9 @@ const DeleteAppointmentCustomer = () => {
     // State for handling the Snackbar
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
+    
+    // State for handling the "no appointments found" Snackbar
+    const [noAppointmentsSnackbarOpen, setNoAppointmentsSnackbarOpen] = useState(false);
 
     // Fetch business information when the component mounts
     useEffect(() => {
@@ -70,14 +73,14 @@ const DeleteAppointmentCustomer = () => {
                 const actualAppointments = appointmentsData?.$values ? appointmentsData.$values : (Array.isArray(appointmentsData) ? appointmentsData : []);
 
                 if (actualAppointments.length === 0) {
-                    setError(t("noAppointmentsFound"));
+                    setNoAppointmentsSnackbarOpen(true); // Show the "no appointments found" Snackbar
                     setAppointments([]);
                 } else {
                     setAppointments(actualAppointments);
                     setViewState('viewAppointments');
                 }
             } else {
-                // Show the Snackbar message
+                // Show the "customer not found" Snackbar message
                 setSnackbarMessage(t('customerNotFound'));
                 setSnackbarOpen(true);
             }
@@ -103,9 +106,10 @@ const DeleteAppointmentCustomer = () => {
         }
     };
 
-    // Function to close the Snackbar
+    // Function to close the Snackbars
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
+        setNoAppointmentsSnackbarOpen(false);
     };
 
     const renderContent = () => {
@@ -172,7 +176,7 @@ const DeleteAppointmentCustomer = () => {
             <CustomContainer>
                 {renderContent()}
             </CustomContainer>
-            {/* Snackbar Component */}
+            {/* Snackbar Component for Customer Not Found */}
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={4000} // The Snackbar will close automatically after 4 seconds
@@ -181,6 +185,17 @@ const DeleteAppointmentCustomer = () => {
             >
                 <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
                     {snackbarMessage}
+                </Alert>
+            </Snackbar>
+            {/* Snackbar Component for No Appointments Found */}
+            <Snackbar
+                open={noAppointmentsSnackbarOpen}
+                autoHideDuration={4000} // The Snackbar will close automatically after 4 seconds
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert onClose={handleSnackbarClose} severity="info" sx={{ width: '100%' }}>
+                    {t("noAppointmentsFound")}
                 </Alert>
             </Snackbar>
         </DashboardContainer>
