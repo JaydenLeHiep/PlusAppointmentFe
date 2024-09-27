@@ -40,17 +40,17 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
     return <Typography variant="h6">No business selected or business ID is missing.</Typography>;
   }
 
-  const events = appointments.map(appt => {
+  const events = (appointments || []).map(appt => {
     let startTime = new Date(appt.appointmentTime).getTime();
-
-    return appt.services.$values.map(service => {
+  
+    return (appt.services?.$values || []).map(service => {
       const serviceStart = new Date(startTime);
       const serviceEnd = new Date(startTime + parseDuration(service.duration));
-
+  
       startTime += parseDuration(service.duration);
-
+  
       return {
-        ...appt, // Include all the appointment details
+        ...appt,
         title: `${appt.customerName} - ${service.name}`,
         start: serviceStart,
         end: serviceEnd,
@@ -61,6 +61,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
       };
     });
   }).flat();
+  
 
   const notAvailableEvents = notAvailableDates.map(date => {
     // Find the staff name from staff list by matching staffId

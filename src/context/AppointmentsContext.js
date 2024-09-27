@@ -48,12 +48,12 @@ export const AppointmentsProvider = ({ children }) => {
   const addAppointmentAndUpdateList = useCallback(async (appointmentData) => {
     try {
       await apiAddAppointment(appointmentData);
-      await fetchAppointmentsForBusiness(appointmentData.businessId);
+      //await fetchAppointmentsForBusiness(appointmentData.businessId);
     } catch (error) {
       console.error('Error adding appointment:', error);
       throw error;
     }
-  }, [fetchAppointmentsForBusiness]);
+  }, []);
 
   const changeStatusAppointments = useCallback(async (appointmentId, status, businessId) => {
     try {
