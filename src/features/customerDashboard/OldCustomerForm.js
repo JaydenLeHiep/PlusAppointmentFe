@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Snackbar, Alert, Box, Typography, CircularProgress, Backdrop, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import { IconButton, Snackbar, Alert, Box, Typography, CircularProgress, Backdrop, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { fetchCustomerByEmailOrPhoneAndBusinessId } from '../../lib/apiClientCustomer';
 import { useAppointmentsContext } from '../../context/AppointmentsContext';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ConfirmationDialog from '../../components/ConfirmationDialog';
 import {
   CustomButton,
   FormContainer,
@@ -21,7 +23,9 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [customerAppointments, setCustomerAppointments] = useState([]);
-  const [fetchedCustomer, setFetchedCustomer] = useState(null); // Store the fetched customer
+  const [fetchedCustomer, setFetchedCustomer] = useState(null);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
 
   const { addAppointmentAndUpdateList, fetchAppointmentsForCustomer } = useAppointmentsContext();
 
@@ -141,6 +145,37 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
     }
   };
 
+  const { deleteAppointmentForCustomer } = useAppointmentsContext(); // Include this to use delete functionality
+
+  // Function to open the delete confirmation dialog
+  const handleDeleteClick = (appointment) => {
+    setSelectedAppointment(appointment);
+    setConfirmationOpen(true);
+  };
+
+  // Function to handle confirming the delete
+  const handleConfirmDelete = async () => {
+    if (selectedAppointment) {
+      try {
+        await deleteAppointmentForCustomer(selectedAppointment.appointmentId, selectedAppointment.businessId);
+        // Remove the deleted appointment from the state
+        setCustomerAppointments((prevAppointments) => prevAppointments.filter(
+          (appointment) => appointment.appointmentId !== selectedAppointment.appointmentId
+        ));
+      } catch (error) {
+        console.error('Error deleting appointment:', error.message);
+      }
+    }
+    setConfirmationOpen(false);
+    setSelectedAppointment(null);
+  };
+
+  // Function to handle canceling the delete
+  const handleCancelDelete = () => {
+    setConfirmationOpen(false);
+    setSelectedAppointment(null);
+  };
+
   return (
     <FormContainer>
       <FormTitle>{t('formTitle')}</FormTitle>
@@ -225,38 +260,47 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
           {customerAppointments.length > 0 ? (
             <>
               <Typography variant="body1" style={{ marginBottom: '10px', fontWeight: 'bold' }}>
-    {t('appointmentInfo', { count: customerAppointments.length })}
-</Typography>
+                {t('appointmentInfo', { count: customerAppointments.length })}
+              </Typography>
               <List>
                 {customerAppointments.map((appointment, index) => (
                   <React.Fragment key={index}>
-                    <ListItem alignItems="flex-start">
+                    <ListItem
+                      alignItems="flex-start"
+                      secondaryAction={
+                        <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteClick(appointment)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      }
+                    >
                       <ListItemText
-                       primary={`${index + 1}. ${t('appointmentOn')} ${new Date(appointment.appointmentTime).toLocaleDateString()} ${t('at')} ${new Date(appointment.appointmentTime).toLocaleTimeString()}`}
-                       secondary={`${t('services')}: ${appointment.services?.$values?.map((service) => service.name).join(', ') || t('noSpecificService')}`}
+                        primary={`${index + 1}. ${t('appointmentOn')} ${new Date(appointment.appointmentTime).toLocaleDateString()} ${t('at')} ${new Date(appointment.appointmentTime).toLocaleTimeString()}`}
+                        secondary={`${t('services')}: ${appointment.services?.$values?.map((service) => service.name).join(', ') || t('noSpecificService')}`}
                       />
                     </ListItem>
                     {index < customerAppointments.length - 1 && <Divider component="li" />}
                   </React.Fragment>
                 ))}
               </List>
-
             </>
           ) : (
             <Typography>{t('noAppointmentsMessage')}</Typography>
           )}
         </DialogContent>
-
-
+        <ConfirmationDialog
+          open={confirmationOpen}
+          title={t('deleteAppointmentTitle', 'Delete Appointment')}
+          content={t('deleteAppointmentContent', 'Are you sure you want to delete this appointment?')}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
         <Box sx={{ padding: '16px 24px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#f9f9f9', borderTop: '1px solid #e0e0e0' }}>
           <Typography variant="body1" style={{ fontWeight: 'bold' }}>
-          <Typography variant="body1" style={{ fontWeight: 'bold' }}>
-    {t('doYouWantToBookMore')}
-</Typography>
+            <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+              {t('doYouWantToBookMore')}
+            </Typography>
           </Typography>
         </Box>
-
-
 
         <DialogActions>
           {/* Styled Cancel Button */}
