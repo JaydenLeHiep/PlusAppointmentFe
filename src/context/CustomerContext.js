@@ -7,6 +7,7 @@ import {
     searchCustomersByName, 
     fetchCustomersByBusinessId,
     checkCustomerExists, 
+    addCheckIn
 } from '../lib/apiClientCustomer';
 
 const CustomersContext = createContext();
@@ -97,6 +98,17 @@ export const CustomersProvider = ({ children }) => {
       throw error;
     }
   }, []);
+  // New method for adding a check-in for a customer
+  const addCustomerCheckIn = useCallback(async (checkInDetails) => {
+    try {
+      await addCheckIn(checkInDetails);
+      setAlert({ message: 'Check-in added successfully!', severity: 'success' });
+    } catch (error) {
+      console.error('Error adding check-in:', error);
+      setAlert({ message: 'Failed to add check-in.', severity: 'error' });
+      throw error;
+    }
+  }, []);
 
   const contextValue = {
     customers,
@@ -107,6 +119,7 @@ export const CustomersProvider = ({ children }) => {
     searchCustomers,
     fetchCustomersForBusiness,
     checkIfCustomerExists,
+    addCustomerCheckIn,
     alert,
   };
 
