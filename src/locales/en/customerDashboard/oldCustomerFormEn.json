@@ -3,9 +3,20 @@
     "emailOrPhoneLabel": "Email or Phone",
     "commentLabel": "Comment",
     "finishButton": "Finish",
-    "newCustomerLink": "If you are a new customer, click here",
+    "newCustomerLink": "If you are a new customer, click here!",
     "successMessage": "Appointment successfully created!",
     "errorMessage": "Failed to find customer or add appointment",
-    "loading": "loading"
+    "loading": "loading",
+    "Welcomeback": "Welcome back",
+    "noAppointmentsMessage": "No existing appointments found.",
+    "existingAppointmentsTitle": "Your Existing Appointments",
+    "appointmentInfo": "You have already {{count}} appointment(s):",
+    "services": "Services",
+    "doYouWantToBookMore": "Do you still want to book more?",
+    "cancelButton": "Cancel",
+    "submitButton": "Submit",
+    "appointmentOn": "Appointment on",
+    "at": "at",
+    "noSpecificService": "No specific service"
   }
   
