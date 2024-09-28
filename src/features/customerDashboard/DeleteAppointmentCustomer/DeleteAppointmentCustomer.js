@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Snackbar, Alert } from '@mui/material';
+import { Box } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { StyledTextField, CustomButton, FormContainer } from '../../../styles/CustomerStyle/DeleteCustomerStyles/DeleteAppointmentCustomerStyles';
+import { StyledTextField, CustomButton, FormContainer, BoldTypography, StyledAlert, StyledSnackbar } from '../../../styles/CustomerStyle/DeleteCustomerStyles/DeleteAppointmentCustomerStyles';
 import { useTranslation } from 'react-i18next';
 import CustomerBusinessInfo from '../CustomerBusinessInfo';
 import { fetchBusinessesByName } from '../../../lib/apiClientBusiness';
@@ -70,17 +70,16 @@ const DeleteAppointmentCustomer = () => {
 
             if (customer.customerId) {
                 const appointmentsData = await fetchAppointmentsForCustomer(customer.customerId);
-                const actualAppointments = appointmentsData?.$values ? appointmentsData.$values : (Array.isArray(appointmentsData) ? appointmentsData : []);
+                const actualAppointments = appointmentsData?.$values || [];
 
                 if (actualAppointments.length === 0) {
-                    setNoAppointmentsSnackbarOpen(true); // Show the "no appointments found" Snackbar
+                    setNoAppointmentsSnackbarOpen(true);
                     setAppointments([]);
                 } else {
                     setAppointments(actualAppointments);
                     setViewState('viewAppointments');
                 }
             } else {
-                // Show the "customer not found" Snackbar message
                 setSnackbarMessage(t('customerNotFound'));
                 setSnackbarOpen(true);
             }
@@ -99,14 +98,12 @@ const DeleteAppointmentCustomer = () => {
     const handleDeleteAppointment = async (appointmentId, businessId) => {
         try {
             await deleteAppointmentForCustomer(appointmentId, businessId);
-            // Remove the deleted appointment from the state
             setAppointments((prevAppointments) => prevAppointments.filter(appointment => appointment.appointmentId !== appointmentId));
         } catch (error) {
             console.error('Error deleting appointment:', error.message);
         }
     };
 
-    // Function to close the Snackbars
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
         setNoAppointmentsSnackbarOpen(false);
@@ -116,13 +113,9 @@ const DeleteAppointmentCustomer = () => {
         switch (viewState) {
             case 'inputEmailOrPhone':
                 return (
-                    <FormContainer style={{ marginTop: '100px' }}>
-                        <Box mb={3} textAlign="center">
-                            <Typography variant="body1" style={{ fontSize: '20px', color: '#333', lineHeight: 1.5, fontWeight: 'bold' }}>
-                                {t('insertEmailOrPhone')}
-                            </Typography>
-                        </Box>
-                        <form onSubmit={handleRetrieveAppointment} style={{ width: '100%', maxWidth: '400px' }}>
+                    <FormContainer>
+                        <BoldTypography>{t('insertEmailOrPhone')}</BoldTypography>
+                        <form onSubmit={handleRetrieveAppointment}>
                             <StyledTextField
                                 label={t('emailOrPhoneLabel')}
                                 name="emailOrPhone"
@@ -132,13 +125,7 @@ const DeleteAppointmentCustomer = () => {
                                 margin="normal"
                             />
                             <Box display="flex" justifyContent="center">
-                                <CustomButton
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                >
-                                    {t('retrieveButton')}
-                                </CustomButton>
+                                <CustomButton type="submit">{t('retrieveButton')}</CustomButton>
                             </Box>
                         </form>
                     </FormContainer>
@@ -159,6 +146,7 @@ const DeleteAppointmentCustomer = () => {
             </Box>
         );
     }
+
     if (error) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -166,6 +154,7 @@ const DeleteAppointmentCustomer = () => {
             </Box>
         );
     }
+
     return (
         <DashboardContainer>
             <CustomerBusinessInfo
@@ -176,28 +165,24 @@ const DeleteAppointmentCustomer = () => {
             <CustomContainer>
                 {renderContent()}
             </CustomContainer>
-            {/* Snackbar Component for Customer Not Found */}
-            <Snackbar
+            <StyledSnackbar
                 open={snackbarOpen}
-                autoHideDuration={4000} // The Snackbar will close automatically after 4 seconds
+                autoHideDuration={4000}
                 onClose={handleSnackbarClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
-                <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
+                <StyledAlert onClose={handleSnackbarClose} severity="error">
                     {snackbarMessage}
-                </Alert>
-            </Snackbar>
-            {/* Snackbar Component for No Appointments Found */}
-            <Snackbar
+                </StyledAlert>
+            </StyledSnackbar>
+            <StyledSnackbar
                 open={noAppointmentsSnackbarOpen}
-                autoHideDuration={4000} // The Snackbar will close automatically after 4 seconds
+                autoHideDuration={4000}
                 onClose={handleSnackbarClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
-                <Alert onClose={handleSnackbarClose} severity="info" sx={{ width: '100%' }}>
+                <StyledAlert onClose={handleSnackbarClose} severity="info">
                     {t("noAppointmentsFound")}
-                </Alert>
-            </Snackbar>
+                </StyledAlert>
+            </StyledSnackbar>
         </DashboardContainer>
     );
 };
