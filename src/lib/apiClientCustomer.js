@@ -201,3 +201,18 @@ export const fetchCustomerById = async (customerId) => {
 
   return await handleApiResponse(response);
 };
+
+// Add a new check-in for a customer
+export const addCheckIn = async (checkInDetails) => {
+  const checkInApiUrl = `${apiBaseUrl}/api/checkin/add`;
+  
+  const response = await fetch(checkInApiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(checkInDetails),
+  });
+
+  return await handleApiResponse(response);
+};
