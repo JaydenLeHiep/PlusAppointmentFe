@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Snackbar, Alert, Box, Typography, CircularProgress, Backdrop, Button } from '@mui/material';
-//import { fetchCustomerByEmailOrPhoneAndBusinessId } from '../../lib/apiClientCustomer';
-import { fetchCustomerByEmailOrPhoneAndBusinessId } from '../../../../lib/apiClientCustomer';
+import { Snackbar, Alert, Box, Typography, CircularProgress, Backdrop } from '@mui/material';
+import { fetchCustomerByEmailOrPhoneAndBusinessId } from '../../../lib/apiClientCustomer';
 import {
   FormContainer,
   StyledTextField,
   FormTitle,
   NewCustomerLink,
-} from '../../../../styles/CustomerStyle/OldCustomerFormStyle';
+  CustomButton
+} from '../../../styles/CustomerStyle/OldCustomerFormStyle';
 import { useTranslation } from 'react-i18next';
-import CheckInInfo from '../CheckInInfo';
+import CheckInInfo from './CheckInInfo';
 
 const CheckInOldCustomer = ({ businessId, onNewCustomer }) => {
   const { t } = useTranslation('checkInOldCustomer');
@@ -17,7 +17,7 @@ const CheckInOldCustomer = ({ businessId, onNewCustomer }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [fetchedCustomer, setFetchedCustomer] = useState(null); // Store the fetched customer
+  const [fetchedCustomer, setFetchedCustomer] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -34,11 +34,10 @@ const CheckInOldCustomer = ({ businessId, onNewCustomer }) => {
     setIsSubmitting(true);
 
     try {
-      // Fetch the customer using email or phone
       const customer = await fetchCustomerByEmailOrPhoneAndBusinessId(emailOrPhone, businessId);
 
       if (customer.customerId) {
-        setFetchedCustomer(customer); // Store the fetched customer
+        setFetchedCustomer(customer);
         setSuccess(true);
       } else {
         throw new Error(t('errorMessage'));
@@ -52,19 +51,26 @@ const CheckInOldCustomer = ({ businessId, onNewCustomer }) => {
   };
 
   const handleNewCustomerClick = () => {
-    if (isSubmitting) return; // Prevent interaction when submitting
-    onNewCustomer(); // Proceed to the NewCustomerForm
+    if (isSubmitting) return;
+    onNewCustomer();
   };
-  if (success && fetchedCustomer) {
-    // Render CheckInInfo component if the customer is successfully fetched
-    return <CheckInInfo customerName={fetchedCustomer.name} customerId={fetchedCustomer.customerId} businessId={businessId}/>;
-  }
 
+  // If success is true, navigate to CheckInInfo and pass onBack to handle the back action
+  if (success && fetchedCustomer) {
+    return (
+      <CheckInInfo
+        customerName={fetchedCustomer.name}
+        customerId={fetchedCustomer.customerId}
+        businessId={businessId}
+        onBack={() => setSuccess(false)} // Set success to false to go back to the current view
+      />
+    );
+  }
 
   return (
     <FormContainer>
-      <FormTitle>{t('formTitle')}</FormTitle>
-      <form onSubmit={handleFormSubmit}>
+      <FormTitle>{t('welcomeCheckIn')}</FormTitle>
+      <form onSubmit={handleFormSubmit} style={{ width: '100%', maxWidth: '400px' }}>
         <StyledTextField
           label={t('emailOrPhoneLabel')}
           name="emailOrPhone"
@@ -75,15 +81,15 @@ const CheckInOldCustomer = ({ businessId, onNewCustomer }) => {
           disabled={isSubmitting}
         />
 
-        <Box display="flex" justifyContent="center" mt={2}>
-          <Button
+        <Box display="flex" justifyContent="center">
+          <CustomButton
             type="submit"
             variant="contained"
             color="primary"
-            disabled={isSubmitting}
+            disabled={!emailOrPhone || isSubmitting}
           >
-            {t('checkInButton')}
-          </Button>
+            {t('submitButton')}
+          </CustomButton>
         </Box>
 
         <Box mt={2} textAlign="center">
@@ -113,7 +119,6 @@ const CheckInOldCustomer = ({ businessId, onNewCustomer }) => {
         </Alert>
       </Snackbar>
 
-      {/* Only show Backdrop during form submission */}
       <Backdrop
         open={isSubmitting}
         style={{ zIndex: 9999, color: '#fff', display: 'flex', flexDirection: 'column' }}

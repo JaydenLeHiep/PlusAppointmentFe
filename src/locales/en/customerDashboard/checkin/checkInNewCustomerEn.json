@@ -1,0 +1,16 @@
+{
+    "yourInformation": "Your Information",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "confirmEmail": "Confirm Email",
+    "phoneLabel": "Phone",
+    "confirmPhone": "Confirm Phone",
+    "readAndAcceptTerms": "Read and Accept Terms",
+    "submitButton": "Submit",
+    "successSnackbar": "Customer added successfully!",
+    "emailMismatchError": "Email and Confirm Email do not match.",
+    "phoneMismatchError": "Phone and Confirm Phone do not match.",
+    "errorSnackbar": "An error occurred. Please try again.",
+    "loading": "Submitting, please wait...",
+    "addedSuccessfully": "Added new Customer successfully!"
+  }

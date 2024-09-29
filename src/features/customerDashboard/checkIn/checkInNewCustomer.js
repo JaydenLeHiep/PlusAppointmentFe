@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { Snackbar, Alert, Box, Typography, CircularProgress, Checkbox, FormControlLabel, Backdrop } from '@mui/material';
-import { useCustomersContext } from '../../../../context/CustomerContext';
+import { Snackbar, Alert, Box, Typography, CircularProgress, Checkbox, FormControlLabel, Backdrop, IconButton } from '@mui/material';
+import { ArrowBack } from '@mui/icons-material';
+import { useCustomersContext } from '../../../context/CustomerContext';
 import {
   CustomButton,
   FormContainer,
   StyledTextField,
   FormTitle,
   NewCustomerLink,
-} from '../../../../styles/CustomerStyle/NewCustomerFormStyle';
-import Terms from '../../Terms';
+} from '../../../styles/CustomerStyle/NewCustomerFormStyle';
+import Terms from '../Terms';
 import { useTranslation } from 'react-i18next';
 
-const CheckInNewCustomer = ({ businessId, onCustomerAdded }) => {
+const CheckInNewCustomer = ({ businessId, onCustomerAdded, onBack }) => {
   const { t } = useTranslation('checkInNewCustomer');
   const { addNewCustomer } = useCustomersContext();
 
@@ -58,13 +59,20 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded }) => {
       setSubmitSuccess(true);
       setSubmitError('');
 
-      // Redirect to old customer form with the added customer details
-      onCustomerAdded(newCustomer);
+      // Allow the backdrop to stay visible for a short while
+      setTimeout(() => {
+        setIsSubmitting(false); // Close Backdrop after some time
+        onCustomerAdded(newCustomer);
+      }, 3000); // Adjust this delay as necessary (1 second delay here)
     } catch (error) {
       console.error('Failed to add customer:', error);
       const errorMessage = error.response?.data?.message || error.message || t('errorSnackbar');
       setSubmitError(errorMessage);
-      setIsSubmitting(false);
+
+      // Maintain visibility of the backdrop for a bit before closing
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 3000); // Adjust this delay as necessary (1 second delay here)
     }
   };
 
@@ -76,9 +84,23 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded }) => {
     setTermsOpen(false);
   };
 
+  const handleBackClick = () => {
+    onBack();
+  };
+
   return (
-    <FormContainer>
-      <FormTitle>{t('formTitle')}</FormTitle>
+    <FormContainer style={{ marginBottom: '50px' }}>
+      <Box display="flex" alignItems="center" mb={2} width="110%" justifyContent="center" position="relative">
+        {/* Back Arrow */}
+        <IconButton
+          onClick={handleBackClick}
+          edge="start"
+          sx={{ position: 'absolute', left: 0 }} 
+        >
+          <ArrowBack />
+        </IconButton>
+        <FormTitle style={{fontSize: '30px'}}>{t('yourInformation')}</FormTitle>
+      </Box>
       <form onSubmit={handleFormSubmit} style={{ width: '100%', maxWidth: '400px' }}>
         <StyledTextField
           label={t('nameLabel')}
@@ -171,15 +193,12 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded }) => {
         </Alert>
       </Snackbar>
 
-      <Terms
-        open={termsOpen}
-        handleClose={handleCloseTerms}
-      />
+      <Terms open={termsOpen} handleClose={handleCloseTerms} />
 
-      <Backdrop open={isSubmitting} style={{ zIndex: 9999, color: '#fff', display: 'flex', flexDirection: 'column' }}>
+      <Backdrop open={isSubmitting} style={{ zIndex: 9999, color: '#fff', position: 'fixed', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
         <CircularProgress color="inherit" />
         <Typography variant="h6" style={{ marginTop: '20px', color: '#fff' }}>
-          {t('Submitting, please wait...')}
+          {t('addedSuccessfully')}
         </Typography>
       </Backdrop>
     </FormContainer>
