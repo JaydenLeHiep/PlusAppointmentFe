@@ -18,7 +18,7 @@ const NotificationPopover = ({ open, anchorEl, onClose, notifications }) => {
     switch (type) {
       case "Add":
         return { icon: <AddCircleOutlineIcon style={{ color: 'green' }} />, color: 'green' };
-      case "Delete":
+      case "Cancle":
         return { icon: <DeleteOutlineIcon style={{ color: 'red' }} />, color: 'red' };
       case "Update":
         return { icon: <UpdateIcon style={{ color: 'orange' }} />, color: 'orange' };

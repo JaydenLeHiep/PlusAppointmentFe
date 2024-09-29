@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, IconButton, Link } from '@mui/material';
-import FacebookIcon from '@mui/icons-material/Facebook';
+import { Box, IconButton} from '@mui/material';
+
 import EnglishFlag from '../assets/united-kingdom.png';
 import VietnameseFlag from '../assets/vietnam.png';
 import GermanFlag from '../assets/germany.png'
@@ -56,28 +56,7 @@ const Footer = () => {
           gap: '0.5rem',
         }}
       >
-        <IconButton
-          component="a"
-          href="https://www.facebook.com/hiep.leduyy/"
-          target="_blank"
-          aria-label="Hiep's Facebook link"
-        >
-          <FacebookIcon sx={{ color: '#4267B2', fontSize: '32px' }} />
-        </IconButton>
-        <Link
-          href="https://www.facebook.com/hiep.leduyy/"
-          target="_blank"
-          sx={{
-            color: '#4267B2',
-            fontSize: '1rem',
-            textDecoration: 'none',
-            '&:hover': {
-              textDecoration: 'underline',
-            },
-          }}
-        >
-          Hiệp
-        </Link>
+        
       </Box>
     </Box>
   );
