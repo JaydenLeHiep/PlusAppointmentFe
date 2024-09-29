@@ -1,0 +1,20 @@
+{
+    "welcomeMessage": "Welcome, {{name}}!",
+    "yourAppointments": "Your Appointments:",
+    "loadingAppointments": "Loading appointments...",
+    "appointmentsError": "Failed to load appointments.",
+    "dateLabel": "Date",
+    "timeLabel": "Time",
+    "serviceLabel": "Service",
+    "durationLabel": "Duration",
+    "priceLabel": "Price",
+    "staffLabel": "Staff",
+    "totalPriceLabel": "Total Price",
+    "noAppointments": "No appointments found.",
+    "chooseCheckInType": "Choose your check-in type:",
+    "walkInLabel": "Walk In",
+    "onlineLabel": "Online",
+    "checkInButton": "Check In",
+    "checkInSuccessful": "Check-in successful!",
+    "checkInError": "Failed to check in. Please try again."
+  }

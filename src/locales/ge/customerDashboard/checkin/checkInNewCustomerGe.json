@@ -1,0 +1,16 @@
+{
+    "yourInformation": "Ihre Informationen",
+    "nameLabel": "Name",
+    "emailLabel": "E-Mail",
+    "confirmEmail": "E-Mail bestätigen",
+    "phoneLabel": "Telefon",
+    "confirmPhone": "Telefon bestätigen",
+    "readAndAcceptTerms": "Lesen und akzeptieren Sie die Bedingungen",
+    "submitButton": "Abgeben",
+    "successSnackbar": "Kunde erfolgreich hinzugefügt!",
+    "emailMismatchError": "E-Mail und Bestätigungs-E-Mail stimmen nicht überein.",
+    "phoneMismatchError": "Telefon und Bestätigungstelefon stimmen nicht überein.",
+    "errorSnackbar": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+    "loading": "Einreichen, bitte warten...",
+    "addedSuccessfully": "Neuer Kunde erfolgreich hinzugefügt!"
+  }

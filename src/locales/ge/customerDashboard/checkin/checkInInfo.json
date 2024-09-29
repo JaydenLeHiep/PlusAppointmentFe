@@ -1,0 +1,20 @@
+{
+    "welcomeMessage": "Willkommen, {{name}}!",
+    "yourAppointments": "Ihre Termine:",
+    "loadingAppointments": "Termine werden geladen...",
+    "appointmentsError": "Termine konnten nicht geladen werden.",
+    "dateLabel": "Datum",
+    "timeLabel": "Zeit",
+    "serviceLabel": "Dienstleistung",
+    "durationLabel": "Dauer",
+    "priceLabel": "Preis",
+    "staffLabel": "Mitarbeiter",
+    "totalPriceLabel": "Gesamtpreis",
+    "noAppointments": "Keine Termine gefunden.",
+    "chooseCheckInType": "Wählen Sie Ihren Check-in-Typ:",
+    "walkInLabel": "Vor Ort",
+    "onlineLabel": "Online",
+    "checkInButton": "Einchecken",
+    "checkInSuccessful": "Check-in erfolgreich!",
+    "checkInError": "Check-in fehlgeschlagen. Bitte versuchen Sie es erneut."
+  }

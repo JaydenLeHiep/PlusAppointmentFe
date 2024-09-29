@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import CustomerBusinessInfo from '../CustomerBusinessInfo';
 import { fetchBusinessesByName } from '../../../lib/apiClientBusiness';
-import CheckInNewCustomer from './checkInNewCustomer/checkInNewCustomer';
-import CheckInOldCustomer from './checkInOldCustomer/checkInOldCustomer';
+import CheckInNewCustomer from './checkInNewCustomer';
+import CheckInOldCustomer from './checkInOldCustomer';
+import CheckInInfo from './CheckInInfo';
+import { MainContainer } from '../../../styles/CustomerStyle/Checkin/CheckInDashboardStyle';
 
 const CheckInDashboard = () => {
     const location = useLocation();
@@ -13,8 +15,8 @@ const CheckInDashboard = () => {
     const [businessInfo, setBusinessInfo] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [view, setView] = useState(''); // State to control which component to show
-    const [customerData, setCustomerData] = useState(null); // Store customer data to pass between components
+    const [view, setView] = useState('oldCustomer');
+    const [customerData, setCustomerData] = useState(null);
 
     useEffect(() => {
         const fetchBusiness = async () => {
@@ -61,71 +63,44 @@ const CheckInDashboard = () => {
         );
     }
 
-    // Display different views based on `view` state
-    if (view === 'newCustomer') {
-        return (
-            <CheckInNewCustomer
-                businessId={businessInfo.businessId}
-                onCustomerAdded={(newCustomer) => {
-                    setCustomerData(newCustomer);
-                    setView('oldCustomer');
-                }}
-            />
-        );
-    }
-
-    if (view === 'oldCustomer') {
-        return (
-            <CheckInOldCustomer
-                businessId={businessInfo.businessId}
-                customerData={customerData}
-                onNewCustomer={() => setView('newCustomer')}
-            />
-        );
-    }
+    const handleBackToDashboard = () => {
+        setView('oldCustomer');
+    };
 
     return (
-        <div style={{ textAlign: 'center', padding: '20px' }}>
-            {/* Display Welcome Message */}
-            
-
-            {/* Display Customer Business Info */}
+        <>
             <CustomerBusinessInfo businessInfo={businessInfo} />
-            <h1>Welcome to {businessName}</h1>
+            <MainContainer>
+                {view === 'oldCustomer' && (
+                    <CheckInOldCustomer
+                        businessId={businessInfo.businessId}
+                        customerData={customerData}
+                        onNewCustomer={() => setView('newCustomer')}
+                    />
+                )}
 
-            {/* Buttons for New or Existing Customers */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
-                <button
-                    style={{
-                        padding: '10px 20px',
-                        fontSize: '16px',
-                        cursor: 'pointer',
-                        backgroundColor: '#007bff',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '5px'
-                    }}
-                    onClick={() => setView('newCustomer')}
-                >
-                    Are you a new customer?
-                </button>
-                <button
-                    style={{
-                        padding: '10px 20px',
-                        fontSize: '16px',
-                        cursor: 'pointer',
-                        backgroundColor: '#007bff',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '5px'
-                    }}
-                    onClick={() => setView('oldCustomer')}
-                >
-                    Are you already a customer with us?
-                </button>
-            </div>
-        </div>
+                {view === 'newCustomer' && (
+                    <CheckInNewCustomer
+                        businessId={businessInfo.businessId}
+                        onCustomerAdded={(newCustomer) => {
+                            setCustomerData(newCustomer);
+                            setView('oldCustomer');
+                        }}
+                        onBack={handleBackToDashboard}
+                    />
+                )}
+
+                {view === 'checkInInfo' && (
+                    <CheckInInfo
+                        customerName={customerData?.name}
+                        customerId={customerData?.customerId}
+                        businessId={businessInfo.businessId}
+                        onBack={handleBackToDashboard} 
+                    />
+                )}
+            </MainContainer>
+        </>
     );
-}
+};
 
 export default CheckInDashboard;
