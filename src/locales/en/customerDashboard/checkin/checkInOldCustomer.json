@@ -1,0 +1,9 @@
+{
+    "welcomeCheckIn": "Welcome Check-In",
+    "emailOrPhoneLabel": "Email or Phone Number",
+    "submitButton": "Submit",
+    "newCustomerLink": "If you are a new customer, click here!",
+    "successMessage": "Welcome back, {{name}}! You have successfully checked in.",
+    "errorMessage": "Could not find a customer with that information. Please try again.",
+    "loading": "Submitting, please wait..."
+}

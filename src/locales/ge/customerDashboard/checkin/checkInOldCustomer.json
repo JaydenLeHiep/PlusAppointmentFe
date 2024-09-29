@@ -1,0 +1,9 @@
+{
+    "welcomeCheckIn": "Willkommen zum Check-In",
+    "emailOrPhoneLabel": "E-Mail oder Telefonnummer",
+    "submitButton": "Absenden",
+    "newCustomerLink": "Wenn Sie ein neuer Kunde sind, klicken Sie hier!",
+    "successMessage": "Willkommen zurück, {{name}}! Sie haben sich erfolgreich eingecheckt.",
+    "errorMessage": "Es konnte kein Kunde mit diesen Informationen gefunden werden. Bitte versuchen Sie es erneut.",
+    "loading": "Wird gesendet, bitte warten..."
+  }

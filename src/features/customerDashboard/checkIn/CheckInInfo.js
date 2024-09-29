@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, FormControl, RadioGroup, FormControlLabel, Radio, CircularProgress, Snackbar, Alert, List, ListItem, ListItemText, Divider } from '@mui/material';
+import { Box, Typography, FormControl, RadioGroup, FormControlLabel, Radio, CircularProgress, Snackbar, Alert, IconButton } from '@mui/material';
+import { ArrowBack } from '@mui/icons-material';
 import { useCustomersContext } from '../../../context/CustomerContext';
 import { useAppointmentsContext } from '../../../context/AppointmentsContext';
+import { StyledButton } from '../../../styles/CustomerStyle/Checkin/CheckInDashboardStyle';
 import ThankYouCheckIn from './ThankYouCheckIn';
+import {
+  OverviewContainer,
+  OverviewItem,
+  StyledListItemText,
+} from '../../../styles/CustomerStyle/AppointmentOverViewPageStyle';
+import { useTranslation } from 'react-i18next';
 
-const CheckInInfo = ({ customerName, customerId, businessId }) => {
+const CheckInInfo = ({ customerName, customerId, businessId, onBack }) => {
+  const { t } = useTranslation('checkInInfo');
   const { addCustomerCheckIn } = useCustomersContext();
   const { fetchAppointmentsForCustomer } = useAppointmentsContext();
 
@@ -26,14 +35,14 @@ const CheckInInfo = ({ customerName, customerId, businessId }) => {
         setAppointmentsError('');
       } catch (error) {
         console.error('Error fetching appointments:', error);
-        setAppointmentsError('Failed to load appointments.');
+        setAppointmentsError(t('appointmentsError'));
       } finally {
         setLoadingAppointments(false);
       }
     };
 
     getAppointments();
-  }, [customerId, fetchAppointmentsForCustomer]);
+  }, [customerId, fetchAppointmentsForCustomer, t]);
 
   const handleCheckInTypeChange = (event) => {
     setCheckInType(event.target.value);
@@ -41,7 +50,7 @@ const CheckInInfo = ({ customerName, customerId, businessId }) => {
 
   const handleCheckInSubmit = async () => {
     if (!checkInType) {
-      setSubmitError('Please select a check-in type');
+      setSubmitError(t('checkInError'));
       return;
     }
 
@@ -60,9 +69,9 @@ const CheckInInfo = ({ customerName, customerId, businessId }) => {
       setSubmitError('');
       setTimeout(() => {
         setShowThankYouCheckIn(true);
-      }, 500); // Delay to give time for Snackbar to be displayed
+      }, 500);
     } catch (error) {
-      setSubmitError('Failed to check in. Please try again.');
+      setSubmitError(t('checkInError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -72,9 +81,31 @@ const CheckInInfo = ({ customerName, customerId, businessId }) => {
     return <ThankYouCheckIn customerName={customerName} />;
   }
 
+  const handleBackClick = () => {
+    onBack();
+  };
+
   return (
     <Box textAlign="center" mt={4}>
-      <Typography variant="h4">Welcome, {customerName}!</Typography>
+      {/* Display the Welcome message */}
+      <Typography variant="h4" gutterBottom>
+        {t('welcomeMessage', { name: customerName })}
+      </Typography>
+
+      {/* Display Appointments Header with Back Button */}
+      <Box display="flex" alignItems="center" mb={2} width="100%" justifyContent="center" position="relative">
+        <IconButton
+          onClick={handleBackClick}
+          edge="start"
+          sx={{ position: 'absolute', left: 0 }}
+        >
+          <ArrowBack />
+        </IconButton>
+
+        <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center', fontWeight: 'bold' }}>
+          {t('yourAppointments')}
+        </Typography>
+      </Box>
 
       {/* Display Appointments */}
       <Box mt={3}>
@@ -83,53 +114,74 @@ const CheckInInfo = ({ customerName, customerId, businessId }) => {
         ) : appointmentsError ? (
           <Typography color="error">{appointmentsError}</Typography>
         ) : appointments.length > 0 ? (
-          <>
-            <Typography variant="h6" gutterBottom>Your Appointments:</Typography>
-            <List>
-              {appointments.map((appointment, index) => (
-                <React.Fragment key={appointment.appointmentId}>
-                  <ListItem>
-                    <ListItemText
-                      primary={`Appointment on ${new Date(appointment.appointmentTime).toLocaleDateString()} at ${new Date(appointment.appointmentTime).toLocaleTimeString()}`}
-                      secondary={`Service(s): ${appointment.services?.$values?.map(service => service.name).join(', ') || 'No specific service'}`}
+          <OverviewContainer>
+            {appointments.map((appointment, index) => (
+              <OverviewItem key={index} sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', padding: 2, marginBottom: 2 }}>
+                <Typography variant="h6">{`${t('dateLabel')}: ${new Date(appointment.appointmentTime).toLocaleDateString()}`}</Typography>
+                <Typography variant="body2">
+                  {`${t('timeLabel')}: ${new Date(appointment.appointmentTime).toLocaleTimeString()}`}
+                </Typography>
+                <Box mt={1}>
+                  {(Array.isArray(appointment.services.$values) ? appointment.services.$values : []).map((service, idx) => (
+                    <StyledListItemText
+                      key={idx}
+                      primary={`${t('serviceLabel')}: ${service.name}`}
+                      secondary={`${t('durationLabel')}: ${service.duration || 'N/A'} | ${t('priceLabel')}: €${service.price || 'N/A'} | ${t('staffLabel')}: ${service.staffName}`}
                     />
-                  </ListItem>
-                  {index < appointments.length - 1 && <Divider component="li" />}
-                </React.Fragment>
-              ))}
-            </List>
-          </>
+                  ))}
+                </Box>
+                <Typography variant="body2" sx={{ fontWeight: 'bold', marginTop: 1 }}>
+                  {`${t('totalPriceLabel')}: €${appointment.services.$values.reduce((total, service) => total + (service.price || 0), 0).toFixed(2)}`}
+                </Typography>
+              </OverviewItem>
+            ))}
+          </OverviewContainer>
         ) : (
-          <Typography>No appointments found.</Typography>
+          <OverviewContainer style={{ marginTop: '50px', marginBottom: '50px' }}>
+            <OverviewItem>
+              <StyledListItemText primary={t('noAppointments')} />
+            </OverviewItem>
+          </OverviewContainer>
         )}
       </Box>
 
       {/* Check-in Form */}
-      <Box mt={3}>
-        <FormControl component="fieldset">
+      <Box>
+        <FormControl component="fieldset" fullWidth>
           <Typography variant="h6" gutterBottom>
-            Choose your check-in type:
+            {t('chooseCheckInType')}
           </Typography>
           <RadioGroup
             row
             value={checkInType}
             onChange={handleCheckInTypeChange}
+            sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}
           >
-            <FormControlLabel value="WalkIn" control={<Radio />} label="Walk In" />
-            <FormControlLabel value="Online" control={<Radio />} label="Online" />
+            <FormControlLabel
+              value="WalkIn"
+              control={<Radio />}
+              label={t('walkInLabel')}
+              sx={{ margin: 0 }}
+            />
+            <FormControlLabel
+              value="Online"
+              control={<Radio />}
+              label={t('onlineLabel')}
+              sx={{ margin: 0 }}
+            />
           </RadioGroup>
         </FormControl>
       </Box>
 
-      <Box mt={3}>
-        <Button
+      <Box mt={2} mb={4}>
+        <StyledButton
           variant="contained"
           color="primary"
           onClick={handleCheckInSubmit}
           disabled={isSubmitting || !checkInType}
         >
-          {isSubmitting ? <CircularProgress size={24} color="inherit" /> : 'Check In'}
-        </Button>
+          {isSubmitting ? <CircularProgress size={24} color="inherit" /> : t('checkInButton')}
+        </StyledButton>
       </Box>
 
       {/* Snackbar for success */}
@@ -139,7 +191,7 @@ const CheckInInfo = ({ customerName, customerId, businessId }) => {
         onClose={() => setSubmitSuccess(false)}
       >
         <Alert severity="success" sx={{ width: '100%' }}>
-          Check-in successful!
+          {t('checkInSuccessful')}
         </Alert>
       </Snackbar>
 

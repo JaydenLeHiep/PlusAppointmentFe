@@ -39,6 +39,15 @@ import deleteAppointmentCustomerGe from '../locales/ge/customerDashboard/deleteA
 import AppointmentOverViewEn from '../locales/en/customerDashboard/appointmentOverViewEn.json'
 import AppointmentOverViewGe from '../locales/ge/customerDashboard/appointmentOverviewGe.json';
 
+import CheckInOldCustomerEn from '../locales/en/customerDashboard/checkin/checkInOldCustomer.json';
+import CheckInOldCustomerGe from '../locales/ge/customerDashboard/checkin/checkInOldCustomer.json';
+
+import CheckInNewCustomerEn from '../locales/en/customerDashboard/checkin/checkInNewCustomerEn.json';
+import CheckInNewCustomerGe from '../locales/ge/customerDashboard/checkin/checkInNewCustomerGe.json';
+
+import CheckInInfoEn from '../locales/en/customerDashboard/checkin/checkInInfo.json';
+import CheckInInfoGe from '../locales/ge/customerDashboard/checkin/checkInInfo.json';
+
 // owner dashboard
 
 import ownerDashboardEn from '../locales/en/ownerDashboard/ownerDashboardEn.json'
@@ -236,7 +245,10 @@ i18n
         notAvailableTime: notAvailableTimeEn,
         changePasswordForm: changePasswordFormEn,
         deleteAppointmentCustomer: deleteAppointmentCustomerEn,
-        appointmentOverview: AppointmentOverViewEn
+        appointmentOverview: AppointmentOverViewEn,
+        checkInOldCustomer: CheckInOldCustomerEn,
+        checkInNewCustomer: CheckInNewCustomerEn,
+        checkInInfo: CheckInInfoEn
         // Add other namespaces for English
       },
       vi: {
@@ -316,7 +328,10 @@ i18n
         changePasswordForm: changePasswordFormGe,
         confirmationDialog: confirmationDialogGe,
         deleteAppointmentCustomer: deleteAppointmentCustomerGe,
-        appointmentOverview: AppointmentOverViewGe
+        appointmentOverview: AppointmentOverViewGe,
+        checkInOldCustomer: CheckInOldCustomerGe,
+        checkInNewCustomer: CheckInNewCustomerGe,
+        checkInInfo: CheckInInfoGe
       },
     },
     lng: 'en', // default language
