@@ -16,11 +16,11 @@ const NotificationPopover = ({ open, anchorEl, onClose, notifications }) => {
   
   const getIconAndColor = (type) => {
     switch (type) {
-      case 0:
+      case "Add":
         return { icon: <AddCircleOutlineIcon style={{ color: 'green' }} />, color: 'green' };
-      case 1:
+      case "Delete":
         return { icon: <DeleteOutlineIcon style={{ color: 'red' }} />, color: 'red' };
-      case 2:
+      case "Update":
         return { icon: <UpdateIcon style={{ color: 'orange' }} />, color: 'orange' };
       default:
         return { icon: null, color: 'black' };

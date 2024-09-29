@@ -17,6 +17,8 @@ import { NotificationsProvider } from './context/NotificationsContext';
 import { NotAvailableTimeProvider } from './context/NotAvailableTimeContext';
 import ChangePasswordForm from './features/ownerDashboard/ChangePasswordForm';
 import { OpeningHoursProvider } from './context/OpeningHoursContext';
+import DeleteAppointmentCustomer from './features/customerDashboard/DeleteAppointmentCustomer/DeleteAppointmentCustomer';
+import CheckInDashboard from './features/customerDashboard/checkIn/CheckInDashboard';
 import './utils/i18n'
 
 const App = () => {
@@ -47,10 +49,12 @@ const App = () => {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
                         <Route path="/customer-dashboard" element={<PCDashboard />} />
+                        <Route path="/customer-checkin-dashboard" element={<CheckInDashboard />} />
                         <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
                         <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
                         <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
                         <Route path="/change-password" element={isAuthenticated ? <ChangePasswordForm /> : <Navigate to="/login" />} />
+                        <Route path="/delete-appointment-customer" element={<DeleteAppointmentCustomer />} />
                       </Routes>
                     </OpeningHoursProvider>
                   </NotificationsProvider>

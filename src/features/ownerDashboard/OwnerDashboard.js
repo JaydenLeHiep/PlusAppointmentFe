@@ -31,7 +31,7 @@ const OwnerDashboard = () => {
   const { customers, fetchCustomersForBusiness } = useCustomersContext();
   const { services, categories, fetchServices, fetchCategories } = useServicesContext();
   const { notAvailableDates, fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext();
-  const { notifications, fetchAllNotifications } = useNotificationsContext(); 
+  const { notifications, fetchAllNotifications } = useNotificationsContext();
   const { notAvailableTimes, fetchAllNotAvailableTimesByBusiness } = useNotAvailableTimeContext();
 
   const [businesses, setBusinesses] = useState([]);
@@ -39,8 +39,8 @@ const OwnerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const connectionRef = useRef(null);
-  const [newNotificationMessage, setNewNotificationMessage] = useState(''); 
-  const [snackbarOpen, setSnackbarOpen] = useState(false); 
+  const [newNotificationMessage, setNewNotificationMessage] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { t } = useTranslation('ownerDashboard');
   useEffect(() => {
     const loadBusinesses = async () => {
@@ -131,16 +131,38 @@ const OwnerDashboard = () => {
         connectionRef.current = newConnection;
 
         // Listen for appointment updates
-        newConnection.on('ReceiveAppointmentUpdate', async (message) => {
-          console.log('New appointment id received via SignalR:', message);
+        newConnection.on('ReceiveAppointmentUpdate', (data) => {
+          const { appointment } = data;
+
+
+          // Convert the services array to match the existing format
+          const normalizedAppointment = {
+              ...appointment,
+              services: {
+                  $values: appointment.services || [] // Ensure services is wrapped in $values
+              }
+          };
+
           if (selectedBusiness && selectedBusiness.businessId) {
-            await fetchAppointmentsForBusiness(selectedBusiness.businessId); // Refresh the appointments
+              setAppointments((prevAppointments) => {
+                  const appointmentExists = prevAppointments.some((appt) => appt.appointmentId === normalizedAppointment.appointmentId);
+
+                  if (appointmentExists) {
+
+                      return prevAppointments;
+                  }
+
+
+
+                  return [...prevAppointments, normalizedAppointment];
+              });
           }
-        });
+      });
+
+
 
         // Listen for notification updates
         newConnection.on('ReceiveNotificationUpdate', async (message) => {
-          console.log('New notification message received:', message);
           if (selectedBusiness && selectedBusiness.businessId) {
             await fetchAllNotifications(selectedBusiness.businessId) // Refresh the appointments
             setNewNotificationMessage(t('notifications.newNotification')); // Set the message for the snackbar
@@ -202,6 +224,14 @@ const OwnerDashboard = () => {
             await fetchAllNotAvailableTimesByBusiness(selectedBusiness.businessId); // Refresh not available times
           }
         });
+
+        // Listen for appointment deletion in customer
+        newConnection.on('ReceiveAppointmentForCustomerDeleted', (appointmentId) => {
+          console.log('Appointment deleted via SignalR:', appointmentId);
+          setAppointments(prevAppointments =>
+              prevAppointments.filter(appt => appt.appointmentId !== appointmentId)  // Remove deleted appointment
+          );
+      });
       } catch (error) {
         console.error('Error connecting to SignalR hub:', error);
       }
@@ -216,6 +246,7 @@ const OwnerDashboard = () => {
     };
   }, [
     selectedBusiness,
+    appointments,
     fetchAppointmentsForBusiness,
     fetchAllStaff,
     fetchServices,
@@ -223,7 +254,7 @@ const OwnerDashboard = () => {
     fetchAllNotAvailableDatesByBusiness,
     fetchAllNotAvailableTimesByBusiness,
     setAppointments,
-    fetchAllNotifications, 
+    fetchAllNotifications,
     t
   ]);
 
@@ -235,6 +266,7 @@ const OwnerDashboard = () => {
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
+
 
 
   return (
@@ -261,7 +293,7 @@ const OwnerDashboard = () => {
                   customers={customers}
                   notAvailableDates={notAvailableDates}
                   notAvailableTimes={notAvailableTimes}
-                  notifications={notifications} 
+                  notifications={notifications}
                 />
 
                 <AppointmentList
@@ -273,7 +305,7 @@ const OwnerDashboard = () => {
                 />
               </>
             ) : (
-              <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick}  />
+              <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />
             )}
           </StyledCard>
         </ContentContainer>
@@ -285,7 +317,7 @@ const OwnerDashboard = () => {
         open={snackbarOpen}
         onClose={handleSnackbarClose}
         message={newNotificationMessage}
-        autoHideDuration={10000} 
+        autoHideDuration={10000}
       />
     </RootContainer>
   );

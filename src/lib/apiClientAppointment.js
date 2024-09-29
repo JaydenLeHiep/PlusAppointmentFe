@@ -7,6 +7,15 @@ const appointmentApiUrl = `${apiBaseUrl}/api/appointments`;
 
 //Api appointments
 
+// Utility function to handle API responses
+const handleApiResponse = async (response) => {
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || 'API request failed');
+  }
+  return data;
+};
+
 export const fetchAppointments = async (businessId) => {
   if (!businessId) {
     throw new Error('Business ID is required');
@@ -169,4 +178,28 @@ export const fetchNotAvailableTimeSlots = async (staffId, date) => {
   } else {
     return []; // Return an empty array if not an array
   }
+}
+
+// Fetch appointments by customer ID
+export const fetchAppointmentsByCustomerId = async (customerId) => {
+  const response = await fetch(`${apiBaseUrl}/api/appointments/customer/customer_id=${customerId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  return await handleApiResponse(response);
+};
+
+// delete the appointment for the customer 
+export const deleteAppointmentForCustomer = async (appointmentId) => {
+  const appointmentBusinessApiUrl = `${appointmentApiUrl}/appointment_id=${appointmentId}/delete-appointment-customer`;
+  const response = await fetch(appointmentBusinessApiUrl, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message);
+  }
+  return response.json();
 };

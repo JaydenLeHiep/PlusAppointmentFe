@@ -1,0 +1,9 @@
+{
+    "insertEmailOrPhone": "Please insert your Email/Phone Number",
+    "emailOrPhoneLabel": "Email or Phone Number",
+    "retrieveButton": "Retrieve Appointment",
+    "customerNotFound": "Customer not found",
+    "noAppointmentsFound": "No appointments found for this customer.",
+    "errorRetrievingAppointment": "Error retrieving appointment"
+}
+

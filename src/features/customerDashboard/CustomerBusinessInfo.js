@@ -10,7 +10,7 @@ import {
   InfoText,
   LanguageSwitcherContainer,
   LanguageText,
-  DividerText
+  DividerText,
 } from '../../styles/CustomerStyle/CustomerBusinessInfoStyle';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -18,7 +18,6 @@ import { useTranslation } from 'react-i18next';
 
 const CustomerBusinessInfo = ({ businessInfo }) => {
   const { i18n } = useTranslation();
-
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
   };

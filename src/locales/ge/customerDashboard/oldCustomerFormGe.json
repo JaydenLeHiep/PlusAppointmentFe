@@ -3,9 +3,20 @@
     "emailOrPhoneLabel": "E-Mail oder Telefon",
     "commentLabel": "Kommentar",
     "finishButton": "Fertig",
-    "newCustomerLink": "Wenn Sie ein neuer Kunde sind, klicken Sie hier",
+    "newCustomerLink": "Wenn Sie ein neuer Kunde sind, klicken Sie hier!",
     "successMessage": "Termin erfolgreich erstellt!",
     "errorMessage": "Kunde nicht gefunden oder Termin konnte nicht hinzugefügt werden",
-    "loading": "Laden"
+    "loading": "Verarbeitung",
+    "Welcomeback": "Willkommen zurück",
+    "noAppointmentsMessage": "Keine bestehenden Termine gefunden.",
+    "existingAppointmentsTitle": "Ihre Bestehenden Termine",
+    "appointmentInfo": "Sie haben bereits {{count}} Termin(e):",
+    "services": "Dienstleistungen",
+    "doYouWantToBookMore": "Möchten Sie noch mehr buchen?",
+    "cancelButton": "Abbrechen",
+    "submitButton": "Bestätigen",
+    "appointmentOn": "Termin am",
+    "at": "um",
+    "noSpecificService": "Kein spezifischer Service"
   }
   

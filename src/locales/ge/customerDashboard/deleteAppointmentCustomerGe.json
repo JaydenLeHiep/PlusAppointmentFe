@@ -1,0 +1,8 @@
+{
+    "insertEmailOrPhone": "Bitte geben Sie Ihre E-Mail-Adresse/Telefonnummer ein",
+    "emailOrPhoneLabel": "E-Mail oder Telefonnummer",
+    "retrieveButton": "Termin abrufen",
+    "customerNotFound": "Kunde nicht gefunden",
+    "noAppointmentsFound": "Keine Termine für diesen Kunden gefunden.",
+    "errorRetrievingAppointment": "Fehler beim Abrufen des Termins"
+}
