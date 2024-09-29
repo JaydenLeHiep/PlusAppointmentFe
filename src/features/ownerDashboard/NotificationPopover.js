@@ -11,17 +11,21 @@ import {
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import UpdateIcon from '@mui/icons-material/Update';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'; 
 
 const NotificationPopover = ({ open, anchorEl, onClose, notifications }) => {
-  
+
   const getIconAndColor = (type) => {
     switch (type) {
       case "Add":
         return { icon: <AddCircleOutlineIcon style={{ color: 'green' }} />, color: 'green' };
-      case "Cancle":
+      case "Cancel":
         return { icon: <DeleteOutlineIcon style={{ color: 'red' }} />, color: 'red' };
       case "Update":
         return { icon: <UpdateIcon style={{ color: 'orange' }} />, color: 'orange' };
+      case "CheckIn":  // Add case for CheckIn
+        return { icon: <CheckCircleOutlineIcon style={{ color: 'blue' }} />, color: 'blue' }; // Choose a suitable color
+      
       default:
         return { icon: null, color: 'black' };
     }
