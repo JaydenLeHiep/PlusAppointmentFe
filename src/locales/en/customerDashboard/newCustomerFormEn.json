@@ -1,14 +1,15 @@
 {
-    "formTitle": "New Customer",
-    "nameLabel": "Name",
-    "emailLabel": "Email",
-    "phoneLabel": "Phone",
-    "readAndAcceptTerms": "Read and Accept Terms",
-    "submitButton": "Submit",
-    "redirectMessage": "Add your data successfully! Please come back to Your Information to finish booking.",
-    "redirectingIn": "Redirecting in",
-    "successSnackbar": "Customer added successfully!",
-    "errorSnackbar": "Failed to add customer.",
-    "Submitting, please wait...": "Submitting, please wait..."
-  }
-  
+  "formTitle": "New Customer",
+  "nameLabel": "Name",
+  "emailLabel": "Email",
+  "phoneLabel": "Phone",
+  "readAndAcceptTerms": "Read and Accept Terms",
+  "submitButton": "Submit",
+  "redirectMessage": "Add your data successfully! Please come back to Your Information to finish booking.",
+  "redirectingIn": "Redirecting in",
+  "successSnackbar": "Customer added successfully!",
+  "errorSnackbar": "Failed to add customer.",
+  "Submitting, please wait...": "Submitting, please wait...",
+  "wantsPromotionLabel": "Allow to receive promotional updates and exclusive deals.",
+  "birthdayLabel": "Birthday"
+}

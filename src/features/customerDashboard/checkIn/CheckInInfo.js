@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, FormControl, RadioGroup, FormControlLabel, Radio, CircularProgress, Snackbar, Alert, IconButton } from '@mui/material';
+import { Box, Typography, FormControl, RadioGroup, FormControlLabel, Radio, CircularProgress, Snackbar, Alert, IconButton, Backdrop } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { useCustomersContext } from '../../../context/CustomerContext';
 import { useAppointmentsContext } from '../../../context/AppointmentsContext';
@@ -69,11 +69,14 @@ const CheckInInfo = ({ customerName, customerId, businessId, onBack }) => {
       setSubmitError('');
       setTimeout(() => {
         setShowThankYouCheckIn(true);
-      }, 500);
+      }, 3000);
     } catch (error) {
       setSubmitError(t('checkInError'));
     } finally {
-      setIsSubmitting(false);
+      // Delay to keep the backdrop for a moment before hiding it
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 3000);
     }
   };
 
@@ -205,6 +208,17 @@ const CheckInInfo = ({ customerName, customerId, businessId, onBack }) => {
           {submitError}
         </Alert>
       </Snackbar>
+
+      {/* Backdrop */}
+      <Backdrop
+        open={isSubmitting}
+        style={{ zIndex: 9999, color: '#fff', position: 'fixed', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}
+      >
+        <CircularProgress color="inherit" />
+        <Typography variant="h6" style={{ marginTop: '20px', color: '#fff' }}>
+          {t('processingCheckIn')}
+        </Typography>
+      </Backdrop>
     </Box>
   );
 };

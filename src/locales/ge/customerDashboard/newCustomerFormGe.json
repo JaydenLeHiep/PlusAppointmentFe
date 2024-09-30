@@ -9,6 +9,8 @@
     "redirectingIn": "Weiterleitung in",
     "successSnackbar": "Kunde erfolgreich hinzugefügt!",
     "errorSnackbar": "Kunde konnte nicht hinzugefügt werden.",
-    "Submitting, please wait...": "Senden, bitte warten …"
+    "Submitting, please wait...": "Senden, bitte warten …",
+    "wantsPromotionLabel": "Erlauben Sie den Empfang von Werbeaktionen und exklusiven Angeboten.",
+    "birthdayLabel": "Geburtstag"
   }
   
