@@ -12,5 +12,7 @@
     "phoneMismatchError": "Phone and Confirm Phone do not match.",
     "errorSnackbar": "An error occurred. Please try again.",
     "loading": "Submitting, please wait...",
-    "addedSuccessfully": "Added new Customer successfully!"
+    "addedSuccessfully": "Added new Customer successfully!",
+    "wantsPromotionLabel": "Allow to receive promotional updates and exclusive deals.",
+    "birthdayLabel": "Birthday"
   }
