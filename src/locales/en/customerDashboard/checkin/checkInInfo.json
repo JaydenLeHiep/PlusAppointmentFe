@@ -16,5 +16,6 @@
     "onlineLabel": "Online",
     "checkInButton": "Check In",
     "checkInSuccessful": "Check-in successful!",
-    "checkInError": "Failed to check in. Please try again."
+    "checkInError": "Failed to check in. Please try again.",
+    "processingCheckIn": "Loading..."
   }
