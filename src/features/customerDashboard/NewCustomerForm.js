@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Snackbar, Alert, Box, Typography, CircularProgress, Checkbox, FormControlLabel, Backdrop } from '@mui/material';
+import { Snackbar, Alert, Box, Typography, CircularProgress, Checkbox,  Backdrop } from '@mui/material';
 import { useCustomersContext } from '../../context/CustomerContext';
 import {
   CustomButton,
@@ -173,28 +173,34 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           required
           disabled={isSubmitting} // Disable input when submitting
         />
+        <Box display="flex" flexDirection="column" alignItems="center" mt={2} width="100%">
+          {/* First Checkbox and Link */}
+          <Box display="flex" alignItems="center" justifyContent="center" width="100%">
+            <Box flex="0 0 30px" display="flex" justifyContent="center"> {/* Control the width for left alignment of checkbox */}
+              <Checkbox
+                checked={acceptTerms}
+                onChange={(e) => setAcceptTerms(e.target.checked)}
+              />
+            </Box>
+            <NewCustomerLink onClick={handleOpenTerms} style={{ textAlign: 'center', flex: 1 }}>
+              {t('readAndAcceptTerms')}
+            </NewCustomerLink>
+          </Box>
 
-        <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
-          <FormControlLabel
-            control={<Checkbox checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />}
-          />
-          <NewCustomerLink onClick={handleOpenTerms}>
-            {t('readAndAcceptTerms')}
-          </NewCustomerLink>
-
-        </Box>
-        <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
-          <FormControlLabel
-            control={
+          {/* Second Checkbox and Label */}
+          <Box display="flex" alignItems="center" justifyContent="center" width="100%" mt={1}>
+            <Box flex="0 0 30px" display="flex" justifyContent="center"> {/* Control the width for left alignment of checkbox */}
               <Checkbox
                 checked={formData.wantsPromotion}
                 onChange={(e) => setFormData({ ...formData, wantsPromotion: e.target.checked })}
               />
-            }
-            label={t('wantsPromotionLabel')}
-          />
+            </Box>
+            <Typography style={{ textAlign: 'center', flex: 1 }}>
+              {t('wantsPromotionLabel')}
+            </Typography>
+          </Box>
         </Box>
-        <Box display="flex" justifyContent="center">
+        <Box display="flex" justifyContent="center"> 
           <CustomButton
             type="submit"
             variant="contained"
