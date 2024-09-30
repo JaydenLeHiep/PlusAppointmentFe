@@ -200,7 +200,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
             </Typography>
           </Box>
         </Box>
-        <Box display="flex" justifyContent="center">
+        <Box display="flex" justifyContent="center"> 
           <CustomButton
             type="submit"
             variant="contained"
