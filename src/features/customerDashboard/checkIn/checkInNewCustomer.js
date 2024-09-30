@@ -21,7 +21,9 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded, onBack }) => {
     email: '',
     confirmEmail: '',
     phone: '',
-    confirmPhone: ''
+    confirmPhone: '',
+    birthday: '',
+    wantsPromotion: false,
   });
 
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -47,32 +49,34 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded, onBack }) => {
     setIsSubmitting(true);
 
     try {
+      const localBirthday = new Date(formData.birthday);
+      const utcBirthday = localBirthday.toISOString(); // Convert to UTC
+
       const customerDetails = {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
-        BusinessId: String(businessId)
+        birthday: utcBirthday, // Send UTC birthday to server
+        wantsPromotion: formData.wantsPromotion,
+        BusinessId: String(businessId),
       };
 
       const newCustomer = await addNewCustomer(customerDetails, businessId);
 
       setSubmitSuccess(true);
       setSubmitError('');
-
-      // Allow the backdrop to stay visible for a short while
       setTimeout(() => {
         setIsSubmitting(false); // Close Backdrop after some time
         onCustomerAdded(newCustomer);
-      }, 3000); // Adjust this delay as necessary (1 second delay here)
+      }, 3000);
     } catch (error) {
       console.error('Failed to add customer:', error);
       const errorMessage = error.response?.data?.message || error.message || t('errorSnackbar');
       setSubmitError(errorMessage);
 
-      // Maintain visibility of the backdrop for a bit before closing
       setTimeout(() => {
         setIsSubmitting(false);
-      }, 3000); // Adjust this delay as necessary (1 second delay here)
+      }, 3000);
     }
   };
 
@@ -91,15 +95,10 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded, onBack }) => {
   return (
     <FormContainer style={{ marginBottom: '50px' }}>
       <Box display="flex" alignItems="center" mb={2} width="110%" justifyContent="center" position="relative">
-        {/* Back Arrow */}
-        <IconButton
-          onClick={handleBackClick}
-          edge="start"
-          sx={{ position: 'absolute', left: 0 }} 
-        >
+        <IconButton onClick={handleBackClick} edge="start" sx={{ position: 'absolute', left: 0 }}>
           <ArrowBack />
         </IconButton>
-        <FormTitle style={{fontSize: '30px'}}>{t('yourInformation')}</FormTitle>
+        <FormTitle style={{ fontSize: '30px' }}>{t('yourInformation')}</FormTitle>
       </Box>
       <form onSubmit={handleFormSubmit} style={{ width: '100%', maxWidth: '400px' }}>
         <StyledTextField
@@ -109,6 +108,18 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded, onBack }) => {
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           fullWidth
           margin="normal"
+          required
+          disabled={isSubmitting}
+        />
+        <StyledTextField
+          label={t('birthdayLabel')}
+          name="birthday"
+          type="date"
+          value={formData.birthday}
+          onChange={(e) => setFormData({ ...formData, birthday: e.target.value })}
+          fullWidth
+          margin="normal"
+          InputLabelProps={{ shrink: true }}
           required
           disabled={isSubmitting}
         />
@@ -160,6 +171,19 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded, onBack }) => {
           <NewCustomerLink onClick={handleOpenTerms}>
             {t('readAndAcceptTerms')}
           </NewCustomerLink>
+
+        </Box>
+
+        <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={formData.wantsPromotion}
+                onChange={(e) => setFormData({ ...formData, wantsPromotion: e.target.checked })}
+              />
+            }
+            label={t('wantsPromotionLabel')}
+          />
         </Box>
 
         <Box display="flex" justifyContent="center">
@@ -167,7 +191,16 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded, onBack }) => {
             type="submit"
             variant="contained"
             color="primary"
-            disabled={!acceptTerms || !formData.name || !formData.email || !formData.confirmEmail || !formData.phone || !formData.confirmPhone || isSubmitting}
+            disabled={
+              !acceptTerms ||
+              !formData.name ||
+              !formData.email ||
+              !formData.confirmEmail ||
+              !formData.phone ||
+              !formData.confirmPhone ||
+              !formData.birthday ||
+              isSubmitting
+            }
           >
             {t('submitButton')}
           </CustomButton>

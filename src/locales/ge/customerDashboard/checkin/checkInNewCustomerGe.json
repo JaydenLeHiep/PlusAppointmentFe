@@ -12,5 +12,7 @@
     "phoneMismatchError": "Telefon und Bestätigungstelefon stimmen nicht überein.",
     "errorSnackbar": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
     "loading": "Einreichen, bitte warten...",
-    "addedSuccessfully": "Neuer Kunde erfolgreich hinzugefügt!"
+    "addedSuccessfully": "Neuer Kunde erfolgreich hinzugefügt!",
+    "wantsPromotionLabel": "Erlauben Sie den Empfang von Werbeaktionen und exklusiven Angeboten.",
+    "birthdayLabel": "Geburtstag"
   }
