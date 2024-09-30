@@ -20,7 +20,9 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
     email: '',
     confirmEmail: '',
     phone: '',
-    confirmPhone: ''
+    confirmPhone: '',
+    birthday: '',
+    wantsPromotion: false,
   });
 
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -28,7 +30,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [countdown, setCountdown] = useState(2);
   const [termsOpen, setTermsOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); 
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -43,15 +45,20 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
       return;
     }
 
-    if (isSubmitting) return; 
-    setIsSubmitting(true); 
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
     try {
+      const localBirthday = new Date(formData.birthday);
+      const utcBirthday = localBirthday.toISOString(); // Convert to UTC
+
       const customerDetails = {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
-        BusinessId: String(businessId)
+        birthday: utcBirthday, // Send UTC birthday to server
+        wantsPromotion: formData.wantsPromotion,
+        BusinessId: String(businessId),
       };
 
       const newCustomer = await addNewCustomer(customerDetails, businessId);
@@ -65,7 +72,9 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
         email: '',
         confirmEmail: '',
         phone: '',
-        confirmPhone: ''
+        confirmPhone: '',
+        birthday: '',
+        wantsPromotion: false,
       });
 
       setCountdown(2);
@@ -73,7 +82,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
         setCountdown((prevCount) => {
           if (prevCount <= 1) {
             clearInterval(countdownInterval);
-            setIsSubmitting(false); 
+            setIsSubmitting(false);
             onCustomerAdded(newCustomer);
           }
           return prevCount - 1;
@@ -107,6 +116,20 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           fullWidth
           margin="normal"
+          required
+          disabled={isSubmitting} // Disable input when submitting
+        />
+        <StyledTextField
+          label={t('birthdayLabel')}
+          name="birthday"
+          type="date"
+          value={formData.birthday}
+          onChange={(e) => setFormData({ ...formData, birthday: e.target.value })}
+          fullWidth
+          margin="normal"
+          InputLabelProps={{
+            shrink: true,
+          }}
           required
           disabled={isSubmitting} // Disable input when submitting
         />
@@ -158,14 +181,34 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
           <NewCustomerLink onClick={handleOpenTerms}>
             {t('readAndAcceptTerms')}
           </NewCustomerLink>
-        </Box>
 
+        </Box>
+        <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={formData.wantsPromotion}
+                onChange={(e) => setFormData({ ...formData, wantsPromotion: e.target.checked })}
+              />
+            }
+            label={t('wantsPromotionLabel')}
+          />
+        </Box>
         <Box display="flex" justifyContent="center">
           <CustomButton
             type="submit"
             variant="contained"
             color="primary"
-            disabled={!acceptTerms || !formData.name || !formData.email || !formData.confirmEmail || !formData.phone || !formData.confirmPhone || isSubmitting}
+            disabled={
+              !acceptTerms ||
+              !formData.name ||
+              !formData.email ||
+              !formData.confirmEmail ||
+              !formData.phone ||
+              !formData.confirmPhone ||
+              !formData.birthday ||
+              isSubmitting
+            }
           >
             {t('submitButton')}
           </CustomButton>
