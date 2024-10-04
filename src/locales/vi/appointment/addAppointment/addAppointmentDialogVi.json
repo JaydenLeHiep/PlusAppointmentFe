@@ -1,6 +1,10 @@
 {
     "addAppointment": "Thêm cuộc hẹn",
     "appointmentAddedSuccess": "Thêm cuộc hẹn thành công!",
-    "appointmentAddFailed": "Không thể thêm cuộc hẹn. Vui lòng thử lại."
+    "appointmentAddFailed": "Không thể thêm cuộc hẹn. Vui lòng thử lại.",
+    "customerRequired": "Thiếu tên kháchh hàng.",
+    "appointmentTimeRequired": "Thiếu thời gian lịch hẹn.",
+    "servicesRequired": "Thiếu dịch vụ.",
+    "staffRequired": "Bạn chưa chọn nhân viên."
   }
   

@@ -93,6 +93,29 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
 
     if (!appointment) return null;
 
+        // Validation function
+        const validateForm = () => {
+            if (!updatedAppointment.customerId) {
+                setAlert({ message: t('customerRequired'), severity: 'error' });
+                return false;
+            }
+            if (!updatedAppointment.appointmentTime) {
+                setAlert({ message: t('appointmentTimeRequired'), severity: 'error' });
+                return false;
+            }
+            const serviceErrors = updatedAppointment.services.some(service => !service.serviceId);
+            if (serviceErrors) {
+                setAlert({ message: t('servicesRequired'), severity: 'error' });
+                return false;
+            }
+            const staffErrors = updatedAppointment.services.some(service => !service.staffId);
+            if (staffErrors) {
+                setAlert({ message: t('staffRequired'), severity: 'error' });
+                return false;
+            }
+            return true;
+        };
+
     const handleConfirmStatus = async () => {
         try {
             const updatedStatus = 'Confirm';
@@ -183,6 +206,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
     };
 
     const handleUpdateAppointment = async () => {
+        if (!validateForm()) return;
         try {
             const localAppointmentTime = new Date(updatedAppointment.appointmentTime);
             const utcAppointmentTime = localAppointmentTime.toISOString();
@@ -289,9 +313,15 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
             )}
             {!editMode && (
                 <StyledDialogActions sx={{ justifyContent: 'flex-end' }}>
-                    <StyledConfirmButton onClick={handleConfirmStatus}>
-                        {t('confirm')}
-                    </StyledConfirmButton>
+                    {appointment.status === 'Pending' ? (
+                        <StyledConfirmButton onClick={handleConfirmStatus}>
+                            {t('confirm')}
+                        </StyledConfirmButton>
+                    ) : (
+                        <StyledConfirmButton disabled>
+                            {t('confirm')}
+                        </StyledConfirmButton>
+                    )}
                 </StyledDialogActions>
             )}
 
