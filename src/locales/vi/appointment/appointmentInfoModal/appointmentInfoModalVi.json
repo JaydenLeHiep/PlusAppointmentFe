@@ -13,6 +13,10 @@
     "deleteAppointmentContent": "Bạn có chắc chắn muốn xóa cuộc hẹn này không?",
     "close": "Đóng",
     "invalidDate": "Ngày không hợp lệ",
-    "invalidTime": "Thời gian không hợp lệ"
+    "invalidTime": "Thời gian không hợp lệ",
+    "customerRequired": "Thiếu tên kháchh hàng.",
+    "appointmentTimeRequired": "Thiếu thời gian lịch hẹn.",
+    "servicesRequired": "Thiếu dịch vụ.",
+    "staffRequired": "Bạn chưa chọn nhân viên."
   }
   
