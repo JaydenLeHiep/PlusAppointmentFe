@@ -289,9 +289,15 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
             )}
             {!editMode && (
                 <StyledDialogActions sx={{ justifyContent: 'flex-end' }}>
-                    <StyledConfirmButton onClick={handleConfirmStatus}>
-                        {t('confirm')}
-                    </StyledConfirmButton>
+                    {appointment.status === 'Pending' ? (
+                        <StyledConfirmButton onClick={handleConfirmStatus}>
+                            {t('confirm')}
+                        </StyledConfirmButton>
+                    ) : (
+                        <StyledConfirmButton disabled>
+                            {t('confirm')}
+                        </StyledConfirmButton>
+                    )}
                 </StyledDialogActions>
             )}
 
