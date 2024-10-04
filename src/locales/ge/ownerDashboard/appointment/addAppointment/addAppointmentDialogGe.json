@@ -1,6 +1,10 @@
 {
     "addAppointment": "Termin hinzufügen",
     "appointmentAddedSuccess": "Termin erfolgreich hinzugefügt!",
-    "appointmentAddFailed": "Termin konnte nicht hinzugefügt werden. Bitte versuche es erneut."
+    "appointmentAddFailed": "Termin konnte nicht hinzugefügt werden. Bitte versuche es erneut.",
+    "customerRequired": "Kunden Name fehlt.",
+    "appointmentTimeRequired": "Uhrzeit fehlt.",
+    "servicesRequired": "Service fehlt.",
+    "staffRequired": "Mitarbeiter:innen fehlt."
   }
   

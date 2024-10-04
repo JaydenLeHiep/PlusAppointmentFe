@@ -1,6 +1,10 @@
 {
     "addAppointment": "Add Appointment",
     "appointmentAddedSuccess": "Appointment added successfully!",
-    "appointmentAddFailed": "Failed to add appointment. Please try again."
+    "appointmentAddFailed": "Failed to add appointment. Please try again.",
+    "customerRequired": "Customer Name is missing.",
+    "appointmentTimeRequired": "Appointment Time is missing.",
+    "servicesRequired": "Services is missing.",
+    "staffRequired": "Staff is missing."
   }
   
