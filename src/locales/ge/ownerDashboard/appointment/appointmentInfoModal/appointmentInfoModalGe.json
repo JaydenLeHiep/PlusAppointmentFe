@@ -13,6 +13,10 @@
     "deleteAppointmentContent": "Bist du sicher, dass du diesen Termin löschen möchtest?",
     "close": "Schließen",
     "invalidDate": "Ungültiges Datum",
-    "invalidTime": "Ungültige Uhrzeit"
+    "invalidTime": "Ungültige Uhrzeit",
+    "customerRequired": "Kunden Name fehlt.",
+    "appointmentTimeRequired": "Uhrzeit fehlt.",
+    "servicesRequired": "Service fehlt.",
+    "staffRequired": "Mitarbeiter:innen fehlt."
   }
   
