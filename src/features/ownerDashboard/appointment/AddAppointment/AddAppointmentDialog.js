@@ -52,7 +52,31 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
         }
     }, [alert.message]);
 
+    const validateForm = () => {
+        if (!newAppointment.customerId) {
+            setAlert({ message: t('customerRequired'), severity: 'error' });
+            return false;
+        }
+        if (!newAppointment.appointmentTime) {
+            setAlert({ message: t('appointmentTimeRequired'), severity: 'error' });
+            return false;
+        }
+        const serviceErrors = newAppointment.services.some(service => !service.serviceId);
+        if (serviceErrors) {
+            setAlert({ message: t('servicesRequired'), severity: 'error' });
+            return false;
+        }
+        const staffErrors = newAppointment.services.some(service => !service.staffId);
+        if (staffErrors) {
+            setAlert({ message: t('staffRequired'), severity: 'error' });
+            return false;
+        }
+        return true;
+    };
+
     const handleAddAppointment = async () => {
+        if (!validateForm()) return;
+
         try {
             const localAppointmentTime = new Date(newAppointment.appointmentTime);
             const utcAppointmentTime = localAppointmentTime.toISOString();
