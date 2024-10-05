@@ -103,43 +103,27 @@ const Navbar = () => {
                 {t('home')}
               </Button>
             )}
-            {isAuthenticated ? (
-              <Button
-                color="primary"
-                onClick={handleLogout}
-                sx={{
-                  color: '#000000',
-                  textTransform: 'none',
-                  textDecoration: 'none',
-                  '&:hover': {
-                    color: '#007bff',
-                  },
-                  transition: 'color 0.3s ease',
-                }}
-              >
-                {t('logout')}
-              </Button>
-            ) : (
-              <>
-                <IconButton
-                  color="inherit"
-                  edge="end"
-                  onClick={handleMenuOpen}
-                  sx={{
-                    color: '#000000',
-                    '&:hover': {
-                      color: '#007bff',
-                    },
-                    transition: 'color 0.3s ease',
-                  }}
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleMenuClose}
-                >
+            <IconButton
+              color="inherit"
+              edge="end"
+              onClick={handleMenuOpen}
+              sx={{
+                color: '#000000',
+                '&:hover': {
+                  color: '#007bff',
+                },
+                transition: 'color 0.3s ease',
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              {!isAuthenticated ? (
+                <>
                   <MenuItem
                     component={RouterLink}
                     to="/register"
@@ -154,9 +138,27 @@ const Navbar = () => {
                   >
                     {t('login')}
                   </MenuItem>
-                </Menu>
-              </>
-            )}
+                </>
+              ) : (
+                <>
+                  <MenuItem
+                    component={RouterLink}
+                    to="/customer-info"
+                    onClick={handleMenuClose}
+                  >
+                    {t('customer')}
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleMenuClose();
+                      handleLogout();
+                    }}
+                  >
+                    {t('logout')}
+                  </MenuItem>
+                </>
+              )}
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
