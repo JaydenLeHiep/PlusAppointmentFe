@@ -25,14 +25,19 @@ export const MainContainer = styled(Box)(({ theme }) => ({
 }));
 
 // Content container style
-export const ContentContainer = styled(Container)({
+
+export const ContentContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   minHeight: '82vh',
   paddingTop: 0,
   marginTop: 0,
-});
+  width: '100%',
+  [theme.breakpoints.up('md')]: {
+    maxWidth: '100%',
+  },
+}));
 
 // Card style
 export const StyledCard = styled(Card)(({ theme }) => ({

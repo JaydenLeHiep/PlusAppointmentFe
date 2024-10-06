@@ -13,6 +13,7 @@ import { useServicesContext } from '../../context/ServicesContext';
 import { useCustomersContext } from '../../context/CustomerContext';
 import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext';
 import { useNotAvailableTimeContext } from '../../context/NotAvailableTimeContext';
+import CustomerInfo from '../customerInfo/CustomerInfo';
 import * as signalR from '@microsoft/signalr';
 import {
   RootContainer,
@@ -38,10 +39,12 @@ const OwnerDashboard = () => {
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [activeView, setActiveView] = useState('dashboard');
   const connectionRef = useRef(null);
   const [newNotificationMessage, setNewNotificationMessage] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { t } = useTranslation('ownerDashboard');
+
   useEffect(() => {
     const loadBusinesses = async () => {
       try {
@@ -125,41 +128,29 @@ const OwnerDashboard = () => {
         .withUrl(`${apiBaseUrl}/appointmentHub`)
         .withAutomaticReconnect()
         .build();
-
       try {
         await newConnection.start();
         connectionRef.current = newConnection;
-
         // Listen for appointment updates
         newConnection.on('ReceiveAppointmentUpdate', (data) => {
           const { appointment } = data;
-
-
           // Convert the services array to match the existing format
           const normalizedAppointment = {
-              ...appointment,
-              services: {
-                  $values: appointment.services || [] // Ensure services is wrapped in $values
-              }
+            ...appointment,
+            services: {
+              $values: appointment.services || [] // Ensure services is wrapped in $values
+            }
           };
-
           if (selectedBusiness && selectedBusiness.businessId) {
-              setAppointments((prevAppointments) => {
-                  const appointmentExists = prevAppointments.some((appt) => appt.appointmentId === normalizedAppointment.appointmentId);
-
-                  if (appointmentExists) {
-
-                      return prevAppointments;
-                  }
-
-
-
-                  return [...prevAppointments, normalizedAppointment];
-              });
+            setAppointments((prevAppointments) => {
+              const appointmentExists = prevAppointments.some((appt) => appt.appointmentId === normalizedAppointment.appointmentId);
+              if (appointmentExists) {
+                return prevAppointments;
+              }
+              return [...prevAppointments, normalizedAppointment];
+            });
           }
-      });
-
-
+        });
 
         // Listen for notification updates
         newConnection.on('ReceiveNotificationUpdate', async (message) => {
@@ -229,9 +220,9 @@ const OwnerDashboard = () => {
         newConnection.on('ReceiveAppointmentForCustomerDeleted', (appointmentId) => {
           console.log('Appointment deleted via SignalR:', appointmentId);
           setAppointments(prevAppointments =>
-              prevAppointments.filter(appt => appt.appointmentId !== appointmentId)  // Remove deleted appointment
+            prevAppointments.filter(appt => appt.appointmentId !== appointmentId)  // Remove deleted appointment
           );
-      });
+        });
       } catch (error) {
         console.error('Error connecting to SignalR hub:', error);
       }
@@ -267,11 +258,14 @@ const OwnerDashboard = () => {
     setSnackbarOpen(false);
   };
 
-
+  // Change active view function
+  const changeView = (view) => {
+    setActiveView(view);
+  };
 
   return (
     <RootContainer>
-      <Navbar />
+      <Navbar changeView={changeView} />
       <MainContainer>
         <ContentContainer>
           <StyledCard>
@@ -283,26 +277,39 @@ const OwnerDashboard = () => {
               <Alert severity="error">{error}</Alert>
             ) : selectedBusiness ? (
               <>
-                <BusinessDetails
-                  selectedBusiness={selectedBusiness}
-                  setSelectedBusiness={setSelectedBusiness}
-                  staff={staff}
-                  services={services}
-                  categories={categories}
-                  appointments={appointments}
-                  customers={customers}
-                  notAvailableDates={notAvailableDates}
-                  notAvailableTimes={notAvailableTimes}
-                  notifications={notifications}
-                />
+                {activeView === 'dashboard' && (
+                  <>
+                    <BusinessDetails
+                      selectedBusiness={selectedBusiness}
+                      setSelectedBusiness={setSelectedBusiness}
+                      staff={staff}
+                      services={services}
+                      categories={categories}
+                      appointments={appointments}
+                      customers={customers}
+                      notAvailableDates={notAvailableDates}
+                      notAvailableTimes={notAvailableTimes}
+                      notifications={notifications}
+                    />
 
-                <AppointmentList
-                  appointments={appointments}
-                  staff={staff}
-                  services={services}
-                  businessId={selectedBusiness.businessId}
-                  fetchAppointmentById={fetchAppointmentById}
-                />
+                    <AppointmentList
+                      appointments={appointments}
+                      staff={staff}
+                      services={services}
+                      businessId={selectedBusiness.businessId}
+                      fetchAppointmentById={fetchAppointmentById}
+                    />
+                  </>
+                )}
+
+                {activeView === 'customersInfo' && (
+                  <>
+                    <CustomerInfo
+                      customers={customers || []}
+                      businessId={selectedBusiness?.businessId}
+                    />
+                  </>
+                )}
               </>
             ) : (
               <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />

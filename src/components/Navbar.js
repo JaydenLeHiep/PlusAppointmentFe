@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import '@fontsource/poppins'; // Importing Poppins font
 import '@fontsource/roboto'; // Importing Roboto font
 
-const Navbar = () => {
+const Navbar = ({ changeView }) => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation('navbar');
@@ -123,32 +123,46 @@ const Navbar = () => {
               onClose={handleMenuClose}
             >
               {!isAuthenticated ? (
-                <>
+                [
                   <MenuItem
+                    key="register"
                     component={RouterLink}
                     to="/register"
                     onClick={handleMenuClose}
                   >
                     {t('register')}
-                  </MenuItem>
+                  </MenuItem>,
                   <MenuItem
+                    key="login"
                     component={RouterLink}
                     to="/login"
                     onClick={handleMenuClose}
                   >
                     {t('login')}
                   </MenuItem>
-                </>
+                ]
               ) : (
-                <>
+                [
                   <MenuItem
-                    component={RouterLink}
-                    to="/customer-info"
-                    onClick={handleMenuClose}
-                  >
-                    {t('customer')}
-                  </MenuItem>
+                  key="home"
+                  onClick={() => {
+                    changeView('dashboard');
+                    handleMenuClose();
+                  }}
+                >
+                  {t('home')}
+                </MenuItem>,
+                <MenuItem
+                  key="customer-info"
+                  onClick={() => {
+                    changeView('customersInfo');
+                    handleMenuClose();
+                  }}
+                >
+                  {t('customer')}
+                </MenuItem>,
                   <MenuItem
+                    key="logout"
                     onClick={() => {
                       handleMenuClose();
                       handleLogout();
@@ -156,7 +170,7 @@ const Navbar = () => {
                   >
                     {t('logout')}
                   </MenuItem>
-                </>
+                ]
               )}
             </Menu>
           </Box>
