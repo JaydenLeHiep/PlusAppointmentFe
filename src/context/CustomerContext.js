@@ -7,7 +7,8 @@ import {
     searchCustomersByName, 
     fetchCustomersByBusinessId,
     checkCustomerExists, 
-    addCheckIn
+    addCheckIn,
+    fetchCheckInByBusinessId
 } from '../lib/apiClientCustomer';
 
 const CustomersContext = createContext();
@@ -16,6 +17,7 @@ export const useCustomersContext = () => useContext(CustomersContext);
 
 export const CustomersProvider = ({ children }) => {
   const [customers, setCustomers] = useState([]);
+  const [checkIns, setCheckIns] = useState([]);  
   const [alert, setAlert] = useState({ message: '', severity: '' });
 
   const fetchCustomersForBusiness = useCallback(async (businessId) => {
@@ -110,8 +112,19 @@ export const CustomersProvider = ({ children }) => {
     }
   }, []);
 
+  const fetchCheckInDetailsForBusiness = useCallback(async (businessId) => {
+    try {
+      const response = await fetchCheckInByBusinessId(businessId);
+      setCheckIns(response);  // Set the fetched check-in details
+    } catch (error) {
+      console.error('Error fetching check-in details for business:', error);
+      setAlert({ message: 'Failed to fetch check-in details for business.', severity: 'error' });
+    }
+  }, []);
+
   const contextValue = {
     customers,
+    checkIns,
     findCustomerById,
     addNewCustomer,
     updateExistingCustomer,
@@ -120,6 +133,7 @@ export const CustomersProvider = ({ children }) => {
     fetchCustomersForBusiness,
     checkIfCustomerExists,
     addCustomerCheckIn,
+    fetchCheckInDetailsForBusiness,
     alert,
   };
 

@@ -216,3 +216,22 @@ export const addCheckIn = async (checkInDetails) => {
 
   return await handleApiResponse(response);
 };
+
+// fetch checkin infos
+export const fetchCheckInByBusinessId = async (businessId) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('User not authenticated');
+  }
+  const customerCheckInDetailsApiUrl = `${apiBaseUrl}/api/checkin/business_id=${businessId}/checkins`;
+  
+  const response = await fetch(customerCheckInDetailsApiUrl, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  return await handleApiResponse(response);
+}; 
