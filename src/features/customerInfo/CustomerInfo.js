@@ -8,6 +8,7 @@ import SearchBar from './SearchBar';
 import CustomerTable from './CustomerTable';
 import CustomerFormModal from './CustomerFormModal';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
+import { sendBulkEmail } from '../../lib/apiClientSendingEmailsCustomer';
 import moment from 'moment-timezone';
 
 const CustomerInfo = ({ businessId, customers }) => {
@@ -60,9 +61,9 @@ const CustomerInfo = ({ businessId, customers }) => {
   };
 
   const handleAddNewCustomer = () => {
-    setEditCustomerId(null); // Clear ID for adding
+    setEditCustomerId(null); 
     setEditCustomerData({ name: '', email: '', phone: '', birthday: null, wantsPromotion: false });
-    setIsFormModalOpen(true); // Open modal for add
+    setIsFormModalOpen(true);
   };
 
   const handleFormSubmit = async () => {
@@ -116,6 +117,19 @@ const CustomerInfo = ({ businessId, customers }) => {
     }
   };
 
+  const handleSendEmail = () => {
+    setIsBulkEmailModalOpen(true);
+  };
+
+  const handleSendBulkEmail = async (bulkEmail) => {
+    try {
+      await sendBulkEmail(bulkEmail);
+      setAlert({ message: t('emailSentSuccess'), severity: 'success' });
+    } catch (err) {
+      setAlert({ message: err.message || t('emailSendError'), severity: 'error' });
+    }
+  };
+
   return (
     <RootContainer>
       <SearchBar
@@ -123,7 +137,7 @@ const CustomerInfo = ({ businessId, customers }) => {
         setSearchQuery={setSearchQuery}
         loadingCheckIns={loadingCheckIns}
         handleLoadCheckIns={handleLoadCheckIns}
-        handleSendEmail={() => setIsBulkEmailModalOpen(true)}
+        handleSendEmail={handleSendEmail}
         handleAddNewCustomer={handleAddNewCustomer}
       />
       {customersData.length === 0 ? (
@@ -151,7 +165,7 @@ const CustomerInfo = ({ businessId, customers }) => {
         open={isBulkEmailModalOpen}
         onClose={() => setIsBulkEmailModalOpen(false)}
         customers={customersData.filter((customer) => customer.wantsPromotion)}
-        onSendEmail={(bulkEmail) => {}}
+        onSendEmail={handleSendBulkEmail}
       />
       <ConfirmationDialog
         open={confirmDialogOpen}
