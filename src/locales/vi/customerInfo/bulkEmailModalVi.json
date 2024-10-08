@@ -1,0 +1,10 @@
+{
+    "sendBulkEmail": "Gửi Email hàng loạt",
+    "subject": "Chủ đề",
+    "body": "Nội dung",
+    "selectCustomers": "Chọn khách hàng để gửi email:",
+    "selectAll": "Chọn tất cả",
+    "cancel": "Hủy",
+    "sendEmail": "Gửi Email"
+  }
+  

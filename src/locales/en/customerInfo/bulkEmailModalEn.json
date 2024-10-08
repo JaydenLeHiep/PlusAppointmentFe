@@ -1,0 +1,10 @@
+{
+    "sendBulkEmail": "Send Bulk Email",
+    "subject": "Subject",
+    "body": "Body",
+    "selectCustomers": "Select customers to send the email to:",
+    "selectAll": "Select All",
+    "cancel": "Cancel",
+    "sendEmail": "Send Email"
+  }
+  

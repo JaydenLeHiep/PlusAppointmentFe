@@ -1,0 +1,10 @@
+{
+    "sendBulkEmail": "Massen-E-Mail senden",
+    "subject": "Betreff",
+    "body": "Inhalt",
+    "selectCustomers": "Wählen Sie Kunden aus, um die E-Mail zu senden:",
+    "selectAll": "Alle auswählen",
+    "cancel": "Abbrechen",
+    "sendEmail": "E-Mail senden"
+  }
+  

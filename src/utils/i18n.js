@@ -207,6 +207,10 @@ import customerInfoEn from '../locales/en/customerInfo/customerInfoEn.json'
 import customerInfoGe from '../locales/ge/customerInfo/customerInfoGe.json'
 import customerInfoVi from '../locales/vi/customerInfo/customerInfoVi.json'
 
+import bulkEmailModalEn from '../locales/en/customerInfo/bulkEmailModalEn.json'
+import bulkEmailModalGe from '../locales/ge/customerInfo/bulkEmailModalGe.json'
+import bulkEmailModalVi from '../locales/vi/customerInfo/bulkEmailModalVi.json'
+
 i18n
   .use(initReactI18next)
   .init({
@@ -258,7 +262,8 @@ i18n
         checkInOldCustomer: CheckInOldCustomerEn,
         checkInNewCustomer: CheckInNewCustomerEn,
         checkInInfo: CheckInInfoEn,
-        customerInfo: customerInfoEn
+        customerInfo: customerInfoEn,
+        bulkEmailModal: bulkEmailModalEn
         // Add other namespaces for English
       },
       vi: {
@@ -297,7 +302,8 @@ i18n
         ownerDashboard: ownerDashboardVi,
         notAvailableTime: notAvailableTimeVi,
         changePasswordForm: changePasswordFormVi,
-        customerInfo: customerInfoVi
+        customerInfo: customerInfoVi,
+        bulkEmailModal: bulkEmailModalVi
         // Add other namespaces for Vietnamese
       },
       ge: {  // Add a new language key for German
@@ -347,7 +353,8 @@ i18n
         checkInOldCustomer: CheckInOldCustomerGe,
         checkInNewCustomer: CheckInNewCustomerGe,
         checkInInfo: CheckInInfoGe,
-        customerInfo: customerInfoGe
+        customerInfo: customerInfoGe,
+        bulkEmailModal: bulkEmailModalGe
       },
     },
     lng: 'en', // default language

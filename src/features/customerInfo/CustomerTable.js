@@ -11,7 +11,7 @@ const CustomerTable = ({ customers, handleEditCustomer, confirmDeleteCustomer })
   const [promotionFilter, setPromotionFilter] = useState('all');
   const [bookingsFilter, setBookingsFilter] = useState('all');
   const [lastBookingFilter, setLastBookingFilter] = useState('all');
-  
+
 
   // State for filter menu
   const [anchorElPromotion, setAnchorElPromotion] = useState(null);
@@ -95,6 +95,7 @@ const CustomerTable = ({ customers, handleEditCustomer, confirmDeleteCustomer })
             </TableCell>
 
             {/* Bookings column with filter */}
+            {/* Bookings column with filter */}
             <TableCell style={{ fontWeight: 'bold', border: '1px solid #ccc', textAlign: 'center' }}>
               {t('bookings')}
               <IconButton size="small" onClick={(e) => handleOpenMenu(e, 'bookings')}>
@@ -106,10 +107,11 @@ const CustomerTable = ({ customers, handleEditCustomer, confirmDeleteCustomer })
                 onClose={() => handleCloseMenu('bookings')}
               >
                 <MenuItem onClick={() => setBookingsFilter('all')}>{t('allBookings')}</MenuItem>
-                <MenuItem onClick={() => setBookingsFilter('greaterThan10')}>{t('> 10 Bookings')}</MenuItem>
-                <MenuItem onClick={() => setBookingsFilter('greaterThan50')}>{t('> 50 Bookings')}</MenuItem>
+                <MenuItem onClick={() => setBookingsFilter('greaterThan10')}>{t('greaterThan10')}</MenuItem>
+                <MenuItem onClick={() => setBookingsFilter('greaterThan50')}>{t('greaterThan50')}</MenuItem>
               </Menu>
             </TableCell>
+
 
             {/* Last Booking column with filter */}
             <TableCell style={{ fontWeight: 'bold', border: '1px solid #ccc', textAlign: 'center' }}>

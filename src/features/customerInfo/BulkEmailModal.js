@@ -13,8 +13,11 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useTranslation } from 'react-i18next';
 
 const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
+  const { t } = useTranslation('bulkEmailModal');
+
   // Filter customers who have opted in for promotions and have an email
   const customersWithEmailAndPromotion = customers.filter((customer) => customer.email && customer.wantsPromotion);
   const [selectedCustomers, setSelectedCustomers] = useState(customersWithEmailAndPromotion);
@@ -54,9 +57,9 @@ const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>
-        Send Bulk Email
+        {t('sendBulkEmail')}
         <IconButton
-          aria-label="close"
+          aria-label={t('close')}
           onClick={onClose}
           sx={{
             position: 'absolute',
@@ -70,14 +73,14 @@ const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
       <DialogContent>
         <Box mb={2}>
           <TextField
-            label="Subject"
+            label={t('subject')}
             fullWidth
             margin="dense"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
           />
           <TextField
-            label="Body"
+            label={t('body')}
             fullWidth
             multiline
             rows={4}
@@ -87,7 +90,7 @@ const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
           />
         </Box>
         <Typography variant="subtitle1" gutterBottom>
-          Select customers to send the email to:
+          {t('selectCustomers')}
         </Typography>
         <FormControlLabel
           control={
@@ -97,7 +100,7 @@ const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
               indeterminate={selectedCustomers.length > 0 && selectedCustomers.length < customersWithEmailAndPromotion.length}
             />
           }
-          label="Select All"
+          label={t('selectAll')}
         />
         {customersWithEmailAndPromotion.map((customer) => (
           <FormControlLabel
@@ -114,10 +117,10 @@ const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          {t('cancel')}
         </Button>
         <Button onClick={handleSend} color="primary" variant="contained">
-          Send Email
+          {t('sendEmail')}
         </Button>
       </DialogActions>
     </Dialog>
