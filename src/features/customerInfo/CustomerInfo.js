@@ -103,13 +103,26 @@ const CustomerInfo = ({ businessId, customers }) => {
     }
   };
 
+  const handleLoadCheckIns = async () => {
+    if (businessId) {
+      setLoadingCheckIns(true);
+      try {
+        await fetchCheckInDetailsForBusiness(businessId);
+      } catch (error) {
+        console.error('Error loading check-ins:', error);
+      } finally {
+        setLoadingCheckIns(false);
+      }
+    }
+  };
+
   return (
     <RootContainer>
       <SearchBar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         loadingCheckIns={loadingCheckIns}
-        handleLoadCheckIns={() => setLoadingCheckIns(true)}
+        handleLoadCheckIns={handleLoadCheckIns}
         handleSendEmail={() => setIsBulkEmailModalOpen(true)}
         handleAddNewCustomer={handleAddNewCustomer}
       />
