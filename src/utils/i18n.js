@@ -23,15 +23,19 @@ import thankYouPageGe from '../locales/ge/customerDashboard/thankYouPageGe.json'
 
 import customerFormEn from '../locales/en/customer/customerFormEn.json';
 import customerFormVi from '../locales/vi/customer/customerFormVi.json';
+import customerFormGe from '../locales/ge/ownerDashboard/customer/customerFormGe.json';
 
 import dialogCustomerActionsEn from '../locales/en/customer/dialogCustomerActionsEn.json';
 import dialogCustomerActionsVi from '../locales/vi/customer/dialogCustomerActionsVi.json';
+import dialogCustomerActionsGe from '../locales/ge/ownerDashboard/customer/dialogCustomerActionsGe.json';
 
 import showCustomerDialogEn from '../locales/en/customer/showCustomerDialogEn.json';
 import showCustomerDialogVi from '../locales/vi/customer/showCustomerDialogVi.json';
+import showCustomerDialogGe from '../locales/ge/ownerDashboard/customer/showCustomerDialogGe.json';
 
 import customerListEn from '../locales/en/customer/customerListEn.json';
 import customerListVi from '../locales/vi/customer/customerListVi.json';
+import customerListGe from '../locales/ge/ownerDashboard/customer/customerListGe.json';
 
 import deleteAppointmentCustomerEn from '../locales/en/customerDashboard/deleteAppointmentCustomerEn.json';
 import deleteAppointmentCustomerGe from '../locales/ge/customerDashboard/deleteAppointmentCustomerGe.json';
@@ -59,7 +63,6 @@ import changePasswordFormEn from '../locales/en/ownerDashboard/changePasswordFor
 import changePasswordFormVi from '../locales/vi/ownerDashboard/changePasswordFormVi.json';
 import changePasswordFormGe from '../locales/ge/ownerDashboard/changePasswordFormGe.json';
 
-
 import businessListEn from '../locales/en/ownerDashboard/businessListEn.json';
 import businessListVi from '../locales/vi/ownerDashboard/businessListVi.json';
 import businessListGe from '../locales/ge/ownerDashboard/businessListGe.json';
@@ -69,6 +72,7 @@ import businessListGe from '../locales/ge/ownerDashboard/businessListGe.json';
 import appointmentListEn from '../locales/en/appointment/appointmentListEn.json';
 import appointmentListVi from '../locales/vi/appointment/appointmentListVi.json';
 import appointmentListGe from '../locales/ge/ownerDashboard/appointment/appointmentListGe.json';
+
 //add Appointment
 import addAppointmentDialogEn from '../locales/en/appointment/addAppointment/addAppointmentDialogEn.json';
 import addAppointmentDialogVi from '../locales/vi/appointment/addAppointment/addAppointmentDialogVi.json';
@@ -316,6 +320,10 @@ i18n
         appointmentActions: appointmentActionsGe,
         addAppointmentDialog: addAppointmentDialogGe,
         customerSearch: customerSearchGe,
+        customerForm: customerFormGe,
+        customerList: customerListGe,
+        dialogCustomerActions: dialogCustomerActionsGe,
+        showCustomerDialog: showCustomerDialogGe,
         appointmentEditView: appointmentEditViewGe,
         calendarDialog: calendarDialogGe,
         notAvailableTime: notAvailableTimeGe,

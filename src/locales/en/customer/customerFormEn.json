@@ -2,5 +2,7 @@
   "nameLabel": "Name",
   "emailLabel": "Email",
   "phoneLabel": "Phone",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "birthdayLabel": "Birth Date",
+  "doYouWantToReceivePromotions": "Receive Promotions:"
 }
