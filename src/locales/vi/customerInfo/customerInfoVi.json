@@ -5,9 +5,9 @@
       "noCustomersFound": "Không tìm thấy khách hàng nào",
       "information": "Thông tin",
       "birthday": "Ngày sinh",
-      "promotion": "Nhận quảng cáo",
+      "promotion": "Quảng cáo",
       "bookings": "Số lần đến",
-      "lastBooking": "Lần đặt cuối",
+
       "edit": "Chỉnh sửa",
       "delete": "Xóa",
       "customerName": "Tên khách hàng",
@@ -28,6 +28,13 @@
       "customerAddedSuccess": "Thêm khách hàng thành công",
       "customerAddedError": "Lỗi khi thêm khách hàng",
       "customerUpdateError": "Lỗi khi cập nhật khách hàng",
-      "operationError": "Có lỗi xảy ra trong quá trình thực hiện"
+      "operationError": "Có lỗi xảy ra trong quá trình thực hiện",
+      "allBookings": "Tất cả các lần đến",
+      "greaterThan10": "Hơn 10",
+      "greaterThan50": "Hơn 50",
+      "lastBooking": "Lần đặt cuối",
+      "allLastBookings": "Tất cả lần đặt cuối",
+      "withLastBooking": "Có lần đặt cuối",
+      "withoutLastBooking": "Không có lần đặt cuối",
+      "allPromotions": "Tất cả"
 }
-  

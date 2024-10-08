@@ -8,7 +8,7 @@
     "birthday": "Geburtstag",
     "promotion": "Promotion",
     "bookings": "Buchungen",
-    "lastBooking": "Letzte Buchung",
+
     "edit": "Bearbeiten",
     "birthdayLabel": "Geburtstag",
     "doYouWantToReceivePromotions": "Werbeaktionen erhalten:",
@@ -29,7 +29,15 @@
     "confirmDeleteContent": "Sind Sie sicher, dass Sie diesen Kunden löschen möchten?",
     "cancel": "Abbrechen",
     "update": "Aktualisieren",
-    "add": "Hinzufügen"
+    "add": "Hinzufügen",
+    "allBookings": "Alle Buchungen",
+    "greaterThan10": "> 10",
+    "greaterThan50": "> 50",
+    "lastBooking": "Letzte Buchung",
+    "allLastBookings": "Alle letzten Buchungen",
+    "withLastBooking": "Mit letzter Buchung",
+    "withoutLastBooking": "Ohne letzte Buchung",
+    "allPromotions": "Alle"
 }
   
   
