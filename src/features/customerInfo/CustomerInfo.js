@@ -34,8 +34,8 @@ const CustomerInfo = ({ businessId, customers }) => {
   const getBookingInfo = useCallback((customerId) => {
     const customerCheckIns = extractedCheckIns.filter((checkIn) => checkIn.customerId === customerId);
     const totalBookings = customerCheckIns.length;
-    const lastBooking = customerCheckIns.length > 0 ? 
-        new Date(Math.max(...customerCheckIns.map((checkIn) => new Date(checkIn.checkInTime)))).toLocaleString('en-GB') : t('noBookings');
+    const lastBooking = customerCheckIns.length > 0 ?
+      new Date(Math.max(...customerCheckIns.map((checkIn) => new Date(checkIn.checkInTime)))).toLocaleString('en-GB') : t('noBookings');
     return { totalBookings, lastBooking };
   }, [extractedCheckIns, t]);
 
@@ -61,7 +61,7 @@ const CustomerInfo = ({ businessId, customers }) => {
   };
 
   const handleAddNewCustomer = () => {
-    setEditCustomerId(null); 
+    setEditCustomerId(null);
     setEditCustomerData({ name: '', email: '', phone: '', birthday: null, wantsPromotion: false });
     setIsFormModalOpen(true);
   };
@@ -130,6 +130,13 @@ const CustomerInfo = ({ businessId, customers }) => {
     }
   };
 
+  // Filter customers based on search query
+  const filteredCustomers = Array.isArray(customersData) ? customersData.filter((customer) =>
+    customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    customer.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    customer.phone.includes(searchQuery)
+  ) : [];
+
   return (
     <RootContainer>
       <SearchBar
@@ -140,11 +147,11 @@ const CustomerInfo = ({ businessId, customers }) => {
         handleSendEmail={handleSendEmail}
         handleAddNewCustomer={handleAddNewCustomer}
       />
-      {customersData.length === 0 ? (
+      {filteredCustomers.length === 0 ? (
         <Typography>{t('noCustomersFound')}</Typography>
       ) : (
         <CustomerTable
-          customers={customersData}
+          customers={filteredCustomers}
           handleEditCustomer={handleEditCustomer}
           confirmDeleteCustomer={(id) => {
             setCustomerToDelete(id);
@@ -164,7 +171,7 @@ const CustomerInfo = ({ businessId, customers }) => {
       <BulkEmailModal
         open={isBulkEmailModalOpen}
         onClose={() => setIsBulkEmailModalOpen(false)}
-        customers={customersData.filter((customer) => customer.wantsPromotion)}
+        customers={filteredCustomers.filter((customer) => customer.wantsPromotion)}
         onSendEmail={handleSendBulkEmail}
       />
       <ConfirmationDialog
