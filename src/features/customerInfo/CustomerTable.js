@@ -142,7 +142,7 @@ const CustomerTable = ({ customers, handleEditCustomer, confirmDeleteCustomer })
                 <Typography variant="body2">{customer.email}</Typography>
                 <Typography variant="body2">{customer.phone}</Typography>
               </TableCell>
-              <TableCell sx={{ width: '25%' }} align="center" style={{ border: '1px solid #ccc' }}>
+              <TableCell sx={{ width: '20%' }} align="center" style={{ border: '1px solid #ccc' }}>
                 {customer.birthday ? new Date(customer.birthday).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : t('unknown')}
               </TableCell>
               <TableCell sx={{ width: '15%' }} align="center" style={{ border: '1px solid #ccc' }}>
@@ -150,7 +150,7 @@ const CustomerTable = ({ customers, handleEditCustomer, confirmDeleteCustomer })
               </TableCell>
               <TableCell sx={{ width: '15%' }} align="center" style={{ border: '1px solid #ccc' }}>{customer.totalBookings || 0}</TableCell>
 
-              <TableCell sx={{ width: '25%' }} align="center" style={{ border: '1px solid #ccc' }}>
+              <TableCell sx={{ width: '20%' }} align="center" style={{ border: '1px solid #ccc' }}>
                 {customer.lastBooking || t('noBookings')}
               </TableCell>
               <TableCell sx={{ width: '10%' }} align="center" style={{ border: '1px solid #ccc' }}>
