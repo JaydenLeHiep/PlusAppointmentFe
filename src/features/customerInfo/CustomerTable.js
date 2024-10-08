@@ -11,7 +11,7 @@ const CustomerTable = ({ customers, handleEditCustomer, confirmDeleteCustomer })
   const [promotionFilter, setPromotionFilter] = useState('all');
   const [bookingsFilter, setBookingsFilter] = useState('all');
   const [lastBookingFilter, setLastBookingFilter] = useState('all');
-  const [searchName, setSearchName] = useState('');
+  
 
   // State for filter menu
   const [anchorElPromotion, setAnchorElPromotion] = useState(null);
@@ -49,7 +49,7 @@ const CustomerTable = ({ customers, handleEditCustomer, confirmDeleteCustomer })
       if (lastBookingFilter === 'without' && customer.lastBooking) return false;
 
       // Filter by search name
-      if (searchName && !customer.name.toLowerCase().includes(searchName.toLowerCase())) return false;
+      if (!customer.name.toLowerCase()) return false;
 
       return true;
     })
