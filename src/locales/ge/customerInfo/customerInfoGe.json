@@ -1,0 +1,36 @@
+
+{
+    "searchCustomer": "Kunde suchen",
+    "sendEmail": "E-Mail senden",
+    "addCustomer": "Kunden hinzufügen",
+    "noCustomersFound": "Keine Kunden gefunden",
+    "information": "Information",
+    "birthday": "Geburtstag",
+    "promotion": "Promotion",
+    "bookings": "Buchungen",
+    "lastBooking": "Letzte Buchung",
+    "edit": "Bearbeiten",
+    "birthdayLabel": "Geburtstag",
+    "doYouWantToReceivePromotions": "Werbeaktionen erhalten:",
+    "yes": "Ja",
+    "no": "Nein",
+    "customerName": "Kundenname",
+    "customerEmail": "Kunden-E-Mail",
+    "customerPhone": "Kundentelefon",
+    "editCustomer": "Kunden bearbeiten",
+    "customerUpdatedSuccess": "Kunde erfolgreich aktualisiert!",
+    "customerAddedSuccess": "Kunde erfolgreich hinzugefügt!",
+    "customerDeletedSuccess": "Kunde erfolgreich gelöscht!",
+    "customerDeleteError": "Fehler beim Löschen des Kunden.",
+    "customerUpdateError": "Fehler beim Aktualisieren des Kunden.",
+    "emailSentSuccess": "E-Mail erfolgreich gesendet!",
+    "emailSendError": "Fehler beim Senden der E-Mail.",
+    "confirmDeleteTitle": "Löschung bestätigen",
+    "confirmDeleteContent": "Sind Sie sicher, dass Sie diesen Kunden löschen möchten?",
+    "cancel": "Abbrechen",
+    "update": "Aktualisieren",
+    "add": "Hinzufügen"
+}
+  
+  
+  

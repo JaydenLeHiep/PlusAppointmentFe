@@ -202,6 +202,11 @@ import showServicesDialogEn from '../locales/en/service/showServiceDialogEn.json
 import showServicesDialogVi from '../locales/vi/service/showServiceDialogVi.json';
 import showServicesDialogGe from '../locales/ge/ownerDashboard/service/showServiceDialogGe.json';
 
+//customerInfo
+import customerInfoEn from '../locales/en/customerInfo/customerInfoEn.json'
+import customerInfoGe from '../locales/ge/customerInfo/customerInfoGe.json'
+import customerInfoVi from '../locales/vi/customerInfo/customerInfoVi.json'
+
 i18n
   .use(initReactI18next)
   .init({
@@ -252,7 +257,8 @@ i18n
         appointmentOverview: AppointmentOverViewEn,
         checkInOldCustomer: CheckInOldCustomerEn,
         checkInNewCustomer: CheckInNewCustomerEn,
-        checkInInfo: CheckInInfoEn
+        checkInInfo: CheckInInfoEn,
+        customerInfo: customerInfoEn
         // Add other namespaces for English
       },
       vi: {
@@ -291,6 +297,7 @@ i18n
         ownerDashboard: ownerDashboardVi,
         notAvailableTime: notAvailableTimeVi,
         changePasswordForm: changePasswordFormVi,
+        customerInfo: customerInfoVi
         // Add other namespaces for Vietnamese
       },
       ge: {  // Add a new language key for German
@@ -339,7 +346,8 @@ i18n
         appointmentOverview: AppointmentOverViewGe,
         checkInOldCustomer: CheckInOldCustomerGe,
         checkInNewCustomer: CheckInNewCustomerGe,
-        checkInInfo: CheckInInfoGe
+        checkInInfo: CheckInInfoGe,
+        customerInfo: customerInfoGe
       },
     },
     lng: 'en', // default language
