@@ -15,9 +15,9 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 
 const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
-  // Only consider customers with an email address for the initial state and rendering
-  const customersWithEmail = customers.filter((customer) => customer.email);
-  const [selectedCustomers, setSelectedCustomers] = useState(customersWithEmail.filter(customer => customer.wantsPromotion));
+  // Filter customers who have opted in for promotions and have an email
+  const customersWithEmailAndPromotion = customers.filter((customer) => customer.email && customer.wantsPromotion);
+  const [selectedCustomers, setSelectedCustomers] = useState(customersWithEmailAndPromotion);
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
   const [selectAll, setSelectAll] = useState(false);
@@ -34,11 +34,9 @@ const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
   // Handle "Select All" toggle
   const handleSelectAllToggle = () => {
     if (selectAll) {
-      // Unselect all
       setSelectedCustomers([]);
     } else {
-      // Select all customers with email addresses
-      setSelectedCustomers(customersWithEmail);
+      setSelectedCustomers(customersWithEmailAndPromotion);
     }
     setSelectAll(!selectAll);
   };
@@ -50,7 +48,7 @@ const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
       body,
     };
     onSendEmail(emailData);
-    onClose(); // Keep automatic closing after sending
+    onClose();
   };
 
   return (
@@ -96,12 +94,12 @@ const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
             <Checkbox
               checked={selectAll}
               onChange={handleSelectAllToggle}
-              indeterminate={selectedCustomers.length > 0 && selectedCustomers.length < customersWithEmail.length}
+              indeterminate={selectedCustomers.length > 0 && selectedCustomers.length < customersWithEmailAndPromotion.length}
             />
           }
           label="Select All"
         />
-        {customersWithEmail.map((customer) => (
+        {customersWithEmailAndPromotion.map((customer) => (
           <FormControlLabel
             key={customer.customerId}
             control={

@@ -49,13 +49,12 @@ export const CustomersProvider = ({ children }) => {
     try {
       await addCustomer(customerDetails);
       setAlert({ message: 'Customer added successfully!', severity: 'success' });
-      await fetchCustomersForBusiness(businessId); // Refresh the customer list
     } catch (error) {
       console.error('Error adding customer:', error);
       setAlert({ message: 'Failed to add customer.', severity: 'error' });
       throw error;
     }
-  }, [fetchCustomersForBusiness]);
+  }, []);
 
   const updateExistingCustomer = useCallback(async (businessId, customerId, customerDetails) => {
     try {

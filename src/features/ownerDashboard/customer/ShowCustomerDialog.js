@@ -13,6 +13,7 @@ import { Add, Close as CloseIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useCustomersContext } from '../../../context/CustomerContext.js';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
+import moment from 'moment-timezone';
 import CustomerList from './CustomerList.js';
 import CustomerForm from './CustomerForm';
 import { dialogTitleStyles, addNewCustomerTypographyStyles, alertStyles, closeIconButtonStyles } from '../../../styles/OwnerStyle/CustomerComponent/ShowCustomerDialogStyles';
@@ -26,6 +27,8 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
     name: '',
     email: '',
     phone: '',
+    birthday: null,       
+    wantsPromotion: false
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [alert, setAlert] = useState({ message: '', severity: '' });
@@ -70,15 +73,19 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
           email: newCustomer.email,
           phone: newCustomer.phone,
           BusinessId: String(businessId),
+          birthday: newCustomer.birthday,
+          wantsPromotion: newCustomer.wantsPromotion,
         };
-
+  
         await addNewCustomer(customerDetails, businessId);
         setAlert({ message: t('customerAddedSuccess'), severity: 'success' });
-
+  
         setNewCustomer({
           name: '',
           email: '',
           phone: '',
+          birthday: null,
+          wantsPromotion: false,
         });
       } catch (error) {
         console.error('Failed to add customer:', error);
@@ -96,15 +103,19 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
           email: newCustomer.email,
           phone: newCustomer.phone,
           BusinessId: String(businessId),
+          birthday: newCustomer.birthday,
+          wantsPromotion: newCustomer.wantsPromotion,
         };
-
+  
         await updateExistingCustomer(businessId, customerId, customerDetails);
         setAlert({ message: t('customerUpdatedSuccess'), severity: 'success' });
-
+  
         setNewCustomer({
           name: '',
           email: '',
           phone: '',
+          birthday: null,
+          wantsPromotion: false,
         });
       } catch (error) {
         console.error('Failed to update customer:', error);
@@ -141,6 +152,8 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
       name: customer.name,
       email: customer.email,
       phone: customer.phone,
+      birthday: customer.birthday ? moment.utc(customer.birthday) : null,
+      wantsPromotion: customer.wantsPromotion,
     });
     setIsFormOpen(false);
   };

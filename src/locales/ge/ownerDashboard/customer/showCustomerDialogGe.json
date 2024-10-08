@@ -1,0 +1,14 @@
+{
+    "customerListTitle": "Kundenliste",
+    "addNewCustomer": "Neuen Kunden hinzufügen",
+    "customerAddedSuccess": "Kunde erfolgreich hinzugefügt!",
+    "customerAddedError": "Kunde konnte nicht hinzugefügt werden. Bitte versuchen Sie es erneut.",
+    "customerUpdatedSuccess": "Kunde erfolgreich aktualisiert!",
+    "customerUpdatedError": "Kunde konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+    "customerDeletedSuccess": "Kunde erfolgreich gelöscht!",
+    "customerDeletedError": "Kunde konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
+    "confirmDeleteTitle": "Löschen bestätigen",
+    "confirmDeleteContent": "Sind Sie sicher, dass Sie diesen Kunden löschen möchten?",
+    "addCustomer": "Hinzufügen",
+    "updateCustomer": "Kunde aktualisieren"
+}

@@ -38,7 +38,7 @@
     "react-big-calendar": "^1.13.4",
     "react-calendar": "^5.0.0",
     "react-date-range": "^2.0.1",
-    "react-datepicker": "^7.3.0",
+    "react-datepicker": "^7.4.0",
     "react-dom": "^18.3.1",
     "react-i18next": "^15.0.1",
     "react-material-ui-carousel": "^3.4.2",

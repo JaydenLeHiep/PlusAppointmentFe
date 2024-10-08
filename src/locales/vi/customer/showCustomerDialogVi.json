@@ -10,7 +10,6 @@
     "customerDeletedError": "Không thể xóa khách hàng. Vui lòng thử lại.",
     "confirmDeleteTitle": "Xác Nhận Xóa",
     "confirmDeleteContent": "Bạn có chắc chắn muốn xóa khách hàng này không?",
-    "addCustomer": "Thêm Khách Hàng",
+    "addCustomer": "Thêm",
     "updateCustomer": "Cập Nhật Khách Hàng"
-  
 }
