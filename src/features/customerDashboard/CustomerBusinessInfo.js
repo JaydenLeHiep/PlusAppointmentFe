@@ -15,6 +15,7 @@ import {
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { useTranslation } from 'react-i18next';
+import pumpkinImage from '../../assets/pumpkin.png'; // Import the pumpkin image
 
 const CustomerBusinessInfo = ({ businessInfo }) => {
   const { i18n } = useTranslation();
@@ -49,9 +50,23 @@ const CustomerBusinessInfo = ({ businessInfo }) => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          position: 'relative', // Make positioning relative to this Box
         }}
       >
-        <BusinessName>{businessInfo.name}</BusinessName>
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <BusinessName>{businessInfo.name}</BusinessName>
+          {/* Pumpkin image positioned below and to the right of the name */}
+          <img
+            src={pumpkinImage}
+            alt="Pumpkin"
+            style={{
+              width: '50px',
+              position: 'absolute',
+              top: '-0.2em', // Adjust to move it down closer to the name
+              right: '-2.0em', // Stick it closer horizontally
+            }}
+          />
+        </div>
         <InfoContainer>
           <AddressWrapper>
             <IconWrapper>
