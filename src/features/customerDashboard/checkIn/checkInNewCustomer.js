@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Snackbar, Alert, Box, Typography, CircularProgress, Checkbox, FormControlLabel, Backdrop, IconButton } from '@mui/material';
+import { Snackbar, Alert, Box, Typography, CircularProgress, Checkbox, Backdrop, IconButton } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { useCustomersContext } from '../../../context/CustomerContext';
 import {
@@ -94,7 +94,7 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded, onBack }) => {
 
   return (
     <FormContainer style={{ marginBottom: '50px' }}>
-      <Box display="flex" alignItems="center" mb={2} width="110%" justifyContent="center" position="relative">
+      <Box display="flex" alignItems="center" mb={2} width="100%" justifyContent="center" position="relative">
         <IconButton onClick={handleBackClick} edge="start" sx={{ position: 'absolute', left: 0 }}>
           <ArrowBack />
         </IconButton>
@@ -164,26 +164,32 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded, onBack }) => {
           disabled={isSubmitting}
         />
 
-        <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
-          <FormControlLabel
-            control={<Checkbox checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />}
-          />
-          <NewCustomerLink onClick={handleOpenTerms}>
-            {t('readAndAcceptTerms')}
-          </NewCustomerLink>
+        <Box display="flex" flexDirection="column" alignItems="center" mt={2} width="100%">
+          {/* First Checkbox and Link */}
+          <Box display="flex" alignItems="center" justifyContent="center" width="100%">
+            <Box flex="0 0 30px" display="flex" justifyContent="center"> {/* Control the width for left alignment of checkbox */}
+              <Checkbox
+                checked={acceptTerms}
+                onChange={(e) => setAcceptTerms(e.target.checked)}
+              />
+            </Box>
+            <NewCustomerLink onClick={handleOpenTerms} style={{ textAlign: 'center', flex: 1 }}>
+              {t('readAndAcceptTerms')}
+            </NewCustomerLink>
+          </Box>
 
-        </Box>
-
-        <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
-          <FormControlLabel
-            control={
+          {/* Second Checkbox and Label */}
+          <Box display="flex" alignItems="center" justifyContent="center" width="100%" mt={1}>
+            <Box flex="0 0 30px" display="flex" justifyContent="center"> {/* Control the width for left alignment of checkbox */}
               <Checkbox
                 checked={formData.wantsPromotion}
                 onChange={(e) => setFormData({ ...formData, wantsPromotion: e.target.checked })}
               />
-            }
-            label={t('wantsPromotionLabel')}
-          />
+            </Box>
+            <Typography style={{ textAlign: 'center', flex: 1 }}>
+              {t('wantsPromotionLabel')}
+            </Typography>
+          </Box>
         </Box>
 
         <Box display="flex" justifyContent="center">

@@ -1,13 +1,25 @@
 import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
+
+import GlobalStyles from './styles/GlobalStyles';
+import { useAuth } from './hooks/useAuth';
+
+// react components
 import HomePage from './features/home/HomePage';
 import BusinessHomePage from './features/home/BusinessHomePage';
 import LoginPage from './features/auth/Login/LoginPage';
 import RegisterPage from './features/auth/Register/RegisterPage';
 import OwnerDashboard from './features/ownerDashboard/OwnerDashboard';
-import GlobalStyles from './styles/GlobalStyles';
-import { useAuth } from './hooks/useAuth';
+
 import PCDashboard from './features/customerDashboard/CustomerDashboard';
+
+import ChangePasswordForm from './features/ownerDashboard/ChangePasswordForm';
+
+import DeleteAppointmentCustomer from './features/customerDashboard/DeleteAppointmentCustomer/DeleteAppointmentCustomer';
+import CheckInDashboard from './features/customerDashboard/checkIn/CheckInDashboard';
+import CustomerInfo from './features/customerInfo/CustomerInfo';
+
+// contexts
 import { AppointmentsProvider } from './context/AppointmentsContext';
 import { StaffsProvider } from './context/StaffsContext';
 import { ServicesProvider } from './context/ServicesContext';
@@ -15,10 +27,8 @@ import { CustomersProvider } from './context/CustomerContext';
 import { NotAvailableDateProvider } from './context/NotAvailableDateContext';
 import { NotificationsProvider } from './context/NotificationsContext';
 import { NotAvailableTimeProvider } from './context/NotAvailableTimeContext';
-import ChangePasswordForm from './features/ownerDashboard/ChangePasswordForm';
 import { OpeningHoursProvider } from './context/OpeningHoursContext';
-import DeleteAppointmentCustomer from './features/customerDashboard/DeleteAppointmentCustomer/DeleteAppointmentCustomer';
-import CheckInDashboard from './features/customerDashboard/checkIn/CheckInDashboard';
+// utils
 import './utils/i18n'
 
 const App = () => {
@@ -54,6 +64,7 @@ const App = () => {
                         <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
                         <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
                         <Route path="/change-password" element={isAuthenticated ? <ChangePasswordForm /> : <Navigate to="/login" />} />
+                        <Route path="/customer-info" element={isAuthenticated ? <CustomerInfo /> : <Navigate to="/login" />} />
                         <Route path="/delete-appointment-customer" element={<DeleteAppointmentCustomer />} />
                       </Routes>
                     </OpeningHoursProvider>

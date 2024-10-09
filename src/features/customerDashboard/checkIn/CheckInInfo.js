@@ -128,7 +128,11 @@ const CheckInInfo = ({ customerName, customerId, businessId, onBack }) => {
                   {(Array.isArray(appointment.services.$values) ? appointment.services.$values : []).map((service, idx) => (
                     <StyledListItemText
                       key={idx}
-                      primary={`${t('serviceLabel')}: ${service.name}`}
+                      primary={
+                      <>
+                      <Typography component="span" fontWeight="bold">{t('serviceLabel')}:</Typography> {service.name}
+                      </>
+                      }
                       secondary={`${t('durationLabel')}: ${service.duration || 'N/A'} | ${t('priceLabel')}: €${service.price || 'N/A'} | ${t('staffLabel')}: ${service.staffName}`}
                     />
                   ))}

@@ -23,15 +23,19 @@ import thankYouPageGe from '../locales/ge/customerDashboard/thankYouPageGe.json'
 
 import customerFormEn from '../locales/en/customer/customerFormEn.json';
 import customerFormVi from '../locales/vi/customer/customerFormVi.json';
+import customerFormGe from '../locales/ge/ownerDashboard/customer/customerFormGe.json';
 
 import dialogCustomerActionsEn from '../locales/en/customer/dialogCustomerActionsEn.json';
 import dialogCustomerActionsVi from '../locales/vi/customer/dialogCustomerActionsVi.json';
+import dialogCustomerActionsGe from '../locales/ge/ownerDashboard/customer/dialogCustomerActionsGe.json';
 
 import showCustomerDialogEn from '../locales/en/customer/showCustomerDialogEn.json';
 import showCustomerDialogVi from '../locales/vi/customer/showCustomerDialogVi.json';
+import showCustomerDialogGe from '../locales/ge/ownerDashboard/customer/showCustomerDialogGe.json';
 
 import customerListEn from '../locales/en/customer/customerListEn.json';
 import customerListVi from '../locales/vi/customer/customerListVi.json';
+import customerListGe from '../locales/ge/ownerDashboard/customer/customerListGe.json';
 
 import deleteAppointmentCustomerEn from '../locales/en/customerDashboard/deleteAppointmentCustomerEn.json';
 import deleteAppointmentCustomerGe from '../locales/ge/customerDashboard/deleteAppointmentCustomerGe.json';
@@ -59,7 +63,6 @@ import changePasswordFormEn from '../locales/en/ownerDashboard/changePasswordFor
 import changePasswordFormVi from '../locales/vi/ownerDashboard/changePasswordFormVi.json';
 import changePasswordFormGe from '../locales/ge/ownerDashboard/changePasswordFormGe.json';
 
-
 import businessListEn from '../locales/en/ownerDashboard/businessListEn.json';
 import businessListVi from '../locales/vi/ownerDashboard/businessListVi.json';
 import businessListGe from '../locales/ge/ownerDashboard/businessListGe.json';
@@ -69,6 +72,7 @@ import businessListGe from '../locales/ge/ownerDashboard/businessListGe.json';
 import appointmentListEn from '../locales/en/appointment/appointmentListEn.json';
 import appointmentListVi from '../locales/vi/appointment/appointmentListVi.json';
 import appointmentListGe from '../locales/ge/ownerDashboard/appointment/appointmentListGe.json';
+
 //add Appointment
 import addAppointmentDialogEn from '../locales/en/appointment/addAppointment/addAppointmentDialogEn.json';
 import addAppointmentDialogVi from '../locales/vi/appointment/addAppointment/addAppointmentDialogVi.json';
@@ -198,6 +202,15 @@ import showServicesDialogEn from '../locales/en/service/showServiceDialogEn.json
 import showServicesDialogVi from '../locales/vi/service/showServiceDialogVi.json';
 import showServicesDialogGe from '../locales/ge/ownerDashboard/service/showServiceDialogGe.json';
 
+//customerInfo
+import customerInfoEn from '../locales/en/customerInfo/customerInfoEn.json'
+import customerInfoGe from '../locales/ge/customerInfo/customerInfoGe.json'
+import customerInfoVi from '../locales/vi/customerInfo/customerInfoVi.json'
+
+import bulkEmailModalEn from '../locales/en/customerInfo/bulkEmailModalEn.json'
+import bulkEmailModalGe from '../locales/ge/customerInfo/bulkEmailModalGe.json'
+import bulkEmailModalVi from '../locales/vi/customerInfo/bulkEmailModalVi.json'
+
 i18n
   .use(initReactI18next)
   .init({
@@ -248,7 +261,9 @@ i18n
         appointmentOverview: AppointmentOverViewEn,
         checkInOldCustomer: CheckInOldCustomerEn,
         checkInNewCustomer: CheckInNewCustomerEn,
-        checkInInfo: CheckInInfoEn
+        checkInInfo: CheckInInfoEn,
+        customerInfo: customerInfoEn,
+        bulkEmailModal: bulkEmailModalEn
         // Add other namespaces for English
       },
       vi: {
@@ -287,6 +302,8 @@ i18n
         ownerDashboard: ownerDashboardVi,
         notAvailableTime: notAvailableTimeVi,
         changePasswordForm: changePasswordFormVi,
+        customerInfo: customerInfoVi,
+        bulkEmailModal: bulkEmailModalVi
         // Add other namespaces for Vietnamese
       },
       ge: {  // Add a new language key for German
@@ -316,6 +333,10 @@ i18n
         appointmentActions: appointmentActionsGe,
         addAppointmentDialog: addAppointmentDialogGe,
         customerSearch: customerSearchGe,
+        customerForm: customerFormGe,
+        customerList: customerListGe,
+        dialogCustomerActions: dialogCustomerActionsGe,
+        showCustomerDialog: showCustomerDialogGe,
         appointmentEditView: appointmentEditViewGe,
         calendarDialog: calendarDialogGe,
         notAvailableTime: notAvailableTimeGe,
@@ -331,7 +352,9 @@ i18n
         appointmentOverview: AppointmentOverViewGe,
         checkInOldCustomer: CheckInOldCustomerGe,
         checkInNewCustomer: CheckInNewCustomerGe,
-        checkInInfo: CheckInInfoGe
+        checkInInfo: CheckInInfoGe,
+        customerInfo: customerInfoGe,
+        bulkEmailModal: bulkEmailModalGe
       },
     },
     lng: 'en', // default language

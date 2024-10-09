@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import '@fontsource/poppins'; // Importing Poppins font
 import '@fontsource/roboto'; // Importing Roboto font
 
-const Navbar = () => {
+const Navbar = ({ changeView }) => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation('navbar');
@@ -103,60 +103,76 @@ const Navbar = () => {
                 {t('home')}
               </Button>
             )}
-            {isAuthenticated ? (
-              <Button
-                color="primary"
-                onClick={handleLogout}
-                sx={{
-                  color: '#000000',
-                  textTransform: 'none',
-                  textDecoration: 'none',
-                  '&:hover': {
-                    color: '#007bff',
-                  },
-                  transition: 'color 0.3s ease',
-                }}
-              >
-                {t('logout')}
-              </Button>
-            ) : (
-              <>
-                <IconButton
-                  color="inherit"
-                  edge="end"
-                  onClick={handleMenuOpen}
-                  sx={{
-                    color: '#000000',
-                    '&:hover': {
-                      color: '#007bff',
-                    },
-                    transition: 'color 0.3s ease',
-                  }}
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleMenuClose}
-                >
+            <IconButton
+              color="inherit"
+              edge="end"
+              onClick={handleMenuOpen}
+              sx={{
+                color: '#000000',
+                '&:hover': {
+                  color: '#007bff',
+                },
+                transition: 'color 0.3s ease',
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              {!isAuthenticated ? (
+                [
                   <MenuItem
+                    key="register"
                     component={RouterLink}
                     to="/register"
                     onClick={handleMenuClose}
                   >
                     {t('register')}
-                  </MenuItem>
+                  </MenuItem>,
                   <MenuItem
+                    key="login"
                     component={RouterLink}
                     to="/login"
                     onClick={handleMenuClose}
                   >
                     {t('login')}
                   </MenuItem>
-                </Menu>
-              </>
-            )}
+                ]
+              ) : (
+                [
+                  <MenuItem
+                  key="home"
+                  onClick={() => {
+                    changeView('dashboard');
+                    handleMenuClose();
+                  }}
+                >
+                  {t('home')}
+                </MenuItem>,
+                <MenuItem
+                  key="customer-info"
+                  onClick={() => {
+                    changeView('customersInfo');
+                    handleMenuClose();
+                  }}
+                >
+                  {t('customer')}
+                </MenuItem>,
+                  <MenuItem
+                    key="logout"
+                    onClick={() => {
+                      handleMenuClose();
+                      handleLogout();
+                    }}
+                  >
+                    {t('logout')}
+                  </MenuItem>
+                ]
+              )}
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
