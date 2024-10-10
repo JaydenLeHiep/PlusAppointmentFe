@@ -2,7 +2,8 @@
     "viewLabels": {
       "month": "Tháng",
       "day": "Ngày",
-      "staff": "Nhân viên"
+      "staff": "Nhân viên",
+      "week": "Lịch"
     },
     "buttons": {
       "previous": "Trước",

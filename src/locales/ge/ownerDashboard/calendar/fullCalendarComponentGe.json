@@ -2,7 +2,8 @@
     "viewLabels": {
       "month": "Monat",
       "day": "Tag",
-      "staff": "Mitarbeiter"
+      "staff": "Mitarbeiter",
+      "week": "Woche"
     },
     "buttons": {
       "previous": "Zurück",
