@@ -63,7 +63,7 @@ const CustomerBusinessInfo = ({ businessInfo }) => {
               width: '50px',
               position: 'absolute',
               top: '-0.2em', // Adjust to move it down closer to the name
-              right: '-2.0em', // Stick it closer horizontally
+              right: '-2.5em', // Stick it closer horizontally
             }}
           />
         </div>
