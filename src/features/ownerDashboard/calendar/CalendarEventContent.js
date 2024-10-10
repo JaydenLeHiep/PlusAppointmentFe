@@ -1,13 +1,9 @@
 import React from 'react';
 
 const CalendarEventContent = ({ eventInfo, currentView }) => {
-  const {extendedProps } = eventInfo.event;
-
+  const { extendedProps, title } = eventInfo.event;
   const startTime = eventInfo.event.start;
   const endTime = eventInfo.event.end;
-  //const staffName = extendedProps.staffName;
-  //const serviceName = extendedProps.service; // Access the service name from extendedProps
-  const customerName = extendedProps.customerName;
 
   if (!startTime || !endTime) {
     return <div><span>Invalid Time</span></div>;
@@ -15,13 +11,18 @@ const CalendarEventContent = ({ eventInfo, currentView }) => {
 
   const timeText = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}-${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-  if (currentView === 'timeGridDay') {
+  // Check if the event is a "not available time" event by looking for the title "Unavailable"
+  if (title === 'Unavailable') {
     return (
-      <div>
-        <span><strong>{timeText}</strong> {customerName}</span>
+      <div style={{ color: 'red', fontWeight: 'bold' }}>
+        <span>{timeText} - {title}</span>
       </div>
     );
-  } else if (currentView === 'resourceTimeGridDay') {
+  }
+
+  // For regular events, display in the standard format
+  if (currentView === 'timeGridDay' || currentView === 'timeGridWeek' || currentView === 'resourceTimeGridDay') {
+    const customerName = extendedProps.customerName;
     return (
       <div>
         <span><strong>{timeText}</strong> {customerName}</span>
