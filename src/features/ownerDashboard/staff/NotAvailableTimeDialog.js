@@ -22,7 +22,7 @@ import { fetchNotAvailableTimeSlots } from '../../../lib/apiClientAppointment';
 import moment from 'moment-timezone';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
+import { useTranslation } from 'react-i18next';
 
 import {
     dialogTitleStyle,
@@ -42,7 +42,7 @@ import {
 
 const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailableTimes, notAvailableDates, staffName }) => {
     const { addNotAvailableTime, updateNotAvailableTime, deleteNotAvailableTime } = useNotAvailableTimeContext();
-    const { t } = useTranslation('notAvailableTime'); // Load the 'notAvailableTime' namespace
+    const { t } = useTranslation('notAvailableTime');
 
     const [alert, setAlert] = useState({ message: '', severity: '' });
     const [editTimeId, setEditTimeId] = useState(null);
@@ -53,6 +53,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
     const [disabledTimeSlots, setDisabledTimeSlots] = useState([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingTimeId, setEditingTimeId] = useState(null);
+    const [reason, setReason] = useState('');
 
     const alertRef = useRef(null);
 
@@ -82,7 +83,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
     }, [selectedDate, staffId]);
 
     const handleAddOrUpdateNotAvailableTime = async () => {
-        if (!selectedIntervals.length || !selectedDate || !staffId) return;
+        if (!selectedIntervals.length || !selectedDate || !staffId || !reason.trim()) return;
 
         const formattedDate = moment(selectedDate).tz('UTC').toISOString();
         const fromDateTime = moment(selectedDate).set({
@@ -100,7 +101,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
             date: formattedDate,
             from: fromDateTime,
             to: toDateTime,
-            reason: 'Meeting',
+            reason: reason.trim(),
         };
 
         try {
@@ -116,6 +117,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
             setEditingTimeId(null);
             setSelectedDate(null);
             setSelectedIntervals([]);
+            setReason('');
         } catch (error) {
             setAlert({ message: editTimeId ? t('errorUpdate') : t('errorAdd'), severity: 'error' });
         }
@@ -140,6 +142,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
         setSelectedIntervals([]);
         setEditTimeId(null);
         setEditingTimeId(null);
+        setReason('');
         setAlert({ message: '', severity: '' });
     };
 
@@ -157,6 +160,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
 
             setSelectedIntervals([fromTime, toTime]);
 
+            setReason(time.reason || ''); // Set reason for editing
             setEditingTimeId(time.notAvailableTimeId);
             setIsFormOpen(false);
         }
@@ -227,6 +231,14 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                             />
                         )}
 
+                        <TextField
+                            label={t('Reason')}
+                            value={reason}
+                            onChange={(e) => setReason(e.target.value)}
+                            fullWidth
+                            sx={{ marginTop: 2, marginBottom: 2 }}
+                        />
+
                         <Box sx={formActionButtonsStyle}>
                             <Button
                                 variant="contained"
@@ -265,6 +277,9 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                                         </Typography>
                                                         <Typography variant="body2" component="div">
                                                             {t('to')}: {moment(time.to).local().format('HH:mm')}
+                                                        </Typography>
+                                                        <Typography variant="body2" component="div">
+                                                            {t('reason')}: {time.reason || 'N/A'}
                                                         </Typography>
                                                     </>
                                                 }
@@ -310,6 +325,14 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                                         disabledTimeSlots={disabledTimeSlots}
                                                     />
                                                 )}
+
+                                                <TextField
+                                                    label={t('Reason')}
+                                                    value={reason}
+                                                    onChange={(e) => setReason(e.target.value)}
+                                                    fullWidth
+                                                    sx={{ marginTop: 2, marginBottom: 2 }}
+                                                />
 
                                                 <Box sx={formActionButtonsStyle}>
                                                     <Button
