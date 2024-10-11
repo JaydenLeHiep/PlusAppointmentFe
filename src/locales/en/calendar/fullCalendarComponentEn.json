@@ -2,7 +2,8 @@
     "viewLabels": {
       "month": "Month",
       "day": "Day",
-      "staff": "Staff"
+      "staff": "Staff",
+      "week": "Week"
     },
     "buttons": {
       "previous": "Previous",

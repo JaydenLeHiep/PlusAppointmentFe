@@ -8,7 +8,7 @@ import ShowServicesDialog from './servicecomponent/showServiceDialog';
 import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import ShowCustomerDialog from '../ownerDashboard/customer/ShowCustomerDialog';
 
-const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments, customers, 
+const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments, customers,
   notAvailableDates, notifications, notAvailableTimes, categories, }) => {
   const { fetchAppointmentsForBusiness } = useAppointmentsContext();
 
@@ -42,13 +42,13 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
 
   const events = (appointments || []).map(appt => {
     let startTime = new Date(appt.appointmentTime).getTime();
-  
+
     return (appt.services?.$values || []).map(service => {
       const serviceStart = new Date(startTime);
       const serviceEnd = new Date(startTime + parseDuration(service.duration));
-  
+
       startTime += parseDuration(service.duration);
-  
+
       return {
         ...appt,
         title: `${appt.customerName} - ${service.name}`,
@@ -61,7 +61,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
       };
     });
   }).flat();
-  
+
 
   const notAvailableEvents = notAvailableDates.map(date => {
     // Find the staff name from staff list by matching staffId
@@ -78,6 +78,8 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
       end: adjustedEndDate.toISOString(),
       staffName: staffName,
       staffId: date.staffId,
+      isNotAvailable: true,
+      reason: date.reason || 'Unavailable',
     };
   });
 
@@ -92,11 +94,12 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
       end: new Date(time.to).toISOString(),
       staffName: staffName,
       staffId: time.staffId,
-      backgroundColor: 'gray',
-      display: 'background',
+      isNotAvailable: true, // Indicate that this event is a "not available time"
+      reason: time.reason, // Add the reason to be displayed
     };
   });
 
+  console.log(notAvailableTimeEvents)
   return (
     <Box>
       <BusinessInfo

@@ -76,10 +76,12 @@ const ServiceList = ({
   );
 
   // Group services by category
-  const servicesByCategory = categories.map(category => ({
+  const servicesByCategory = categories
+  .map(category => ({
     category,
     services: filteredServices.filter(service => service.categoryId === category.categoryId),
-  }));
+  }))
+  .filter(({ services }) => services.length > 0); 
 
   return (
     <Box>
