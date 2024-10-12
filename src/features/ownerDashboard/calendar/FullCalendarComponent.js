@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Box, Button, ButtonGroup } from '@mui/material';
 import AppointmentInfoModal from '../appointment/AppointmentInfoModal/AppointmentInfoModal';
 import CalendarViewControls from './CalendarViewControlls';
-import CalendarEventContent from './CalendarEventContent';
 import CalendarDayCell from './CalendarDayCell';
 import FullCalendarWrapper from './FullCalendarWrapper';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 // Commented out 'timeGridDay' view
 const views = ['dayGridMonth', /* 'timeGridDay', */ 'timeGridWeek', 'resourceTimeGridDay'];
 
-const FullCalendarComponent = ({ events, staff, services, notAvailableDates, notAvailableTimes }) => {
+const FullCalendarComponent = ({ events, staff, services, notAvailableDates, notAvailableTimes, fetchAppointmentById }) => {
   const { t } = useTranslation('fullCalendarComponent');
   const [currentView, setCurrentView] = useState(views[0]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -35,10 +34,8 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
 
   const handleEventClick = (clickInfo) => {
     const { isNotAvailable } = clickInfo.event.extendedProps;
-
-    // Prevent clicks on "not available" events
     if (isNotAvailable) {
-      return; // Do nothing if the event is marked as "not available"
+      return;
     }
 
     const eventProps = clickInfo.event.extendedProps;
@@ -87,58 +84,58 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
   // Logic for appointment events
   const appointmentEvents = currentView === 'resourceTimeGridDay'
     ? events.map(event => {
-        const resource = resources.find(res => res.title === event.staffName);
-        return {
-          ...event,
-          resourceIds: [resource?.id],
-        };
-      })
+      const resource = resources.find(res => res.title === event.staffName);
+      return {
+        ...event,
+        resourceIds: [resource?.id],
+      };
+    })
     : currentView === 'timeGridWeek'
       ? events.reduce((acc, event) => {
-          const existingEvent = acc.find(e => e.appointmentId === event.appointmentId);
-          if (existingEvent) {
-            existingEvent.end = new Date(Math.max(new Date(existingEvent.end), new Date(event.end))).toISOString();
-          } else {
-            acc.push({ ...event, resourceIds: [] });
-          }
-          return acc;
-        }, [])
+        const existingEvent = acc.find(e => e.appointmentId === event.appointmentId);
+        if (existingEvent) {
+          existingEvent.end = new Date(Math.max(new Date(existingEvent.end), new Date(event.end))).toISOString();
+        } else {
+          acc.push({ ...event, resourceIds: [] });
+        }
+        return acc;
+      }, [])
       : events;
 
   // Logic for not available dates
   const notAvailableEvents = currentView === 'resourceTimeGridDay'
     ? notAvailableDates.map(date => {
-        const resource = resources.find(res => res.title === date.staffName);
-        if (!resource) return null;
-        return {
-          start: new Date(date.start).toISOString(),
-          end: date.end ? new Date(date.end).toISOString() : new Date(new Date(date.start).setHours(new Date(date.start).getHours() + 1)).toISOString(),
-          resourceIds: [resource.id],
-          backgroundColor: 'red',
-          display: 'auto',
-          isNotAvailable: true, // Indicate that this is a "not available" event
-          title: date.title || 'Unavailable', // Display the title
-        };
-      }).filter(event => event !== null)
+      const resource = resources.find(res => res.title === date.staffName);
+      if (!resource) return null;
+      return {
+        start: new Date(date.start).toISOString(),
+        end: date.end ? new Date(date.end).toISOString() : new Date(new Date(date.start).setHours(new Date(date.start).getHours() + 1)).toISOString(),
+        resourceIds: [resource.id],
+        backgroundColor: 'rgba(255, 0, 0, 0.4)',
+        display: 'auto',
+        isNotAvailable: true, // Indicate that this is a "not available" event
+        title: date.title || 'Unavailable', // Display the title
+      };
+    }).filter(event => event !== null)
     : [];
 
   // Logic for not available times
   const notAvailableTimeEvents = (currentView === 'resourceTimeGridDay' || currentView === 'timeGridWeek')
     ? notAvailableTimes.map(time => {
-        const resource = currentView === 'resourceTimeGridDay' ? resources.find(res => res.title === time.staffName) : null;
-        const event = {
-          start: new Date(time.start).toISOString(),
-          end: new Date(time.end).toISOString(),
-          backgroundColor: 'red',
-          display: 'auto',
-          isNotAvailable: true, // Indicate this is a "not available" event
-          title: time.title || 'Unavailable', // Display the title
-        };
-        if (resource) {
-          event.resourceIds = [resource.id];
-        }
-        return event;
-      }).filter(event => event !== null)
+      const resource = currentView === 'resourceTimeGridDay' ? resources.find(res => res.title === time.staffName) : null;
+      const event = {
+        start: new Date(time.start).toISOString(),
+        end: new Date(time.end).toISOString(),
+        backgroundColor: 'rgba(255, 0, 0, 0.4)',
+        display: 'auto',
+        isNotAvailable: true,
+        title: time.title || 'Unavailable',
+      };
+      if (resource) {
+        event.resourceIds = [resource.id];
+      }
+      return event;
+    }).filter(event => event !== null)
     : [];
 
   // Render Event Content Logic
@@ -149,7 +146,6 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
           fontSize: '14px',
           color: 'white',
           fontWeight: 'bold',
-          backgroundColor: 'red',
           padding: '4px',
           borderRadius: '4px',
         }}>
@@ -157,7 +153,89 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
         </div>
       );
     }
-    return <CalendarEventContent eventInfo={eventInfo} currentView={currentView} />;
+    // Check if current view is the week, day, or month view
+    const isWeekView = eventInfo.view.type === 'timeGridWeek';
+    const isDayView = eventInfo.view.type === 'resourceTimeGridDay';
+    const isMonthView = eventInfo.view.type === 'dayGridMonth';
+    const { customerName } = eventInfo.event.extendedProps;
+
+    if (isWeekView) {
+      // Customized layout for the week view with 75%/25% split and color blocks
+      const colors = eventInfo.event.extendedProps.categoryColors || [];
+      const rowHeight = colors.length ? `${100 / colors.length}%` : '100%';
+
+      return (
+        <Box sx={{
+          display: 'flex',
+          width: '100%',
+          height: '100%',
+          borderRadius: '3px', // Rounded corners
+          overflow: 'hidden', // Ensures corners apply to internal elements
+          backgroundColor: '#f0f8ff', // Wrapper background color
+          border: '1px solid lightgray', // Wrapper border
+        }}>
+          {/* 75% Column for Event Title with very light blue background and black text */}
+          <Box sx={{
+            width: '70%',
+            backgroundColor: '#f0f8ff',
+            color: 'black',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '14px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'normal', // Allows text to wrap to a new line
+            padding: '0 4px',     // Adds some padding for better readability
+            wordBreak: 'break-word', // Breaks long words onto the next line
+          }}>
+            <span>{customerName}</span>
+          </Box>
+
+          {/* 25% Column for Color Rows */}
+          <Box sx={{
+            width: '30%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'stretch',
+            borderLeft: '1px solid lightgray',
+          }}>
+            {colors.map((color, index) => (
+              <Box
+                key={index}
+                sx={{
+                  width: '100%',
+                  height: rowHeight,
+                  backgroundColor: color,
+                  borderBottom: index < colors.length - 1 ? '1px solid lightgray' : 'none',
+                }}
+              />
+            ))}
+          </Box>
+        </Box>
+      );
+    } else if (isDayView) {
+      return (
+        <Box sx={{
+          backgroundColor: '#1e90ff', // Blue background
+          color: 'white', // White text color
+          padding: '4px',
+          borderRadius: '4px',
+          fontSize: '14px',
+          textAlign: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+        }}>
+          <span>{eventInfo.event.title}</span>
+        </Box>
+      );
+    } else if (isMonthView) {
+      // No content rendered for the month view
+      return null;
+    }
+    return null;
   };
 
   // Custom eventOverlap function
@@ -166,6 +244,18 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
       return false; // Prevent appointments from overlapping with unavailable times
     }
     return true;
+  };
+
+  const afterUpdate = () => {
+    if (selectedAppointment) {
+      fetchAppointmentById(selectedAppointment.appointmentId)
+        .then(updatedAppointment => {
+          setSelectedAppointment(updatedAppointment);
+        })
+        .catch(error => {
+          console.error('Failed to fetch updated appointment details:', error);
+        });
+    }
   };
 
   return (
@@ -211,6 +301,7 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
           onClose={handleCloseModal}
           staff={staff}
           services={services}
+          afterUpdate={afterUpdate}
         />
       )}
     </Box>

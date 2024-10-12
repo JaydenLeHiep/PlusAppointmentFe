@@ -9,7 +9,7 @@ import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import ShowCustomerDialog from '../ownerDashboard/customer/ShowCustomerDialog';
 
 const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments, customers,
-  notAvailableDates, notifications, notAvailableTimes, categories, }) => {
+  notAvailableDates, notifications, notAvailableTimes, categories, fetchAppointmentById }) => {
   const { fetchAppointmentsForBusiness } = useAppointmentsContext();
 
   const [staffOpen, setStaffOpen] = useState(false);
@@ -42,12 +42,20 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
 
   const events = (appointments || []).map(appt => {
     let startTime = new Date(appt.appointmentTime).getTime();
-
-    return (appt.services?.$values || []).map(service => {
+    
+    // Collect unique colors for all services in this appointment
+    const colorsSet = new Set();
+  
+    const servicesDetails = (appt.services?.$values || []).map(service => {
       const serviceStart = new Date(startTime);
       const serviceEnd = new Date(startTime + parseDuration(service.duration));
-
       startTime += parseDuration(service.duration);
+  
+      const serviceCategory = services.find(s => s.serviceId === service.serviceId);
+      const category = categories.find(cat => cat.categoryId === serviceCategory?.categoryId);
+      if (category?.color) {
+        colorsSet.add(category.color);
+      }
 
       return {
         ...appt,
@@ -60,6 +68,12 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
         staffId: service.staffId,
       };
     });
+  
+    // Pass the unique colors as an array
+    return servicesDetails.map(serviceDetail => ({
+      ...serviceDetail,
+      categoryColors: Array.from(colorsSet),
+    }));
   }).flat();
 
 
@@ -99,7 +113,6 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
     };
   });
 
-  console.log(notAvailableTimeEvents)
   return (
     <Box>
       <BusinessInfo
@@ -124,6 +137,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
           services={services}
           notAvailableDates={notAvailableEvents}
           notAvailableTimes={notAvailableTimeEvents}
+          fetchAppointmentById={fetchAppointmentById}
         />
       </Box>
 

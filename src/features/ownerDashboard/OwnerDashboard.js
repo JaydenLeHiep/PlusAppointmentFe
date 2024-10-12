@@ -290,6 +290,7 @@ const OwnerDashboard = () => {
                       notAvailableDates={notAvailableDates}
                       notAvailableTimes={notAvailableTimes}
                       notifications={notifications}
+                      fetchAppointmentById={fetchAppointmentById}
                     />
 
                     <AppointmentList
