@@ -18,7 +18,7 @@ const AddAppointmentDialog = ({ open, onClose, businessId }) => {
     const { t } = useTranslation('addAppointmentDialog');
     const initialAppointmentState = useRef({
         appointmentTime: '',
-        status: 'Pending',
+        status: 'Confirm',
         customerId: '',
         businessId,
         comment: '',
