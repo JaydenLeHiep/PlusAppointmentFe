@@ -92,7 +92,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
         customerId: parseInt(customer.customerId, 10),
         businessId: parseInt(businessId, 10),
         appointmentTime: utcAppointmentTime,
-        status: 'Pending',
+        status: 'Confirm',
         comment: comment || '',
         services: selectedAppointments.flatMap((appointment) =>
           appointment.services.map((service) => ({
