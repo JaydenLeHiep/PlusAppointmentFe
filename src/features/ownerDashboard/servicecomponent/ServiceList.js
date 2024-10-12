@@ -97,6 +97,15 @@ const ServiceList = ({
           <Fragment key={category.categoryId}>
             {/* Category Header */}
             <CategoryCardStyled button onClick={() => toggleCategory(category.categoryId)}>
+              {/* Add color dot box before the category name */}
+              <Box sx={{
+                display: 'inline-block',
+                width: '10px',
+                height: '10px',
+                backgroundColor: category.color,  // Assuming each category has a color property
+                borderRadius: '50%',
+                marginRight: '8px',  // Space between dot and text
+              }} />
               <ListItemTextStyled
                 primary={
                   <Typography variant="h6">
