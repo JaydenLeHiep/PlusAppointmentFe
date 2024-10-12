@@ -54,13 +54,20 @@ const FullCalendarWrapper = ({
           type: 'resourceTimeGrid',
           duration: { days: 1 },
           slotDuration: '00:10:00',
-          
           buttonText: 'Vertical Staff',
         }
       }}
       slotLabelFormat={{ hour: 'numeric', minute: '2-digit', omitZeroMinute: false }}
-      slotEventOverlap={false} // Prevent overlapping of events
-      eventOrder="start,-duration,appointmentId"  // Order events by start time, duration, and appointment ID
+      slotEventOverlap={false} 
+      eventOrder="start,-duration,appointmentId"  
+      eventBackgroundColor="transparent" 
+      eventBorderColor="transparent" 
+      style={{
+        backgroundColor: 'transparent', 
+        border: 'none', 
+        padding: '0', 
+        margin: '0',
+      }}
     />
   );
 };
