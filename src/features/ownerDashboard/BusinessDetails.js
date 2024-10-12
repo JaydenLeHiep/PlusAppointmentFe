@@ -9,7 +9,7 @@ import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import ShowCustomerDialog from '../ownerDashboard/customer/ShowCustomerDialog';
 
 const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments, customers,
-  notAvailableDates, notifications, notAvailableTimes, categories, }) => {
+  notAvailableDates, notifications, notAvailableTimes, categories, fetchAppointmentById }) => {
   const { fetchAppointmentsForBusiness } = useAppointmentsContext();
 
   const [staffOpen, setStaffOpen] = useState(false);
@@ -137,6 +137,7 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
           services={services}
           notAvailableDates={notAvailableEvents}
           notAvailableTimes={notAvailableTimeEvents}
+          fetchAppointmentById={fetchAppointmentById}
         />
       </Box>
 

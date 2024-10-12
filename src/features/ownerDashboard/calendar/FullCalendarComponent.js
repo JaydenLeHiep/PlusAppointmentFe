@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 // Commented out 'timeGridDay' view
 const views = ['dayGridMonth', /* 'timeGridDay', */ 'timeGridWeek', 'resourceTimeGridDay'];
 
-const FullCalendarComponent = ({ events, staff, services, notAvailableDates, notAvailableTimes }) => {
+const FullCalendarComponent = ({ events, staff, services, notAvailableDates, notAvailableTimes, fetchAppointmentById }) => {
   const { t } = useTranslation('fullCalendarComponent');
   const [currentView, setCurrentView] = useState(views[0]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -165,15 +165,15 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
       const rowHeight = colors.length ? `${100 / colors.length}%` : '100%';
 
       return (
-        <Box sx={{ 
-        display: 'flex', 
-        width: '100%', 
-        height: '100%', 
-        borderRadius: '3px', // Rounded corners
-        overflow: 'hidden', // Ensures corners apply to internal elements
-        backgroundColor: '#f0f8ff', // Wrapper background color
-        border: '1px solid lightgray', // Wrapper border
-      }}>
+        <Box sx={{
+          display: 'flex',
+          width: '100%',
+          height: '100%',
+          borderRadius: '3px', // Rounded corners
+          overflow: 'hidden', // Ensures corners apply to internal elements
+          backgroundColor: '#f0f8ff', // Wrapper background color
+          border: '1px solid lightgray', // Wrapper border
+        }}>
           {/* 75% Column for Event Title with very light blue background and black text */}
           <Box sx={{
             width: '70%',
@@ -183,6 +183,11 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: '14px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'normal', // Allows text to wrap to a new line
+            padding: '0 4px',     // Adds some padding for better readability
+            wordBreak: 'break-word', // Breaks long words onto the next line
           }}>
             <span>{customerName}</span>
           </Box>
@@ -241,6 +246,18 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
     return true;
   };
 
+  const afterUpdate = () => {
+    if (selectedAppointment) {
+      fetchAppointmentById(selectedAppointment.appointmentId)
+        .then(updatedAppointment => {
+          setSelectedAppointment(updatedAppointment);
+        })
+        .catch(error => {
+          console.error('Failed to fetch updated appointment details:', error);
+        });
+    }
+  };
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <CalendarViewControls
@@ -284,6 +301,7 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
           onClose={handleCloseModal}
           staff={staff}
           services={services}
+          afterUpdate={afterUpdate}
         />
       )}
     </Box>
