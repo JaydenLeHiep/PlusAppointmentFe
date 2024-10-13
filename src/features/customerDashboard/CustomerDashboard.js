@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+
 import CustomerBusinessInfo from './CustomerBusinessInfo';
 import ServiceList from './ServiceList';
 import StaffList from './StaffList';
@@ -29,9 +31,10 @@ import ShopPicturesCarousel from './ShopPicturesCarousel';
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const CustomerDashboard = () => {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const businessName = queryParams.get('business_name');
+
+
+  const { businessName } = useParams();
+  const formattedBusinessName = businessName.toLowerCase();
   const [customer, setCustomer] = useState(null);
   const [businessInfo, setBusinessInfo] = useState({});
   const [loading, setLoading] = useState(true);
@@ -54,17 +57,17 @@ const CustomerDashboard = () => {
 
   useEffect(() => {
     const fetchBusiness = async () => {
-      if (!businessName) {
+      if (!formattedBusinessName) {
         setError('Business name not provided');
         setLoading(false);
         return;
       }
       try {
-        const data = await fetchBusinessesByName(businessName);
+        const data = await fetchBusinessesByName(formattedBusinessName);
         setBusinessInfo(data); // Store the whole business object
         await fetchServices(data.businessId); // Fetch services by business ID
         await fetchCategories(); // Fetch categories
-        await fetchOpeningHoursForBusiness(data.businessId); 
+        await fetchOpeningHoursForBusiness(data.businessId);
         setLoading(false);
       } catch (error) {
         setError('Error fetching business information');
@@ -74,7 +77,7 @@ const CustomerDashboard = () => {
     };
 
     fetchBusiness();
-  }, [businessName, fetchServices, fetchCategories, fetchOpeningHoursForBusiness]);
+  }, [formattedBusinessName, fetchServices, fetchCategories, fetchOpeningHoursForBusiness]);
 
   useEffect(() => {
     const connectToHub = async () => {
@@ -308,103 +311,111 @@ const CustomerDashboard = () => {
   };
 
   return (
-    <DashboardContainer>
-      <CustomerBusinessInfo businessInfo={businessInfo} />
-      <StyledCarouselContainer>
-        <ShopPicturesCarousel businessId={businessInfo.businessId} />
-      </StyledCarouselContainer>
-      <CustomContainer>
-        <BackAndNextButtons
-          onBackClick={handleBackClick}
-          onNextClick={handleNextClick}
-          disableBack={view === 'services'}
-          disableNext={
-            (view === 'services' && selectedServices.length === 0) ||
-            (view === 'staffs' && !selectedStaff) ||
-            (view === 'calendar' && (!selectedDate || !selectedTime))
-          }
-          searchQuery={searchQuery}
-          onSearchChange={handleSearchChange}
-          view={view}
-          isAddingNewCustomer={isAddingNewCustomer}
-        />
+    <>
+      <Helmet>
+        <title>{businessInfo.name ? `${businessInfo.name} - Termine buchen` : 'Kundendashboard'}</title>
+        <meta name="description" content={`Buchen Sie Dienstleistungen und Termine bei ${businessInfo.name}. Sehen Sie sich verfügbares Personal, Dienstleistungen und Geschäftsinformationen an.`} />
+      </Helmet>
 
-        {view === 'services' && (
-          <CustomerListContainer>
-            {columns.map((column, colIndex) => (
-              <div key={colIndex}>
-                {column.map(category => (
-                  <ServiceList
-                    key={category.categoryId}
-                    category={category}
-                    services={services.filter(service => service.categoryId === category.categoryId)}
-                    businessId={businessInfo.businessId}
-                    searchQuery={searchQuery}
-                    selectedServices={selectedServices}
-                    onServiceSelect={handleServiceSelect}
-                    onServiceDeselect={handleServiceDeselect}
-                    expandedCategoryId={expandedCategoryId}
-                    setExpandedCategoryId={setExpandedCategoryId}
-                  />
-                ))}
-              </div>
-            ))}
-          </CustomerListContainer>
-        )}
 
-        {view === 'staffs' && (
-          <CustomerListContainer>
-            <StaffList
+      <DashboardContainer>
+        <CustomerBusinessInfo businessInfo={businessInfo} />
+        <StyledCarouselContainer>
+          <ShopPicturesCarousel businessId={businessInfo.businessId} businessName={formattedBusinessName} businessInfo={businessInfo}/>
+        </StyledCarouselContainer>
+        <CustomContainer>
+          <BackAndNextButtons
+            onBackClick={handleBackClick}
+            onNextClick={handleNextClick}
+            disableBack={view === 'services'}
+            disableNext={
+              (view === 'services' && selectedServices.length === 0) ||
+              (view === 'staffs' && !selectedStaff) ||
+              (view === 'calendar' && (!selectedDate || !selectedTime))
+            }
+            searchQuery={searchQuery}
+            onSearchChange={handleSearchChange}
+            view={view}
+            isAddingNewCustomer={isAddingNewCustomer}
+          />
+
+          {view === 'services' && (
+            <CustomerListContainer>
+              {columns.map((column, colIndex) => (
+                <div key={colIndex}>
+                  {column.map(category => (
+                    <ServiceList
+                      key={category.categoryId}
+                      category={category}
+                      services={services.filter(service => service.categoryId === category.categoryId)}
+                      businessId={businessInfo.businessId}
+                      searchQuery={searchQuery}
+                      selectedServices={selectedServices}
+                      onServiceSelect={handleServiceSelect}
+                      onServiceDeselect={handleServiceDeselect}
+                      expandedCategoryId={expandedCategoryId}
+                      setExpandedCategoryId={setExpandedCategoryId}
+                    />
+                  ))}
+                </div>
+              ))}
+            </CustomerListContainer>
+          )}
+
+          {view === 'staffs' && (
+            <CustomerListContainer>
+              <StaffList
+                businessId={businessInfo.businessId}
+                searchQuery={searchQuery}
+                selectedStaff={selectedStaff}
+                onStaffSelect={handleStaffSelect}
+              />
+            </CustomerListContainer>
+          )}
+
+          {view === 'calendar' && (
+            <MyDatePicker
               businessId={businessInfo.businessId}
-              searchQuery={searchQuery}
-              selectedStaff={selectedStaff}
-              onStaffSelect={handleStaffSelect}
+              selectedDate={selectedDate}
+              onDateChange={handleDateChange}
+              selectedTime={selectedTime}
+              onTimeSelect={handleTimeSelect}
+              onConfirmTime={handleConfirmTime}
+              staffId={selectedStaff?.staffId}
+              totalDuration={totalDuration}
+              openingHours={openingHours}
             />
-          </CustomerListContainer>
-        )}
+          )}
 
-        {view === 'calendar' && (
-          <MyDatePicker
-            businessId={businessInfo.businessId}
-            selectedDate={selectedDate}
-            onDateChange={handleDateChange}
-            selectedTime={selectedTime}
-            onTimeSelect={handleTimeSelect}
-            onConfirmTime={handleConfirmTime}
-            staffId={selectedStaff?.staffId}
-            totalDuration={totalDuration}
-            openingHours={openingHours} 
-          />
-        )}
-
-        {view === 'overview' && (
-          <AppointmentOverviewPage
-            selectedAppointments={selectedAppointments}
-            onAddMoreServices={() => setView('services')}
-            onFinish={handleFinish}
-            onDeleteAppointment={handleDeleteAppointment}
-          />
-        )}
-
-        {view === 'customerForm' && (
-          !isAddingNewCustomer ? (
-            <OldCustomerForm
+          {view === 'overview' && (
+            <AppointmentOverviewPage
               selectedAppointments={selectedAppointments}
-              businessId={businessInfo.businessId} // Use businessId from fetched data
-              onAppointmentSuccess={handleAppointmentSuccess}
-              onNewCustomer={() => setIsAddingNewCustomer(true)}
+              onAddMoreServices={() => setView('services')}
+              onFinish={handleFinish}
+              onDeleteAppointment={handleDeleteAppointment}
             />
-          ) : (
-            <NewCustomerForm
-              businessId={businessInfo.businessId} // Use businessId from fetched data
-              onCustomerAdded={handleNewCustomerSuccess}
-            />
-          )
-        )}
+          )}
 
-        {view === 'thankYou' && <ThankYou customer={customer} />}
-      </CustomContainer>
-    </DashboardContainer>
+          {view === 'customerForm' && (
+            !isAddingNewCustomer ? (
+              <OldCustomerForm
+                selectedAppointments={selectedAppointments}
+                businessId={businessInfo.businessId} // Use businessId from fetched data
+                onAppointmentSuccess={handleAppointmentSuccess}
+                onNewCustomer={() => setIsAddingNewCustomer(true)}
+              />
+            ) : (
+              <NewCustomerForm
+                businessId={businessInfo.businessId} // Use businessId from fetched data
+                onCustomerAdded={handleNewCustomerSuccess}
+              />
+            )
+          )}
+
+          {view === 'thankYou' && <ThankYou customer={customer} />}
+        </CustomContainer>
+      </DashboardContainer>
+    </>
   );
 };
 

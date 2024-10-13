@@ -357,8 +357,8 @@ i18n
         bulkEmailModal: bulkEmailModalGe
       },
     },
-    lng: 'en', // default language
-    fallbackLng: 'en',
+    lng: 'ge', // default language
+    fallbackLng: 'ge',
     interpolation: {
       escapeValue: false,
     },
