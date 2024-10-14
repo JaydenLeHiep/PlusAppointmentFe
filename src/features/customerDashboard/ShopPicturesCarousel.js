@@ -45,7 +45,7 @@ const NextArrow = (props) => {
   );
 };
 
-const ShopPicturesCarousel = ({ businessId }) => {
+const ShopPicturesCarousel = ({ businessId, businessName, businessInfo }) => {
   const [pictures, setPictures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -101,6 +101,7 @@ const ShopPicturesCarousel = ({ businessId }) => {
       },
     ],
   };
+  console.log(businessInfo)
 
   return (
     <Box
@@ -117,7 +118,7 @@ const ShopPicturesCarousel = ({ businessId }) => {
           <div key={picture.shopPictureId}>
             <img
               src={picture.s3ImageUrl}
-              alt=""
+              alt={`${businessName}, ${businessInfo.address}`}
               style={{
                 width: '100%',
                 height: 'auto',

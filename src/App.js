@@ -11,7 +11,7 @@ import LoginPage from './features/auth/Login/LoginPage';
 import RegisterPage from './features/auth/Register/RegisterPage';
 import OwnerDashboard from './features/ownerDashboard/OwnerDashboard';
 
-import PCDashboard from './features/customerDashboard/CustomerDashboard';
+import CustomerDashboard from './features/customerDashboard/CustomerDashboard';
 
 import ChangePasswordForm from './features/ownerDashboard/ChangePasswordForm';
 
@@ -58,7 +58,7 @@ const App = () => {
                       <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
-                        <Route path="/customer-dashboard" element={<PCDashboard />} />
+                        <Route path="/customer-dashboard" element={<CustomerDashboard />} />
                         <Route path="/customer-checkin-dashboard" element={<CheckInDashboard />} />
                         <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
                         <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />

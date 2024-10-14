@@ -6,14 +6,15 @@ import {
   ListItemText,
   Box,
   Typography,
-  CircularProgress,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import UpdateIcon from '@mui/icons-material/Update';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'; 
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
 
 const NotificationPopover = ({ open, anchorEl, onClose, notifications }) => {
+  const { t } = useTranslation('notificationPopover'); // Initialize the translation function
 
   const getIconAndColor = (type) => {
     switch (type) {
@@ -24,8 +25,8 @@ const NotificationPopover = ({ open, anchorEl, onClose, notifications }) => {
       case "Update":
         return { icon: <UpdateIcon style={{ color: 'orange' }} />, color: 'orange' };
       case "CheckIn":  // Add case for CheckIn
-        return { icon: <CheckCircleOutlineIcon style={{ color: 'blue' }} />, color: 'blue' }; // Choose a suitable color
-      
+        return { icon: <CheckCircleOutlineIcon style={{ color: 'blue' }} />, color: 'blue' };
+
       default:
         return { icon: null, color: 'black' };
     }
@@ -37,8 +38,8 @@ const NotificationPopover = ({ open, anchorEl, onClose, notifications }) => {
       anchorEl={anchorEl}
       onClose={onClose}
       anchorOrigin={{
-        vertical: 'bottom',   // Positions it below the icon
-        horizontal: 'right',  // Aligns it with the right of the icon
+        vertical: 'bottom',
+        horizontal: 'right',
       }}
       transformOrigin={{
         vertical: 'top',
@@ -46,21 +47,21 @@ const NotificationPopover = ({ open, anchorEl, onClose, notifications }) => {
       }}
       PaperProps={{
         sx: {
-          width: '200px',        // Make it smaller
-          maxHeight: '250px',    // Constrain height with vertical scrolling
+          width: '200px',
+          maxHeight: '250px',
           overflowY: 'auto',
           backgroundColor: '#fff',
           boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-          zIndex: 1300,  // Ensure it stays on top
+          zIndex: 1300,
         },
       }}
     >
       <Box p={1}>
-
-
         {notifications.length === 0 ? (
           <Box display="flex" justifyContent="center" alignItems="center">
-            <CircularProgress size={24} />
+            <Typography variant="body2" color="textSecondary">
+              {t('noNewNotifications')} {/* Use the translation key */}
+            </Typography>
           </Box>
         ) : (
           <List>
