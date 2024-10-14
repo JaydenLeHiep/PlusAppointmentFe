@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams , useLocation} from 'react-router-dom';
+import { useLocation} from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
 import CustomerBusinessInfo from './CustomerBusinessInfo';
