@@ -67,6 +67,9 @@ import businessListEn from '../locales/en/ownerDashboard/businessListEn.json';
 import businessListVi from '../locales/vi/ownerDashboard/businessListVi.json';
 import businessListGe from '../locales/ge/ownerDashboard/businessListGe.json';
 
+import notificationPopoverEn  from '../locales/en/ownerDashboard/notificationPopoverEn.json';
+import notificationPopoverGe  from '../locales/ge/ownerDashboard/notificationPopoverGe.json';
+import notificationPopoverVi  from '../locales/vi/ownerDashboard/notificationPopoverVi.json';
 
 //appointment
 import appointmentListEn from '../locales/en/appointment/appointmentListEn.json';
@@ -211,6 +214,7 @@ import bulkEmailModalEn from '../locales/en/customerInfo/bulkEmailModalEn.json'
 import bulkEmailModalGe from '../locales/ge/customerInfo/bulkEmailModalGe.json'
 import bulkEmailModalVi from '../locales/vi/customerInfo/bulkEmailModalVi.json'
 
+
 i18n
   .use(initReactI18next)
   .init({
@@ -263,7 +267,8 @@ i18n
         checkInNewCustomer: CheckInNewCustomerEn,
         checkInInfo: CheckInInfoEn,
         customerInfo: customerInfoEn,
-        bulkEmailModal: bulkEmailModalEn
+        bulkEmailModal: bulkEmailModalEn,
+        notificationPopover: notificationPopoverEn
         // Add other namespaces for English
       },
       vi: {
@@ -303,7 +308,8 @@ i18n
         notAvailableTime: notAvailableTimeVi,
         changePasswordForm: changePasswordFormVi,
         customerInfo: customerInfoVi,
-        bulkEmailModal: bulkEmailModalVi
+        bulkEmailModal: bulkEmailModalVi,
+        notificationPopover: notificationPopoverGe
         // Add other namespaces for Vietnamese
       },
       ge: {  // Add a new language key for German
@@ -354,11 +360,12 @@ i18n
         checkInNewCustomer: CheckInNewCustomerGe,
         checkInInfo: CheckInInfoGe,
         customerInfo: customerInfoGe,
-        bulkEmailModal: bulkEmailModalGe
+        bulkEmailModal: bulkEmailModalGe,
+        notificationPopover: notificationPopoverVi
       },
     },
-    lng: 'en', // default language
-    fallbackLng: 'en',
+    lng: 'ge', // default language
+    fallbackLng: 'ge',
     interpolation: {
       escapeValue: false,
     },
