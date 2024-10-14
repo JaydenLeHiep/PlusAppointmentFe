@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams , useLocation} from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
 import CustomerBusinessInfo from './CustomerBusinessInfo';
@@ -33,8 +33,10 @@ const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 const CustomerDashboard = () => {
 
 
-  const { businessName } = useParams();
-  const formattedBusinessName = businessName.toLowerCase();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const businessName = queryParams.get('business_name');
+
   const [customer, setCustomer] = useState(null);
   const [businessInfo, setBusinessInfo] = useState({});
   const [loading, setLoading] = useState(true);
@@ -57,13 +59,13 @@ const CustomerDashboard = () => {
 
   useEffect(() => {
     const fetchBusiness = async () => {
-      if (!formattedBusinessName) {
+      if (!businessName) {
         setError('Business name not provided');
         setLoading(false);
         return;
       }
       try {
-        const data = await fetchBusinessesByName(formattedBusinessName);
+        const data = await fetchBusinessesByName(businessName);
         setBusinessInfo(data); // Store the whole business object
         await fetchServices(data.businessId); // Fetch services by business ID
         await fetchCategories(); // Fetch categories
@@ -77,7 +79,7 @@ const CustomerDashboard = () => {
     };
 
     fetchBusiness();
-  }, [formattedBusinessName, fetchServices, fetchCategories, fetchOpeningHoursForBusiness]);
+  }, [businessName, fetchServices, fetchCategories, fetchOpeningHoursForBusiness]);
 
   useEffect(() => {
     const connectToHub = async () => {
@@ -321,7 +323,7 @@ const CustomerDashboard = () => {
       <DashboardContainer>
         <CustomerBusinessInfo businessInfo={businessInfo} />
         <StyledCarouselContainer>
-          <ShopPicturesCarousel businessId={businessInfo.businessId} businessName={formattedBusinessName} businessInfo={businessInfo}/>
+          <ShopPicturesCarousel businessId={businessInfo.businessId} businessName={businessName} businessInfo={businessInfo}/>
         </StyledCarouselContainer>
         <CustomContainer>
           <BackAndNextButtons

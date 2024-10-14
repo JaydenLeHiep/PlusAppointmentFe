@@ -58,7 +58,7 @@ const App = () => {
                       <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
-                        <Route path="/customer-dashboard/:businessName" element={<CustomerDashboard />} />
+                        <Route path="/customer-dashboard" element={<CustomerDashboard />} />
                         <Route path="/customer-checkin-dashboard" element={<CheckInDashboard />} />
                         <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
                         <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
