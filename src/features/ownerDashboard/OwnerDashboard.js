@@ -308,7 +308,7 @@ const OwnerDashboard = () => {
                   <>
                     <CustomerInfo
                       customers={customers || []}
-                      businessId={selectedBusiness?.businessIdbusinessId}
+                      businessId={selectedBusiness?.businessId}
                       businessName= {selectedBusiness?.name}
                     />
                   </>
