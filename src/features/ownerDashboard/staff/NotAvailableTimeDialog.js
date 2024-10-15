@@ -40,7 +40,7 @@ import {
     formActionButtonsStyle,
 } from '../../../styles/OwnerStyle/StaffComPonent/NotAvailableTimeDialogStyles';
 
-const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailableTimes, notAvailableDates, staffName }) => {
+const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailableTimes, notAvailableDates, staffName, notAvailableTimeId }) => {
     const { addNotAvailableTime, updateNotAvailableTime, deleteNotAvailableTime } = useNotAvailableTimeContext();
     const { t } = useTranslation('notAvailableTime');
 
@@ -68,6 +68,23 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
             return () => clearTimeout(timer);
         }
     }, [alert]);
+
+    useEffect(() => {
+        if (notAvailableTimeId && open) {
+            // Find the not-available time data for the given ID
+            const timeToEdit = notAvailableTimes.find(time => time.notAvailableTimeId === notAvailableTimeId);
+            if (timeToEdit) {
+                setEditTimeId(timeToEdit.notAvailableTimeId);
+                setEditingTimeId(timeToEdit.notAvailableTimeId);
+                setSelectedDate(moment(timeToEdit.date).toDate());
+                setSelectedIntervals([
+                    moment(timeToEdit.from).local().format('HH:mm'),
+                    moment(timeToEdit.to).local().format('HH:mm')
+                ]);
+                setReason(timeToEdit.reason || '');
+            }
+        }
+    }, [notAvailableTimeId, open, notAvailableTimes]);
 
     useEffect(() => {
         const fetchUnavailableTimeSlots = async () => {

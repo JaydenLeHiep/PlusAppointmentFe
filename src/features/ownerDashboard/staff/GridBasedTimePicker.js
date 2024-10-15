@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
-import { gridBoxStyle, timeSlotStyle, selectedSlotStyle, timeLabelStyle, firstClickStyle, disabledSlotStyle, containerStyle } 
-from '../../../styles/OwnerStyle/StaffComPonent/GridBasedTimePickerStyles';
+import { gridBoxStyle, timeSlotStyle, selectedSlotStyle, timeLabelStyle, firstClickStyle, disabledSlotStyle, containerStyle }
+    from '../../../styles/OwnerStyle/StaffComPonent/GridBasedTimePickerStyles';
 
 const timeSlots = [
     '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -25,17 +25,24 @@ const GridBasedTimePicker = ({ selectedIntervals, setSelectedIntervals, disabled
 
     const handleSlotClick = (timeSlot) => {
         if (disabledTimeSlots.includes(timeSlot)) return;
-
-        if (!firstClick) {
+    
+        // Reset on third click to begin a new interval
+        if (firstClick && lastClick) {
+            setFirstClick(timeSlot);
+            setLastClick(null);
+            setSelectedIntervals([timeSlot]);
+        } else if (!firstClick) {
+            // Set first click if no initial selection
             setFirstClick(timeSlot);
             setLastClick(null);
         } else {
+            // Set second click for end interval and determine the range
             setLastClick(timeSlot);
-
+    
             const startIndex = timeSlots.indexOf(firstClick);
             const endIndex = timeSlots.indexOf(timeSlot);
             const [start, end] = startIndex <= endIndex ? [startIndex, endIndex] : [endIndex, startIndex];
-
+    
             setSelectedIntervals([timeSlots[start], timeSlots[end]]);
         }
     };
