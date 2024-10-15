@@ -11,7 +11,7 @@ import ConfirmationDialog from '../../components/ConfirmationDialog';
 import { sendBulkEmail } from '../../lib/apiClientSendingEmailsCustomer';
 import moment from 'moment-timezone';
 
-const CustomerInfo = ({ businessId, customers }) => {
+const CustomerInfo = ({ businessId, customers, businessName }) => {
   const { t } = useTranslation('customerInfo');
   const { checkIns, fetchCheckInDetailsForBusiness, addNewCustomer, updateExistingCustomer, deleteExistingCustomer } = useCustomersContext();
   const [searchQuery, setSearchQuery] = useState('');
@@ -173,6 +173,7 @@ const CustomerInfo = ({ businessId, customers }) => {
         onClose={() => setIsBulkEmailModalOpen(false)}
         customers={filteredCustomers.filter((customer) => customer.wantsPromotion)}
         onSendEmail={handleSendBulkEmail}
+        businessName={businessName}
       />
       <ConfirmationDialog
         open={confirmDialogOpen}

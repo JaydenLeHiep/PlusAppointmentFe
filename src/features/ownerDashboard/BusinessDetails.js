@@ -116,7 +116,7 @@ const notAvailableTimeEvents = notAvailableTimes.map(time => {
     isNotAvailable: true, // Flag to indicate unavailable times
   };
 });
-console.log(notAvailableTimeEvents)
+
   return (
     <Box>
       <BusinessInfo

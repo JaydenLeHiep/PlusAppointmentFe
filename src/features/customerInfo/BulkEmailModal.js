@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -11,11 +11,13 @@ import {
   Box,
   Typography,
   IconButton,
+  MenuItem,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
+import { fetchEmailContents } from '../../lib/apiClientEmailContent';
 
-const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
+const BulkEmailModal = ({ open, onClose, customers, onSendEmail, businessName }) => {
   const { t } = useTranslation('bulkEmailModal');
 
   // Filter customers who have opted in for promotions and have an email
@@ -24,6 +26,38 @@ const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
   const [selectAll, setSelectAll] = useState(false);
+  const [emailTemplates, setEmailTemplates] = useState([]); // State for email templates
+
+  // Fetch email templates on component mount
+  useEffect(() => {
+    const loadEmailContents = async () => {
+      try {
+        const templates = await fetchEmailContents();
+        setEmailTemplates(templates);
+      } catch (error) {
+        console.error('Failed to load email templates', error);
+      }
+    };
+
+    loadEmailContents();
+  }, []);
+
+  // Function to replace the placeholder with the actual business name
+  const insertBusinessName = (templateBody) => {
+    return templateBody.replace('{{businessName}}', businessName);
+  };
+
+  // Handle subject selection
+  const handleSubjectChange = (e) => {
+    const selectedTemplate = emailTemplates.find(template => template.subject === e.target.value);
+    if (selectedTemplate) {
+      setSubject(selectedTemplate.subject);
+      setBody(insertBusinessName(selectedTemplate.body)); // Replace placeholder
+    } else {
+      setSubject(e.target.value);
+      setBody(''); // Clear the body if no template is selected
+    }
+  };
 
   // Toggle individual customer selection
   const handleCustomerToggle = (customer) => {
@@ -73,12 +107,24 @@ const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
       <DialogContent>
         <Box mb={2}>
           <TextField
+            select
             label={t('subject')}
             fullWidth
             margin="dense"
             value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-          />
+            onChange={handleSubjectChange}
+            helperText={t('selectOrWriteSubject')}
+          >
+            <MenuItem value="">
+              {t('customSubject')}
+            </MenuItem>
+            {emailTemplates.map((template) => (
+              <MenuItem key={template.emailContentId} value={template.subject}>
+                {template.subject}
+              </MenuItem>
+            ))}
+          </TextField>
+
           <TextField
             label={t('body')}
             fullWidth
@@ -89,6 +135,7 @@ const BulkEmailModal = ({ open, onClose, customers, onSendEmail }) => {
             onChange={(e) => setBody(e.target.value)}
           />
         </Box>
+
         <Typography variant="subtitle1" gutterBottom>
           {t('selectCustomers')}
         </Typography>
