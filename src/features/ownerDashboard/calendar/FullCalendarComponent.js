@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, ButtonGroup } from '@mui/material';
 import AppointmentInfoModal from '../appointment/AppointmentInfoModal/AppointmentInfoModal';
+import NotAvailableTimeDialog from '../staff/NotAvailableTimeDialog';
 import CalendarViewControls from './CalendarViewControlls';
 import CalendarDayCell from './CalendarDayCell';
 import FullCalendarWrapper from './FullCalendarWrapper';
@@ -16,6 +17,7 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const staffPerPage = 4;
+  const [isNotAvailableTimeDialogOpen, setIsNotAvailableTimeDialogOpen] = useState(false);
 
   const handleDateClick = (info) => {
     const clickedDate = new Date(info.date).getTime();
@@ -32,12 +34,19 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
     calendarApi.gotoDate(info.date);
   };
 
+  const [selectedNotAvailableTime, setSelectedNotAvailableTime] = useState(null);
+
   const handleEventClick = (clickInfo) => {
     const { isNotAvailable } = clickInfo.event.extendedProps;
+
     if (isNotAvailable) {
+      // Set the selected not-available time slot data
+      setSelectedNotAvailableTime(clickInfo.event.extendedProps);
+      setIsNotAvailableTimeDialogOpen(true);
       return;
     }
 
+    // Handle appointments as usual
     const eventProps = clickInfo.event.extendedProps;
     if (eventProps.start && !isNaN(new Date(eventProps.start))) {
       eventProps.start = new Date(eventProps.start).toISOString();
@@ -55,6 +64,12 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
       const newIndex = (currentIndex + direction + views.length) % views.length;
       return views[newIndex];
     });
+  };
+
+  // Add this function near your other handlers
+  const handleCloseNotAvailableTimeDialog = () => {
+    setIsNotAvailableTimeDialogOpen(false);
+    setSelectedNotAvailableTime(null); // Clear the selected not-available time if necessary
   };
 
   const handleCloseModal = () => {
@@ -119,24 +134,31 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
     }).filter(event => event !== null)
     : [];
 
-  // Logic for not available times
-  const notAvailableTimeEvents = (currentView === 'resourceTimeGridDay' || currentView === 'timeGridWeek')
-    ? notAvailableTimes.map(time => {
-      const resource = currentView === 'resourceTimeGridDay' ? resources.find(res => res.title === time.staffName) : null;
-      const event = {
-        start: new Date(time.start).toISOString(),
-        end: new Date(time.end).toISOString(),
+// Logic for not available times in FullCalendar component
+const notAvailableTimeEvents = (currentView === 'resourceTimeGridDay' || currentView === 'timeGridWeek')
+  ? notAvailableTimes.map(time => {
+      const resource = currentView === 'resourceTimeGridDay' 
+        ? resources.find(res => res.title === time.staffName) 
+        : null;
+
+      return {
+        start: time.from,  // Required by FullCalendar for event display
+        end: time.to,      // Required by FullCalendar for event display
+        from: time.from,   // Retained for passing to the NotAvailableTime dialog
+        to: time.to,       // Retained for passing to the NotAvailableTime dialog
         backgroundColor: 'rgba(255, 0, 0, 0.4)',
         display: 'auto',
         isNotAvailable: true,
-        title: time.title || 'Unavailable',
+        title: time.reason || 'Unavailable', // Title from reason if available
+        staffId: time.staffId,
+        businessId: time.businessId,
+        staffName: time.staffName,
+        reason: time.reason || 'No reason provided', // Default reason text if not available
+        notAvailableTimeId: time.notAvailableTimeId, // Unique identifier for unavailable time
+        ...(resource ? { resourceIds: [resource.id] } : {}), // Only include resourceIds if resource is found
       };
-      if (resource) {
-        event.resourceIds = [resource.id];
-      }
-      return event;
-    }).filter(event => event !== null)
-    : [];
+  }).filter(event => event !== null)
+  : [];
 
   // Render Event Content Logic
   const renderEventContent = (eventInfo) => {
@@ -302,6 +324,23 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
           staff={staff}
           services={services}
           afterUpdate={afterUpdate}
+        />
+      )}
+
+      {isNotAvailableTimeDialogOpen && selectedNotAvailableTime && (
+        <NotAvailableTimeDialog
+          open={isNotAvailableTimeDialogOpen}
+          onClose={handleCloseNotAvailableTimeDialog}
+          notAvailableTimes={notAvailableTimes}
+          staffName={selectedNotAvailableTime.staffName}
+          staffId={selectedNotAvailableTime.staffId}
+          notAvailableDates={notAvailableDates}
+          businessId={selectedNotAvailableTime.businessId}
+          from={selectedNotAvailableTime.from}
+          to={selectedNotAvailableTime.to}
+          reason={selectedNotAvailableTime.reason}
+          date={selectedNotAvailableTime.date}
+          notAvailableTimeId={selectedNotAvailableTime.notAvailableTimeId} 
         />
       )}
     </Box>

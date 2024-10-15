@@ -97,21 +97,25 @@ const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, service
     };
   });
 
-  // Process notAvailableTimes before sending it to FullCalendarComponent
-  const notAvailableTimeEvents = notAvailableTimes.map(time => {
-    const staffMember = staff.find(s => s.staffId === time.staffId);
-    const staffName = staffMember ? staffMember.name : 'Unknown Staff';
+// Process notAvailableTimes before sending it to FullCalendarComponent
+const notAvailableTimeEvents = notAvailableTimes.map(time => {
+  const staffMember = staff.find(s => s.staffId === time.staffId);
+  const staffName = staffMember ? staffMember.name : 'Unknown Staff';
 
-    return {
-      title: time.reason || 'Unavailable',
-      start: new Date(time.from).toISOString(),
-      end: new Date(time.to).toISOString(),
-      staffName: staffName,
-      staffId: time.staffId,
-      isNotAvailable: true, // Indicate that this event is a "not available time"
-      reason: time.reason, // Add the reason to be displayed
-    };
-  });
+  return {
+    $id: time.$id, // Unique identifier, if required in FullCalendar or for further processing
+    businessId: time.businessId,
+    date: time.date, // Date associated with the unavailable time
+    from: time.from, // Start time in ISO format
+    to: time.to,     // End time in ISO format
+    notAvailableTimeId: time.notAvailableTimeId, // Unique ID for the unavailable time entry
+    reason: time.reason || 'No reason provided', // Provide a reason or default message
+    staffId: time.staffId,
+    staffName: staffName, // Include staff name for easier identification
+    title: time.reason || 'Unavailable', // Title for display purposes, using the reason or default text
+    isNotAvailable: true, // Flag to indicate unavailable times
+  };
+});
 
   return (
     <Box>

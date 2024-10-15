@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchNotAvailableTimeSlots } from '../../lib/apiClientAppointment';
 import moment from 'moment-timezone';
+import Holidays from 'date-holidays';
 import {
   StyledDatePicker,
   TimeSlotButton,
@@ -21,6 +22,14 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
   const [notAvailableTimeSlots, setNotAvailableTimeSlots] = useState([]);
   const { notAvailableDates, fetchAllNotAvailableDatesByStaff } = useNotAvailableDateContext();
   const { fetchAllNotAvailableTimesByStaff, notAvailableTimes } = useNotAvailableTimeContext();
+  const [austrianHolidays, setAustrianHolidays] = useState([]);
+
+  useEffect(() => {
+    const hd = new Holidays('AT'); // Initialize holidays for Austria
+    const holidays = hd.getHolidays(new Date().getFullYear()); // Fetch holidays for the current year
+    const holidayDates = holidays.map(holiday => moment(holiday.date).format('YYYY-MM-DD'));
+    setAustrianHolidays(holidayDates); // Store the holiday dates in state
+  }, []);
 
   useEffect(() => {
     if (staffId && selectedDate) {
@@ -176,8 +185,10 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
       const end = moment(endDate);
       return date.isBetween(start, end, null, '[]'); // Inclusive of start and end date
     });
+    // Disable date if it's a holiday in Austria
+    const isHoliday = austrianHolidays.includes(date.format('YYYY-MM-DD'));
 
-    return isInUnavailableRange; // Disable Sundays and dates within unavailable intervals
+    return isInUnavailableRange || isHoliday;
   };
 
   return (
