@@ -279,7 +279,7 @@ const notAvailableTimeEvents = (currentView === 'resourceTimeGridDay' || current
         });
     }
   };
-console.log(notAvailableTimes)
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <CalendarViewControls

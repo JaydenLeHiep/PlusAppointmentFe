@@ -263,6 +263,7 @@ const OwnerDashboard = () => {
     setActiveView(view);
   };
 
+  
   return (
     <RootContainer>
       <Navbar changeView={changeView} />
@@ -307,7 +308,8 @@ const OwnerDashboard = () => {
                   <>
                     <CustomerInfo
                       customers={customers || []}
-                      businessId={selectedBusiness?.businessId}
+                      businessId={selectedBusiness?.businessIdbusinessId}
+                      businessName= {selectedBusiness?.name}
                     />
                   </>
                 )}
