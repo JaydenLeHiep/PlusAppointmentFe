@@ -19,6 +19,18 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
   const staffPerPage = 4;
   const [isNotAvailableTimeDialogOpen, setIsNotAvailableTimeDialogOpen] = useState(false);
 
+  const today = new Date();
+
+  const filteredNotAvailableDates = notAvailableDates.filter(date => {
+    const endDate = date.end ? new Date(date.end) : new Date(date.start);
+    return endDate >= today;
+  });
+
+  const filteredNotAvailableTimes = notAvailableTimes.filter(time => {
+    const toTime = new Date(time.to);
+    return toTime >= today;
+  });
+
   const handleDateClick = (info) => {
     const clickedDate = new Date(info.date).getTime();
     const isUnavailable = notAvailableDates.some(date => {
@@ -119,7 +131,7 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
 
   // Logic for not available dates
   const notAvailableEvents = currentView === 'resourceTimeGridDay'
-    ? notAvailableDates.map(date => {
+    ? filteredNotAvailableDates.map(date => {
       const resource = resources.find(res => res.title === date.staffName);
       if (!resource) return null;
       return {
@@ -128,37 +140,38 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
         resourceIds: [resource.id],
         backgroundColor: 'rgba(255, 0, 0, 0.4)',
         display: 'auto',
-        isNotAvailable: true, // Indicate that this is a "not available" event
-        title: date.title || 'Unavailable', // Display the title
+        isNotAvailable: true,
+        title: date.title || 'Unavailable',
       };
     }).filter(event => event !== null)
     : [];
 
-// Logic for not available times in FullCalendar component
-const notAvailableTimeEvents = (currentView === 'resourceTimeGridDay' || currentView === 'timeGridWeek')
-  ? notAvailableTimes.map(time => {
-      const resource = currentView === 'resourceTimeGridDay' 
-        ? resources.find(res => res.title === time.staffName) 
+
+  // Logic for not available times in FullCalendar component
+  const notAvailableTimeEvents = (currentView === 'resourceTimeGridDay' || currentView === 'timeGridWeek')
+    ? filteredNotAvailableTimes.map(time => {
+      const resource = currentView === 'resourceTimeGridDay'
+        ? resources.find(res => res.title === time.staffName)
         : null;
 
       return {
-        start: time.from,  // Required by FullCalendar for event display
-        end: time.to,      // Required by FullCalendar for event display
-        from: time.from,   // Retained for passing to the NotAvailableTime dialog
-        to: time.to,       // Retained for passing to the NotAvailableTime dialog
+        start: time.from,
+        end: time.to,
+        from: time.from,
+        to: time.to,
         backgroundColor: 'rgba(255, 0, 0, 0.4)',
         display: 'auto',
         isNotAvailable: true,
-        title: time.reason || 'Unavailable', // Title from reason if available
+        title: time.reason || 'Unavailable',
         staffId: time.staffId,
         businessId: time.businessId,
         staffName: time.staffName,
-        reason: time.reason || 'No reason provided', // Default reason text if not available
-        notAvailableTimeId: time.notAvailableTimeId, // Unique identifier for unavailable time
-        ...(resource ? { resourceIds: [resource.id] } : {}), // Only include resourceIds if resource is found
+        reason: time.reason || 'No reason provided',
+        notAvailableTimeId: time.notAvailableTimeId,
+        ...(resource ? { resourceIds: [resource.id] } : {}),
       };
-  }).filter(event => event !== null)
-  : [];
+    }).filter(event => event !== null)
+    : [];
 
   // Render Event Content Logic
   const renderEventContent = (eventInfo) => {
@@ -340,7 +353,7 @@ const notAvailableTimeEvents = (currentView === 'resourceTimeGridDay' || current
           to={selectedNotAvailableTime.to}
           reason={selectedNotAvailableTime.reason}
           date={selectedNotAvailableTime.date}
-          notAvailableTimeId={selectedNotAvailableTime.notAvailableTimeId} 
+          notAvailableTimeId={selectedNotAvailableTime.notAvailableTimeId}
         />
       )}
     </Box>
