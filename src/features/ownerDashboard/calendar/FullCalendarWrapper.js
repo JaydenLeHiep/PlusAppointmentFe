@@ -62,9 +62,7 @@ const FullCalendarWrapper = ({
           updateData
         );
         afterUpdate();
-        console.log(`Not available time ${event.extendedProps.notAvailableTimeId} updated successfully!`);
       } catch (error) {
-        console.error('Failed to update not available time:', error);
         revert(); // Revert the event back on failure
       }
     } else {
@@ -76,9 +74,7 @@ const FullCalendarWrapper = ({
       try {
         await updateAppointmentAndRefresh(event.extendedProps.appointmentId, updateData, event.extendedProps.businessId);
         afterUpdate();
-        console.log(`Appointment ${event.extendedProps.appointmentId} updated successfully!`);
       } catch (error) {
-        console.error('Failed to update appointment:', error);
         revert(); // Revert the event back on failure
       }
     }
