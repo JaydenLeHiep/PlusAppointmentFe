@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box, TextField, Button } from '@mui/material';
+import { Box, TextField, Button, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import CircularProgress from '@mui/material/CircularProgress';
+import SearchIcon from '@mui/icons-material/Search';
 import { useTranslation } from 'react-i18next';
 
 const SearchBar = ({ searchQuery, setSearchQuery, loadingCheckIns, handleLoadCheckIns, handleSendEmail, handleAddNewCustomer }) => {
@@ -16,6 +17,13 @@ const SearchBar = ({ searchQuery, setSearchQuery, loadingCheckIns, handleLoadChe
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         sx={{ width: '28.5%' }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
       />
       <Box display="flex" justifyContent="flex-start" alignItems="center" sx={{ mr: 2 }}>
         <LoadingButton

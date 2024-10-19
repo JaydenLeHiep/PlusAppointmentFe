@@ -1,6 +1,7 @@
 {
     "serviceListTitle": "Dienstleistungsliste",
     "addNewService": "Neue Dienstleistung hinzufügen",
+    "addNewServiceButton": "Hinzufügen",
     "serviceAddedSuccess": "Dienstleistung erfolgreich hinzugefügt!",
     "serviceUpdatedSuccess": "Dienstleistung erfolgreich aktualisiert!",
     "serviceDeletedSuccess": "Dienstleistung erfolgreich gelöscht!",

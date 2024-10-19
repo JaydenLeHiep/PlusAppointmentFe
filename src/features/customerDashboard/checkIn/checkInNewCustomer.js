@@ -24,6 +24,7 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded, onBack }) => {
     confirmPhone: '',
     birthday: '',
     wantsPromotion: false,
+    note: null,
   });
 
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -58,6 +59,7 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded, onBack }) => {
         phone: formData.phone,
         birthday: utcBirthday, // Send UTC birthday to server
         wantsPromotion: formData.wantsPromotion,
+        note: null,
         BusinessId: String(businessId),
       };
 

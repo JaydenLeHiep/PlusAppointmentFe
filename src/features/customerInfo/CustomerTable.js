@@ -72,11 +72,6 @@ const CustomerTable = ({ customers, handleEditCustomer, confirmDeleteCustomer })
               </IconButton>
             </TableCell>
 
-            {/* Birthday column */}
-            <TableCell style={{ fontWeight: 'bold', border: '1px solid #ccc', textAlign: 'center' }}>
-              {t('birthday')}
-            </TableCell>
-
             {/* Promotion column with filter */}
             <TableCell style={{ fontWeight: 'bold', border: '1px solid #ccc', textAlign: 'center' }}>
               {t('promotion')}
@@ -95,7 +90,6 @@ const CustomerTable = ({ customers, handleEditCustomer, confirmDeleteCustomer })
             </TableCell>
 
             {/* Bookings column with filter */}
-            {/* Bookings column with filter */}
             <TableCell style={{ fontWeight: 'bold', border: '1px solid #ccc', textAlign: 'center' }}>
               {t('bookings')}
               <IconButton size="small" onClick={(e) => handleOpenMenu(e, 'bookings')}>
@@ -112,8 +106,7 @@ const CustomerTable = ({ customers, handleEditCustomer, confirmDeleteCustomer })
               </Menu>
             </TableCell>
 
-
-            {/* Last Booking column with filter */}
+            {/* Last Booking column */}
             <TableCell style={{ fontWeight: 'bold', border: '1px solid #ccc', textAlign: 'center' }}>
               {t('lastBooking')}
               <IconButton size="small" onClick={(e) => handleOpenMenu(e, 'lastBooking')}>
@@ -130,6 +123,11 @@ const CustomerTable = ({ customers, handleEditCustomer, confirmDeleteCustomer })
               </Menu>
             </TableCell>
 
+            {/* Note column */}
+            <TableCell style={{ fontWeight: 'bold', border: '1px solid #ccc', textAlign: 'center' }}>
+              {t('Note')}
+            </TableCell>
+
             {/* Edit column */}
             <TableCell style={{ fontWeight: 'bold', border: '1px solid #ccc', textAlign: 'center' }}>
               {t('edit')}
@@ -139,21 +137,40 @@ const CustomerTable = ({ customers, handleEditCustomer, confirmDeleteCustomer })
         <TableBody>
           {filteredCustomers.map((customer) => (
             <TableRow key={customer.customerId}>
-              <TableCell sx={{ width: '20%' }} style={{ border: '1px solid #ccc' }}>
+              <TableCell sx={{ width: '25%' }} style={{ border: '1px solid #ccc' }}>
                 <Typography variant="body1" fontWeight="bold">{customer.name}</Typography>
-                <Typography variant="body2">{customer.email}</Typography>
-                <Typography variant="body2">{customer.phone}</Typography>
-              </TableCell>
-              <TableCell sx={{ width: '20%' }} align="center" style={{ border: '1px solid #ccc' }}>
-                {customer.birthday ? new Date(customer.birthday).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : t('unknown')}
+
+                {/* Email with bold label and on the same line */}
+                <Typography variant="body2">
+                  <strong>{t('Email')}: </strong> {customer.email}
+                </Typography>
+
+                {/* Phone with bold label and on the same line */}
+                <Typography variant="body2">
+                  <strong>{t('Phone')}: </strong> {customer.phone}
+                </Typography>
+
+                {/* Birthday with bold label and on the same line */}
+                <Typography variant="body2">
+                  <strong>{t('Birthday')}: </strong>
+                  {customer.birthday ? new Date(customer.birthday).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : t('unknown')}
+                </Typography>
               </TableCell>
               <TableCell sx={{ width: '15%' }} align="center" style={{ border: '1px solid #ccc' }}>
                 {customer.wantsPromotion ? t('yes') : t('no')}
               </TableCell>
-              <TableCell sx={{ width: '15%' }} align="center" style={{ border: '1px solid #ccc' }}>{customer.totalBookings || 0}</TableCell>
-
-              <TableCell sx={{ width: '20%' }} align="center" style={{ border: '1px solid #ccc' }}>
+              <TableCell sx={{ width: '15%' }} align="center" style={{ border: '1px solid #ccc' }}>
+                {customer.totalBookings || 0}
+              </TableCell>
+              <TableCell sx={{ width: '15%' }} align="center" style={{ border: '1px solid #ccc' }}>
                 {customer.lastBooking || t('noBookings')}
+              </TableCell>
+              <TableCell sx={{ width: '25%', maxHeight: '150px', overflowY: 'auto' }} style={{ border: '1px solid #ccc' }}>
+                <Typography
+                  variant="body2"
+                  dangerouslySetInnerHTML={{ __html: customer.note || t('noNote') }}
+                  sx={{ maxHeight: '150px', overflowY: 'auto' }} 
+                />
               </TableCell>
               <TableCell sx={{ width: '10%' }} align="center" style={{ border: '1px solid #ccc' }}>
                 <IconButton onClick={() => handleEditCustomer(customer)}>
