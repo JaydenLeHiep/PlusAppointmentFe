@@ -5,6 +5,7 @@
     "priceLabel": "Preis",
     "cancelButton": "Abbrechen",
     "addButton": "Dienstleistung hinzufügen",
-    "updateButton": "Dienstleistung aktualisieren"
+    "updateButton": "Dienstleistung aktualisieren",
+    "categoryLabel": "Kategorie"
   }
   

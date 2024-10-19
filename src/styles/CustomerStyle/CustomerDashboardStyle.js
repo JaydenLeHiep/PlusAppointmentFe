@@ -21,7 +21,10 @@ export const CustomerListContainer = styled(Box)(({ theme }) => ({
   gridTemplateColumns: 'repeat(3, 1fr)', 
   backgroundColor: '#ffffff',
   borderRadius: '16px',
-  padding: theme.spacing(4),
+  paddingTop: theme.spacing(2), // Top padding for PC
+  paddingLeft: theme.spacing(4), // Keep left padding
+  paddingRight: theme.spacing(4), // Keep right padding
+  paddingBottom: 0, // No padding at the bottom
   width: '100%',
   maxWidth: '1200px',
   margin: 'auto',
@@ -33,7 +36,10 @@ export const CustomerListContainer = styled(Box)(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     gridTemplateColumns: '1fr', 
-    padding: theme.spacing(2),
+    paddingTop: theme.spacing(1), // Top padding for mobile
+    paddingLeft: theme.spacing(2), // Left padding for mobile
+    paddingRight: theme.spacing(2), // Right padding for mobile
+    paddingBottom: 0, // No padding at the bottom for mobile
     maxHeight: '70%', 
   },
 }));
@@ -69,9 +75,9 @@ export const CustomCircularProgress = styled(Box)(({ theme }) => ({
 // CustomContainer styling
 export const CustomContainer = styled(Box)(({ theme }) => ({
   textAlign: 'center',
-  padding: theme.spacing(3.5),
+  padding: `${theme.spacing(3.5)} ${theme.spacing(3.5)} 0`, 
   [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(2),
+    padding: `${theme.spacing(2)} ${theme.spacing(2)} 0`, 
   },
 }));
 

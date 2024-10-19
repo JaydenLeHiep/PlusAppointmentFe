@@ -1,12 +1,21 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle, TextField, Box, Button, IconButton, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Box, Button, IconButton, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { useTranslation } from 'react-i18next';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const CustomerFormModal = ({ isFormModalOpen, setIsFormModalOpen, editCustomerData, setEditCustomerData, handleFormSubmit, editCustomerId, handleDateChange }) => {
   const { t } = useTranslation('customerInfo');
+
+  const maxNoteLength = 255;
+
+  const handleNoteChange = (event, editor) => {
+    const data = editor.getData();
+    setEditCustomerData({ ...editCustomerData, note: data });
+  };
 
   return (
     <Dialog open={isFormModalOpen} onClose={() => setIsFormModalOpen(false)}>
@@ -67,6 +76,31 @@ const CustomerFormModal = ({ isFormModalOpen, setIsFormModalOpen, editCustomerDa
               </FormControl>
             </Box>
           </Box>
+          <Box>
+            <FormLabel sx={{ fontWeight: 'bold', fontSize: '18px' }}>
+              {t('Note: ')}
+            </FormLabel>
+            <CKEditor
+              editor={ClassicEditor}
+              data={editCustomerData.note || ''}
+              onChange={handleNoteChange}
+              style={{ height: '150px', marginTop: '10px' }}
+              config={{
+                toolbar: [
+                  'bold', 'italic', 'underline', 'strikethrough',
+                  'bulletedList', 'numberedList', 'blockQuote',
+                  'alignment:left', 'alignment:center', 'alignment:right',
+                  'heading', 'fontSize'
+                ],
+              }}
+              onReady={editor => {
+                console.log('Editor is ready to use!', editor);
+              }}
+            />
+            <Typography variant="body2" sx={{ color: '#888', marginTop: '10px' }}>
+              {`${maxNoteLength - (editCustomerData.note?.length || 0)} ${t('charactersRemaining')}`}
+            </Typography>
+          </Box>
           <Box display="flex" justifyContent="flex-end" mt={2}>
             <Button onClick={handleFormSubmit} variant="contained" color="primary">
               {editCustomerId ? t('update') : t('add')}
@@ -76,7 +110,7 @@ const CustomerFormModal = ({ isFormModalOpen, setIsFormModalOpen, editCustomerDa
             </Button>
           </Box>
         </Box>
-        </DialogContent>
+      </DialogContent>
     </Dialog>
   );
 };

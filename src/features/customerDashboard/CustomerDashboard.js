@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-
 import CustomerBusinessInfo from './CustomerBusinessInfo';
 import ServiceList from './ServiceList';
 import StaffList from './StaffList';
@@ -27,6 +26,7 @@ import {
 import BackAndNextButtons from './BackNextButtons';
 import { fetchStaff } from '../../lib/apiClientStaff';
 import ShopPicturesCarousel from './ShopPicturesCarousel';
+import NextButton from './NextButton';
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -319,11 +319,10 @@ const CustomerDashboard = () => {
         <meta name="description" content={`Buchen Sie Dienstleistungen und Termine bei ${businessInfo.name}. Sehen Sie sich verfügbares Personal, Dienstleistungen und Geschäftsinformationen an.`} />
       </Helmet>
 
-
       <DashboardContainer>
         <CustomerBusinessInfo businessInfo={businessInfo} />
         <StyledCarouselContainer>
-          <ShopPicturesCarousel businessId={businessInfo.businessId} businessName={businessName} businessInfo={businessInfo}/>
+          <ShopPicturesCarousel businessId={businessInfo.businessId} businessName={businessName} businessInfo={businessInfo} />
         </StyledCarouselContainer>
         <CustomContainer>
           <BackAndNextButtons
@@ -342,30 +341,36 @@ const CustomerDashboard = () => {
           />
 
           {view === 'services' && (
-            <CustomerListContainer>
-              {columns.map((column, colIndex) => (
-                <div key={colIndex}>
-                  {column.map(category => (
-                    <ServiceList
-                      key={category.categoryId}
-                      category={category}
-                      services={services.filter(service => service.categoryId === category.categoryId)}
-                      businessId={businessInfo.businessId}
-                      searchQuery={searchQuery}
-                      selectedServices={selectedServices}
-                      onServiceSelect={handleServiceSelect}
-                      onServiceDeselect={handleServiceDeselect}
-                      expandedCategoryId={expandedCategoryId}
-                      setExpandedCategoryId={setExpandedCategoryId}
-                    />
-                  ))}
-                </div>
-              ))}
-            </CustomerListContainer>
+            <>
+              <CustomerListContainer>
+                {columns.map((column, colIndex) => (
+                  <div key={colIndex}>
+                    {column.map(category => (
+                      <ServiceList
+                        key={category.categoryId}
+                        category={category}
+                        services={services.filter(service => service.categoryId === category.categoryId)}
+                        businessId={businessInfo.businessId}
+                        searchQuery={searchQuery}
+                        selectedServices={selectedServices}
+                        onServiceSelect={handleServiceSelect}
+                        onServiceDeselect={handleServiceDeselect}
+                        expandedCategoryId={expandedCategoryId}
+                        setExpandedCategoryId={setExpandedCategoryId}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </CustomerListContainer>
+              <NextButton
+                onNextClick={handleNextFromServices}
+                disableNext={selectedServices.length === 0}
+              />
+            </>
           )}
 
           {view === 'staffs' && (
-            <CustomerListContainer>
+            <CustomerListContainer sx={{ marginBottom: '30px' }}>
               <StaffList
                 businessId={businessInfo.businessId}
                 searchQuery={searchQuery}
@@ -402,13 +407,13 @@ const CustomerDashboard = () => {
             !isAddingNewCustomer ? (
               <OldCustomerForm
                 selectedAppointments={selectedAppointments}
-                businessId={businessInfo.businessId} // Use businessId from fetched data
+                businessId={businessInfo.businessId}
                 onAppointmentSuccess={handleAppointmentSuccess}
                 onNewCustomer={() => setIsAddingNewCustomer(true)}
               />
             ) : (
               <NewCustomerForm
-                businessId={businessInfo.businessId} // Use businessId from fetched data
+                businessId={businessInfo.businessId}
                 onCustomerAdded={handleNewCustomerSuccess}
               />
             )

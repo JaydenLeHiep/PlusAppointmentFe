@@ -9,7 +9,6 @@ export const ButtonContainer = styled(Box)(({ theme }) => ({
   maxWidth: '1200px', 
   height: '60px', 
   margin: '0 auto', 
-  marginBottom: theme.spacing(2.5),
   [theme.breakpoints.down('sm')]: {
     height: '50px', // Default height for mobile
     flexDirection: 'row',

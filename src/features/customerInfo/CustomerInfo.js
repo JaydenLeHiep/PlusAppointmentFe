@@ -16,7 +16,7 @@ const CustomerInfo = ({ businessId, customers, businessName }) => {
   const { checkIns, fetchCheckInDetailsForBusiness, addNewCustomer, updateExistingCustomer, deleteExistingCustomer } = useCustomersContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [editCustomerId, setEditCustomerId] = useState(null);
-  const [editCustomerData, setEditCustomerData] = useState({ name: '', email: '', phone: '', birthday: null, wantsPromotion: false });
+  const [editCustomerData, setEditCustomerData] = useState({ name: '', email: '', phone: '', birthday: null, wantsPromotion: false, note: '' });
   const [alert, setAlert] = useState({ message: '', severity: '' });
   const [customersData, setCustomersData] = useState([]);
   const [loadingCheckIns, setLoadingCheckIns] = useState(false);
@@ -56,13 +56,13 @@ const CustomerInfo = ({ businessId, customers, businessName }) => {
 
   const handleEditCustomer = (customer) => {
     setEditCustomerId(customer.customerId);
-    setEditCustomerData({ ...customer, birthday: customer.birthday ? moment(customer.birthday) : null });
+    setEditCustomerData({ ...customer, birthday: customer.birthday ? moment(customer.birthday) : null, note: customer.note || '' });
     setIsFormModalOpen(true);
   };
 
   const handleAddNewCustomer = () => {
     setEditCustomerId(null);
-    setEditCustomerData({ name: '', email: '', phone: '', birthday: null, wantsPromotion: false });
+    setEditCustomerData({ name: '', email: '', phone: '', birthday: null, wantsPromotion: false, note: '' });
     setIsFormModalOpen(true);
   };
 

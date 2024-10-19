@@ -89,12 +89,12 @@ const StaffList = ({
               <Collapse in={editStaffId === member.staffId}>
                 <Box ref={formRef}>
                   <StaffForm
-                    title="Update Staff"
+                    title={t('updateStaff')}
                     newStaff={newStaff}
                     setNewStaff={setNewStaff}
                     handleAction={() => handleUpdateStaff(member.staffId)}
                     handleCancelForm={handleCancelForm}
-                    buttonText="Update Staff"
+                    buttonText={t('updateStaffButton')}
                     buttonColor="#28a745"
                   />
                 </Box>

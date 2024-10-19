@@ -63,7 +63,7 @@ export const dialogTitleStyle = {
     borderRadius: '4px',
     cursor: 'pointer',
     fontSize: '1rem',
-    width: '100px',
+    width: 'auto',
     height: '40px',
     boxSizing: 'border-box',
   };

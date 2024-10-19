@@ -222,7 +222,7 @@ const ShowServicesDialog = ({ open, onClose, businessId, categories }) => {
               setNewService={setNewService}
               handleAction={handleAddService}
               handleCancelForm={handleCancelForm}
-              buttonText={t('addNewService')}
+              buttonText={t('addNewServiceButton')}
               buttonColor="#007bff"
             />
           </Collapse>
