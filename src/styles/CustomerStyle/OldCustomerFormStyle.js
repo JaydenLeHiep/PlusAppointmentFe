@@ -33,13 +33,13 @@ export const FormContainer = styled(Box)(({ theme }) => ({
   padding: '32px',
   borderRadius: '16px',
   boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.1)',
-  marginBottom: theme.spacing(5), // Bottom margin
-  marginTop: theme.spacing(3), // Top margin
+  marginBottom: theme.spacing(5), 
+  marginTop: theme.spacing(3), 
   maxWidth: '500px',
   margin: 'auto',
   [theme.breakpoints.down('sm')]: {
-    marginBottom: theme.spacing(4), // Bottom margin for mobile
-    marginTop: theme.spacing(2), // Top margin for mobile
+    marginBottom: theme.spacing(4), 
+    marginTop: theme.spacing(2), 
   },
 }));
 

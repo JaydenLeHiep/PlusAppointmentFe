@@ -27,7 +27,7 @@ import BackAndNextButtons from './BackNextButtons';
 import { fetchStaff } from '../../lib/apiClientStaff';
 import ShopPicturesCarousel from './ShopPicturesCarousel';
 import NextButton from './NextButton';
-
+import { Box } from '@mui/material';
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const CustomerDashboard = () => {
@@ -36,7 +36,7 @@ const CustomerDashboard = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const businessName = queryParams.get('business_name');
-
+  const bottomRef = useRef(null);
   const [customer, setCustomer] = useState(null);
   const [businessInfo, setBusinessInfo] = useState({});
   const [loading, setLoading] = useState(true);
@@ -51,11 +51,21 @@ const CustomerDashboard = () => {
   const [isAddingNewCustomer, setIsAddingNewCustomer] = useState(false);
   const [, setRedirectingToOldCustomerForm] = useState(false);
   const { openingHours, fetchOpeningHoursForBusiness } = useOpeningHoursContext();
-
   const { services, categories, fetchServices, fetchCategories } = useServicesContext();
   const [expandedCategoryId, setExpandedCategoryId] = useState(null);
-
   const connectionRef = useRef(null);
+
+   // Scroll function to scroll to the bottom of the page
+   const scrollToBottom = () => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Scroll to bottom whenever view changes or important states update
+  useEffect(() => {
+    scrollToBottom();
+  }, [view, selectedDate, selectedTime, selectedAppointments]);
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -153,7 +163,7 @@ const CustomerDashboard = () => {
     if (selectedServices.length > 0 && selectedStaff && selectedDate && selectedTime) {
       const appointmentDetails = selectedServices.map(service => {
         const appointmentTime = `${selectedDate.format('YYYY-MM-DD')}T${selectedTime.substring(11, 16)}`;
-
+  
         return {
           serviceName: service.name,
           staffName: selectedStaff.name,
@@ -168,22 +178,15 @@ const CustomerDashboard = () => {
           ]
         };
       });
-
-      const uniqueAppointments = [...selectedAppointments];
-
-      appointmentDetails.forEach(newAppointment => {
-        const isDuplicate = uniqueAppointments.some(existingAppointment =>
-          existingAppointment.services[0].serviceId === newAppointment.services[0].serviceId &&
-          existingAppointment.services[0].staffId === newAppointment.services[0].staffId &&
-          existingAppointment.appointmentTime === newAppointment.appointmentTime
+  
+      // Filter out any services with the same serviceId that are already in selectedAppointments
+      const updatedAppointments = appointmentDetails.filter(newAppointment => {
+        return !selectedAppointments.some(existingAppointment => 
+          existingAppointment.services.some(service => service.serviceId === newAppointment.services[0].serviceId)
         );
-
-        if (!isDuplicate) {
-          uniqueAppointments.push(newAppointment);
-        }
       });
-
-      setSelectedAppointments(uniqueAppointments);
+  
+      setSelectedAppointments(prevAppointments => [...prevAppointments, ...updatedAppointments]);
       setView('overview');
     }
   };
@@ -395,31 +398,46 @@ const CustomerDashboard = () => {
           )}
 
           {view === 'overview' && (
-            <AppointmentOverviewPage
-              selectedAppointments={selectedAppointments}
-              onAddMoreServices={() => setView('services')}
-              onFinish={handleFinish}
-              onDeleteAppointment={handleDeleteAppointment}
-            />
+            <Box
+              sx={{
+                marginTop: { xs: 2, sm: 3 },
+                marginBottom: { xs: 3, sm: 4 },
+              }}
+            >
+              <AppointmentOverviewPage
+                selectedAppointments={selectedAppointments}
+                onAddMoreServices={() => setView('services')}
+                onFinish={handleFinish}
+                onDeleteAppointment={handleDeleteAppointment}
+              />
+            </Box>
           )}
 
           {view === 'customerForm' && (
-            !isAddingNewCustomer ? (
-              <OldCustomerForm
-                selectedAppointments={selectedAppointments}
-                businessId={businessInfo.businessId}
-                onAppointmentSuccess={handleAppointmentSuccess}
-                onNewCustomer={() => setIsAddingNewCustomer(true)}
-              />
-            ) : (
-              <NewCustomerForm
-                businessId={businessInfo.businessId}
-                onCustomerAdded={handleNewCustomerSuccess}
-              />
-            )
+            <Box
+              sx={{
+                marginTop: { xs: 2, sm: 3 },
+                marginBottom: { xs: 3, sm: 4 },
+              }}
+            >
+              {!isAddingNewCustomer ? (
+                <OldCustomerForm
+                  selectedAppointments={selectedAppointments}
+                  businessId={businessInfo.businessId}
+                  onAppointmentSuccess={handleAppointmentSuccess}
+                  onNewCustomer={() => setIsAddingNewCustomer(true)}
+                />
+              ) : (
+                <NewCustomerForm
+                  businessId={businessInfo.businessId}
+                  onCustomerAdded={handleNewCustomerSuccess}
+                />
+              )}
+            </Box>
           )}
 
           {view === 'thankYou' && <ThankYou customer={customer} />}
+          <div ref={bottomRef} />
         </CustomContainer>
       </DashboardContainer>
     </>
