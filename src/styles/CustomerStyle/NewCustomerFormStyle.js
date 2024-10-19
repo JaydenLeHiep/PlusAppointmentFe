@@ -26,19 +26,23 @@ export const CustomButton = styled(Button)({
 });
 
 // FormContainer styling
-export const FormContainer = styled(Box)({
+export const FormContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  marginTop: '20px',
   backgroundColor: '#FFF2F4',
   padding: '32px',
   borderRadius: '16px',
   boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.1)',
-  marginBottom: '24px',
+  marginBottom: theme.spacing(5), 
+  marginTop: theme.spacing(3),
   maxWidth: '500px',
   margin: 'auto',
-});
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: theme.spacing(4), 
+    marginTop: theme.spacing(2), 
+  },
+}));
 
 // StyledTextField styling
 export const StyledTextField = styled(TextField)({

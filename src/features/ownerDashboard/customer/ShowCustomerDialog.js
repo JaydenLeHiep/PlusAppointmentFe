@@ -28,7 +28,8 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
     email: '',
     phone: '',
     birthday: null,       
-    wantsPromotion: false
+    wantsPromotion: false,
+    note: null,
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [alert, setAlert] = useState({ message: '', severity: '' });
@@ -75,6 +76,7 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
           BusinessId: String(businessId),
           birthday: newCustomer.birthday,
           wantsPromotion: newCustomer.wantsPromotion,
+          note: null,
         };
   
         await addNewCustomer(customerDetails, businessId);
@@ -86,6 +88,7 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
           phone: '',
           birthday: null,
           wantsPromotion: false,
+          note: null,
         });
       } catch (error) {
         console.error('Failed to add customer:', error);
@@ -154,6 +157,7 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
       phone: customer.phone,
       birthday: customer.birthday ? moment.utc(customer.birthday) : null,
       wantsPromotion: customer.wantsPromotion,
+      note: customer.note,
     });
     setIsFormOpen(false);
   };

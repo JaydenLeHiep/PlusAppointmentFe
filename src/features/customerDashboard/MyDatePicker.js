@@ -193,7 +193,10 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
-      <StyledBox>
+      <StyledBox sx={{
+      marginTop: { xs: '16px', sm: '32px' }, 
+      marginBottom: { xs: '32px', sm: '50px' },
+    }}>
         <StyledDatePicker
           value={selectedDate}
           onChange={handleDateChangeWrapper}
