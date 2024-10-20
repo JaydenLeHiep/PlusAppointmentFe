@@ -61,16 +61,6 @@ const OwnerDashboard = () => {
 
     loadBusinesses();
 
-    const isNewLogin = localStorage.getItem('isNewLogin');
-    if (isNewLogin) {
-      localStorage.removeItem('isNewLogin');
-      setSelectedBusiness(null);
-    } else {
-      const storedBusiness = localStorage.getItem('selectedBusiness');
-      if (storedBusiness) {
-        setSelectedBusiness(JSON.parse(storedBusiness));
-      }
-    }
   }, []);
 
   useEffect(() => {
@@ -100,12 +90,10 @@ const OwnerDashboard = () => {
 
     if (selectedBusiness) {
 
-      localStorage.setItem('selectedBusiness', JSON.stringify(selectedBusiness));
-      localStorage.setItem('selectedBusinessId', selectedBusiness.businessId);
       fetchAllData();
     } else {
-      localStorage.removeItem('selectedBusiness');
-      localStorage.removeItem('selectedBusinessId');
+
+
     }
   }, [
     selectedBusiness,
