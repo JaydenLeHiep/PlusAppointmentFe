@@ -237,7 +237,7 @@ const CustomerDashboard = () => {
       setIsAddingNewCustomer(false);
       setView('customerForm');
       setRedirectingToOldCustomerForm(false);
-    }, 5000);
+    }, 2000);
   };
 
   const handleAppointmentSuccess = (customer) => {
