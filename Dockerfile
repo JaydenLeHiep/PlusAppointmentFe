@@ -4,11 +4,11 @@ FROM node:14-alpine
 # Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package.json and package-lock.json first to leverage Docker cache
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies (this layer will be cached if package.json or package-lock.json hasn't changed)
+RUN npm install --production
 
 # Copy the rest of the application code
 COPY . .
@@ -21,7 +21,9 @@ RUN npm run build
 
 # Serve the app using a lightweight HTTP server
 RUN npm install -g serve
-CMD ["serve", "-s", "build"]
 
 # Expose the port the app runs on
 EXPOSE 3000
+
+# Run the server
+CMD ["serve", "-s", "build"]
