@@ -227,7 +227,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
       {/* Snackbar and Terms components remain the same */}
       <Snackbar
         open={submitSuccess}
-        autoHideDuration={3000}
+        autoHideDuration={2000}
         onClose={() => setSubmitSuccess(false)}
       >
         <Alert severity="success" sx={{ width: '100%' }}>
@@ -236,7 +236,7 @@ const NewCustomerForm = ({ businessId, onCustomerAdded }) => {
       </Snackbar>
       <Snackbar
         open={!!submitError}
-        autoHideDuration={6000}
+        autoHideDuration={2000}
         onClose={() => setSubmitError('')}
       >
         <Alert severity="error" sx={{ width: '100%' }}>
