@@ -54,7 +54,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingTimeId, setEditingTimeId] = useState(null);
     const [reason, setReason] = useState('');
-
+    const editTimeRef = useRef(null); 
     const alertRef = useRef(null);
 
     useEffect(() => {
@@ -87,6 +87,16 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
     }, [notAvailableTimeId, open, notAvailableTimes]);
 
     useEffect(() => {
+        if (editTimeRef.current) {
+            editTimeRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start', 
+            
+            });
+        }
+    }, [editTimeId, open]);
+
+    useEffect(() => {
         const fetchUnavailableTimeSlots = async () => {
             if (selectedDate && staffId) {
                 const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
@@ -100,8 +110,9 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
     }, [selectedDate, staffId]);
 
     const handleAddOrUpdateNotAvailableTime = async () => {
-        if (!selectedIntervals.length || !selectedDate || !staffId || !reason.trim()) return;
-
+        // Ensure only required fields are validated (reason is optional)
+        if (!selectedIntervals.length || !selectedDate || !staffId) return;
+    
         const formattedDate = moment(selectedDate).tz('UTC').toISOString();
         const fromDateTime = moment(selectedDate).set({
             hour: parseInt(selectedIntervals[0].split(':')[0]),
@@ -111,16 +122,16 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
             hour: parseInt(selectedIntervals[1].split(':')[0]),
             minute: parseInt(selectedIntervals[1].split(':')[1])
         }).tz('UTC').toISOString();
-
+    
         const notAvailableTimeData = {
             staffId,
             businessId,
             date: formattedDate,
             from: fromDateTime,
             to: toDateTime,
-            reason: reason.trim(),
+            reason: reason.trim() || null, 
         };
-
+    
         try {
             if (editTimeId) {
                 await updateNotAvailableTime(businessId, staffId, editTimeId, notAvailableTimeData);
@@ -284,7 +295,9 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                 .filter(time => time.staffId === staffId)
                                 .map((time) => (
                                     <React.Fragment key={time.notAvailableTimeId}>
-                                        <ListItem sx={listItemStyle}>
+                                        <ListItem 
+                                        sx={listItemStyle}
+                                        ref={editTimeId === time.notAvailableTimeId ? editTimeRef : null}>
                                             <ListItemText
                                                 primary={`Date: ${moment(time.date).format('YYYY-MM-DD')}`}
                                                 secondary={
