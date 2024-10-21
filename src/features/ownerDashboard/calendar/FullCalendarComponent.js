@@ -7,8 +7,7 @@ import CalendarDayCell from './CalendarDayCell';
 import FullCalendarWrapper from './FullCalendarWrapper';
 import { useTranslation } from 'react-i18next';
 
-// Commented out 'timeGridDay' view
-const views = ['dayGridMonth', /* 'timeGridDay', */ 'timeGridWeek', 'resourceTimeGridDay'];
+const views = ['dayGridMonth', 'timeGridWeek', 'resourceTimeGridDay'];
 
 const FullCalendarComponent = ({ events, staff, services, notAvailableDates, notAvailableTimes, fetchAppointmentById }) => {
   const { t } = useTranslation('fullCalendarComponent');
@@ -162,11 +161,11 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
         backgroundColor: 'rgba(255, 0, 0, 0.4)',
         display: 'auto',
         isNotAvailable: true,
-        title: time.reason || 'Unavailable',
+        title: time.reason || '',
         staffId: time.staffId,
         businessId: time.businessId,
         staffName: time.staffName,
-        reason: time.reason || 'No reason provided',
+        reason: time.reason || '',
         notAvailableTimeId: time.notAvailableTimeId,
         ...(resource ? { resourceIds: [resource.id] } : {}),
       };
