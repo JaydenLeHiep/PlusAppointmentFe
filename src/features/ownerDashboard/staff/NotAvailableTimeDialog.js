@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -43,7 +43,11 @@ import {
 const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailableTimes, notAvailableDates, staffName, notAvailableTimeId }) => {
     const { addNotAvailableTime, updateNotAvailableTime, deleteNotAvailableTime } = useNotAvailableTimeContext();
     const { t } = useTranslation('notAvailableTime');
-
+    const timeSlots = useMemo(() => [
+        '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+        '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
+        '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'
+    ], []);
     const [alert, setAlert] = useState({ message: '', severity: '' });
     const [editTimeId, setEditTimeId] = useState(null);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -100,14 +104,36 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
         const fetchUnavailableTimeSlots = async () => {
             if (selectedDate && staffId) {
                 const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
+    
+                // Fetch unavailable time slots for the staff (appointments)
                 const slots = await fetchNotAvailableTimeSlots(staffId, formattedDate);
                 const localNotAvailableTimeSlots = slots.map(slot => moment.utc(slot).tz(moment.tz.guess()).format('HH:mm'));
+    
+                // Combine with notAvailableTimes for the same date
+                const notAvailableTimesForDate = notAvailableTimes.filter(time =>
+                    moment(time.date).format('YYYY-MM-DD') === formattedDate
+                );
+    
+                // Calculate disabled slots based on both appointments and notAvailableTimes
+                notAvailableTimesForDate.forEach(time => {
+                    const fromTime = moment(time.from).local().format('HH:mm');
+                    const toTime = moment(time.to).local().format('HH:mm');
+    
+                    const startIndex = timeSlots.indexOf(fromTime);
+                    const endIndex = timeSlots.indexOf(toTime);
+    
+                    for (let i = startIndex; i < endIndex; i++) {
+                        localNotAvailableTimeSlots.push(timeSlots[i]);
+                    }
+                });
+    
+                // Set the combined disabled time slots
                 setDisabledTimeSlots(localNotAvailableTimeSlots);
             }
         };
-
+    
         fetchUnavailableTimeSlots();
-    }, [selectedDate, staffId]);
+    }, [selectedDate, staffId, notAvailableTimes, timeSlots]);
 
     const handleAddOrUpdateNotAvailableTime = async () => {
         // Ensure only required fields are validated (reason is optional)
