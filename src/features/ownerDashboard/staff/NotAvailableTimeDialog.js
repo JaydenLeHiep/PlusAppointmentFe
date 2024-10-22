@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -43,7 +43,11 @@ import {
 const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailableTimes, notAvailableDates, staffName, notAvailableTimeId }) => {
     const { addNotAvailableTime, updateNotAvailableTime, deleteNotAvailableTime } = useNotAvailableTimeContext();
     const { t } = useTranslation('notAvailableTime');
-
+    const timeSlots = useMemo(() => [
+        '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+        '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
+        '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'
+    ], []);
     const [alert, setAlert] = useState({ message: '', severity: '' });
     const [editTimeId, setEditTimeId] = useState(null);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -54,7 +58,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingTimeId, setEditingTimeId] = useState(null);
     const [reason, setReason] = useState('');
-
+    const editTimeRef = useRef(null);
     const alertRef = useRef(null);
 
     useEffect(() => {
@@ -87,20 +91,53 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
     }, [notAvailableTimeId, open, notAvailableTimes]);
 
     useEffect(() => {
+        if (editTimeRef.current) {
+            editTimeRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+
+            });
+        }
+    }, [editTimeId, open]);
+
+    useEffect(() => {
         const fetchUnavailableTimeSlots = async () => {
             if (selectedDate && staffId) {
                 const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
+    
+                // Fetch unavailable time slots for the staff (appointments)
                 const slots = await fetchNotAvailableTimeSlots(staffId, formattedDate);
                 const localNotAvailableTimeSlots = slots.map(slot => moment.utc(slot).tz(moment.tz.guess()).format('HH:mm'));
+    
+                // Combine with notAvailableTimes for the same date
+                const notAvailableTimesForDate = notAvailableTimes.filter(time =>
+                    moment(time.date).format('YYYY-MM-DD') === formattedDate
+                );
+    
+                // Calculate disabled slots based on both appointments and notAvailableTimes
+                notAvailableTimesForDate.forEach(time => {
+                    const fromTime = moment(time.from).local().format('HH:mm');
+                    const toTime = moment(time.to).local().format('HH:mm');
+    
+                    const startIndex = timeSlots.indexOf(fromTime);
+                    const endIndex = timeSlots.indexOf(toTime);
+    
+                    for (let i = startIndex; i < endIndex; i++) {
+                        localNotAvailableTimeSlots.push(timeSlots[i]);
+                    }
+                });
+    
+                // Set the combined disabled time slots
                 setDisabledTimeSlots(localNotAvailableTimeSlots);
             }
         };
-
+    
         fetchUnavailableTimeSlots();
-    }, [selectedDate, staffId]);
+    }, [selectedDate, staffId, notAvailableTimes, timeSlots]);
 
     const handleAddOrUpdateNotAvailableTime = async () => {
-        if (!selectedIntervals.length || !selectedDate || !staffId || !reason.trim()) return;
+        // Ensure only required fields are validated (reason is optional)
+        if (!selectedIntervals.length || !selectedDate || !staffId) return;
 
         const formattedDate = moment(selectedDate).tz('UTC').toISOString();
         const fromDateTime = moment(selectedDate).set({
@@ -118,7 +155,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
             date: formattedDate,
             from: fromDateTime,
             to: toDateTime,
-            reason: reason.trim(),
+            reason: reason.trim() || null,
         };
 
         try {
@@ -189,6 +226,15 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
     };
 
     const shouldDisableDate = (date) => {
+        const today = moment().startOf('day');
+        const yesterday = moment().subtract(1, 'days').startOf('day');
+
+        // Allow today and yesterday
+        if (date.isSame(today) || date.isSame(yesterday)) {
+            return false;
+        }
+
+        // Apply your existing unavailable date logic
         const staffNotAvailableDates = notAvailableDates.filter(({ staffId: dateStaffId }) => dateStaffId === staffId);
         const isInUnavailableRange = staffNotAvailableDates.some(({ startDate, endDate }) => {
             const start = moment(startDate);
@@ -196,7 +242,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
             return date.isBetween(start, end, null, '[]');
         });
 
-        return isInUnavailableRange || date.day() === 0;
+        return isInUnavailableRange || date.day() === 0; // Disables Sundays or any unavailable dates
     };
 
     return (
@@ -235,8 +281,6 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                 onChange={(newDate) => setSelectedDate(newDate ? moment(newDate).toDate() : null)}
                                 shouldDisableDate={shouldDisableDate}
                                 renderInput={(params) => <TextField {...params} />}
-                                disablePast
-                                sx={{ marginBottom: 2 }}
                             />
                         </LocalizationProvider>
 
@@ -281,10 +325,12 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                     <List>
                         {Array.isArray(notAvailableTimes) && notAvailableTimes.length > 0 ? (
                             notAvailableTimes
-                                .filter(time => time.staffId === staffId)
+                                .filter(time => time.staffId === staffId && moment(time.date).isSameOrAfter(moment().startOf('day'))) // Filter out past dates
                                 .map((time) => (
                                     <React.Fragment key={time.notAvailableTimeId}>
-                                        <ListItem sx={listItemStyle}>
+                                        <ListItem
+                                            sx={listItemStyle}
+                                            ref={editTimeId === time.notAvailableTimeId ? editTimeRef : null}>
                                             <ListItemText
                                                 primary={`Date: ${moment(time.date).format('YYYY-MM-DD')}`}
                                                 secondary={
@@ -296,7 +342,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                                             {t('to')}: {moment(time.to).local().format('HH:mm')}
                                                         </Typography>
                                                         <Typography variant="body2" component="div">
-                                                            {t('reason')}: {time.reason || 'N/A'}
+                                                            {t('reason')}: {time.reason || ''}
                                                         </Typography>
                                                     </>
                                                 }
@@ -363,10 +409,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                                     <Button
                                                         variant="outlined"
                                                         color="secondary"
-                                                        onClick={() => {
-                                                            setIsFormOpen(false);
-                                                            setEditingTimeId(null);
-                                                        }}
+                                                        onClick={() => setIsFormOpen(false)}
                                                         sx={cancelButtonStyle}
                                                     >
                                                         {t('cancel')}
