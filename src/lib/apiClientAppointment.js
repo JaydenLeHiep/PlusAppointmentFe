@@ -158,11 +158,12 @@ export const fetchNotAvailableTimeSlots = async (staffId, date) => {
   // Use moment to format the date consistently
   const formattedDate = moment(date).format('YYYY-MM-DD');
 
-  const response = await fetch(`${appointmentApiUrl}/not-available-timeslots?staffId=${staffId}&date=${formattedDate}`, {
+  // Make the API request with staffId in the URL and date as a query parameter
+  const response = await fetch(`${appointmentApiUrl}/staff/${staffId}/not-available-timeslots?date=${formattedDate}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-    },
+    }
   });
 
   if (!response.ok) {
@@ -178,7 +179,7 @@ export const fetchNotAvailableTimeSlots = async (staffId, date) => {
   } else {
     return []; // Return an empty array if not an array
   }
-}
+};
 
 // Fetch appointments by customer ID
 export const fetchAppointmentsByCustomerId = async (customerId) => {
