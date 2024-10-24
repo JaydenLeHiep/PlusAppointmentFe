@@ -101,7 +101,6 @@ const ShopPicturesCarousel = ({ businessId, businessName, businessInfo }) => {
       },
     ],
   };
-  console.log(businessInfo)
 
   return (
     <Box
