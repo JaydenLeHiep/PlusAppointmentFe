@@ -1,6 +1,6 @@
 import { apiBaseUrl } from '../config/apiConfig';
 
-const notificationApiUrl = `${apiBaseUrl}/api/notification/`;
+const notificationApiUrl = `${apiBaseUrl}/api/notification`;
 
 const getToken = () => {
     const token = localStorage.getItem('token');
@@ -19,28 +19,32 @@ const handleApiResponse = async (response) => {
     return data;
 };
 
-// Ensure `business_id={businessId}` in the URL
-const buildNotificationApiUrl = (businessId, path = '') => `${notificationApiUrl}business_id=${businessId}${path}`;
+
 
 // API client function for fetching notifications
 export const fetchNotification = async (businessId) => {
-    const token = getToken();
-    const response = await fetch(buildNotificationApiUrl(businessId, '/get-notifications'), {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-    });
-
-    const data = await handleApiResponse(response);
-    return Array.isArray(data.$values) ? data.$values : []; 
+  try {
+      const token = getToken();
+      const response = await fetch(`${notificationApiUrl}/business/${businessId}`, {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${token}`
+          },
+      });
+      const data = await handleApiResponse(response);
+      return Array.isArray(data.$values) ? data.$values : []; 
+  } catch (error) {
+      console.error('Error fetching notifications:', error);
+      return [];
+  }
 };
+
 
 // API client function to mark notifications as seen
 export const markNotificationsAsSeen = async (businessId, notificationIds) => {
   const token = getToken();
   
-  const response = await fetch(`${notificationApiUrl}mark-as-seen`, {
+  const response = await fetch(`${notificationApiUrl}/mark-as-seen`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
