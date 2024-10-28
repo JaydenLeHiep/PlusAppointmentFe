@@ -4,7 +4,7 @@ const shopPicturesApiUrl = `${apiBaseUrl}/api/shoppictures`;
 
 // API client function for fetching shop pictures by business ID
 export const fetchPictureBusiness = async (businessId) => {
-  const response = await fetch(`${shopPicturesApiUrl}/business/business_id=${businessId}`, {
+  const response = await fetch(`${shopPicturesApiUrl}/business/${businessId}`, {
     method: 'GET',
   });
 
