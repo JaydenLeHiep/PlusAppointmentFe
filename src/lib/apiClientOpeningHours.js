@@ -22,17 +22,16 @@ const handleApiResponse = async (response) => {
 
 // Fetch opening hours for a business
 export const fetchOpeningHours = async (businessId) => {
-  const response = await fetch(`${openingHoursApiUrl}/business_id=${businessId}`, {
+  const response = await fetch(`${openingHoursApiUrl}/business/${businessId}`, {
     method: 'GET',
   });
-  const data = await handleApiResponse(response);
-  return data;
+  return await handleApiResponse(response);
 };
 
 // Add new opening hours
 export const addOpeningHours = async (businessId, openingHoursDetails) => {
   const token = getToken();
-  const response = await fetch(`${openingHoursApiUrl}/business_id=${businessId}/add`, {
+  const response = await fetch(`${openingHoursApiUrl}/business/${businessId}/add`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -46,7 +45,7 @@ export const addOpeningHours = async (businessId, openingHoursDetails) => {
 // Update existing opening hours
 export const updateOpeningHours = async (businessId, openingHoursDetails) => {
   const token = getToken();
-  const response = await fetch(`${openingHoursApiUrl}/business_id=${businessId}`, {
+  const response = await fetch(`${openingHoursApiUrl}/business/${businessId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -60,7 +59,7 @@ export const updateOpeningHours = async (businessId, openingHoursDetails) => {
 // Delete opening hours for a business
 export const deleteOpeningHours = async (businessId) => {
   const token = getToken();
-  const response = await fetch(`${openingHoursApiUrl}/business_id=${businessId}`, {
+  const response = await fetch(`${openingHoursApiUrl}/business/${businessId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
