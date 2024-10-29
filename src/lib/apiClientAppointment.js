@@ -26,7 +26,7 @@ export const fetchAppointments = async (businessId) => {
     throw new Error('User not authenticated');
   }
 
-  const appointmentBusinessApiUrl = `${appointmentApiUrl}/business/business_id=${businessId}`;
+  const appointmentBusinessApiUrl = `${appointmentApiUrl}/businesses/${businessId}/appointments`;
   const response = await fetch(appointmentBusinessApiUrl, {
     method: 'GET',
     headers: {
@@ -47,7 +47,7 @@ export const fetchAppointments = async (businessId) => {
 
 // for add Appointment
 export const addAppointment = async (appointmentDetails) => {
-  const response = await fetch(`${appointmentApiUrl}/add-appointment`, {
+  const response = await fetch(`${appointmentApiUrl}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export const changeStatusAppointments = async (appointmentId, status) => {
   if (!token) {
     throw new Error('User not authenticated');
   }
-  const appointmentBusinessApiUrl = `${appointmentApiUrl}/appointment_id=${appointmentId}/status-appointment`;
+  const appointmentBusinessApiUrl = `${appointmentApiUrl}/${appointmentId}/status`;
   const response = await fetch(appointmentBusinessApiUrl, {
     method: 'PUT',
     headers: {
@@ -93,7 +93,7 @@ export const deleteAppointment = async (appointmentId) => {
   if (!token) {
     throw new Error('User not authenticated');
   }
-  const appointmentBusinessApiUrl = `${appointmentApiUrl}/appointment_id=${appointmentId}/delete-appointment`;
+  const appointmentBusinessApiUrl = `${appointmentApiUrl}/${appointmentId}`;
   const response = await fetch(appointmentBusinessApiUrl, {
     method: 'DELETE',
     headers: {
@@ -114,7 +114,7 @@ export const fetchAppointmentById = async (appointmentId) => {
   if (!token) {
     throw new Error('User not authenticated');
   }
-  const response = await fetch(`${appointmentApiUrl}/appointment_id=${appointmentId}`, {
+  const response = await fetch(`${appointmentApiUrl}/${appointmentId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -134,7 +134,7 @@ export const updateAppointment = async (appointmentId, updateData) => {
   if (!token) {
     throw new Error('User not authenticated');
   }
-  const response = await fetch(`${appointmentApiUrl}/appointment_id=${appointmentId}/update-appointment`, {
+  const response = await fetch(`${appointmentApiUrl}/${appointmentId}/`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -158,11 +158,12 @@ export const fetchNotAvailableTimeSlots = async (staffId, date) => {
   // Use moment to format the date consistently
   const formattedDate = moment(date).format('YYYY-MM-DD');
 
-  const response = await fetch(`${appointmentApiUrl}/not-available-timeslots?staffId=${staffId}&date=${formattedDate}`, {
+  // Make the API request with staffId in the URL and date as a query parameter
+  const response = await fetch(`${appointmentApiUrl}/staff/${staffId}/not-available-timeslots?date=${formattedDate}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-    },
+    }
   });
 
   if (!response.ok) {
@@ -178,11 +179,11 @@ export const fetchNotAvailableTimeSlots = async (staffId, date) => {
   } else {
     return []; // Return an empty array if not an array
   }
-}
+};
 
 // Fetch appointments by customer ID
 export const fetchAppointmentsByCustomerId = async (customerId) => {
-  const response = await fetch(`${apiBaseUrl}/api/appointments/customer/customer_id=${customerId}`, {
+  const response = await fetch(`${apiBaseUrl}/api/appointments/customers/${customerId}/appointments`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -193,7 +194,7 @@ export const fetchAppointmentsByCustomerId = async (customerId) => {
 
 // delete the appointment for the customer 
 export const deleteAppointmentForCustomer = async (appointmentId) => {
-  const appointmentBusinessApiUrl = `${appointmentApiUrl}/appointment_id=${appointmentId}/delete-appointment-customer`;
+  const appointmentBusinessApiUrl = `${appointmentApiUrl}/${appointmentId}`;
   const response = await fetch(appointmentBusinessApiUrl, {
     method: 'DELETE',
   });
