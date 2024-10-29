@@ -204,7 +204,7 @@ export const fetchCustomerById = async (customerId) => {
 
 // Add a new check-in for a customer
 export const addCheckIn = async (checkInDetails) => {
-  const checkInApiUrl = `${apiBaseUrl}/api/checkin/add`;
+  const checkInApiUrl = `${apiBaseUrl}/api/checkin`;
   
   const response = await fetch(checkInApiUrl, {
     method: 'POST',
@@ -223,7 +223,7 @@ export const fetchCheckInByBusinessId = async (businessId) => {
   if (!token) {
     throw new Error('User not authenticated');
   }
-  const customerCheckInDetailsApiUrl = `${apiBaseUrl}/api/checkin/business_id=${businessId}/checkins`;
+  const customerCheckInDetailsApiUrl = `${apiBaseUrl}/api/checkin/business/${businessId}`;
   
   const response = await fetch(customerCheckInDetailsApiUrl, {
     method: 'GET',
