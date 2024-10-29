@@ -13,37 +13,34 @@ const handleApiResponse = async (response) => {
 
 // Fetch all NotAvailableDates for a specific staff
 export const fetchNotAvailableDates = async (businessId, staffId) => {
-  const response = await fetch(`${notAvailableDateApiUrl}/business_id=${businessId}/staff_id=${staffId}`, {
+  const response = await fetch(`${notAvailableDateApiUrl}/business/${businessId}/staff/${staffId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   });
-
   return await handleApiResponse(response);
 };
 
 // Fetch all NotAvailableDates for a specific business (all staff)
 export const fetchNotAvailableDatesByBusiness = async (businessId) => {
-  const response = await fetch(`${notAvailableDateApiUrl}/business_id=${businessId}`, {
+  const response = await fetch(`${notAvailableDateApiUrl}/business/${businessId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   });
-
   return await handleApiResponse(response);
 };
 
 // Fetch a specific NotAvailableDate by ID
 export const fetchNotAvailableDateById = async (businessId, staffId, notAvailableDateId) => {
-  const response = await fetch(`${notAvailableDateApiUrl}/business_id=${businessId}/staff_id=${staffId}/notAvailable_id=${notAvailableDateId}`, {
+  const response = await fetch(`${notAvailableDateApiUrl}/business/${businessId}/staff/${staffId}/notavailable/${notAvailableDateId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   });
-
   return await handleApiResponse(response);
 };
 
@@ -54,7 +51,7 @@ export const addNotAvailableDate = async (businessId, staffId, notAvailableDate)
     throw new Error('User not authenticated');
   }
 
-  const response = await fetch(`${notAvailableDateApiUrl}/business_id=${businessId}/staff_id=${staffId}/add`, {
+  const response = await fetch(`${notAvailableDateApiUrl}/business/${businessId}/staff/${staffId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -73,7 +70,7 @@ export const updateNotAvailableDate = async (businessId, staffId, notAvailableDa
     throw new Error('User not authenticated');
   }
 
-  const response = await fetch(`${notAvailableDateApiUrl}/business_id=${businessId}/staff_id=${staffId}/notAvailable_id=${notAvailableDateId}`, {
+  const response = await fetch(`${notAvailableDateApiUrl}/business/${businessId}/staff/${staffId}/notavailable/${notAvailableDateId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -92,7 +89,7 @@ export const deleteNotAvailableDate = async (businessId, staffId, notAvailableDa
     throw new Error('User not authenticated');
   }
 
-  const response = await fetch(`${notAvailableDateApiUrl}/business_id=${businessId}/staff_id=${staffId}/notAvailable_id=${notAvailableDateId}`, {
+  const response = await fetch(`${notAvailableDateApiUrl}/business/${businessId}/staff/${staffId}/notavailable/${notAvailableDateId}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`,
