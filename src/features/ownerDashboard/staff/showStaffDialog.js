@@ -90,8 +90,7 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates, notAvai
           name: newStaff.name,
           email: newStaff.email,
           phone: newStaff.phone,
-          password: newStaff.password,
-          BusinessId: String(businessId),
+          password: newStaff.password
         };
 
         await addStaff(String(businessId), staffDetails);
@@ -118,8 +117,7 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates, notAvai
           name: newStaff.name,
           email: newStaff.email,
           phone: newStaff.phone,
-          password: newStaff.password,
-          BusinessId: String(businessId),
+          password: newStaff.password
         };
 
         await updateStaff(String(businessId), staffId, staffDetails);
