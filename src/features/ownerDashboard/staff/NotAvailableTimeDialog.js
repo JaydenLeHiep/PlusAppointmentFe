@@ -104,34 +104,34 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
         const fetchUnavailableTimeSlots = async () => {
             if (selectedDate && staffId) {
                 const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
-    
+
                 // Fetch unavailable time slots for the staff (appointments)
                 const slots = await fetchNotAvailableTimeSlots(staffId, formattedDate);
                 const localNotAvailableTimeSlots = slots.map(slot => moment.utc(slot).tz(moment.tz.guess()).format('HH:mm'));
-    
+
                 // Combine with notAvailableTimes for the same date
                 const notAvailableTimesForDate = notAvailableTimes.filter(time =>
                     moment(time.date).format('YYYY-MM-DD') === formattedDate
                 );
-    
+
                 // Calculate disabled slots based on both appointments and notAvailableTimes
                 notAvailableTimesForDate.forEach(time => {
                     const fromTime = moment(time.from).local().format('HH:mm');
                     const toTime = moment(time.to).local().format('HH:mm');
-    
+
                     const startIndex = timeSlots.indexOf(fromTime);
                     const endIndex = timeSlots.indexOf(toTime);
-    
+
                     for (let i = startIndex; i < endIndex; i++) {
                         localNotAvailableTimeSlots.push(timeSlots[i]);
                     }
                 });
-    
+
                 // Set the combined disabled time slots
                 setDisabledTimeSlots(localNotAvailableTimeSlots);
             }
         };
-    
+
         fetchUnavailableTimeSlots();
     }, [selectedDate, staffId, notAvailableTimes, timeSlots]);
 
@@ -227,21 +227,16 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
 
     const shouldDisableDate = (date) => {
         const today = moment().startOf('day');
-        const yesterday = moment().subtract(1, 'days').startOf('day');
-
-        // Allow today and yesterday
-        if (date.isSame(today) || date.isSame(yesterday)) {
-            return false;
+        // Disable all dates before today
+        if (date.isBefore(today)) {
+            return true;
         }
-
-        // Apply your existing unavailable date logic
         const staffNotAvailableDates = notAvailableDates.filter(({ staffId: dateStaffId }) => dateStaffId === staffId);
         const isInUnavailableRange = staffNotAvailableDates.some(({ startDate, endDate }) => {
             const start = moment(startDate);
             const end = moment(endDate);
             return date.isBetween(start, end, null, '[]');
         });
-
         return isInUnavailableRange || date.day() === 0; // Disables Sundays or any unavailable dates
     };
 
