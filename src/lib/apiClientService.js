@@ -25,7 +25,7 @@ const handleApiResponse = async (response) => {
 
 // Fetch all services for a business
 export const fetchServices = async (businessId) => {
-  const response = await fetch(`${serviceApiUrl}/business_id=${businessId}`, {
+  const response = await fetch(`${serviceApiUrl}/business/${businessId}`, {
     method: 'GET',
   });
   const data = await handleApiResponse(response);
@@ -42,7 +42,7 @@ export const fetchServices = async (businessId) => {
 // Add a new service
 export const addService = async (businessId, serviceDetails) => {
   const token = getToken();
-  const response = await fetch(`${serviceApiUrl}/business_id=${businessId}/add`, {
+  const response = await fetch(`${serviceApiUrl}/business/${businessId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ export const addService = async (businessId, serviceDetails) => {
 // Update an existing service
 export const updateService = async (businessId, serviceId, serviceDetails) => {
   const token = getToken();
-  const response = await fetch(`${serviceApiUrl}/business_id=${businessId}/service_id=${serviceId}`, {
+  const response = await fetch(`${serviceApiUrl}/business/${businessId}/service/${serviceId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export const updateService = async (businessId, serviceId, serviceDetails) => {
 // Delete a service
 export const deleteService = async (businessId, serviceId) => {
   const token = getToken();
-  const response = await fetch(`${serviceApiUrl}/business_id=${businessId}/service_id=${serviceId}`, {
+  const response = await fetch(`${serviceApiUrl}/business/${businessId}/service/${serviceId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
