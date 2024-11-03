@@ -73,13 +73,12 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
           name: newCustomer.name,
           email: newCustomer.email,
           phone: newCustomer.phone,
-          BusinessId: String(businessId),
           birthday: newCustomer.birthday,
           wantsPromotion: newCustomer.wantsPromotion,
           note: null,
         };
   
-        await addNewCustomer(customerDetails, businessId);
+        await addNewCustomer(businessId, customerDetails);
         setAlert({ message: t('customerAddedSuccess'), severity: 'success' });
   
         setNewCustomer({
