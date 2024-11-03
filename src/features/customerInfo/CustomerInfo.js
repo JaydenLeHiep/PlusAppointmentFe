@@ -73,7 +73,7 @@ const CustomerInfo = ({ businessId, customers, businessName }) => {
         await updateExistingCustomer(businessId, editCustomerId, customerDetails);
         setAlert({ message: t('customerUpdatedSuccess'), severity: 'success' });
       } else {
-        await addNewCustomer(customerDetails);
+        await addNewCustomer(businessId, customerDetails);
         setAlert({ message: t('customerAddedSuccess'), severity: 'success' });
       }
     } catch (error) {
