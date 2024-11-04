@@ -45,9 +45,9 @@ export const CustomersProvider = ({ children }) => {
     }
   }, []);
 
-  const addNewCustomer = useCallback(async (customerDetails, businessId) => {
+  const addNewCustomer = useCallback(async (businessId, customerDetails) => {
     try {
-      await addCustomer(customerDetails);
+      await addCustomer(businessId,customerDetails);
       setAlert({ message: 'Customer added successfully!', severity: 'success' });
     } catch (error) {
       console.error('Error adding customer:', error);
@@ -58,7 +58,7 @@ export const CustomersProvider = ({ children }) => {
 
   const updateExistingCustomer = useCallback(async (businessId, customerId, customerDetails) => {
     try {
-      await updateCustomer(businessId, customerId, customerDetails);
+      await updateCustomer(customerId, customerDetails);
       setAlert({ message: 'Customer updated successfully!', severity: 'success' });
       await fetchCustomersForBusiness(businessId); // Refresh the customer list
     } catch (error) {
@@ -70,7 +70,7 @@ export const CustomersProvider = ({ children }) => {
 
   const deleteExistingCustomer = useCallback(async (businessId, customerId) => {
     try {
-      await deleteCustomer(businessId, customerId);
+      await deleteCustomer(customerId);
       setAlert({ message: 'Customer deleted successfully!', severity: 'success' });
       await fetchCustomersForBusiness(businessId); // Refresh the customer list
     } catch (error) {

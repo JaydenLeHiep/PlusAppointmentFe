@@ -59,11 +59,10 @@ const CheckInNewCustomer = ({ businessId, onCustomerAdded, onBack }) => {
         phone: formData.phone,
         birthday: utcBirthday, // Send UTC birthday to server
         wantsPromotion: formData.wantsPromotion,
-        note: null,
-        BusinessId: String(businessId),
+        note: null
       };
 
-      const newCustomer = await addNewCustomer(customerDetails, businessId);
+      const newCustomer = await addNewCustomer(businessId,customerDetails);
 
       setSubmitSuccess(true);
       setSubmitError('');

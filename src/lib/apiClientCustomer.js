@@ -44,8 +44,8 @@ export const fetchCustomers = async () => {
 };
 
 // Add a new customer
-export const addCustomer = async (customerDetails) => {
-  const response = await fetch(`${customerApiUrl}/add`, {
+export const addCustomer = async (businessId, customerDetails) => {
+  const response = await fetch(`${customerApiUrl}/business/${businessId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -56,13 +56,13 @@ export const addCustomer = async (customerDetails) => {
 };
 
 // Delete a customer
-export const deleteCustomer = async (businessId, customerId) => {
+export const deleteCustomer = async (customerId) => {
   const token = localStorage.getItem('token');
   if (!token) {
     throw new Error('User not authenticated');
   }
 
-  const response = await fetch(`${customerApiUrl}/business_id=${businessId}/customer_id=${customerId}`, {
+  const response = await fetch(`${customerApiUrl}/${customerId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -74,13 +74,13 @@ export const deleteCustomer = async (businessId, customerId) => {
 };
 
 // Update a customer
-export const updateCustomer = async (businessId, customerId, customerDetails) => {
+export const updateCustomer = async (customerId, customerDetails) => {
   const token = localStorage.getItem('token');
   if (!token) {
     throw new Error('User not authenticated');
   }
 
-  const response = await fetch(`${customerApiUrl}/business_id=${businessId}/customer_id=${customerId}`, {
+  const response = await fetch(`${customerApiUrl}/${customerId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ export const fetchCustomerByEmailOrPhone = async (emailOrPhone) => {
 
 //take customer id by phonenumber or mail
 export const fetchCustomerByEmailOrPhoneAndBusinessId = async (emailOrPhone, businessId) => {
-  const findCustomerApiUrl = `${customerApiUrl}/find-customer/business_id=${businessId}`;
+  const findCustomerApiUrl = `${customerApiUrl}/find-customer/business/${businessId}`;
   const response = await fetch(findCustomerApiUrl, {
     method: 'POST',
     headers: {
@@ -174,7 +174,7 @@ export const fetchCustomersByBusinessId = async (businessId) => {
     throw new Error('User not authenticated');
   }
 
-  const response = await fetch(`${customerApiUrl}/business_id=${businessId}/customers`, {
+  const response = await fetch(`${customerApiUrl}/business/${businessId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ export const fetchCustomersByBusinessId = async (businessId) => {
 
 // Fetch a customer by their ID without authorization
 export const fetchCustomerById = async (customerId) => {
-  const customerDetailsApiUrl = `${apiBaseUrl}/api/customer/customer_id=${customerId}`;
+  const customerDetailsApiUrl = `${apiBaseUrl}/api/customer/customer/${customerId}`;
   
   const response = await fetch(customerDetailsApiUrl, {
     method: 'GET',
