@@ -8,7 +8,8 @@ import {
     fetchCustomersByBusinessId,
     checkCustomerExists, 
     addCheckIn,
-    fetchCheckInByBusinessId
+    fetchCheckInByBusinessId,
+    verifyAndUseDiscountCode
 } from '../lib/apiClientCustomer';
 
 const CustomersContext = createContext();
@@ -121,6 +122,18 @@ export const CustomersProvider = ({ children }) => {
     }
   }, []);
 
+  const applyDiscountCode = useCallback(async (codeDetails) => {
+    try {
+      const result = await verifyAndUseDiscountCode(codeDetails);
+      setAlert({ message: 'Discount code applied successfully!', severity: 'success' });
+      return result;
+    } catch (error) {
+      console.error('Error applying discount code:', error);
+      setAlert({ message: 'Failed to apply discount code.', severity: 'error' });
+      throw error;
+    }
+  }, []);
+
   const contextValue = {
     customers,
     checkIns,
@@ -133,6 +146,7 @@ export const CustomersProvider = ({ children }) => {
     checkIfCustomerExists,
     addCustomerCheckIn,
     fetchCheckInDetailsForBusiness,
+    applyDiscountCode,
     alert,
   };
 

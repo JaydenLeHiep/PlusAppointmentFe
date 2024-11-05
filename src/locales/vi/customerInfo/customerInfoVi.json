@@ -42,5 +42,11 @@
       "Phone": "Số điện thoại",
       "Note: ": "Ghi chú: ",
       "noNote": "Chưa có",
-      "noBookings": "Chưa có" 
+      "noBookings": "Chưa có",
+      "verifyDiscount": "Xác minh mã giảm giá",
+      "discountCodeVerification": "Xác minh Mã Giảm Giá",
+      "verify": "Kiểm tra",
+      "codeVerify": "Mã xác minh",
+      "discountCodeAppliedSuccess": "Mã giảm giá đã được áp dụng thành công!",
+      "discountCodeAppliedFailed": "Không thể áp dụng mã giảm giá."
 }
