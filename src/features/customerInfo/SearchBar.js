@@ -12,23 +12,37 @@ const SearchBar = ({ searchQuery, setSearchQuery, loadingCheckIns, handleLoadChe
 
   const [isDiscountModalOpen, setIsDiscountModalOpen] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
-  const [discountAlert, setDiscountAlert] = useState(null); // State to store alert message
+  const [discountAlert, setDiscountAlert] = useState(null);
+  const [discountPercentage, setDiscountPercentage] = useState(null); // New state to store discount percentage
 
   const handleOpenDiscountModal = () => setIsDiscountModalOpen(true);
 
   const handleCloseDiscountModal = () => {
     setIsDiscountModalOpen(false);
     setDiscountCode('');
-    setDiscountAlert(null);  // Reset alert when modal closes
+    setDiscountAlert(null);
+    setDiscountPercentage(null); // Reset discount percentage when modal closes
+  };
+
+  const handleDiscountCodeInputChange = (e) => {
+    setDiscountCode(e.target.value);
+    setDiscountPercentage(null); // Reset discount percentage when input changes
   };
 
   const handleVerifyDiscountCode = async () => {
     try {
-      const result = await handleDiscountCodeVerification(discountCode); // Call verification function
-      setDiscountAlert({ message: result.message, severity: result.success ? 'success' : 'error' });
+      const result = await handleDiscountCodeVerification(discountCode);
+      if (result.success) {
+        setDiscountAlert({ message: result.message, severity: 'success' });
+        setDiscountPercentage(result.discountPercentage); // Set the discount percentage on successful verification
+      } else {
+        setDiscountAlert({ message: result.message, severity: 'error' });
+        setDiscountPercentage(null);
+      }
     } catch (error) {
       console.error("Verification failed:", error);
       setDiscountAlert({ message: t('discountCodeAppliedFailed'), severity: 'error' });
+      setDiscountPercentage(null);
     }
   };
 
@@ -104,8 +118,18 @@ const SearchBar = ({ searchQuery, setSearchQuery, loadingCheckIns, handleLoadChe
             fullWidth
             margin="dense"
             value={discountCode}
-            onChange={(e) => setDiscountCode(e.target.value)}
+            onChange={handleDiscountCodeInputChange}
           />
+          {discountPercentage !== null && (
+            <TextField
+              label={t('discountPercentageMessage', { discount: discountPercentage })}
+              value={`${discountPercentage}%`}
+              fullWidth
+              margin="dense"
+              InputProps={{ readOnly: true }}
+              sx={{ mt: 2 }}
+            />
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDiscountModal} color="secondary">

@@ -9,7 +9,7 @@ import { useAppointmentsContext } from '../../context/AppointmentsContext';
 import ShowCustomerDialog from '../ownerDashboard/customer/ShowCustomerDialog';
 
 const BusinessDetails = ({ selectedBusiness, setSelectedBusiness, staff, services, appointments, customers,
-  notAvailableDates, notifications, notAvailableTimes, categories, fetchAppointmentById }) => {
+  notAvailableDates, notifications, notAvailableTimes, categories, fetchAppointmentById, openingHours }) => {
   const { fetchAppointmentsForBusiness } = useAppointmentsContext();
 
   const [staffOpen, setStaffOpen] = useState(false);
@@ -145,7 +145,7 @@ const notAvailableTimeEvents = notAvailableTimes.map(time => {
         />
       </Box>
 
-      <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} notAvailableDates={notAvailableDates} notAvailableTimes={notAvailableTimes} />
+      <ShowStaffDialog open={staffOpen} onClose={handleStaffClose} businessId={selectedBusiness.businessId} notAvailableDates={notAvailableDates} notAvailableTimes={notAvailableTimes} openingHours={openingHours}/>
       <AddAppointmentDialog open={appointmentOpen} onClose={handleAppointmentClose} businessId={selectedBusiness.businessId} setAppointments={fetchAppointmentsForBusiness} />
       <ShowServicesDialog open={servicesOpen} onClose={handleServicesClose} businessId={selectedBusiness.businessId} categories={categories} />
       <ShowCustomerDialog open={customerOpen} onClose={handleCustomerClose} businessId={selectedBusiness.businessId} customers={customers} />

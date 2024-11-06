@@ -21,7 +21,7 @@ import {
   BoxStyled,
 } from '../../../styles/OwnerStyle/StaffComPonent/showStaffDialogStyles';
 
-const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates, notAvailableTimes }) => {
+const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates, notAvailableTimes, openingHours }) => {
   const { t } = useTranslation('showStaffDialog');
   const { staff, addStaff, updateStaff, deleteStaff } = useStaffsContext();
 
@@ -275,6 +275,7 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates, notAvai
         staffName={selectedStaffName}
         staffId={selectedStaffId}
         businessId={businessId}
+        openingHours={openingHours}
       />
 
       <ConfirmationDialog
