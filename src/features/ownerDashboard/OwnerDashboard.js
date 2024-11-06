@@ -13,6 +13,7 @@ import { useServicesContext } from '../../context/ServicesContext';
 import { useCustomersContext } from '../../context/CustomerContext';
 import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext';
 import { useNotAvailableTimeContext } from '../../context/NotAvailableTimeContext';
+import { useOpeningHoursContext } from '../../context/OpeningHoursContext';
 import CustomerInfo from '../customerInfo/CustomerInfo';
 import * as signalR from '@microsoft/signalr';
 import {
@@ -34,6 +35,7 @@ const OwnerDashboard = () => {
   const { notAvailableDates, fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext();
   const { notifications, fetchAllNotifications } = useNotificationsContext();
   const { notAvailableTimes, fetchAllNotAvailableTimesByBusiness } = useNotAvailableTimeContext();
+  const { openingHours, fetchOpeningHoursForBusiness } = useOpeningHoursContext();
 
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
@@ -76,7 +78,8 @@ const OwnerDashboard = () => {
             fetchCustomersForBusiness(selectedBusiness.businessId),
             fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId),
             fetchAllNotAvailableTimesByBusiness(selectedBusiness.businessId),
-            fetchAllNotifications(selectedBusiness.businessId)
+            fetchAllNotifications(selectedBusiness.businessId),
+            fetchOpeningHoursForBusiness(selectedBusiness.businessId)
           ]);
 
         } catch (error) {
@@ -105,6 +108,7 @@ const OwnerDashboard = () => {
     fetchAllNotAvailableDatesByBusiness,
     fetchAllNotAvailableTimesByBusiness,
     fetchAllNotifications,
+    fetchOpeningHoursForBusiness
   ]);
 
 
@@ -280,6 +284,7 @@ const OwnerDashboard = () => {
                       notAvailableTimes={notAvailableTimes}
                       notifications={notifications}
                       fetchAppointmentById={fetchAppointmentById}
+                      openingHours={openingHours} 
                     />
 
                     <AppointmentList

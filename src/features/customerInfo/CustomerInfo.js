@@ -139,9 +139,14 @@ const CustomerInfo = ({ businessId, customers, businessName }) => {
 
   const handleDiscountCodeVerification = async (code) => {
     try {
-      await applyDiscountCode({ Code: code });
+      const response = await applyDiscountCode({ Code: code });
       const successMessage = t('discountCodeAppliedSuccess');
-      return { success: true, message: successMessage };
+      
+      return {
+        success: true,
+        message: successMessage,
+        discountPercentage: response.discountPercentage || null, // Capture discountPercentage if available
+      };
     } catch (error) {
       const errorMessage = t('discountCodeAppliedFailed');
       return { success: false, message: errorMessage };
