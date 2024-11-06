@@ -145,7 +145,7 @@ const CustomerInfo = ({ businessId, customers, businessName }) => {
       return {
         success: true,
         message: successMessage,
-        discountPercentage: response.discountPercentage || null, // Capture discountPercentage if available
+        discountPercentage: response.discountPercentage || null, 
       };
     } catch (error) {
       const errorMessage = t('discountCodeAppliedFailed');

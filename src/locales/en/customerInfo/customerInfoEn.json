@@ -41,6 +41,7 @@
     "verify": "Verify",
     "codeVerify": "Code",
     "discountCodeAppliedSuccess": "Discount code applied successfully!",
-    "discountCodeAppliedFailed": "Failed to apply discount code."    
+    "discountCodeAppliedFailed": "Failed to apply discount code.",
+    "discountPercentageMessage": "Discount"     
   }
   
