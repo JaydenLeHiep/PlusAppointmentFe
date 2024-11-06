@@ -64,7 +64,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
     const [reason, setReason] = useState('');
     const editTimeRef = useRef(null);
     const alertRef = useRef(null);
-console.log(openingHours)
+
     useEffect(() => {
         if (alert.message) {
             if (alertRef.current) {
