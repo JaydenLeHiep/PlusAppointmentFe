@@ -16,6 +16,6 @@
     "onlineLabel": "Online",
     "checkInButton": "Check In",
     "checkInSuccessful": "Check-in successful!",
-    "checkInError": "Failed to check in. Please try again.",
+    "checkInError": "Failed to check in. Please try again. Or you checkin more that one times in a day",
     "processingCheckIn": "Loading..."
   }
