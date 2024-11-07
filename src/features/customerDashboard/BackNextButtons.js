@@ -3,7 +3,7 @@ import { Box, InputAdornment } from '@mui/material';
 import { ButtonContainer, StyledButton, StyledTextFieldContainer, StyledTextField } from '../../styles/CustomerStyle/BackNextButtonsStyle';
 import SearchIcon from '@mui/icons-material/Search';
 import { useTranslation } from 'react-i18next';
-import ghostImage from '../../assets/ghost-2.png'; // Import the ghost image
+
 
 const BackAndNextButtons = ({
   onBackClick,
@@ -25,17 +25,8 @@ const BackAndNextButtons = ({
     <ButtonContainer>
       {view !== 'thankYou' && (
         <Box sx={{ position: 'relative', display: 'flex', justifyContent: 'flex-start' }}>
-          {/* Ghost image above the back button */}
-          <img
-            src={ghostImage}
-            alt="Ghost"
-            style={{
-              width: '80px',
-              position: 'absolute',
-              top: '-70px', // Position it above the button
-              left: '0px', // Align it horizontally to the button
-            }}
-          />
+
+
           <StyledButton
             variant="contained"
             color="primary"
