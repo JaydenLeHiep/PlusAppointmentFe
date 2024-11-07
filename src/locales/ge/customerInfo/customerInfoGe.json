@@ -42,7 +42,14 @@
     "Phone": "Telefon",
     "Note: ": "Anmerkungen: ",
     "noNote": "Keine Anmerkung",
-    "noBookings": "Keine vorherige Buchung" 
+    "noBookings": "Keine vorherige Buchung",
+    "verifyDiscount": "Rabattcode verifizieren",
+    "discountCodeVerification": "Rabattcode-Verifizierung",
+    "verify": "Bestätigen",
+    "codeVerify": "Code",
+    "discountCodeAppliedSuccess": "Rabattcode erfolgreich angewendet!",
+    "discountCodeAppliedFailed": "Rabattcode konnte nicht angewendet werden.",   
+    "discountPercentageMessage": "Rabatt" 
 }
   
   

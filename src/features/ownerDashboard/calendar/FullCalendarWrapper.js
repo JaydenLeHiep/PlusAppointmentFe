@@ -97,10 +97,10 @@ const FullCalendarWrapper = ({
       businessHours={{
         daysOfWeek: [1, 2, 3, 4, 5, 6],
         startTime: '08:00',
-        endTime: '19:00',
+        endTime: '21:30',
       }}
       slotMinTime="07:00:00"
-      slotMaxTime="21:00:00"
+      slotMaxTime="21:30:00"
       headerToolbar={{
         left: 'title',
         center: '',

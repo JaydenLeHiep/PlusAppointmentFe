@@ -35,6 +35,13 @@
     "allLastBookings": "All Last Bookings",
     "withLastBooking": "With Last Booking",
     "withoutLastBooking": "Without Last Booking",
-    "allPromotions": "All"
+    "allPromotions": "All",
+    "verifyDiscount": "Verify Discount",
+    "discountCodeVerification": "Discount Verification",
+    "verify": "Verify",
+    "codeVerify": "Code",
+    "discountCodeAppliedSuccess": "Discount code applied successfully!",
+    "discountCodeAppliedFailed": "Failed to apply discount code.",
+    "discountPercentageMessage": "Discount"     
   }
   

@@ -235,3 +235,23 @@ export const fetchCheckInByBusinessId = async (businessId) => {
 
   return await handleApiResponse(response);
 }; 
+
+const discountCodeApiUrl = `${apiBaseUrl}/api/discountcode`;
+// Verify and use discount code
+export const verifyAndUseDiscountCode = async (codeDetails) => {
+  const response = await fetch(`${discountCodeApiUrl}/verifyanduse`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(codeDetails),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to verify and use discount code');
+  }
+
+  return data;
+};

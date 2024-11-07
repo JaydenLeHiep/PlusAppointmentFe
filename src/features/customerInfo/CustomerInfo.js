@@ -13,7 +13,7 @@ import moment from 'moment-timezone';
 
 const CustomerInfo = ({ businessId, customers, businessName }) => {
   const { t } = useTranslation('customerInfo');
-  const { checkIns, fetchCheckInDetailsForBusiness, addNewCustomer, updateExistingCustomer, deleteExistingCustomer } = useCustomersContext();
+  const { checkIns, fetchCheckInDetailsForBusiness, addNewCustomer, updateExistingCustomer, deleteExistingCustomer, applyDiscountCode } = useCustomersContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [editCustomerId, setEditCustomerId] = useState(null);
   const [editCustomerData, setEditCustomerData] = useState({ name: '', email: '', phone: '', birthday: null, wantsPromotion: false, note: '' });
@@ -137,6 +137,22 @@ const CustomerInfo = ({ businessId, customers, businessName }) => {
     customer.phone.includes(searchQuery)
   ) : [];
 
+  const handleDiscountCodeVerification = async (code) => {
+    try {
+      const response = await applyDiscountCode({ Code: code });
+      const successMessage = t('discountCodeAppliedSuccess');
+      
+      return {
+        success: true,
+        message: successMessage,
+        discountPercentage: response.discountPercentage || null, 
+      };
+    } catch (error) {
+      const errorMessage = t('discountCodeAppliedFailed');
+      return { success: false, message: errorMessage };
+    }
+  };
+
   return (
     <RootContainer>
       <SearchBar
@@ -146,6 +162,7 @@ const CustomerInfo = ({ businessId, customers, businessName }) => {
         handleLoadCheckIns={handleLoadCheckIns}
         handleSendEmail={handleSendEmail}
         handleAddNewCustomer={handleAddNewCustomer}
+        handleDiscountCodeVerification={handleDiscountCodeVerification}
       />
       {filteredCustomers.length === 0 ? (
         <Typography>{t('noCustomersFound')}</Typography>
