@@ -319,7 +319,7 @@ const AppointmentInfoModal = ({ open, appointment, onClose, staff, services, aft
                         </StyledConfirmButton>
                     ) : (
                         <StyledConfirmButton disabled>
-                            {t('confirm')}
+                            {t('confirmed')}
                         </StyledConfirmButton>
                     )}
                 </StyledDialogActions>
