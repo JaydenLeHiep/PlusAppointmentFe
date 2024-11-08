@@ -89,7 +89,7 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
     while (startTime.isBefore(endTime)) {
       const slot = startTime.clone().format('YYYY-MM-DDTHH:mm:ss');
       slots.push(slot);
-      startTime.add(15, 'minutes');
+      startTime.add(10, 'minutes');
     }
 
     return slots;
