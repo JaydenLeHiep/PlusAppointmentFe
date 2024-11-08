@@ -7,6 +7,7 @@
     "updateSuccess": "Termin erfolgreich aktualisiert!",
     "updateError": "Termin konnte nicht aktualisiert werden. Bitte versuche es erneut.",
     "confirm": "Bestätigen",
+    "confirmed": "Schon Bestätigt",
     "cancel": "Abbrechen",
     "update": "Aktualisieren",
     "deleteAppointmentTitle": "Termin löschen",
