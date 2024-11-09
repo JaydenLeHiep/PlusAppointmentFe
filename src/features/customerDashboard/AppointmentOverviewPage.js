@@ -12,16 +12,6 @@ import {
 } from '../../styles/CustomerStyle/AppointmentOverViewPageStyle';
 import { useTranslation } from 'react-i18next';
 
-const formatDate = (appointmentTime) => {
-  const d = new Date(appointmentTime);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-};
-
-const formatTime = (appointmentTime) => {
-  const t = new Date(appointmentTime);
-  return t.toTimeString().substring(0, 5);
-};
-
 const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFinish, onDeleteAppointment }) => {
   const { t } = useTranslation('appointmentOverviewPage');
 
@@ -55,7 +45,7 @@ const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFi
             <ServiceNameText>{t('serviceLabel')}: {appointment.serviceName}</ServiceNameText>
             <OverviewText>{t('staffLabel')}: {appointment.staffName}</OverviewText>
             <Typography variant="body2">
-              {t('dateLabel')}: {formatDate(appointment.appointmentTime)} | {t('timeLabel')}: {formatTime(appointment.appointmentTime)}
+              {t('dateLabel')}: {new Date(appointment.appointmentTime).toLocaleDateString('en-GB')} | {t('timeLabel')}: {new Date(appointment.appointmentTime).toLocaleTimeString()}
             </Typography>
             <List dense>
               {appointment.services.map((service, idx) => (

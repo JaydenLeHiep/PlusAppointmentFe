@@ -253,7 +253,7 @@ const OldCustomerForm = ({ selectedAppointments, businessId, onAppointmentSucces
                       }
                     >
                       <ListItemText
-                        primary={`${index + 1}. ${t('appointmentOn')} ${new Date(appointment.appointmentTime).toLocaleDateString()} ${t('at')} ${new Date(appointment.appointmentTime).toLocaleTimeString()}`}
+                        primary={`${index + 1}. ${t('appointmentOn')} ${new Date(appointment.appointmentTime).toLocaleDateString('en-GB')} ${t('at')} ${new Date(appointment.appointmentTime).toLocaleTimeString()}`}
                         secondary={`${t('services')}: ${appointment.services?.$values?.map((service) => service.name).join(', ') || t('noSpecificService')}`}
                       />
                     </ListItem>
