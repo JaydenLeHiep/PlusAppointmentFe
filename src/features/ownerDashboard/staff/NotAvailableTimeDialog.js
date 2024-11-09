@@ -338,7 +338,7 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
                                             sx={listItemStyle}
                                             ref={editTimeId === time.notAvailableTimeId ? editTimeRef : null}>
                                             <ListItemText
-                                                primary={`Date: ${moment(time.date).format('YYYY-MM-DD')}`}
+                                                primary={`Date: ${moment(time.date).format('DD-MM-YYYY')}`} // Changed format here
                                                 secondary={
                                                     <>
                                                         <Typography variant="body2" component="div">
