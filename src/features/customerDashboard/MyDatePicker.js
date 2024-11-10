@@ -165,13 +165,26 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
     const slotMoment = moment(timeSlot);
     const slotEnd = slotMoment.clone().add(totalDuration, 'minutes');
 
+    // Get the closing time for the selected day
+    const { closingTime } = getOpeningAndClosingTimes();
+    if (!closingTime) return false;
+
+    const closingMoment = selectedDate.clone().set({
+      hour: parseInt(closingTime.split(':')[0], 10),
+      minute: parseInt(closingTime.split(':')[1], 10),
+      second: 0,
+    });
+
+    // Check if the time slot end time exceeds the closing time
+    if (slotEnd.isAfter(closingMoment)) return false;
+
     // Check if the time slot is within the next 3 hours
     if (isWithinNextThreeHours(timeSlot)) return false;
 
     // Check if the end of the slot overlaps with any "not available" times
     return !notAvailableTimeSlots.some(notAvailableSlot => {
       const notAvailableStart = moment(notAvailableSlot);
-      const notAvailableEnd = notAvailableStart.clone().add(15, 'minutes');
+      const notAvailableEnd = notAvailableStart.clone().add(10, 'minutes');
 
       // Return true if there is any overlap
       return slotEnd.isAfter(notAvailableStart) && slotMoment.isBefore(notAvailableEnd);
@@ -194,9 +207,9 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <StyledBox sx={{
-      marginTop: { xs: '16px', sm: '32px' }, 
-      marginBottom: { xs: '32px', sm: '50px' },
-    }}>
+        marginTop: { xs: '16px', sm: '32px' },
+        marginBottom: { xs: '32px', sm: '50px' },
+      }}>
         <StyledDatePicker
           value={selectedDate}
           onChange={handleDateChangeWrapper}
