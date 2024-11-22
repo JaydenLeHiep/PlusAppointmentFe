@@ -20,7 +20,7 @@ import { dialogTitleStyles, addNewCustomerTypographyStyles, alertStyles, closeIc
 
 const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
   const { t } = useTranslation('showCustomerDialog');
-  const { fetchCustomersForBusiness, addNewCustomer, updateExistingCustomer, deleteExistingCustomer } = useCustomersContext();
+  const {addNewCustomer, updateExistingCustomer, deleteExistingCustomer } = useCustomersContext();
 
   const [editCustomerId, setEditCustomerId] = useState(null);
   const [newCustomer, setNewCustomer] = useState({
@@ -39,11 +39,7 @@ const ShowCustomerDialog = ({ open, onClose, businessId, customers }) => {
   const alertRef = useRef(null);
   const formRef = useRef(null);
 
-  useEffect(() => {
-    if (open && !customers.length) {
-      fetchCustomersForBusiness(businessId);
-    }
-  }, [open, fetchCustomersForBusiness, businessId, customers]);
+
 
   useEffect(() => {
     if (alert.message) {
