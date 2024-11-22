@@ -1,15 +1,15 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { 
-    fetchCustomerId, 
-    addCustomer, 
-    deleteCustomer, 
-    updateCustomer, 
-    searchCustomersByName, 
-    fetchCustomersByBusinessId,
-    checkCustomerExists, 
-    addCheckIn,
-    fetchCheckInByBusinessId,
-    verifyAndUseDiscountCode
+import {
+  fetchCustomerId,
+  addCustomer,
+  deleteCustomer,
+  updateCustomer,
+  searchCustomersByName,
+  fetchCustomersByBusinessId,
+  checkCustomerExists,
+  addCheckIn,
+  fetchCheckInByBusinessId,
+  verifyAndUseDiscountCode
 } from '../lib/apiClientCustomer';
 
 const CustomersContext = createContext();
@@ -18,17 +18,14 @@ export const useCustomersContext = () => useContext(CustomersContext);
 
 export const CustomersProvider = ({ children }) => {
   const [customers, setCustomers] = useState([]);
-  const [checkIns, setCheckIns] = useState([]);  
+  const [checkIns, setCheckIns] = useState([]);
   const [alert, setAlert] = useState({ message: '', severity: '' });
 
   const fetchCustomersForBusiness = useCallback(async (businessId) => {
     try {
       const response = await fetchCustomersByBusinessId(businessId);
-      if (response && response.$values) {
-        setCustomers(response.$values);  // Extract and set the customers from the $values array
-      } else {
-        setCustomers([]); // Fallback to an empty array if $values isn't available
-      }
+      setCustomers(response?.$values || []);
+
     } catch (error) {
       console.error('Error fetching customers for business:', error);
       setAlert({ message: 'Failed to fetch customers for business.', severity: 'error' });
@@ -48,7 +45,7 @@ export const CustomersProvider = ({ children }) => {
 
   const addNewCustomer = useCallback(async (businessId, customerDetails) => {
     try {
-      await addCustomer(businessId,customerDetails);
+      await addCustomer(businessId, customerDetails);
       setAlert({ message: 'Customer added successfully!', severity: 'success' });
     } catch (error) {
       console.error('Error adding customer:', error);
