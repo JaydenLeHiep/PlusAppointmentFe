@@ -30,6 +30,10 @@ const CustomerBusinessInfo = ({ businessInfo }) => {
         <LanguageText
           onClick={() => changeLanguage('en')}
           isActive={i18n.language === 'en'}
+          style={{
+            position: 'relative',
+            zIndex: 10, // Ensure this is on top
+          }}
         >
           EN
         </LanguageText>
