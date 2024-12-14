@@ -55,12 +55,11 @@ const CustomerBusinessInfo = ({ businessInfo }) => {
           flexDirection: 'column',
           alignItems: 'center',
           position: 'relative', // Make positioning relative to this Box
+          marginTop: '50px',
         }}
       >
         <div style={{ position: 'relative', display: 'inline-block' }}>
           <BusinessName>{businessInfo.name}</BusinessName>
-
-
         </div>
         <InfoContainer>
           <AddressWrapper>
