@@ -9,7 +9,8 @@ import {
   CategoryText,
   ServiceText,
   ServiceListContainer,
-  SnowLayer
+  SnowLayer,
+  ServiceTextBlack
 } from '../../styles/CustomerStyle/ServiceListStyle';
 import { IconButton, Typography } from '@mui/material';
 
@@ -114,7 +115,7 @@ const ServiceList = ({
               onClick={() => handleServiceClick(service)}
             >
               <ServiceListContainer>
-                <CategoryText>{service.name}</CategoryText>
+                <ServiceTextBlack>{service.name}</ServiceTextBlack>
                 {isMobile && (
                   <IconButton
                     onClick={(e) => {
