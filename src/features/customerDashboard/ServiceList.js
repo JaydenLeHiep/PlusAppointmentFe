@@ -9,6 +9,7 @@ import {
   CategoryText,
   ServiceText,
   ServiceListContainer,
+  SnowLayer
 } from '../../styles/CustomerStyle/ServiceListStyle';
 import { IconButton, Typography } from '@mui/material';
 
@@ -22,6 +23,19 @@ const ServiceList = ({
   expandedCategoryId,
   setExpandedCategoryId,
 }) => {
+  // Create snowflakes dynamically
+  const snowflakes = Array.from({ length: 20 }).map((_, index) => (
+    <div
+      key={index}
+      className="snowflake"
+      style={{
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * -100}px`, // Snowflakes start above the header
+        '--index': index, // For animation delay
+      }}
+    ></div>
+  ));
+
   const { services, fetchServices, loading, error } = useServicesContext();
   const [expandedService, setExpandedService] = useState(null);
   const isMobile = useMediaQuery('(max-width:500px)');
@@ -45,17 +59,23 @@ const ServiceList = ({
   }
 
   // Filter out categories that have no services
-  const servicesInCategory = filteredServices.filter(service => service.categoryId === category.categoryId);
+  const servicesInCategory = filteredServices.filter(
+    service => service.categoryId === category.categoryId
+  );
   if (servicesInCategory.length === 0) {
     return null; // Don't render the category if there are no services in it
   }
 
   const isServiceSelected = (service) => {
-    return selectedServices.some(selectedService => selectedService.serviceId === service.serviceId);
+    return selectedServices.some(
+      (selectedService) => selectedService.serviceId === service.serviceId
+    );
   };
 
   const handleCategoryToggle = (categoryId) => {
-    setExpandedCategoryId(prevCategoryId => prevCategoryId === categoryId ? null : categoryId);
+    setExpandedCategoryId((prevCategoryId) =>
+      prevCategoryId === categoryId ? null : categoryId
+    );
   };
 
   const handleServiceClick = (service) => {
@@ -67,16 +87,18 @@ const ServiceList = ({
   };
 
   const handleToggleExpand = (serviceId) => {
-    setExpandedService(prev => (prev === serviceId ? null : serviceId));
+    setExpandedService((prev) => (prev === serviceId ? null : serviceId));
   };
 
   return (
     <List>
       <React.Fragment key={category.categoryId}>
         <CategoryHeader button onClick={() => handleCategoryToggle(category.categoryId)}>
-          <CategoryText>
-            {category.name}
-          </CategoryText>
+          {/* Snow animation layer */}
+          <SnowLayer>{snowflakes}</SnowLayer>
+
+          {/* Main content */}
+          <CategoryText>{category.name}</CategoryText>
           <ChevronRightIcon
             style={{
               transform: expandedCategoryId === category.categoryId ? 'rotate(90deg)' : 'rotate(0deg)',
@@ -94,7 +116,12 @@ const ServiceList = ({
               <ServiceListContainer>
                 <CategoryText>{service.name}</CategoryText>
                 {isMobile && (
-                  <IconButton onClick={(e) => { e.stopPropagation(); handleToggleExpand(service.serviceId); }}>
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleExpand(service.serviceId);
+                    }}
+                  >
                     <ChevronRightIcon
                       style={{
                         transform: expandedService === service.serviceId ? 'rotate(90deg)' : 'rotate(0deg)',
