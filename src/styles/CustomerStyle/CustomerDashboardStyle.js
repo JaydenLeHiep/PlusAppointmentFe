@@ -1,9 +1,14 @@
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Background from'../../assets/christmas-celebration-frame-background.png'; 
 
 // DashboardContainer styling
 export const DashboardContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
+  backgroundImage: `url(${Background})`,
+  backgroundSize: '100% 100%', // Ensures the image covers the entire container
+  backgroundRepeat: 'no-repeat', // Prevents tiling
+  backgroundPosition: 'center', // Centers the image
   backgroundColor: '#ffffff',
   display: 'flex',
   flexDirection: 'column',
