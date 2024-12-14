@@ -1,9 +1,10 @@
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
-import Background from'../../assets/christmas-composition-with-gifts-fir-tree-branches-red-decorations-white-background-christmas-winter-new-year-concept-top-view-copy-space.jpg'; 
+import Background1 from'../../assets/Untitled_design-removebg-preview.png'; 
+import Background2 from'../../assets/Untitled_design__1_-removebg-preview.png'; 
 
 export const BusinessInfoContainer = styled(Box)(({ theme }) => ({
-  backgroundImage: `url(${Background})`,
+  backgroundImage: `url(${Background2})`, // Default for larger screens
   backgroundSize: '100% 100%', // Ensures the image covers the entire container
   backgroundRepeat: 'no-repeat', // Prevents tiling
   backgroundPosition: 'center', // Centers the image
@@ -23,6 +24,8 @@ export const BusinessInfoContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2, 3),
   },
   [theme.breakpoints.down('sm')]: {
+    backgroundImage: `url(${Background1})`, // Switch to mobile background
+    backgroundSize: '100% 100%',
     padding: theme.spacing(1, 2),
     maxHeight: '20%',
   },
