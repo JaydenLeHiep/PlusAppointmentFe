@@ -24,14 +24,14 @@ const ServiceList = ({
   setExpandedCategoryId,
 }) => {
   // Create snowflakes dynamically
-  const snowflakes = Array.from({ length: 20 }).map((_, index) => (
+  const snowflakes = Array.from({ length: 30 }).map((_, index) => (
     <div
       key={index}
       className="snowflake"
       style={{
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * -100}px`, // Snowflakes start above the header
-        '--index': index, // For animation delay
+        left: `${Math.random() * 100}%`, // Random horizontal position
+        top: `${Math.random() * -100}px`, // Start slightly off-screen
+        '--index': index, // Index for animation delay
       }}
     ></div>
   ));

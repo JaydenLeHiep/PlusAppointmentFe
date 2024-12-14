@@ -20,13 +20,13 @@ export const SnowLayer = styled('div')({
   overflow: 'hidden',
   '& .snowflake': {
     position: 'absolute',
-    width: '5px',
-    height: '5px',
+    width: '8px',
+    height: '8px',
     background: '#ffffff',
     borderRadius: '50%',
-    animation: `${snowFall} 5s linear infinite`,
-    animationDelay: 'calc(var(--index) * 0.2s)',
-    opacity: 0.8,
+    animation: `${snowFall} 4s linear infinite`,
+    animationDelay: 'calc(val(--index) * 0.2s)',
+    opacity: 1.2,
   },
 });
 
@@ -111,7 +111,7 @@ export const ServiceItem = styled(Paper)(({ theme, selected }) => ({
 }));
 
 export const CategoryText = styled(Typography)(({ theme }) => ({
-    color: 'black', // Corrected the typo here
+    color: 'white', // Corrected the typo here
     fontSize: '1.4rem',
     marginBottom: theme.spacing(0.5),
     [theme.breakpoints.down('sm')]: {
