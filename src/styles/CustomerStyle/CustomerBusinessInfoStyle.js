@@ -1,7 +1,13 @@
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
+import Background1 from'../../assets/Untitled_design-removebg-preview.png'; 
+import Background2 from'../../assets/Untitled_design__1_-removebg-preview.png'; 
 
 export const BusinessInfoContainer = styled(Box)(({ theme }) => ({
+  backgroundImage: `url(${Background2})`, // Default for larger screens
+  backgroundSize: '100% 100%', // Ensures the image covers the entire container
+  backgroundRepeat: 'no-repeat', // Prevents tiling
+  backgroundPosition: 'center', // Centers the image
   maxWidth: '100%',
   backgroundColor: '#ffffff',
   padding: theme.spacing(2, 3),
@@ -18,6 +24,8 @@ export const BusinessInfoContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2, 3),
   },
   [theme.breakpoints.down('sm')]: {
+    backgroundImage: `url(${Background1})`, // Switch to mobile background
+    backgroundSize: '100% 100%',
     padding: theme.spacing(1, 2),
     maxHeight: '20%',
   },
