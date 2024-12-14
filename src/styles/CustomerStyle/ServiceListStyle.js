@@ -119,6 +119,15 @@ export const CategoryText = styled(Typography)(({ theme }) => ({
     },
 }));
 
+export const ServiceTextBlack = styled(Typography)(({ theme }) => ({
+    color: 'black', // Corrected the typo here
+    fontSize: '1.4rem',
+    marginBottom: theme.spacing(0.5),
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '1.2rem',
+    },
+}));
+
 export const ServiceText = styled(Typography)(({ theme }) => ({
     color: '#555',
     fontSize: '1rem',
