@@ -98,6 +98,7 @@ const Navbar = ({ changeView }) => {
                 left: '50%',
                 top: '50%',
                 transform: 'translate(-50%, -50%)', // Center both horizontally and vertically
+                marginTop: '7px'
               }}
             >
               <img
