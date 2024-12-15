@@ -11,14 +11,14 @@ import '@fontsource/poppins';
 import '@fontsource/roboto';
 
 // Import your photo
-import Logo from '../assets/Untitled design.jpg'; 
+import Logo from '../assets/Untitled design.jpg';
 
 const Navbar = ({ changeView }) => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation('navbar');
   const [anchorEl, setAnchorEl] = useState(null);
-  const isDesktop = useMediaQuery('(min-width:800px)'); // Check if the screen width is greater than 800px
+  const isDesktop = useMediaQuery('(min-width:850px)'); // Check if the screen width is greater than 800px
 
   const handleLogout = () => {
     logout();
@@ -68,6 +68,7 @@ const Navbar = ({ changeView }) => {
             alignItems: 'center',
             height: '100%',
             padding: { xs: '0 16px', sm: '0 24px' },
+            position: 'relative', // For absolute positioning of the logo
           }}
         >
           {/* Left: Text */}
@@ -89,16 +90,22 @@ const Navbar = ({ changeView }) => {
             Plus Appointment
           </Typography>
 
-          {/* Center: Logo (only on desktop) */}
+          {/* Center: Logo */}
           {isDesktop && (
-            <Box sx={{ flexGrow: 0 }}>
+            <Box
+              sx={{
+                position: 'absolute', // Center the logo absolutely
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)', // Center both horizontally and vertically
+              }}
+            >
               <img
                 src={Logo}
                 alt="Logo"
                 style={{
                   height: '40px',
                   objectFit: 'contain',
-                  marginTop: '10px'
                 }}
               />
             </Box>
