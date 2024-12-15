@@ -47,6 +47,23 @@ const OwnerDashboard = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { t } = useTranslation('ownerDashboard');
 
+  const snowflakes = Array.from({ length: 50 }).map((_, index) => {
+    const left = `${Math.random() * 100}%`;
+    const top = `-${Math.random() * 32}vh`; // Randomly position snowflakes above the viewport
+  
+    return (
+      <div
+        key={index}
+        className="snowflake"
+        style={{
+          left,
+          top, // Random starting position above the visible area
+          animationDelay: `${Math.random() * 4}s`, // Staggered animation
+        }}
+      ></div>
+    );
+  });
+
   useEffect(() => {
     const loadBusinesses = async () => {
       try {
@@ -260,6 +277,7 @@ const OwnerDashboard = () => {
     <RootContainer>
       <Navbar changeView={changeView} />
       <MainContainer>
+      {snowflakes} 
         <ContentContainer>
           <StyledCard>
             {loading ? (

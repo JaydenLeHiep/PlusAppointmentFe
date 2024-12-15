@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem, useMediaQuery } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
@@ -7,14 +7,18 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 
 // Importing Google Fonts
-import '@fontsource/poppins'; // Importing Poppins font
-import '@fontsource/roboto'; // Importing Roboto font
+import '@fontsource/poppins';
+import '@fontsource/roboto';
+
+// Import your photo
+import Logo from '../assets/Untitled design.jpg'; 
 
 const Navbar = ({ changeView }) => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation('navbar');
   const [anchorEl, setAnchorEl] = useState(null);
+  const isDesktop = useMediaQuery('(min-width:800px)'); // Check if the screen width is greater than 800px
 
   const handleLogout = () => {
     logout();
@@ -66,6 +70,7 @@ const Navbar = ({ changeView }) => {
             padding: { xs: '0 16px', sm: '0 24px' },
           }}
         >
+          {/* Left: Text */}
           <Typography
             variant="h4"
             component={RouterLink}
@@ -74,7 +79,6 @@ const Navbar = ({ changeView }) => {
               color: '#000000',
               textDecoration: 'none',
               fontWeight: '500',
-              flexGrow: 1,
               textAlign: 'left',
               '&:hover': {
                 color: '#007bff',
@@ -84,6 +88,23 @@ const Navbar = ({ changeView }) => {
           >
             Plus Appointment
           </Typography>
+
+          {/* Center: Logo (only on desktop) */}
+          {isDesktop && (
+            <Box sx={{ flexGrow: 0 }}>
+              <img
+                src={Logo}
+                alt="Logo"
+                style={{
+                  height: '40px',
+                  objectFit: 'contain',
+                  marginTop: '10px'
+                }}
+              />
+            </Box>
+          )}
+
+          {/* Right: Menu */}
           <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
             {!isAuthenticated && (
               <Button
@@ -139,28 +160,28 @@ const Navbar = ({ changeView }) => {
                     onClick={handleMenuClose}
                   >
                     {t('login')}
-                  </MenuItem>
+                  </MenuItem>,
                 ]
               ) : (
                 [
                   <MenuItem
-                  key="home"
-                  onClick={() => {
-                    changeView('dashboard');
-                    handleMenuClose();
-                  }}
-                >
-                  {t('home')}
-                </MenuItem>,
-                <MenuItem
-                  key="customer-info"
-                  onClick={() => {
-                    changeView('customersInfo');
-                    handleMenuClose();
-                  }}
-                >
-                  {t('customer')}
-                </MenuItem>,
+                    key="home"
+                    onClick={() => {
+                      changeView('dashboard');
+                      handleMenuClose();
+                    }}
+                  >
+                    {t('home')}
+                  </MenuItem>,
+                  <MenuItem
+                    key="customer-info"
+                    onClick={() => {
+                      changeView('customersInfo');
+                      handleMenuClose();
+                    }}
+                  >
+                    {t('customer')}
+                  </MenuItem>,
                   <MenuItem
                     key="logout"
                     onClick={() => {
@@ -169,7 +190,7 @@ const Navbar = ({ changeView }) => {
                     }}
                   >
                     {t('logout')}
-                  </MenuItem>
+                  </MenuItem>,
                 ]
               )}
             </Menu>
