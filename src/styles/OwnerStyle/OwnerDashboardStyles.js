@@ -1,5 +1,75 @@
 import { Container, Card, Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, keyframes } from '@mui/material/styles';
+
+// Keyframes for snow animation
+const snowFall = keyframes`
+  0% { 
+    transform: translateY(-30vh) translateX(0); /* Start well above the viewport */
+    opacity: 1; 
+  }
+  25% {
+    transform: translateY(25vh) translateX(-5px); /* Drift left */
+  }
+  50% {
+    transform: translateY(50vh) translateX(5px); /* Drift right */
+    opacity: 0.9;
+  }
+  75% {
+    transform: translateY(75vh) translateX(-3px); /* Drift left again */
+  }
+  100% { 
+    transform: translateY(150vh) translateX(0); /* Fall far below the viewport */
+    opacity: 0.8; 
+  }
+`;
+
+// SnowLayer for falling snowflakes
+export const SnowLayer = styled('div')({
+  position: 'absolute',
+  top: '-30vh', // Start above the visible viewport
+  left: 0,
+  width: '100%',
+  height: '100%',
+  pointerEvents: 'none', // Snowflakes shouldn't block interactions
+  zIndex: 0, // Behind the text and content
+  overflow: 'hidden',
+  '& .snowflake': {
+    position: 'absolute',
+    width: '10px', // Snowflake size
+    height: '10px',
+    backgroundColor: '#ffffff', // Snowflake color
+    borderRadius: '50%', // Circular snowflake
+    animation: `${snowFall} 15s linear infinite`, // Extend duration for a slower, more realistic fall
+    animationDelay: `${Math.random() * 4}s`, // Staggered start for each snowflake
+    opacity: 0.9,
+  },
+});
+
+export const MainContainer = styled(Box)(({ theme }) => ({
+  backgroundColor: '#FF0000', // Red color for Christmas theme
+  position: 'relative', // Position relative to contain snowflakes
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  textAlign: 'center',
+  padding: '0 1rem',
+  flex: 1,
+  overflow: 'hidden', // Prevent snowflakes from overflowing
+  [theme.breakpoints.up('md')]: {
+    padding: '0 2rem',
+  },
+  // Snowflake layer
+  '& .snowflake': {
+    position: 'absolute',
+    width: '10px', // Snowflake size
+    height: '10px',
+    backgroundColor: '#ffffff', // Snowflake color
+    borderRadius: '50%', // Circular snowflake
+    animation: `${snowFall} 5s linear infinite`, // Continuous animation
+    animationDelay: 'calc(var(--index) * 0.2s)', // Staggered start for each snowflake
+    opacity: 0.9,
+  },
+}));
 
 // Root container style
 export const RootContainer = styled(Box)({
@@ -8,24 +78,7 @@ export const RootContainer = styled(Box)({
   minHeight: '100vh',
 });
 
-// Main container style
-export const MainContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: '#f0f8ff',
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  textAlign: 'center',
-  padding: '0 1rem',
-  flex: 1,
-  [theme.breakpoints.up('md')]: {
-    padding: '0 2rem',
-  },
-}));
-
 // Content container style
-
 export const ContentContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
