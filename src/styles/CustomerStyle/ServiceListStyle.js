@@ -34,7 +34,7 @@ export const SnowLayer = styled('div')({
 export const CategoryHeader = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1.2, 3),
   margin: theme.spacing(0, 1),
-  background: '#ff4d4f', // Light red background
+  background: '#FF0000', // Light red background
   borderRadius: '12px',
   textAlign: 'left',
   cursor: 'pointer',
