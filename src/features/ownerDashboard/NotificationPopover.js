@@ -76,11 +76,6 @@ const NotificationPopover = ({ open, anchorEl, onClose, notifications }) => {
                         {notification.message}
                       </Typography>
                     }
-                    secondary={
-                      <Typography variant="caption" color="textSecondary">
-                        {new Date(notification.createdAt).toLocaleString()}
-                      </Typography>
-                    }
                   />
                 </ListItem>
               );
