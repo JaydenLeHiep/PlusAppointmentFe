@@ -74,4 +74,4 @@ export const TotalPriceTypography = styled(Typography)(({ theme }) => ({
   color: 'Black',
   textAlign: 'center',
   marginTop: theme.spacing(4),
-}));
+})); 
