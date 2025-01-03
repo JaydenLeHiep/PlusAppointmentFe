@@ -1,40 +1,11 @@
-import { styled, keyframes } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
 
-// Keyframes for snow animation
-const snowFall = keyframes`
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(100px); opacity: 0; }
-`;
-
-// SnowLayer for falling snowflakes
-export const SnowLayer = styled('div')({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  pointerEvents: 'none', // Snowflakes shouldn't block interactions
-  zIndex: 0, // Behind the text and content
-  overflow: 'hidden',
-  '& .snowflake': {
-    position: 'absolute',
-    width: '8px',
-    height: '8px',
-    background: '#ffffff',
-    borderRadius: '50%',
-    animation: `${snowFall} 4s linear infinite`,
-    animationDelay: 'calc(val(--index) * 0.2s)',
-    opacity: 1.2,
-  },
-});
-
-// Styled CategoryHeader with snow cap
 export const CategoryHeader = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1.2, 3),
   margin: theme.spacing(0, 1),
-  background: '#FF0000', // Light red background
+  background: 'rgba(0, 0, 0, 0.7)', // Semi-transparent black background
   borderRadius: '12px',
   textAlign: 'left',
   cursor: 'pointer',
@@ -42,35 +13,21 @@ export const CategoryHeader = styled(Paper)(({ theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   boxSizing: 'border-box',
-  border: '1.5px solid #d32f2f', // Rich festive red border
-  boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)', // Subtle shadow
-  position: 'relative', // Needed for snow cap and snowflakes
-  overflow: 'hidden', // Prevent snowflakes from overflowing
+  position: 'relative', // Ensure stacking context
+  zIndex: 10, // Elevate above the fireworks canvas
+  border: '1.5px solid rgba(211, 47, 47, 0.8)', // Transparent red border
+  boxShadow: '0 2px 5px rgba(0, 0, 0, 0.3)', // Enhanced shadow for better visibility
+  overflow: 'hidden',
   '&:hover': {
-    background: 'linear-gradient(to right, #e53935, #ff4f4f)', // Slightly darker hover effect
-    border: '1.5px solid #b71c1c',
-    borderRadius: '12px',
+    background: 'rgba(0, 0, 0, 0.8)', // Darker on hover
+    border: '1.5px solid rgba(183, 28, 28, 0.8)',
   },
   '&:active': {
+    background: 'rgba(0, 0, 0, 0.9)', // Darker when active
     borderRadius: '16px',
-    background: 'linear-gradient(to right, #d32f2f, #ff3d3d)', // Slightly darker on click
   },
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(1.2, 3),
-  },
-
-  // Snow cap on top
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '20px',
-    background: '#ffffff', // White snow color
-    borderRadius: '12px 12px 0 0', // Rounded snow edges
-    clipPath: 'polygon(0% 55%, 10% 60%, 25% 50%, 40% 65%, 60% 45%, 75% 70%, 90% 55%, 100% 65%, 100% 0%, 0% 0%)', // Wavy snow effect
-    zIndex: 1, // Above the header
   },
 }));
 
@@ -111,12 +68,15 @@ export const ServiceItem = styled(Paper)(({ theme, selected }) => ({
 }));
 
 export const CategoryText = styled(Typography)(({ theme }) => ({
-    color: 'white', // Corrected the typo here
-    fontSize: '1.4rem',
-    marginBottom: theme.spacing(0.5),
-    [theme.breakpoints.down('sm')]: {
-        fontSize: '1.2rem',
-    },
+  color: '#FFFFFF', // Bright white text
+  fontSize: '1.4rem',
+  fontWeight: 600, // Bold for better visibility
+  textShadow: '0px 0px 3px rgba(255, 255, 255, 0.5)', // Subtle glow
+  marginBottom: theme.spacing(0.5),
+  zIndex: 11, // Ensure the text appears above the fireworks
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '1.2rem',
+  },
 }));
 
 export const ServiceTextBlack = styled(Typography)(({ theme }) => ({

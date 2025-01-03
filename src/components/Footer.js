@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, IconButton} from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 
 import EnglishFlag from '../assets/united-kingdom.png';
 import VietnameseFlag from '../assets/vietnam.png';
-import GermanFlag from '../assets/germany.png'
+import GermanFlag from '../assets/germany.png';
 import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
@@ -18,14 +18,16 @@ const Footer = () => {
       sx={{
         padding: '1.8rem 0',
         textAlign: 'center',
-        backgroundColor: '#fff',
-        borderTop: '1px solid #e0e0e0',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)', // Slightly transparent white
+        borderTop: '1px solid rgba(224, 224, 224, 0.8)', // Lighter border
         boxShadow: '0px -2px 10px rgba(0, 0, 0, 0.1)',
         mt: 'auto',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: '1rem',
+        zIndex: 100, // Ensures it stays above the fireworks
+        position: 'relative',
       }}
     >
       {/* Language Flags */}
@@ -45,18 +47,6 @@ const Footer = () => {
         <IconButton onClick={() => changeLanguage('ge')} aria-label="Change language to German">
           <img src={GermanFlag} alt="German" style={{ width: '32px', height: 'auto' }} />
         </IconButton>
-      </Box>
-
-      {/* Facebook Link for Hiệp */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '0.5rem',
-        }}
-      >
-        
       </Box>
     </Box>
   );

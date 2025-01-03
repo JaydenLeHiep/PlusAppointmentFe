@@ -9,10 +9,10 @@ import {
   CategoryText,
   ServiceText,
   ServiceListContainer,
-  SnowLayer,
   ServiceTextBlack
 } from '../../styles/CustomerStyle/ServiceListStyle';
 import { IconButton, Typography } from '@mui/material';
+import Fireworks from '../../styles/CustomerStyle/Fireworks';
 
 const ServiceList = ({
   businessId,
@@ -24,19 +24,7 @@ const ServiceList = ({
   expandedCategoryId,
   setExpandedCategoryId,
 }) => {
-  // Create snowflakes dynamically
-  const snowflakes = Array.from({ length: 30 }).map((_, index) => (
-    <div
-      key={index}
-      className="snowflake"
-      style={{
-        left: `${Math.random() * 100}%`, // Random horizontal position
-        top: `${Math.random() * -100}px`, // Start slightly off-screen
-        '--index': index, // Index for animation delay
-      }}
-    ></div>
-  ));
-
+ 
   const { services, fetchServices, loading, error } = useServicesContext();
   const [expandedService, setExpandedService] = useState(null);
   const isMobile = useMediaQuery('(max-width:500px)');
@@ -95,9 +83,20 @@ const ServiceList = ({
     <List>
       <React.Fragment key={category.categoryId}>
         <CategoryHeader button onClick={() => handleCategoryToggle(category.categoryId)}>
-          {/* Snow animation layer */}
-          <SnowLayer>{snowflakes}</SnowLayer>
-
+         {/* Fireworks overlay */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0, // Ensure it is behind the text
+          pointerEvents: 'none', // Allow clicks to pass through
+        }}
+      >
+        <Fireworks />
+      </div>
           {/* Main content */}
           <CategoryText>{category.name}</CategoryText>
           <ChevronRightIcon

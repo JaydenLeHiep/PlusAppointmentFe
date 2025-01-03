@@ -1,22 +1,9 @@
 import React from 'react';
-import { Box, Typography, IconButton, useMediaQuery } from '@mui/material';
+import { Box, Typography, IconButton } from '@mui/material';
 import ArrowBackIosTwoToneIcon from '@mui/icons-material/ArrowBackIosTwoTone';
 import ArrowForwardIosTwoToneIcon from '@mui/icons-material/ArrowForwardIosTwoTone';
-import {
-  IconContainer,
-  IconTreeContainer,
-  RopeTreeContainer,
-  RopeManContainer,
-  RopeBellContainer,
-  IconBellContainer,
-} from '../../../styles/OwnerStyle/ButtonCalendarStyle';
-
-import TreeIcon from '../../../assets/christmas-tree.png';
-import Cookies from '../../../assets/gingerbread-man.png 00-30-41-648.png';
-import BellIcon from '../../../assets/packard-bell.png';
 
 const CalendarViewControls = ({ currentView, views, viewLabels, onPrevClick, onNextClick }) => {
-  const isMobile = useMediaQuery('(max-width:600px)'); // Determine if the screen size is mobile
 
   return (
     <Box
@@ -29,29 +16,9 @@ const CalendarViewControls = ({ currentView, views, viewLabels, onPrevClick, onN
         padding: '8px',
         borderRadius: '8px',
         marginBottom: '16px',
-        position: 'relative', // For absolute positioning
+        position: 'relative',
       }}
     >
-      {/* Render Left Icon only if not mobile */}
-      {!isMobile && (
-        <Box
-          sx={{
-            position: 'absolute',
-            left: '10%', // Adjust the tree position closer to the middle
-            bottom: '-35px', // Start the rope slightly below the navigation
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <RopeTreeContainer>
-            <IconTreeContainer>
-              <img src={TreeIcon} alt="Christmas Tree" />
-            </IconTreeContainer>
-          </RopeTreeContainer>
-        </Box>
-      )}
-
       {/* Main Navigation */}
       <Box display="flex" justifyContent="center" alignItems="center">
         <IconButton onClick={onPrevClick}>
@@ -64,47 +31,6 @@ const CalendarViewControls = ({ currentView, views, viewLabels, onPrevClick, onN
           <ArrowForwardIosTwoToneIcon />
         </IconButton>
       </Box>
-
-      {/* Render Right Icons only if not mobile */}
-      {!isMobile && (
-        <>
-          {/* Cookies */}
-          <Box
-            sx={{
-              position: 'absolute',
-              right: '25%',
-              bottom: '-35px', // Start the rope slightly below the navigation
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <RopeManContainer>
-              <IconContainer>
-                <img src={Cookies} alt="Cookie" />
-              </IconContainer>
-            </RopeManContainer>
-          </Box>
-
-          {/* Bell */}
-          <Box
-            sx={{
-              position: 'absolute',
-              right: '5%',
-              bottom: '-35px', // Start the rope slightly below the navigation
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <RopeBellContainer>
-              <IconBellContainer>
-                <img src={BellIcon} alt="Bell" />
-              </IconBellContainer>
-            </RopeBellContainer>
-          </Box>
-        </>
-      )}
     </Box>
   );
 };

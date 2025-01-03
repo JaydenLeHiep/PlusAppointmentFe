@@ -24,6 +24,7 @@ import {
   LoadingContainer,
 } from '../../styles/OwnerStyle/OwnerDashboardStyles';
 import { useNotificationsContext } from '../../context/NotificationsContext';
+import Fireworks from '../../styles/OwnerStyle/Fireworks';
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -46,23 +47,6 @@ const OwnerDashboard = () => {
   const [newNotificationMessage, setNewNotificationMessage] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { t } = useTranslation('ownerDashboard');
-
-  const snowflakes = Array.from({ length: 50 }).map((_, index) => {
-    const left = `${Math.random() * 100}%`;
-    const top = `-${Math.random() * 32}vh`; // Randomly position snowflakes above the viewport
-  
-    return (
-      <div
-        key={index}
-        className="snowflake"
-        style={{
-          left,
-          top, // Random starting position above the visible area
-          animationDelay: `${Math.random() * 4}s`, // Staggered animation
-        }}
-      ></div>
-    );
-  });
 
   useEffect(() => {
     const loadBusinesses = async () => {
@@ -277,7 +261,7 @@ const OwnerDashboard = () => {
     <RootContainer>
       <Navbar changeView={changeView} />
       <MainContainer>
-      {snowflakes} 
+      <Fireworks />
         <ContentContainer>
           <StyledCard>
             {loading ? (
