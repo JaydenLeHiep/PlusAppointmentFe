@@ -11,14 +11,14 @@ import '@fontsource/poppins';
 import '@fontsource/roboto';
 
 // Import your photo
-import Logo from '../assets/Untitled design.jpg';
+import Logo from '../assets/OwnerTop.jpeg';
 
 const Navbar = ({ changeView }) => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation('navbar');
   const [anchorEl, setAnchorEl] = useState(null);
-  const isDesktop = useMediaQuery('(min-width:850px)'); // Check if the screen width is greater than 800px
+  const isDesktop = useMediaQuery('(min-width:1050px)'); // Check if the screen width is greater than 800px
 
   const handleLogout = () => {
     logout();
@@ -50,7 +50,7 @@ const Navbar = ({ changeView }) => {
   return (
     <ThemeProvider theme={theme}>
       <AppBar
-        position="static"
+        position="fix"
         sx={{
           backgroundColor: '#ffffff',
           color: '#000000',
@@ -59,6 +59,7 @@ const Navbar = ({ changeView }) => {
           height: { xs: '55px', sm: '75px' },
           display: 'flex',
           justifyContent: 'center',
+          zIndex: 1100,
         }}
       >
         <Toolbar
@@ -98,15 +99,16 @@ const Navbar = ({ changeView }) => {
                 left: '50%',
                 top: '50%',
                 transform: 'translate(-50%, -50%)', // Center both horizontally and vertically
-                marginTop: '7px'
+                marginTop: '5px'
               }}
             >
               <img
                 src={Logo}
                 alt="Logo"
                 style={{
-                  height: '40px',
+                  height: '70px',
                   objectFit: 'contain',
+                  marginTop: '-10px'
                 }}
               />
             </Box>

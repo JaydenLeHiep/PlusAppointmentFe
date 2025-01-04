@@ -5,21 +5,9 @@ import {
   StyledButton,
   StyledTextFieldContainer,
   StyledTextField,
-  RopeContainer,
-  IconContainer,
-  IconTreeContainer,
-  RopeTreeContainer,
-  RopeManContainer,
-  RopeBellContainer,
-  IconBellContainer
 } from '../../styles/CustomerStyle/BackNextButtonsStyle';
 import SearchIcon from '@mui/icons-material/Search';
 import { useTranslation } from 'react-i18next';
-
-import TreeIcon from '../../assets/christmas-tree.png';
-import BellIcon from '../../assets/packard-bell.png';
-import Cookies from '../../assets/gingerbread-man.png 00-30-41-648.png';
-import Ball from '../../assets/christmas-ball.png';
 
 const BackAndNextButtons = ({
   onBackClick,
@@ -49,34 +37,6 @@ const BackAndNextButtons = ({
           >
             {t('back')}
           </StyledButton>
-          <Box position="relative" display="flex" width="100%">
-            {/* Left Half with its RopeContainer */}
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              flex="1"
-            >
-              <RopeTreeContainer>
-                <IconTreeContainer>
-                  <img src={TreeIcon} alt="Christmas Tree" />
-                </IconTreeContainer>
-              </RopeTreeContainer>
-            </Box>
-            {/* Right Half with its RopeContainer */}
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              flex="1"
-            >
-              <RopeManContainer>
-                <IconContainer>
-                  <img src={Cookies} alt="Cookie" />
-                </IconContainer>
-              </RopeManContainer>
-            </Box>
-          </Box>
         </Box>
       )}
 
@@ -96,14 +56,6 @@ const BackAndNextButtons = ({
                 ),
               }}
             />
-            {/* Icon below the search bar */}
-            <Box mt={2}>
-              <RopeBellContainer style={{ marginLeft: '100px' }}>
-                <IconBellContainer> {/* Push the icon slightly to the right */}
-                  <img src={BellIcon} alt="Christmas Ball" />
-                </IconBellContainer>
-              </RopeBellContainer>
-            </Box>
           </Box>
         </StyledTextFieldContainer>
       )}
@@ -118,13 +70,6 @@ const BackAndNextButtons = ({
           >
             {t('next')}
           </StyledButton>
-          <Box position="relative" mt={2}>
-            <RopeContainer style={{ marginLeft: ' 40px' }}>
-              <IconContainer>
-                <img src={Ball} alt="Christmas Ball" />
-              </IconContainer>
-            </RopeContainer>
-          </Box>
         </Box>
       )}
     </ButtonContainer>

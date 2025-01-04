@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
-import Background1 from'../../assets/Untitled_design-removebg-preview.png'; 
-import Background2 from'../../assets/Untitled_design__1_-removebg-preview.png'; 
+import Background1 from'../../assets/CustomerTop.jpeg'; 
+import Background2 from'../../assets/TopCustomer.jpeg'; 
 
 export const BusinessInfoContainer = styled(Box)(({ theme }) => ({
   backgroundImage: `url(${Background2})`, // Default for larger screens
