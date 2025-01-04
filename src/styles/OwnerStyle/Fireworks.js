@@ -210,7 +210,7 @@ const Fireworks = () => {
           }
 
         const update = () => {
-            ctx.fillStyle = 'rgb(225, 0, 0)';
+            ctx.fillStyle = 'rgb(200, 0, 0)';
             ctx.fillRect(0, 0, clientWidth, clientHeight);
 
             if (timer > LimiterTicker) {
