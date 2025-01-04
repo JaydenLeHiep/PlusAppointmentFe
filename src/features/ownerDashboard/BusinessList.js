@@ -23,13 +23,19 @@ const BusinessList = ({ businesses, onBusinessClick }) => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 3 }}>
         <Button
           variant="contained"
-          color="primary"
+          sx={{
+            backgroundColor: 'red',
+            '&:hover': {
+              backgroundColor: '#cc0000', // Slightly darker red on hover
+            },
+            color: 'white', // Ensures text is visible
+          }}
           onClick={handleChangePasswordClick}
         >
-           {t('changePassword')}
+          {t('changePassword')}
         </Button>
       </Box>
 
