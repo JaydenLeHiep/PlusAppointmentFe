@@ -6,12 +6,12 @@ export const AppointmentPaper = styled(Paper)(({ theme }) => ({
   padding: '16px',
   marginBottom: '8px',
   borderRadius: '12px',
-  backgroundColor: '#f0f8ff',
-  border: '1px solid #1976d2',
+  backgroundColor: 'rgba(255, 0, 0, 0.7)', // Lighter red with transparency
+  border: '1px solid rgba(255, 0, 0, 1)', // Lighter red border
   boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
   '&:hover': {
     boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-    backgroundColor: '#e6f1ff',
+    backgroundColor: 'rgba(255, 0, 0, 0.9)', // Slightly darker on hover
   },
 }));
 
@@ -42,7 +42,7 @@ export const TimeInfo = styled(Box)(({ theme }) => ({
 
 export const TimeText = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
-  color: '#1976d2',
+  color: '#FFFFFF', // White text
 }));
 
 export const CustomerInfo = styled(Box)(({ theme }) => ({
@@ -61,14 +61,19 @@ export const BadgeContent = (status) => ({
     lineHeight: '24px',
     minWidth: '60px',
     textAlign: 'center',
-    backgroundColor: status === 'confirmed' ? '#4caf50' : status === 'pending' ? '#ff9800' : '#f44336',
-    color: '#fff',
+    backgroundColor:
+      status === 'confirmed'
+        ? '#4caf50'
+        : status === 'pending'
+        ? '#ff9800'
+        : '#f44336',
+    color: '#FFFFFF', // White text
   },
 });
 
 export const ScrollableAppointmentList = styled(List)(({ theme }) => ({
-    maxHeight: '250px',  
-    overflowY: 'auto',
-    paddingRight: theme.spacing(2),  
-    overflowX: 'hidden', 
-  }));
+  maxHeight: '250px',
+  overflowY: 'auto',
+  paddingRight: theme.spacing(2),
+  overflowX: 'hidden',
+}));
