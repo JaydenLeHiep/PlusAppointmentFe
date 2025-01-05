@@ -107,26 +107,37 @@ const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }
                   <AppointmentBox>
                     <AppointmentInfoBox>
                       <TimeInfo>
-                        <TimeText >
+                        <TimeText sx={{ color: 'white' }}>
                           {`${hours}:${minutes}`} - {`${endHours}:${endMinutes}`} {/* Display start and end time */}
                         </TimeText>
-                        <Typography variant="body2" color="textSecondary">
+                        <Typography variant="body2" sx={{ color: 'white' }}>
                           {`${day}/${month}`}
                         </Typography>
                       </TimeInfo>
                       <CustomerInfo>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>
                           {appointment.customerName}
                         </Typography>
-                        <Typography variant="body2" color="textSecondary">
+                        <Typography variant="body2" sx={{ color: 'white' }}>
                           {appointment.customerPhone}
                         </Typography>
                       </CustomerInfo>
                     </AppointmentInfoBox>
                     <Badge
                       badgeContent={t(appointment.status.toLowerCase())}
-                      color={appointment.status.toLowerCase() === 'confirmed' ? 'success' : appointment.status.toLowerCase() === 'pending' ? 'warning' : 'error'}
-                      sx={BadgeContent(appointment.status.toLowerCase())}
+                      color={
+                        appointment.status.toLowerCase() === 'confirmed'
+                          ? 'success'
+                          : appointment.status.toLowerCase() === 'pending'
+                          ? 'warning'
+                          : 'error'
+                      }
+                      sx={{
+                        ...BadgeContent(appointment.status.toLowerCase()),
+                        '& .MuiBadge-badge': {
+                          color: 'white', // Ensure badge text is also white
+                        },
+                      }}
                     />
                   </AppointmentBox>
                 </AppointmentPaper>
