@@ -39,9 +39,14 @@ const BusinessList = ({ businesses, onBusinessClick }) => {
         </Button>
       </Box>
 
-      <ContainerTypography variant="h5" gutterBottom>
+      <ContainerTypography
+        variant="h5"
+        gutterBottom
+        sx={{ color: '#FAA0A0' }}
+      >
         {t('myBusinesses')}
       </ContainerTypography>
+
 
       <List>
         {businesses.map((business) => (
