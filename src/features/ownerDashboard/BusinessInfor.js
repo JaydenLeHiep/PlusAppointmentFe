@@ -56,18 +56,28 @@ const BusinessInfo = ({
     <BusinessInfoContainer>
       <BusinessInfoHeader>
         <IconButtonGroup>
-          <IconButton color="primary" onClick={onBack}>
-            <ArrowCircleLeftTwoToneIcon sx={IconStyle} />
+          <IconButton onClick={onBack}>
+            <ArrowCircleLeftTwoToneIcon
+              sx={{ ...IconStyle, color: '#D2691E' }} // Warm orange-brown
+            />
           </IconButton>
-          <IconButton color="secondary" onClick={onAddAppointment}>
-            <AddCircleTwoToneIcon sx={IconStyle} />
+          <IconButton onClick={onAddAppointment}>
+            <AddCircleTwoToneIcon
+              sx={{ ...IconStyle, color: '#FF4500' }} // Vibrant orange-red
+            />
           </IconButton>
-          <IconButton color="primary" onClick={handleCustomerOpen}>
-            <Face2Icon sx={IconStyle} />
+          <IconButton onClick={handleCustomerOpen}>
+            <Face2Icon
+              sx={{ ...IconStyle, color: '#B22222' }} // Warm crimson red
+            />
           </IconButton>
         </IconButtonGroup>
+
         <IconButtonGroup>
-          <CustomBadge badgeContent={staffCount} color="primary">
+          <CustomBadge
+            badgeContent={staffCount}
+            sx={{ "& .MuiBadge-badge": { backgroundColor: '#FF7F50', color: 'white' } }} // Coral for warmth
+          >
             <InsertEmoticonTwoToneIcon
               onClick={handleStaffOpen}
               sx={IconStyle}
@@ -75,7 +85,7 @@ const BusinessInfo = ({
           </CustomBadge>
           <CustomBadge
             badgeContent={servicesCount}
-            sx={{ "& .MuiBadge-badge": { backgroundColor: 'green', color: 'white' } }}
+            sx={{ "& .MuiBadge-badge": { backgroundColor: '#FFA500', color: 'white' } }} // Vibrant orange
           >
             <AutoAwesomeTwoToneIcon
               onClick={handleServiceOpen}
@@ -83,15 +93,16 @@ const BusinessInfo = ({
             />
           </CustomBadge>
           <CustomBadge
-            badgeContent={unseenNotificationCount} // Only count unseen notifications
-            sx={{ "& .MuiBadge-badge": { backgroundColor: 'red', color: 'white' } }}
+            badgeContent={unseenNotificationCount}
+            sx={{ "& .MuiBadge-badge": { backgroundColor: '#FF6347', color: 'white' } }} // Tomato red
           >
             <NotificationsIcon
-              onClick={handleNotificationOpen} // Open notification popover
+              onClick={handleNotificationOpen}
               sx={IconStyle}
             />
           </CustomBadge>
         </IconButtonGroup>
+
       </BusinessInfoHeader>
       <Box mt={2}>
         <BusinessName variant="h3" gutterBottom>
