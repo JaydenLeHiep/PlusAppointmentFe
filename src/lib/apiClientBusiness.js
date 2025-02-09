@@ -1,6 +1,6 @@
 import { apiBaseUrl } from '../config/apiConfig';
 
-const businessApiUrl = `${apiBaseUrl}/api/business`;
+const businessApiUrl = `${apiBaseUrl}/api/businesses`;
 
 // use this for production
 //const businessApiUrl = `https://plus-appointment.com/api/business`;
@@ -41,7 +41,7 @@ export const fetchBusinessesById = async (businessId) => {
     //     throw new Error('User not authenticated');
     // }
 
-    const response = await fetch(`${businessApiUrl}/business_id=${businessId}`, {
+    const response = await fetch(`${businessApiUrl}/${businessId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export const fetchBusinessesByName = async (businessName) => {
     //     throw new Error('User not authenticated');
     // }
 
-    const response = await fetch(`${businessApiUrl}/business_name=${businessName}/booking`, {
+    const response = await fetch(`${businessApiUrl}/${businessName}/booking`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
