@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import ArrowBackIosTwoToneIcon from '@mui/icons-material/ArrowBackIosTwoTone';
 import ArrowForwardIosTwoToneIcon from '@mui/icons-material/ArrowForwardIosTwoTone';
-import Icon from '../../../assets/Gold.png'
 
 const NavigationWithImageIcon = ({ onPrevClick, onNextClick, views, currentView, viewLabels }) => {
   return (
@@ -13,33 +12,13 @@ const NavigationWithImageIcon = ({ onPrevClick, onNextClick, views, currentView,
         justifyContent: 'center',
         alignItems: 'center',
         border: '1px solid lightblue',
-        backgroundColor: 'red',
+        backgroundColor: '#ff69b4',
         padding: '8px',
         borderRadius: '8px',
         marginBottom: '16px',
         marginTop: '15px'
       }}
     >
-      {/* Floating image icon */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '-58px', // Adjust to place the image above the navigation
-          left: '50%',
-          transform: 'translateX(7%)', // Center the image horizontally
-        }}
-      >
-        <img
-          src={Icon}
-          alt="Icon"
-          style={{
-            width: '80px', // Adjust size as needed
-            height: '80px',
-            borderRadius: '50%', // Make it circular
-          }}
-        />
-      </Box>
-
       {/* Main Navigation */}
       <Box display="flex" justifyContent="center" alignItems="center">
         <IconButton onClick={onPrevClick}>

@@ -76,7 +76,7 @@ const BusinessInfo = ({
         <IconButtonGroup>
           <CustomBadge
             badgeContent={staffCount}
-            sx={{ "& .MuiBadge-badge": { backgroundColor: '#FF7F50', color: 'white' } }} // Coral for warmth
+            sx={{ "& .MuiBadge-badge": { backgroundColor: '#ff69b4', color: 'white' } }} // Coral for warmth
           >
             <InsertEmoticonTwoToneIcon
               onClick={handleStaffOpen}
@@ -85,7 +85,7 @@ const BusinessInfo = ({
           </CustomBadge>
           <CustomBadge
             badgeContent={servicesCount}
-            sx={{ "& .MuiBadge-badge": { backgroundColor: '#FFA500', color: 'white' } }} // Vibrant orange
+            sx={{ "& .MuiBadge-badge": { backgroundColor: '#d1007e', color: 'white' } }} // Vibrant orange
           >
             <AutoAwesomeTwoToneIcon
               onClick={handleServiceOpen}
@@ -94,7 +94,7 @@ const BusinessInfo = ({
           </CustomBadge>
           <CustomBadge
             badgeContent={unseenNotificationCount}
-            sx={{ "& .MuiBadge-badge": { backgroundColor: '#FF6347', color: 'white' } }} // Tomato red
+            sx={{ "& .MuiBadge-badge": { backgroundColor: '#b00050', color: 'white' } }} // Tomato red
           >
             <NotificationsIcon
               onClick={handleNotificationOpen}
