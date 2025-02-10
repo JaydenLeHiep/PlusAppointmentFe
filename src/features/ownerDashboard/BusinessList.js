@@ -27,9 +27,9 @@ const BusinessList = ({ businesses, onBusinessClick }) => {
         <Button
           variant="contained"
           sx={{
-            backgroundColor: 'red',
+            backgroundColor: '#ff69b4',
             '&:hover': {
-              backgroundColor: '#cc0000', // Slightly darker red on hover
+              backgroundColor: '#e05297', // Slightly darker red on hover
             },
             color: 'white', // Ensures text is visible
           }}
@@ -42,7 +42,7 @@ const BusinessList = ({ businesses, onBusinessClick }) => {
       <ContainerTypography
         variant="h5"
         gutterBottom
-        sx={{ color: '#FAA0A0' }}
+        sx={{ color: '#e6007e' }}
       >
         {t('myBusinesses')}
       </ContainerTypography>
