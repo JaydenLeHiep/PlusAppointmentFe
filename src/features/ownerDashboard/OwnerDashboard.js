@@ -24,7 +24,7 @@ import {
   LoadingContainer,
 } from '../../styles/OwnerStyle/OwnerDashboardStyles';
 import { useNotificationsContext } from '../../context/NotificationsContext';
-import Fireworks from '../../styles/OwnerStyle/Fireworks';
+import HeartAnimation from '../../styles/OwnerStyle/HeartAnimation';
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -261,7 +261,7 @@ const OwnerDashboard = () => {
     <RootContainer>
       <Navbar changeView={changeView} />
       <MainContainer>
-      <Fireworks />
+      <HeartAnimation />
         <ContentContainer>
           <StyledCard>
             {loading ? (

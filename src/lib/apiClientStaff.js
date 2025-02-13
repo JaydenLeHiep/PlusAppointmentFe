@@ -1,6 +1,6 @@
 import { apiBaseUrl } from '../config/apiConfig';
 
-const staffApiUrl = `${apiBaseUrl}/api/staff`;
+const staffApiUrl = `${apiBaseUrl}/api/staffs`;
 
 // use this for production
 //const staffApiUrl = `https://plus-appointment.com/api/staff`;
@@ -27,7 +27,7 @@ const handleApiResponse = async (response) => {
 
 // API client function for fetching staff
 export const fetchStaff = async (businessId) => {
-  const response = await fetch(`${staffApiUrl}/business/${businessId}`, {
+  const response = await fetch(`${staffApiUrl}/businesses/${businessId}`, {
     method: 'GET',
   });
   const data = await handleApiResponse(response);
@@ -44,7 +44,7 @@ export const fetchStaff = async (businessId) => {
 // API client function for adding a new staff member
 export const addStaff = async (businessId, staffDetails) => {
   const token = getToken();
-  const response = await fetch(`${staffApiUrl}/business/${businessId}`, {
+  const response = await fetch(`${staffApiUrl}/businesses/${businessId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ export const addStaff = async (businessId, staffDetails) => {
 // API client function for deleting a staff member
 export const deleteStaff = async (businessId, staffId) => {
   const token = getToken();
-  const response = await fetch(`${staffApiUrl}/business/${businessId}/staff/${staffId}`, {
+  const response = await fetch(`${staffApiUrl}/businesses/${businessId}/staffs/${staffId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export const deleteStaff = async (businessId, staffId) => {
 // API client function for updating a staff member
 export const updateStaff = async (businessId, staffId, staffDetails) => {
   const token = getToken();
-  const response = await fetch(`${staffApiUrl}/business/${businessId}/staff/${staffId}`, {
+  const response = await fetch(`${staffApiUrl}/businesses/${businessId}/staffs/${staffId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

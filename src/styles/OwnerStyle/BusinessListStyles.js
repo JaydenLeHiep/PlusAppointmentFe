@@ -10,15 +10,17 @@ export const ContainerTypography = styled(Typography)(({ theme }) => ({
 
 export const CustomListItem = styled(ListItem)(({ theme }) => ({
   borderRadius: '12px',
-  backgroundColor: 'rgba(255, 0, 0, 0.7)',
+  backgroundColor: '#ff69b4', // Main hot pink
   marginBottom: theme.spacing(3),
   padding: '20px',
-  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-  border: '1px solid rgba(255, 0, 0, 1)', // Lighter red border
+  boxShadow: '0px 4px 12px rgba(255, 20, 147, 0.3)', // Softer pink shadow
+  border: '1px solid #d63384', // Deeper magenta-pink border
   cursor: 'pointer',
+  
   '&:hover': {
-    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-    backgroundColor: 'rgba(255, 0, 0, 0.9)', // Slightly darker on hover
+    boxShadow: '0px 8px 16px rgba(255, 20, 147, 0.5)', // Stronger pink shadow on hover
+    backgroundColor: '#e05297', // Slightly darker pink
+    border: '1px solid #c2185b', // Darker pink-red border
   },
 }));
 

@@ -5,7 +5,7 @@ import { Typography } from '@mui/material';
 export const CategoryHeader = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1.2, 3),
   margin: theme.spacing(0, 1),
-  background: 'rgba(0, 0, 0, 0.7)', // Semi-transparent black background
+  background: 'rgba(255, 105, 180, 0.7)', // Soft pink transparent background
   borderRadius: '12px',
   textAlign: 'left',
   cursor: 'pointer',
@@ -13,17 +13,17 @@ export const CategoryHeader = styled(Paper)(({ theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   boxSizing: 'border-box',
-  position: 'relative', // Ensure stacking context
-  zIndex: 10, // Elevate above the fireworks canvas
-  border: '1.5px solid rgba(211, 47, 47, 0.8)', // Transparent red border
-  boxShadow: '0 2px 5px rgba(0, 0, 0, 0.3)', // Enhanced shadow for better visibility
+  position: 'relative', 
+  zIndex: 10, 
+  border: '1px solid #D63384', // Deep pink border
+  boxShadow: '0 2px 10px rgba(255, 20, 147, 0.5)', 
   overflow: 'hidden',
   '&:hover': {
-    background: 'rgba(0, 0, 0, 0.8)', // Darker on hover
-    border: '1.5px solid rgba(183, 28, 28, 0.8)',
+    background: 'rgba(255, 105, 180, 0.9)', // Brighter pink on hover
+    border: '1px solid #C2185B',
   },
   '&:active': {
-    background: 'rgba(0, 0, 0, 0.9)', // Darker when active
+    background: 'rgba(255, 20, 147, 1)', 
     borderRadius: '16px',
   },
   [theme.breakpoints.down('sm')]: {
@@ -68,12 +68,12 @@ export const ServiceItem = styled(Paper)(({ theme, selected }) => ({
 }));
 
 export const CategoryText = styled(Typography)(({ theme }) => ({
-  color: '#FFFFFF', // Bright white text
-  fontSize: '1.4rem',
-  fontWeight: 600, // Bold for better visibility
-  textShadow: '0px 0px 3px rgba(255, 255, 255, 0.5)', // Subtle glow
+  color: '#FFFFFF', // White text for contrast
+  fontSize: '1.5rem',
+  fontWeight: 'bold', 
+  textShadow: '0px 0px 5px rgba(255, 255, 255, 0.7)', 
   marginBottom: theme.spacing(0.5),
-  zIndex: 11, // Ensure the text appears above the fireworks
+  zIndex: 11, 
   [theme.breakpoints.down('sm')]: {
     fontSize: '1.2rem',
   },
