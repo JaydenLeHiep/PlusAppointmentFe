@@ -409,6 +409,7 @@ const CustomerDashboard = () => {
                 onAddMoreServices={() => setView('services')}
                 onFinish={handleFinish}
                 onDeleteAppointment={handleDeleteAppointment}
+                businessId={businessInfo.businessId}
               />
             </Box>
           )}
