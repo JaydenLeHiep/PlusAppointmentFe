@@ -12,7 +12,7 @@ import {
 } from '../../styles/CustomerStyle/AppointmentOverViewPageStyle';
 import { useTranslation } from 'react-i18next';
 
-const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFinish, onDeleteAppointment }) => {
+const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFinish, onDeleteAppointment, businessId }) => {
   const { t } = useTranslation('appointmentOverviewPage');
 
   const handleFinish = () => {
@@ -52,8 +52,10 @@ const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFi
                 <StyledListItemText
                   key={idx}
                   primary={service.serviceName}
-                  secondary={`${t('durationLabel')}: ${service.duration || 'N/A'} | ${t('priceLabel')}: €${service.price || 'N/A'}`}
+                  secondary={`${t('durationLabel')}: ${service.duration || 'N/A'} | ${t('priceLabel')}: ${businessId === 1 ? 'CHF ' : '€'}${service.price || 'N/A'}`}
                 />
+
+
               ))}
             </List>
           </Box>
@@ -68,8 +70,9 @@ const AppointmentOverviewPage = ({ selectedAppointments, onAddMoreServices, onFi
 
       {/* Display total price */}
       <TotalPriceTypography variant="h6">
-        {t('TotalPriceLabel')}: €{totalPrice.toFixed(2)}
+        {t('TotalPriceLabel')}: {businessId === 1 ? 'CHF ' : '€'}{totalPrice.toFixed(2)}
       </TotalPriceTypography>
+
 
       <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
         <OverviewButton
