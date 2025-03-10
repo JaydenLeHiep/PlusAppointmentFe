@@ -133,7 +133,7 @@ const ServiceList = ({
               </ServiceListContainer>
               <Collapse in={!isMobile || expandedService === service.serviceId}>
                 <ServiceText>{service.duration}</ServiceText>
-                <ServiceText>€{service.price}</ServiceText>
+                <ServiceText>{businessId === 13 ? 'CHF ' : '€ '}{service.price}</ServiceText>
                 <ServiceText>{service.description}</ServiceText>
               </Collapse>
             </ServiceItem>
