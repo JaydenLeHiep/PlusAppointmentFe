@@ -55,8 +55,8 @@ const CustomerDashboard = () => {
   const [expandedCategoryId, setExpandedCategoryId] = useState(null);
   const connectionRef = useRef(null);
 
-   // Scroll function to scroll to the bottom of the page
-   const scrollToBottom = () => {
+  // Scroll function to scroll to the bottom of the page
+  const scrollToBottom = () => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -163,7 +163,7 @@ const CustomerDashboard = () => {
     if (selectedServices.length > 0 && selectedStaff && selectedDate && selectedTime) {
       const appointmentDetails = selectedServices.map(service => {
         const appointmentTime = `${selectedDate.format('YYYY-MM-DD')}T${selectedTime.substring(11, 16)}`;
-  
+
         return {
           serviceName: service.name,
           staffName: selectedStaff.name,
@@ -178,14 +178,14 @@ const CustomerDashboard = () => {
           ]
         };
       });
-  
+
       // Filter out any services with the same serviceId that are already in selectedAppointments
       const updatedAppointments = appointmentDetails.filter(newAppointment => {
-        return !selectedAppointments.some(existingAppointment => 
+        return !selectedAppointments.some(existingAppointment =>
           existingAppointment.services.some(service => service.serviceId === newAppointment.services[0].serviceId)
         );
       });
-  
+
       setSelectedAppointments(prevAppointments => [...prevAppointments, ...updatedAppointments]);
       setView('overview');
     }
@@ -305,8 +305,12 @@ const CustomerDashboard = () => {
     return sum + parsedDuration;
   }, 0);
 
+  // Step 1: Sort categories first before distributing them into columns
+  const sortedCategories = [...categories].sort((a, b) => a.name.localeCompare(b.name));
+
+  // Step 2: Distribute sorted categories into 3 columns
   const columns = [[], [], []];
-  categories.forEach((category, index) => {
+  sortedCategories.forEach((category, index) => {
     columns[index % 3].push(category);
   });
 
