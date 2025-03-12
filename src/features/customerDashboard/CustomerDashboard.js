@@ -12,6 +12,7 @@ import ThankYou from './ThankYou';
 import { fetchBusinessesByName } from '../../lib/apiClientBusiness';
 import { useServicesContext } from '../../context/ServicesContext';
 import { useOpeningHoursContext } from '../../context/OpeningHoursContext';
+import useMediaQuery from "@mui/material/useMediaQuery";
 import * as signalR from '@microsoft/signalr';
 import {
   DashboardContainer,
@@ -54,7 +55,8 @@ const CustomerDashboard = () => {
   const { services, categories, fetchServices, fetchCategories } = useServicesContext();
   const [expandedCategoryId, setExpandedCategoryId] = useState(null);
   const connectionRef = useRef(null);
-
+  const isMobile = useMediaQuery('(max-width:500px)');
+  
   // Scroll function to scroll to the bottom of the page
   const scrollToBottom = () => {
     if (bottomRef.current) {
@@ -305,15 +307,20 @@ const CustomerDashboard = () => {
     return sum + parsedDuration;
   }, 0);
 
-  // Step 1: Sort categories first before distributing them into columns
+  // Sort categories alphabetically before distributing them into columns
   const sortedCategories = [...categories].sort((a, b) => a.name.localeCompare(b.name));
 
-  // Step 2: Distribute sorted categories into 3 columns
-  const columns = [[], [], []];
-  sortedCategories.forEach((category, index) => {
-    columns[index % 3].push(category);
-  });
+  let columns = [[], [], []];
 
+  // Distribute categories into columns only if not on mobile
+  if (!isMobile) {
+    sortedCategories.forEach((category, index) => {
+      columns[index % 3].push(category);
+    });
+  } else {
+    // If mobile, keep everything in a single column to maintain order
+    columns = [sortedCategories];
+  }
   // Function to delete the appointment by index
   const handleDeleteAppointment = (index) => {
     setSelectedAppointments(prevAppointments => prevAppointments.filter((_, i) => i !== index));
