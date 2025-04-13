@@ -12,6 +12,7 @@ import ThankYou from './ThankYou';
 import { fetchBusinessesByName } from '../../lib/apiClientBusiness';
 import { useServicesContext } from '../../context/ServicesContext';
 import { useOpeningHoursContext } from '../../context/OpeningHoursContext';
+import useMediaQuery from "@mui/material/useMediaQuery";
 import * as signalR from '@microsoft/signalr';
 import {
   DashboardContainer,
@@ -54,9 +55,10 @@ const CustomerDashboard = () => {
   const { services, categories, fetchServices, fetchCategories } = useServicesContext();
   const [expandedCategoryId, setExpandedCategoryId] = useState(null);
   const connectionRef = useRef(null);
-
-   // Scroll function to scroll to the bottom of the page
-   const scrollToBottom = () => {
+  const isMobile = useMediaQuery('(max-width:500px)');
+  
+  // Scroll function to scroll to the bottom of the page
+  const scrollToBottom = () => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -163,7 +165,7 @@ const CustomerDashboard = () => {
     if (selectedServices.length > 0 && selectedStaff && selectedDate && selectedTime) {
       const appointmentDetails = selectedServices.map(service => {
         const appointmentTime = `${selectedDate.format('YYYY-MM-DD')}T${selectedTime.substring(11, 16)}`;
-  
+
         return {
           serviceName: service.name,
           staffName: selectedStaff.name,
@@ -178,14 +180,14 @@ const CustomerDashboard = () => {
           ]
         };
       });
-  
+
       // Filter out any services with the same serviceId that are already in selectedAppointments
       const updatedAppointments = appointmentDetails.filter(newAppointment => {
-        return !selectedAppointments.some(existingAppointment => 
+        return !selectedAppointments.some(existingAppointment =>
           existingAppointment.services.some(service => service.serviceId === newAppointment.services[0].serviceId)
         );
       });
-  
+
       setSelectedAppointments(prevAppointments => [...prevAppointments, ...updatedAppointments]);
       setView('overview');
     }
@@ -305,11 +307,20 @@ const CustomerDashboard = () => {
     return sum + parsedDuration;
   }, 0);
 
-  const columns = [[], [], []];
-  categories.forEach((category, index) => {
-    columns[index % 3].push(category);
-  });
+  // Sort categories alphabetically before distributing them into columns
+  const sortedCategories = [...categories].sort((a, b) => a.name.localeCompare(b.name));
 
+  let columns = [[], [], []];
+
+  // Distribute categories into columns only if not on mobile
+  if (!isMobile) {
+    sortedCategories.forEach((category, index) => {
+      columns[index % 3].push(category);
+    });
+  } else {
+    // If mobile, keep everything in a single column to maintain order
+    columns = [sortedCategories];
+  }
   // Function to delete the appointment by index
   const handleDeleteAppointment = (index) => {
     setSelectedAppointments(prevAppointments => prevAppointments.filter((_, i) => i !== index));
@@ -409,6 +420,7 @@ const CustomerDashboard = () => {
                 onAddMoreServices={() => setView('services')}
                 onFinish={handleFinish}
                 onDeleteAppointment={handleDeleteAppointment}
+                businessId={businessInfo.businessId}
               />
             </Box>
           )}
