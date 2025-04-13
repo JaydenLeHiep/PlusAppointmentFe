@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { changePassword } from '../../lib/apiClient';
 import { useTranslation } from 'react-i18next'; // Import useTranslation hook
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 
 const heroImage = require('../../assets/hero-image.jpg'); // Adjust the path as needed
 
@@ -71,145 +73,157 @@ const ChangePasswordForm = () => {
     }
   };
 
+  const changeView = (view) => {
+    if (view === 'dashboard') {
+      navigate('/owner-dashboard'); // or your dashboard route
+    } else if (view === 'customersInfo') {
+      navigate('/owner-dashboard'); // adjust if you have a separate route
+    }
+  };
+
   return (
-    <Box
-      sx={{
-        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${heroImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color: '#fff',
-        textAlign: 'center',
-        flex: 1,
-        minHeight: '82vh',
-      }}
-    >
-      <Container
+    <>
+      <Navbar changeView={changeView} />
+      <Box
         sx={{
+          backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${heroImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          color: '#fff',
+          textAlign: 'center',
+          flex: 1,
           minHeight: '82vh',
         }}
       >
-        <Card
+        <Container
           sx={{
-            maxWidth: 400,
-            padding: '2rem',
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-            borderRadius: '8px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '82vh',
           }}
         >
-          <Typography
-            variant="h4"
-            component="h1"
-            gutterBottom
+          <Card
             sx={{
-              textAlign: 'center',
-              color: '#333',
+              maxWidth: 400,
+              padding: '2rem',
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+              borderRadius: '8px',
             }}
           >
-            {t('title')}
-          </Typography>
-          <form onSubmit={handlePasswordChange}>
-            <TextField
-              label={t('oldPassword')}
-              type={showOldPassword ? 'text' : 'password'}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowOldPassword(!showOldPassword)} edge="end">
-                      {showOldPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
+            <Typography
+              variant="h4"
+              component="h1"
+              gutterBottom
+              sx={{
+                textAlign: 'center',
+                color: '#333',
               }}
-              required
-            />
-            <TextField
-              label={t('confirmOldPassword')}
-              type={showConfirmOldPassword ? 'text' : 'password'}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={confirmOldPassword}
-              onChange={(e) => setConfirmOldPassword(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowConfirmOldPassword(!showConfirmOldPassword)} edge="end">
-                      {showConfirmOldPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              required
-            />
-            <TextField
-              label={t('newPassword')}
-              type={showNewPassword ? 'text' : 'password'}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowNewPassword(!showNewPassword)} edge="end">
-                      {showNewPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              required
-            />
-            <TextField
-              label={t('confirmNewPassword')}
-              type={showConfirmNewPassword ? 'text' : 'password'}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={confirmNewPassword}
-              onChange={(e) => setConfirmNewPassword(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)} edge="end">
-                      {showConfirmNewPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              required
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              fullWidth
-              sx={{ mt: 2 }}
-              disabled={!oldPassword || !confirmOldPassword || !newPassword || !confirmNewPassword}
             >
-              {t('changePasswordButton')}
-            </Button>
-            {message && (
-              <Alert severity={alertVariant} sx={{ mt: 3 }}>
-                {message}
-              </Alert>
-            )}
-          </form>
-        </Card>
-      </Container>
-    </Box>
+              {t('title')}
+            </Typography>
+            <form onSubmit={handlePasswordChange}>
+              <TextField
+                label={t('oldPassword')}
+                type={showOldPassword ? 'text' : 'password'}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowOldPassword(!showOldPassword)} edge="end">
+                        {showOldPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                required
+              />
+              <TextField
+                label={t('confirmOldPassword')}
+                type={showConfirmOldPassword ? 'text' : 'password'}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={confirmOldPassword}
+                onChange={(e) => setConfirmOldPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowConfirmOldPassword(!showConfirmOldPassword)} edge="end">
+                        {showConfirmOldPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                required
+              />
+              <TextField
+                label={t('newPassword')}
+                type={showNewPassword ? 'text' : 'password'}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowNewPassword(!showNewPassword)} edge="end">
+                        {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                required
+              />
+              <TextField
+                label={t('confirmNewPassword')}
+                type={showConfirmNewPassword ? 'text' : 'password'}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)} edge="end">
+                        {showConfirmNewPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                required
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                fullWidth
+                sx={{ mt: 2 }}
+                disabled={!oldPassword || !confirmOldPassword || !newPassword || !confirmNewPassword}
+              >
+                {t('changePasswordButton')}
+              </Button>
+              {message && (
+                <Alert severity={alertVariant} sx={{ mt: 3 }}>
+                  {message}
+                </Alert>
+              )}
+            </form>
+          </Card>
+        </Container>
+      </Box>
+      <Footer />
+    </>
   );
 };
 
