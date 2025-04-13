@@ -107,18 +107,18 @@ const AppointmentList = ({ appointments, staff, services, fetchAppointmentById }
                   <AppointmentBox>
                     <AppointmentInfoBox>
                       <TimeInfo>
-                        <TimeText sx={{ color: 'white' }}>
+                        <TimeText>
                           {`${hours}:${minutes}`} - {`${endHours}:${endMinutes}`} {/* Display start and end time */}
                         </TimeText>
-                        <Typography variant="body2" sx={{ color: 'white' }}>
+                        <Typography variant="body2">
                           {`${day}/${month}`}
                         </Typography>
                       </TimeInfo>
                       <CustomerInfo>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                           {appointment.customerName}
                         </Typography>
-                        <Typography variant="body2" sx={{ color: 'white' }}>
+                        <Typography variant="body2">
                           {appointment.customerPhone}
                         </Typography>
                       </CustomerInfo>

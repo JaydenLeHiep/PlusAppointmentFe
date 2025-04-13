@@ -12,7 +12,6 @@ import {
   ServiceTextBlack
 } from '../../styles/CustomerStyle/ServiceListStyle';
 import { IconButton, Typography } from '@mui/material';
-import HeartsAnimation from '../../styles/CustomerStyle/HeartsAnimation';
 
 const ServiceList = ({
   businessId,
@@ -83,20 +82,6 @@ const ServiceList = ({
     <List>
       <React.Fragment key={category.categoryId}>
         <CategoryHeader button onClick={() => handleCategoryToggle(category.categoryId)}>
-          {/* Fireworks overlay */}
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              zIndex: 0,
-              pointerEvents: 'none',
-            }}
-          >
-            <HeartsAnimation />
-          </div>
           {/* Main content */}
           <CategoryText>{category.name}</CategoryText>
           <ChevronRightIcon

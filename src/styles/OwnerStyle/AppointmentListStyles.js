@@ -6,14 +6,13 @@ export const AppointmentPaper = styled(Paper)(({ theme }) => ({
   padding: '16px',
   marginBottom: '8px',
   borderRadius: '12px',
-  backgroundColor: '#ff69b4', // Main hot pink
-  border: '1px solid #d63384', // Deeper magenta-pink border
-  boxShadow: '0px 4px 12px rgba(255, 20, 147, 0.3)', // Softer pink shadow
-  
+  backgroundColor: '#eff8ff', 
+  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+  border: '1px solid #1976d2',
   '&:hover': {
-    boxShadow: '0px 8px 16px rgba(255, 20, 147, 0.5)', // Stronger pink shadow on hover
-    backgroundColor: '#e05297', // Slightly darker pink
-    border: '1px solid #c2185b', // Darker pink-red border
+    backgroundColor: '#e6f1ff',
+    boxShadow: '0px 8px 16px rgba(33, 150, 243, 0.2)',
+    border: '1px solid #64b5f6',
   },
 }));
 
@@ -40,11 +39,12 @@ export const TimeInfo = styled(Box)(({ theme }) => ({
   alignItems: 'flex-start',
   minWidth: '120px',
   textAlign: 'center',
+  color: '#555',
 }));
 
 export const TimeText = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
-  color: '#FFFFFF', // White text
+  color: '#555',
 }));
 
 export const CustomerInfo = styled(Box)(({ theme }) => ({
@@ -52,6 +52,7 @@ export const CustomerInfo = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'flex-start',
   flexGrow: 1,
+  color: '#1976d2',
 }));
 
 export const BadgeContent = (status) => ({
