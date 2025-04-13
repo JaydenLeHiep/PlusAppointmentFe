@@ -23,7 +23,7 @@ const BusinessList = ({ businesses, onBusinessClick }) => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 3 }}>
         <Button
           variant="contained"
           color="primary"
