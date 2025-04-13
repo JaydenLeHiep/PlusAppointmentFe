@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem, useMediaQuery } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
@@ -10,15 +10,11 @@ import { useTranslation } from 'react-i18next';
 import '@fontsource/poppins';
 import '@fontsource/roboto';
 
-// Import your photo
-import Logo from '../assets/OwnerTop.jpeg';
-
 const Navbar = ({ changeView }) => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation('navbar');
   const [anchorEl, setAnchorEl] = useState(null);
-  const isDesktop = useMediaQuery('(min-width:1050px)'); // Check if the screen width is greater than 800px
 
   const handleLogout = () => {
     logout();
@@ -90,29 +86,6 @@ const Navbar = ({ changeView }) => {
           >
             Plus Appointment
           </Typography>
-
-          {/* Center: Logo */}
-          {isDesktop && (
-            <Box
-              sx={{
-                position: 'absolute', // Center the logo absolutely
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)', // Center both horizontally and vertically
-                marginTop: '5px'
-              }}
-            >
-              <img
-                src={Logo}
-                alt="Logo"
-                style={{
-                  height: '70px',
-                  objectFit: 'contain',
-                  marginTop: '-10px'
-                }}
-              />
-            </Box>
-          )}
 
           {/* Right: Menu */}
           <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>

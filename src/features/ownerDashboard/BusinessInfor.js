@@ -56,28 +56,20 @@ const BusinessInfo = ({
     <BusinessInfoContainer>
       <BusinessInfoHeader>
         <IconButtonGroup>
-          <IconButton onClick={onBack}>
-            <ArrowCircleLeftTwoToneIcon
-              sx={{ ...IconStyle, color: '#D2691E' }} // Warm orange-brown
-            />
+          <IconButton color="primary" onClick={onBack}>
+            <ArrowCircleLeftTwoToneIcon sx={{ ...IconStyle }} />
           </IconButton>
-          <IconButton onClick={onAddAppointment}>
-            <AddCircleTwoToneIcon
-              sx={{ ...IconStyle, color: '#FF4500' }} // Vibrant orange-red
-            />
+          <IconButton color="secondary" onClick={onAddAppointment}>
+            <AddCircleTwoToneIcon sx={{ ...IconStyle }} />
           </IconButton>
-          <IconButton onClick={handleCustomerOpen}>
-            <Face2Icon
-              sx={{ ...IconStyle, color: '#B22222' }} // Warm crimson red
-            />
+          <IconButton color="secondary" onClick={handleCustomerOpen}>
+            <Face2Icon sx={{ ...IconStyle }} />
           </IconButton>
         </IconButtonGroup>
 
         <IconButtonGroup>
           <CustomBadge
-            badgeContent={staffCount}
-            sx={{ "& .MuiBadge-badge": { backgroundColor: '#ff69b4', color: 'white' } }} // Coral for warmth
-          >
+            badgeContent={staffCount} color="primary" sx={{ marginRight: 2 }}>
             <InsertEmoticonTwoToneIcon
               onClick={handleStaffOpen}
               sx={IconStyle}
@@ -85,7 +77,7 @@ const BusinessInfo = ({
           </CustomBadge>
           <CustomBadge
             badgeContent={servicesCount}
-            sx={{ "& .MuiBadge-badge": { backgroundColor: '#d1007e', color: 'white' } }} // Vibrant orange
+            sx={{ "& .MuiBadge-badge": { backgroundColor: 'green', color: 'white' } }}
           >
             <AutoAwesomeTwoToneIcon
               onClick={handleServiceOpen}
@@ -94,7 +86,7 @@ const BusinessInfo = ({
           </CustomBadge>
           <CustomBadge
             badgeContent={unseenNotificationCount}
-            sx={{ "& .MuiBadge-badge": { backgroundColor: '#b00050', color: 'white' } }} // Tomato red
+            sx={{ "& .MuiBadge-badge": { backgroundColor: 'orange', color: 'black' } }}
           >
             <NotificationsIcon
               onClick={handleNotificationOpen}

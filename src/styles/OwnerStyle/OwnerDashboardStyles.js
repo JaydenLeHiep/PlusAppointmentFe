@@ -2,7 +2,7 @@ import { Container, Card, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const MainContainer = styled(Box)(({ theme }) => ({
-  background: 'linear-gradient(to bottom, #ffb6c1, #ff69b4)',
+  backgroundColor: '#edf2f7',
   position: 'relative', // Ensure proper layering
   display: 'flex',
   justifyContent: 'center',
