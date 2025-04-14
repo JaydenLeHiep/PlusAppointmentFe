@@ -12,6 +12,8 @@ import ThankYou from './ThankYou';
 import { fetchBusinessesByName } from '../../lib/apiClientBusiness';
 import { useServicesContext } from '../../context/ServicesContext';
 import { useOpeningHoursContext } from '../../context/OpeningHoursContext';
+import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext';
+import { useNotAvailableTimeContext } from '../../context/NotAvailableTimeContext';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import * as signalR from '@microsoft/signalr';
 import {
@@ -25,15 +27,13 @@ import {
   StyledCarouselContainer
 } from '../../styles/CustomerStyle/CustomerDashboardStyle';
 import BackAndNextButtons from './BackNextButtons';
-import { fetchStaff } from '../../lib/apiClientStaff';
+import { useStaffsContext  } from '../../context/StaffsContext';
 import ShopPicturesCarousel from './ShopPicturesCarousel';
 import NextButton from './NextButton';
 import { Box } from '@mui/material';
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const CustomerDashboard = () => {
-
-
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const businessName = queryParams.get('business_name');
@@ -53,10 +53,13 @@ const CustomerDashboard = () => {
   const [, setRedirectingToOldCustomerForm] = useState(false);
   const { openingHours, fetchOpeningHoursForBusiness } = useOpeningHoursContext();
   const { services, categories, fetchServices, fetchCategories } = useServicesContext();
+  const { fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext();
+  const { fetchAllNotAvailableTimesByBusiness } = useNotAvailableTimeContext();
+  const { fetchAllStaff } = useStaffsContext();
   const [expandedCategoryId, setExpandedCategoryId] = useState(null);
   const connectionRef = useRef(null);
   const isMobile = useMediaQuery('(max-width:500px)');
-  
+
   // Scroll function to scroll to the bottom of the page
   const scrollToBottom = () => {
     if (bottomRef.current) {
@@ -114,7 +117,21 @@ const CustomerDashboard = () => {
         // Listen for staff updates
         newConnection.on('ReceiveStaffUpdate', async (message) => {
           if (businessInfo.businessId) {
-            await fetchStaff(businessInfo.businessId); // Refresh the staff
+            await fetchAllStaff(businessInfo.businessId); // Refresh the staff
+          }
+        });
+
+        // Listen for not available date updates
+        newConnection.on('ReceiveNotAvailableDateUpdate', async (message) => {
+          if (businessInfo.businessId) {
+            await fetchAllNotAvailableDatesByBusiness(businessInfo.businessId); // Refresh not available dates
+          }
+        });
+
+        // Listen for not available time updates
+        newConnection.on('ReceiveNotAvailableTimeUpdate', async (message) => {
+          if (businessInfo.businessId) {
+            await fetchAllNotAvailableTimesByBusiness(businessInfo.businessId); // Refresh not available times
           }
         });
 
@@ -130,7 +147,13 @@ const CustomerDashboard = () => {
         connectionRef.current.stop();
       }
     };
-  }, [businessInfo.businessId, fetchServices, fetchCategories]);
+  }, [
+    businessInfo.businessId,
+    fetchServices,
+    fetchAllStaff,
+    fetchAllNotAvailableDatesByBusiness,
+    fetchAllNotAvailableTimesByBusiness
+  ]);
 
   const handleServiceSelect = (service) => {
     setSelectedServices([...selectedServices, service]);
