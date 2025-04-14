@@ -182,13 +182,24 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
     if (isWithinNextThreeHours(timeSlot)) return false;
 
     // Check if the end of the slot overlaps with any "not available" times
-    return !notAvailableTimeSlots.some(notAvailableSlot => {
+    const overlaps = notAvailableTimeSlots.some(notAvailableSlot => {
       const notAvailableStart = moment(notAvailableSlot);
       const notAvailableEnd = notAvailableStart.clone().add(10, 'minutes');
-
+  
       // Return true if there is any overlap
       return slotEnd.isAfter(notAvailableStart) && slotMoment.isBefore(notAvailableEnd);
     });
+  
+    if (overlaps) return false;
+    // Prevent booking if totalDuration ends right when notAvailable starts
+    const overlapsBeforeNotAvailableStart = notAvailableTimes.some(({ from }) => {
+      const notAvailableStart = moment(from);
+      const latestAllowedSlot = notAvailableStart.clone().subtract(totalDuration, 'minutes');
+      return slotMoment.isAfter(latestAllowedSlot) && slotMoment.isBefore(notAvailableStart);
+    });
+    if (overlapsBeforeNotAvailableStart) return false;
+  
+    return true;
   };
 
   // Disable dates that are not available based on intervals
@@ -200,7 +211,6 @@ const MyDatePicker = ({ businessId, staffId, selectedDate, onDateChange, selecte
     });
     // Disable date if it's a holiday in Austria
     const isHoliday = austrianHolidays.includes(date.format('YYYY-MM-DD'));
-
     return isInUnavailableRange || isHoliday;
   };
 
