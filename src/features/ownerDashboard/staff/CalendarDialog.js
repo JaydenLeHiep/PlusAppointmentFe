@@ -83,11 +83,16 @@ const CalendarDialog = ({ open, onClose, businessId, staffId, notAvailableDates,
         const { startDate, endDate } = state[0];
         if (!startDate || !endDate || !staffId) return;
 
+        const timeZone = 'Europe/Vienna';
+
+        const start = moment.tz(startDate, timeZone).startOf('day');
+        const end = moment.tz(endDate, timeZone).startOf('day');
+
         const notAvailableDateData = {
             staffId,
             businessId,
-            startDate: moment(startDate).tz('UTC').toISOString(),
-            endDate: moment(endDate).tz('UTC').toISOString(),
+            startDate: start.toISOString(), // 00:00 Vienna → UTC
+            endDate: end.toISOString(),     // 00:00 Vienna → UTC
             reason: 'Not Available',
         };
 
@@ -232,7 +237,7 @@ const CalendarDialog = ({ open, onClose, businessId, staffId, notAvailableDates,
 
                 <Box mt={4} width="100%">
                     <List>
-                    {Array.isArray(notAvailableDates) && notAvailableDates.length > 0 ? (
+                        {Array.isArray(notAvailableDates) && notAvailableDates.length > 0 ? (
                             notAvailableDates
                                 .filter(date => date.staffId === staffId) // Filter dates specific to the selected staff
                                 .map((date) => (
@@ -286,10 +291,10 @@ const CalendarDialog = ({ open, onClose, businessId, staffId, notAvailableDates,
                                                         onChange={item => setState([item.selection])}
                                                         showSelectionPreview={true}
                                                         moveRangeOnFirstSelection={false}
-                                                        months={1} 
+                                                        months={1}
                                                         ranges={state}
                                                         direction="horizontal"
-                                                        sx={dateRangePickerStyle}                                        
+                                                        sx={dateRangePickerStyle}
                                                     />
                                                 )}
                                                 <Box display="flex" justifyContent="space-between" width="100%" mb={1}>

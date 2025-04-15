@@ -9,29 +9,28 @@ export const ContainerTypography = styled(Typography)(({ theme }) => ({
 }));
 
 export const CustomListItem = styled(ListItem)(({ theme }) => ({
+  width: '100%',
+  padding: '16px',
+  marginBottom: '8px',
   borderRadius: '12px',
-  backgroundColor: '#ff69b4', // Main hot pink
-  marginBottom: theme.spacing(3),
-  padding: '20px',
-  boxShadow: '0px 4px 12px rgba(255, 20, 147, 0.3)', // Softer pink shadow
-  border: '1px solid #d63384', // Deeper magenta-pink border
-  cursor: 'pointer',
-  
+  backgroundColor: '#eff8ff', 
+  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+  border: '1px solid #1976d2',
   '&:hover': {
-    boxShadow: '0px 8px 16px rgba(255, 20, 147, 0.5)', // Stronger pink shadow on hover
-    backgroundColor: '#e05297', // Slightly darker pink
-    border: '1px solid #c2185b', // Darker pink-red border
+    backgroundColor: '#e6f1ff',
+    boxShadow: '0px 8px 16px rgba(33, 150, 243, 0.2)',
+    border: '1px solid #64b5f6',
   },
 }));
 
 export const BusinessNameTypography = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
-  color: 'white',
+  color: '#555',
 }));
 
 export const BusinessAddressTypography = styled(Typography)(({ theme }) => ({
   display: 'block',
-  color: 'white',
+  color: '#555',
   marginTop: '8px',
 }));
 

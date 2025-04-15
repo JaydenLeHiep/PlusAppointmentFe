@@ -12,6 +12,9 @@ import ThankYou from './ThankYou';
 import { fetchBusinessesByName } from '../../lib/apiClientBusiness';
 import { useServicesContext } from '../../context/ServicesContext';
 import { useOpeningHoursContext } from '../../context/OpeningHoursContext';
+import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext';
+import { useNotAvailableTimeContext } from '../../context/NotAvailableTimeContext';
+import useMediaQuery from "@mui/material/useMediaQuery";
 import * as signalR from '@microsoft/signalr';
 import {
   DashboardContainer,
@@ -24,15 +27,13 @@ import {
   StyledCarouselContainer
 } from '../../styles/CustomerStyle/CustomerDashboardStyle';
 import BackAndNextButtons from './BackNextButtons';
-import { fetchStaff } from '../../lib/apiClientStaff';
+import { useStaffsContext  } from '../../context/StaffsContext';
 import ShopPicturesCarousel from './ShopPicturesCarousel';
 import NextButton from './NextButton';
 import { Box } from '@mui/material';
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const CustomerDashboard = () => {
-
-
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const businessName = queryParams.get('business_name');
@@ -52,11 +53,15 @@ const CustomerDashboard = () => {
   const [, setRedirectingToOldCustomerForm] = useState(false);
   const { openingHours, fetchOpeningHoursForBusiness } = useOpeningHoursContext();
   const { services, categories, fetchServices, fetchCategories } = useServicesContext();
+  const { fetchAllNotAvailableDatesByBusiness } = useNotAvailableDateContext();
+  const { fetchAllNotAvailableTimesByBusiness } = useNotAvailableTimeContext();
+  const { fetchAllStaff } = useStaffsContext();
   const [expandedCategoryId, setExpandedCategoryId] = useState(null);
   const connectionRef = useRef(null);
+  const isMobile = useMediaQuery('(max-width:500px)');
 
-   // Scroll function to scroll to the bottom of the page
-   const scrollToBottom = () => {
+  // Scroll function to scroll to the bottom of the page
+  const scrollToBottom = () => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -112,7 +117,21 @@ const CustomerDashboard = () => {
         // Listen for staff updates
         newConnection.on('ReceiveStaffUpdate', async (message) => {
           if (businessInfo.businessId) {
-            await fetchStaff(businessInfo.businessId); // Refresh the staff
+            await fetchAllStaff(businessInfo.businessId); // Refresh the staff
+          }
+        });
+
+        // Listen for not available date updates
+        newConnection.on('ReceiveNotAvailableDateUpdate', async (message) => {
+          if (businessInfo.businessId) {
+            await fetchAllNotAvailableDatesByBusiness(businessInfo.businessId); // Refresh not available dates
+          }
+        });
+
+        // Listen for not available time updates
+        newConnection.on('ReceiveNotAvailableTimeUpdate', async (message) => {
+          if (businessInfo.businessId) {
+            await fetchAllNotAvailableTimesByBusiness(businessInfo.businessId); // Refresh not available times
           }
         });
 
@@ -128,7 +147,13 @@ const CustomerDashboard = () => {
         connectionRef.current.stop();
       }
     };
-  }, [businessInfo.businessId, fetchServices, fetchCategories]);
+  }, [
+    businessInfo.businessId,
+    fetchServices,
+    fetchAllStaff,
+    fetchAllNotAvailableDatesByBusiness,
+    fetchAllNotAvailableTimesByBusiness
+  ]);
 
   const handleServiceSelect = (service) => {
     setSelectedServices([...selectedServices, service]);
@@ -163,7 +188,7 @@ const CustomerDashboard = () => {
     if (selectedServices.length > 0 && selectedStaff && selectedDate && selectedTime) {
       const appointmentDetails = selectedServices.map(service => {
         const appointmentTime = `${selectedDate.format('YYYY-MM-DD')}T${selectedTime.substring(11, 16)}`;
-  
+
         return {
           serviceName: service.name,
           staffName: selectedStaff.name,
@@ -178,14 +203,14 @@ const CustomerDashboard = () => {
           ]
         };
       });
-  
+
       // Filter out any services with the same serviceId that are already in selectedAppointments
       const updatedAppointments = appointmentDetails.filter(newAppointment => {
-        return !selectedAppointments.some(existingAppointment => 
+        return !selectedAppointments.some(existingAppointment =>
           existingAppointment.services.some(service => service.serviceId === newAppointment.services[0].serviceId)
         );
       });
-  
+
       setSelectedAppointments(prevAppointments => [...prevAppointments, ...updatedAppointments]);
       setView('overview');
     }
@@ -305,11 +330,20 @@ const CustomerDashboard = () => {
     return sum + parsedDuration;
   }, 0);
 
-  const columns = [[], [], []];
-  categories.forEach((category, index) => {
-    columns[index % 3].push(category);
-  });
+  // Sort categories alphabetically before distributing them into columns
+  const sortedCategories = [...categories].sort((a, b) => a.name.localeCompare(b.name));
 
+  let columns = [[], [], []];
+
+  // Distribute categories into columns only if not on mobile
+  if (!isMobile) {
+    sortedCategories.forEach((category, index) => {
+      columns[index % 3].push(category);
+    });
+  } else {
+    // If mobile, keep everything in a single column to maintain order
+    columns = [sortedCategories];
+  }
   // Function to delete the appointment by index
   const handleDeleteAppointment = (index) => {
     setSelectedAppointments(prevAppointments => prevAppointments.filter((_, i) => i !== index));
@@ -409,6 +443,7 @@ const CustomerDashboard = () => {
                 onAddMoreServices={() => setView('services')}
                 onFinish={handleFinish}
                 onDeleteAppointment={handleDeleteAppointment}
+                businessId={businessInfo.businessId}
               />
             </Box>
           )}

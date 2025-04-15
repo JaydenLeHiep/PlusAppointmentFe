@@ -27,11 +27,9 @@ const BusinessList = ({ businesses, onBusinessClick }) => {
         <Button
           variant="contained"
           sx={{
-            backgroundColor: '#ff69b4',
-            '&:hover': {
-              backgroundColor: '#e05297', // Slightly darker red on hover
+            '&:hover': {      
             },
-            color: 'white', // Ensures text is visible
+            color: 'white',
           }}
           onClick={handleChangePasswordClick}
         >
@@ -42,7 +40,7 @@ const BusinessList = ({ businesses, onBusinessClick }) => {
       <ContainerTypography
         variant="h5"
         gutterBottom
-        sx={{ color: '#e6007e' }}
+        sx={{ color: 'Black' }}
       >
         {t('myBusinesses')}
       </ContainerTypography>

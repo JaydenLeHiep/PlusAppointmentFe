@@ -5,7 +5,7 @@ import { Typography } from '@mui/material';
 export const CategoryHeader = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1.2, 3),
   margin: theme.spacing(0, 1),
-  background: 'rgba(255, 105, 180, 0.7)', // Soft pink transparent background
+  background: '#ffd2d9', 
   borderRadius: '12px',
   textAlign: 'left',
   cursor: 'pointer',
@@ -15,15 +15,15 @@ export const CategoryHeader = styled(Paper)(({ theme }) => ({
   boxSizing: 'border-box',
   position: 'relative', 
   zIndex: 10, 
-  border: '1px solid #D63384', // Deep pink border
-  boxShadow: '0 2px 10px rgba(255, 20, 147, 0.5)', 
+  border: '1.2px solid #7b7d7b',
+  boxShadow: 'none',
   overflow: 'hidden',
   '&:hover': {
-    background: 'rgba(255, 105, 180, 0.9)', // Brighter pink on hover
+    background: '#ffc4cf',
     border: '1px solid #C2185B',
   },
   '&:active': {
-    background: 'rgba(255, 20, 147, 1)', 
+    background: '#ffb2bf',
     borderRadius: '16px',
   },
   [theme.breakpoints.down('sm')]: {
@@ -68,14 +68,11 @@ export const ServiceItem = styled(Paper)(({ theme, selected }) => ({
 }));
 
 export const CategoryText = styled(Typography)(({ theme }) => ({
-  color: '#FFFFFF', // White text for contrast
-  fontSize: '1.5rem',
-  fontWeight: 'bold', 
-  textShadow: '0px 0px 5px rgba(255, 255, 255, 0.7)', 
+  color: 'black', // Corrected the typo here
+  fontSize: '1.4rem',
   marginBottom: theme.spacing(0.5),
-  zIndex: 11, 
   [theme.breakpoints.down('sm')]: {
-    fontSize: '1.2rem',
+      fontSize: '1.2rem',
   },
 }));
 
