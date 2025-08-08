@@ -46,18 +46,6 @@ const Footer = () => {
           <img src={GermanFlag} alt="German" style={{ width: '32px', height: 'auto' }} />
         </IconButton>
       </Box>
-
-      {/* Facebook Link for Hiệp */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '0.5rem',
-        }}
-      >
-        
-      </Box>
     </Box>
   );
 };

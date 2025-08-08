@@ -194,7 +194,7 @@ export const fetchAppointmentsByCustomerId = async (customerId) => {
 
 // delete the appointment for the customer 
 export const deleteAppointmentForCustomer = async (appointmentId) => {
-  const appointmentBusinessApiUrl = `${appointmentApiUrl}/${appointmentId}`;
+  const appointmentBusinessApiUrl = `${appointmentApiUrl}/${appointmentId}/customer`;
   const response = await fetch(appointmentBusinessApiUrl, {
     method: 'DELETE',
   });
