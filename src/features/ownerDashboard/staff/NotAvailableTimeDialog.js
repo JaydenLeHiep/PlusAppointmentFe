@@ -122,7 +122,8 @@ const NotAvailableTimeDialog = ({ open, onClose, businessId, staffId, notAvailab
 
                 // Combine with notAvailableTimes for the same date
                 const notAvailableTimesForDate = notAvailableTimes.filter(time =>
-                    moment(time.date).format('YYYY-MM-DD') === formattedDate
+                    moment(time.date).format('YYYY-MM-DD') === formattedDate &&
+                    time.staffId === staffId
                 );
 
                 // Calculate disabled slots based on both appointments and notAvailableTimes
