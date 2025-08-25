@@ -6,6 +6,7 @@ import CalendarViewControls from './CalendarViewControlls';
 import CalendarDayCell from './CalendarDayCell';
 import FullCalendarWrapper from './FullCalendarWrapper';
 import { useTranslation } from 'react-i18next';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const views = ['dayGridMonth', 'timeGridWeek', 'resourceTimeGridDay'];
 
@@ -313,20 +314,32 @@ const FullCalendarComponent = ({ events, staff, services, notAvailableDates, not
         </ButtonGroup>
       )}
 
-      <FullCalendarWrapper
-        currentView={currentView}
-        events={
-          currentView === 'resourceTimeGridDay' || currentView === 'timeGridWeek'
-            ? [...appointmentEvents, ...notAvailableEvents, ...notAvailableTimeEvents]
-            : appointmentEvents
-        }
-        resources={currentView === 'resourceTimeGridDay' ? resources : []}
-        handleDateClick={handleDateClick}
-        handleEventClick={handleEventClick}
-        renderEventContent={renderEventContent}
-        renderDayCell={(dayCellInfo) => <CalendarDayCell dayCellInfo={dayCellInfo} events={events} currentView={currentView} />}
-        eventOverlap={eventOverlap}
-      />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentView}
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -50 }}
+          transition={{ duration: 0.3 }}
+          style={{ width: '100%' }}
+        >
+          <FullCalendarWrapper
+            currentView={currentView}
+            events={
+              currentView === 'resourceTimeGridDay' || currentView === 'timeGridWeek'
+                ? [...appointmentEvents, ...notAvailableEvents, ...notAvailableTimeEvents]
+                : appointmentEvents
+            }
+            resources={currentView === 'resourceTimeGridDay' ? resources : []}
+            handleDateClick={handleDateClick}
+            handleEventClick={handleEventClick}
+            renderEventContent={renderEventContent}
+            renderDayCell={(dayCellInfo) => <CalendarDayCell dayCellInfo={dayCellInfo} events={events} currentView={currentView} />}
+            eventOverlap={eventOverlap}
+            afterUpdate={afterUpdate}
+          />
+        </motion.div>
+      </AnimatePresence>
 
       {selectedAppointment && selectedAppointment.display !== 'background' && (
         <AppointmentInfoModal

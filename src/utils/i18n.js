@@ -268,7 +268,7 @@ i18n
         checkInInfo: CheckInInfoEn,
         customerInfo: customerInfoEn,
         bulkEmailModal: bulkEmailModalEn,
-        notificationPopover: notificationPopoverEn
+        notificationPopover: notificationPopoverEn,
         // Add other namespaces for English
       },
       vi: {
@@ -309,7 +309,7 @@ i18n
         changePasswordForm: changePasswordFormVi,
         customerInfo: customerInfoVi,
         bulkEmailModal: bulkEmailModalVi,
-        notificationPopover: notificationPopoverGe
+        notificationPopover: notificationPopoverVi
         // Add other namespaces for Vietnamese
       },
       ge: {  // Add a new language key for German
@@ -361,7 +361,7 @@ i18n
         checkInInfo: CheckInInfoGe,
         customerInfo: customerInfoGe,
         bulkEmailModal: bulkEmailModalGe,
-        notificationPopover: notificationPopoverVi
+        notificationPopover: notificationPopoverGe
       },
     },
     lng: 'ge', // default language

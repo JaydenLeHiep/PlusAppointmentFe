@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
+import { motion } from 'framer-motion';
 
 const CalendarDayCell = ({ dayCellInfo, events, currentView }) => {
   const date = dayCellInfo.date;
@@ -13,13 +14,13 @@ const CalendarDayCell = ({ dayCellInfo, events, currentView }) => {
 
   if (currentView === 'dayGridMonth') {
     return (
-      <Box
-        sx={{
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
+      <motion.div
+        key={currentView}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -50 }}
+        transition={{ duration: 0.3 }}
+        style={{ width: '100%' }}
       >
         {uniqueAppointmentCount > 0 && (
           <Box
@@ -37,7 +38,7 @@ const CalendarDayCell = ({ dayCellInfo, events, currentView }) => {
           </Box>
         )}
         <div>{date.getDate()}</div>
-      </Box>
+      </motion.div>
     );
   }
 
