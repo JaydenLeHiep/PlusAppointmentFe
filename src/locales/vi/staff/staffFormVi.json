@@ -1,9 +1,10 @@
 {
-    "name": "Tên",
-    "email": "Email",
-    "phone": "Số điện thoại",
-    "password": "Mật khẩu",
-    "passwordError": "Mật khẩu phải dài ít nhất 8 ký tự và bao gồm ít nhất một chữ cái viết hoa, một chữ cái viết thường, một số và một ký tự đặc biệt.",
-    "cancel": "Hủy bỏ"
-  }
-  
+  "name": "Tên",
+  "email": "Email",
+  "phone": "Số điện thoại",
+  "password": "Mật khẩu",
+  "passwordError": "Mật khẩu phải dài ít nhất 8 ký tự và bao gồm ít nhất một chữ cái viết hoa, một chữ cái viết thường, một số và một ký tự đặc biệt.",
+  "cancel": "Hủy bỏ",
+  "requiredField": "Vui lòng nhập thông tin này.",
+  "optionalForUpdate": "Để trống nếu muốn giữ giá trị hiện tại."
+}

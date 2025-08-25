@@ -96,6 +96,7 @@ const StaffList = ({
                     handleCancelForm={handleCancelForm}
                     buttonText={t('updateStaffButton')}
                     buttonColor="#28a745"
+                    mode="update" 
                   />
                 </Box>
               </Collapse>
