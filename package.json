@@ -36,6 +36,7 @@
     "@tinymce/tinymce-react": "^5.1.1",
     "css-loader": "^7.1.2",
     "date-holidays": "^3.23.12",
+    "framer-motion": "^12.23.12",
     "i18next": "^23.14.0",
     "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",
