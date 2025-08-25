@@ -14,7 +14,11 @@ import { useCustomersContext } from '../../context/CustomerContext';
 import { useNotAvailableDateContext } from '../../context/NotAvailableDateContext';
 import { useNotAvailableTimeContext } from '../../context/NotAvailableTimeContext';
 import { useOpeningHoursContext } from '../../context/OpeningHoursContext';
+import { useWorkSessionsContext } from '../../context/WorkSessionsContext';
+import { useCalculateMoneyContext } from '../../context/CalculateMoneyContext';
+import CalculateMoneyView from '../CalculateMoney/CalculateMoneyView';
 import CustomerInfo from '../customerInfo/CustomerInfo';
+import { AnimatePresence, motion } from 'framer-motion';
 import * as signalR from '@microsoft/signalr';
 import {
   RootContainer,
@@ -22,6 +26,8 @@ import {
   ContentContainer,
   StyledCard,
   LoadingContainer,
+  CarouselIndicatorContainer,
+  CarouselDot
 } from '../../styles/OwnerStyle/OwnerDashboardStyles';
 import { useNotificationsContext } from '../../context/NotificationsContext';
 import Fireworks from '../../styles/OwnerStyle/Fireworks';
@@ -37,6 +43,14 @@ const OwnerDashboard = () => {
   const { notifications, fetchAllNotifications } = useNotificationsContext();
   const { notAvailableTimes, fetchAllNotAvailableTimesByBusiness } = useNotAvailableTimeContext();
   const { openingHours, fetchOpeningHoursForBusiness } = useOpeningHoursContext();
+  const { workSessions, fetchWorkSessionsByBusinessData } = useWorkSessionsContext();
+  const {
+    businessEarnings,
+    getBusinessYearlyEarnings,
+    getBusinessMonthlyEarnings,
+    getBusinessWeeklyEarnings,
+    getBusinessDailyEarnings
+  } = useCalculateMoneyContext();
 
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
@@ -47,6 +61,21 @@ const OwnerDashboard = () => {
   const [newNotificationMessage, setNewNotificationMessage] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { t } = useTranslation('ownerDashboard');
+
+  function getISOWeek(date) {
+    const target = new Date(date.valueOf());
+    const dayNr = (date.getDay() + 6) % 7;
+    target.setDate(target.getDate() - dayNr + 3);
+    const firstThursday = new Date(target.getFullYear(), 0, 4);
+    const diff = target - firstThursday;
+    return 1 + Math.round((diff / 86400000 - 3 + ((firstThursday.getDay() + 6) % 7)) / 7);
+  }
+
+  const variants = {
+    initial: { opacity: 0, x: 50 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -50 }
+  };
 
   useEffect(() => {
     const loadBusinesses = async () => {
@@ -61,44 +90,38 @@ const OwnerDashboard = () => {
         setLoading(false);
       }
     };
-
     loadBusinesses();
-
   }, []);
 
   useEffect(() => {
     const fetchAllData = async () => {
-      if (selectedBusiness && selectedBusiness.businessId) {
-        setLoading(true);  // Set loading to true before fetching data
-        try {
-          await Promise.all([
-            fetchAppointmentsForBusiness(selectedBusiness.businessId),
-            fetchAllStaff(selectedBusiness.businessId),
-            fetchServices(selectedBusiness.businessId),
-            fetchCategories(),
-            fetchCustomersForBusiness(selectedBusiness.businessId),
-            fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId),
-            fetchAllNotAvailableTimesByBusiness(selectedBusiness.businessId),
-            fetchAllNotifications(selectedBusiness.businessId),
-            fetchOpeningHoursForBusiness(selectedBusiness.businessId)
-          ]);
-
-        } catch (error) {
-          setError(error.message);
-          console.error('Error fetching data:', error);
-        } finally {
-          setLoading(false);  // Set loading to false after fetching data
-        }
+      if (!selectedBusiness?.businessId) return;
+      setLoading(true);
+      try {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentWeek = getISOWeek(now);
+        await Promise.all([
+          fetchAppointmentsForBusiness(selectedBusiness.businessId),
+          fetchAllStaff(selectedBusiness.businessId),
+          fetchServices(selectedBusiness.businessId),
+          fetchCategories(),
+          fetchCustomersForBusiness(selectedBusiness.businessId),
+          fetchAllNotAvailableDatesByBusiness(selectedBusiness.businessId),
+          fetchAllNotAvailableTimesByBusiness(selectedBusiness.businessId),
+          fetchAllNotifications(selectedBusiness.businessId),
+          fetchOpeningHoursForBusiness(selectedBusiness.businessId),
+          fetchWorkSessionsByBusinessData(selectedBusiness.businessId),
+          getBusinessWeeklyEarnings(selectedBusiness.businessId, currentYear, currentWeek)
+        ]);
+      } catch (error) {
+        setError(error.message);
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
     };
-
-    if (selectedBusiness) {
-
-      fetchAllData();
-    } else {
-
-
-    }
+    fetchAllData();
   }, [
     selectedBusiness,
     fetchAppointmentsForBusiness,
@@ -109,10 +132,10 @@ const OwnerDashboard = () => {
     fetchAllNotAvailableDatesByBusiness,
     fetchAllNotAvailableTimesByBusiness,
     fetchAllNotifications,
-    fetchOpeningHoursForBusiness
+    fetchOpeningHoursForBusiness,
+    fetchWorkSessionsByBusinessData,
+    getBusinessWeeklyEarnings
   ]);
-
-
 
   // Setup SignalR connection
   useEffect(() => {
@@ -219,6 +242,30 @@ const OwnerDashboard = () => {
       } catch (error) {
         console.error('Error connecting to SignalR hub:', error);
       }
+
+      // Work session update
+      ['ReceiveWorkSessionCreated', 'ReceiveWorkSessionUpdated', 'ReceiveWorkSessionDeleted'].forEach(event => {
+        newConnection.on(event, async () => {
+          if (selectedBusiness?.businessId) {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const week = getISOWeek(now);
+            const day = now.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+
+            await fetchWorkSessionsByBusinessData(selectedBusiness.businessId);
+
+            if (activeView === 'calculateMoney') {
+              await Promise.all([
+                getBusinessYearlyEarnings(selectedBusiness.businessId, year),
+                getBusinessMonthlyEarnings(selectedBusiness.businessId, year, month),
+                getBusinessWeeklyEarnings(selectedBusiness.businessId, year, week),
+                getBusinessDailyEarnings(selectedBusiness.businessId, day),
+              ]);
+            }
+          }
+        });
+      });
     };
 
     connectToHub();
@@ -230,6 +277,7 @@ const OwnerDashboard = () => {
     };
   }, [
     selectedBusiness,
+    activeView,
     appointments,
     fetchAppointmentsForBusiness,
     fetchAllStaff,
@@ -239,6 +287,11 @@ const OwnerDashboard = () => {
     fetchAllNotAvailableTimesByBusiness,
     setAppointments,
     fetchAllNotifications,
+    fetchWorkSessionsByBusinessData,
+    getBusinessYearlyEarnings,
+    getBusinessMonthlyEarnings,
+    getBusinessWeeklyEarnings,
+    getBusinessDailyEarnings,
     t
   ]);
 
@@ -256,10 +309,24 @@ const OwnerDashboard = () => {
     setActiveView(view);
   };
 
-  
+    const handleBackToBusinessList = () => {
+    setSelectedBusiness(null);
+  };
+
   return (
     <RootContainer>
-      <Navbar changeView={changeView} />
+      <Navbar changeView={changeView} selectedBusiness={selectedBusiness} />
+      {selectedBusiness && (
+        <CarouselIndicatorContainer>
+          {['dashboard', 'calculateMoney', 'customersInfo'].map((view) => (
+            <CarouselDot
+              key={view}
+              onClick={() => changeView(view)}
+              active={activeView === view}
+            />
+          ))}
+        </CarouselIndicatorContainer>
+      )}
       <MainContainer>
       <Fireworks />
         <ContentContainer>
@@ -271,44 +338,59 @@ const OwnerDashboard = () => {
             ) : error ? (
               <Alert severity="error">{error}</Alert>
             ) : selectedBusiness ? (
-              <>
-                {activeView === 'dashboard' && (
-                  <>
-                    <BusinessDetails
-                      selectedBusiness={selectedBusiness}
-                      setSelectedBusiness={setSelectedBusiness}
-                      staff={staff}
-                      services={services}
-                      categories={categories}
-                      appointments={appointments}
-                      customers={customers}
-                      notAvailableDates={notAvailableDates}
-                      notAvailableTimes={notAvailableTimes}
-                      notifications={notifications}
-                      fetchAppointmentById={fetchAppointmentById}
-                      openingHours={openingHours} 
-                    />
-
-                    <AppointmentList
-                      appointments={appointments}
-                      staff={staff}
-                      services={services}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeView}
+                  variants={variants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  transition={{ duration: 0.25 }}
+                  style={{ width: '100%', height: '100%' }}
+                >
+                  {activeView === 'dashboard' && (
+                    <>
+                      <BusinessDetails
+                        selectedBusiness={selectedBusiness}
+                        setSelectedBusiness={setSelectedBusiness}
+                        staff={staff}
+                        services={services}
+                        categories={categories}
+                        appointments={appointments}
+                        customers={customers}
+                        notAvailableDates={notAvailableDates}
+                        notAvailableTimes={notAvailableTimes}
+                        notifications={notifications}
+                        fetchAppointmentById={fetchAppointmentById}
+                        openingHours={openingHours}
+                        onBack={handleBackToBusinessList} 
+                      />
+                      <AppointmentList
+                        appointments={appointments}
+                        staff={staff}
+                        services={services}
+                        businessId={selectedBusiness.businessId}
+                        fetchAppointmentById={fetchAppointmentById}
+                      />
+                    </>
+                  )}
+                  {activeView === 'calculateMoney' && (
+                    <CalculateMoneyView
                       businessId={selectedBusiness.businessId}
-                      fetchAppointmentById={fetchAppointmentById}
+                      workSessions={workSessions}
+                      earningsSummary={businessEarnings}
+                      staff={staff}
                     />
-                  </>
-                )}
-
-                {activeView === 'customersInfo' && (
-                  <>
+                  )}
+                  {activeView === 'customersInfo' && (
                     <CustomerInfo
                       customers={customers || []}
                       businessId={selectedBusiness?.businessId}
-                      businessName= {selectedBusiness?.name}
+                      businessName={selectedBusiness?.name}
                     />
-                  </>
-                )}
-              </>
+                  )}
+                </motion.div>
+              </AnimatePresence>
             ) : (
               <BusinessList businesses={businesses} onBusinessClick={handleBusinessClick} />
             )}
@@ -316,7 +398,6 @@ const OwnerDashboard = () => {
         </ContentContainer>
       </MainContainer>
       <Footer />
-      {/* Snackbar for notification */}
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={snackbarOpen}

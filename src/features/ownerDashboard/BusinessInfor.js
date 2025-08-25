@@ -16,6 +16,7 @@ import Face2Icon from '@mui/icons-material/Face2';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationPopover from './NotificationPopover';
 import { useNotificationsContext } from '../../context/NotificationsContext';
+import { motion } from 'framer-motion'; 
 
 const BusinessInfo = ({
   selectedBusiness,
@@ -56,41 +57,54 @@ const BusinessInfo = ({
     <BusinessInfoContainer>
       <BusinessInfoHeader>
         <IconButtonGroup>
-          <IconButton color="primary" onClick={onBack}>
-            <ArrowCircleLeftTwoToneIcon sx={IconStyle} />
-          </IconButton>
-          <IconButton color="secondary" onClick={onAddAppointment}>
-            <AddCircleTwoToneIcon sx={IconStyle} />
-          </IconButton>
-          <IconButton color="primary" onClick={handleCustomerOpen}>
-            <Face2Icon sx={IconStyle} />
-          </IconButton>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <IconButton color="primary" onClick={onBack}>
+              <ArrowCircleLeftTwoToneIcon sx={IconStyle} />
+            </IconButton>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <IconButton color="secondary" onClick={onAddAppointment}>
+              <AddCircleTwoToneIcon sx={IconStyle} />
+            </IconButton>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <IconButton color="primary" onClick={handleCustomerOpen}>
+              <Face2Icon sx={IconStyle} />
+            </IconButton>
+          </motion.div>
         </IconButtonGroup>
         <IconButtonGroup>
-          <CustomBadge badgeContent={staffCount} color="primary">
-            <InsertEmoticonTwoToneIcon
-              onClick={handleStaffOpen}
-              sx={IconStyle}
-            />
-          </CustomBadge>
-          <CustomBadge
-            badgeContent={servicesCount}
-            sx={{ "& .MuiBadge-badge": { backgroundColor: 'green', color: 'white' } }}
-          >
-            <AutoAwesomeTwoToneIcon
-              onClick={handleServiceOpen}
-              sx={IconStyle}
-            />
-          </CustomBadge>
-          <CustomBadge
-            badgeContent={unseenNotificationCount} // Only count unseen notifications
-            sx={{ "& .MuiBadge-badge": { backgroundColor: 'red', color: 'white' } }}
-          >
-            <NotificationsIcon
-              onClick={handleNotificationOpen} // Open notification popover
-              sx={IconStyle}
-            />
-          </CustomBadge>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <CustomBadge
+              badgeContent={staffCount} color="primary" sx={{ marginRight: 2 }}>
+              <InsertEmoticonTwoToneIcon
+                onClick={handleStaffOpen}
+                sx={IconStyle}
+              />
+            </CustomBadge>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <CustomBadge
+              badgeContent={servicesCount}
+              sx={{ "& .MuiBadge-badge": { backgroundColor: 'green', color: 'white' } }}
+            >
+              <AutoAwesomeTwoToneIcon
+                onClick={handleServiceOpen}
+                sx={IconStyle}
+              />
+            </CustomBadge>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <CustomBadge
+              badgeContent={unseenNotificationCount}
+              sx={{ "& .MuiBadge-badge": { backgroundColor: 'orange', color: 'black' } }}
+            >
+              <NotificationsIcon
+                onClick={handleNotificationOpen}
+                sx={IconStyle}
+              />
+            </CustomBadge>
+          </motion.div>
         </IconButtonGroup>
       </BusinessInfoHeader>
       <Box mt={2}>

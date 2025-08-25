@@ -28,6 +28,9 @@ import { NotAvailableDateProvider } from './context/NotAvailableDateContext';
 import { NotificationsProvider } from './context/NotificationsContext';
 import { NotAvailableTimeProvider } from './context/NotAvailableTimeContext';
 import { OpeningHoursProvider } from './context/OpeningHoursContext';
+import { WorkSessionsProvider } from './context/WorkSessionsContext';
+import { CalculateMoneyProvider } from './context/CalculateMoneyContext';
+
 // utils
 import './utils/i18n'
 
@@ -41,40 +44,44 @@ const App = () => {
     if (user?.role === '') {
       return '/customer-dashboard';
     }
-    return '/'; // Default case, should not happen if roles are properly set
+    return '/';
   };
 
   return (
     <>
       <GlobalStyles />
-      <CustomersProvider>
-        <ServicesProvider>
-          <StaffsProvider>
-            <NotAvailableDateProvider>
-              <NotAvailableTimeProvider>
-                <AppointmentsProvider>
-                  <NotificationsProvider>
-                    <OpeningHoursProvider>
-                      <Routes>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
-                        <Route path="/customer-dashboard" element={<CustomerDashboard />} />
-                        <Route path="/customer-checkin-dashboard" element={<CheckInDashboard />} />
-                        <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
-                        <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
-                        <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
-                        <Route path="/change-password" element={isAuthenticated ? <ChangePasswordForm /> : <Navigate to="/login" />} />
-                        <Route path="/customer-info" element={isAuthenticated ? <CustomerInfo /> : <Navigate to="/login" />} />
-                        <Route path="/delete-appointment-customer" element={<DeleteAppointmentCustomer />} />
-                      </Routes>
-                    </OpeningHoursProvider>
-                  </NotificationsProvider>
-                </AppointmentsProvider>
-              </NotAvailableTimeProvider>
-            </NotAvailableDateProvider>
-          </StaffsProvider>
-        </ServicesProvider>
-      </CustomersProvider>
+      <WorkSessionsProvider>
+        <CalculateMoneyProvider>
+          <CustomersProvider>
+            <ServicesProvider>
+              <StaffsProvider>
+                <NotAvailableDateProvider>
+                  <NotAvailableTimeProvider>
+                    <AppointmentsProvider>
+                      <NotificationsProvider>
+                        <OpeningHoursProvider>
+                          <Routes>
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="/business-home" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <BusinessHomePage />} />
+                            <Route path="/customer-dashboard" element={<CustomerDashboard />} />
+                            <Route path="/customer-checkin-dashboard" element={<CheckInDashboard />} />
+                            <Route path="/login" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <LoginPage />} />
+                            <Route path="/register" element={isAuthenticated ? <Navigate to={getDashboardPath()} /> : <RegisterPage />} />
+                            <Route path="/owner-dashboard" element={isAuthenticated ? <OwnerDashboard /> : <Navigate to="/login" />} />
+                            <Route path="/change-password" element={isAuthenticated ? <ChangePasswordForm /> : <Navigate to="/login" />} />
+                            <Route path="/customer-info" element={isAuthenticated ? <CustomerInfo /> : <Navigate to="/login" />} />
+                            <Route path="/delete-appointment-customer" element={<DeleteAppointmentCustomer />} />
+                          </Routes>
+                        </OpeningHoursProvider>
+                      </NotificationsProvider>
+                    </AppointmentsProvider>
+                  </NotAvailableTimeProvider>
+                </NotAvailableDateProvider>
+              </StaffsProvider>
+            </ServicesProvider>
+          </CustomersProvider>
+        </CalculateMoneyProvider>
+      </WorkSessionsProvider>
     </>
   );
 };
