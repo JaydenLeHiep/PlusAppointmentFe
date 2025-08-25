@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography, IconButton, useMediaQuery } from '@mui/material';
 import ArrowBackIosTwoToneIcon from '@mui/icons-material/ArrowBackIosTwoTone';
 import ArrowForwardIosTwoToneIcon from '@mui/icons-material/ArrowForwardIosTwoTone';
+import { motion } from 'framer-motion';
 import {
   IconContainer,
   IconTreeContainer,
@@ -54,15 +55,19 @@ const CalendarViewControls = ({ currentView, views, viewLabels, onPrevClick, onN
 
       {/* Main Navigation */}
       <Box display="flex" justifyContent="center" alignItems="center">
-        <IconButton onClick={onPrevClick}>
-          <ArrowBackIosTwoToneIcon />
-        </IconButton>
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+          <IconButton onClick={onPrevClick}>
+            <ArrowBackIosTwoToneIcon />
+          </IconButton>
+        </motion.div>
         <Typography variant="h6" sx={{ margin: '0 16px' }}>
           {viewLabels[views.indexOf(currentView)]}
         </Typography>
-        <IconButton onClick={onNextClick}>
-          <ArrowForwardIosTwoToneIcon />
-        </IconButton>
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+          <IconButton onClick={onNextClick}>
+            <ArrowForwardIosTwoToneIcon />
+          </IconButton>
+        </motion.div>
       </Box>
 
       {/* Render Right Icons only if not mobile */}
