@@ -37,7 +37,7 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates, notAvai
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [staffToDelete, setStaffToDelete] = useState(null);
   const [selectedStaffName, setSelectedStaffName] = useState(null);
-  
+
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [selectedStaffId, setSelectedStaffId] = useState(null);
 
@@ -60,17 +60,17 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates, notAvai
 
   const handleCalendarIconClick = (staffId) => {
     const selectedStaff = staff.find((staffMember) => staffMember.staffId === staffId);
-    const staffName = selectedStaff ? selectedStaff.name : ''; 
+    const staffName = selectedStaff ? selectedStaff.name : '';
     setSelectedStaffId(staffId);
-    setSelectedStaffName(staffName); 
+    setSelectedStaffName(staffName);
     setCalendarOpen(true);
   };
-  
+
   const handleClockIconClick = (staffId) => {
     const selectedStaff = staff.find((staffMember) => staffMember.staffId === staffId);
-    const staffName = selectedStaff ? selectedStaff.name : ''; 
+    const staffName = selectedStaff ? selectedStaff.name : '';
     setSelectedStaffId(staffId);
-    setSelectedStaffName(staffName); 
+    setSelectedStaffName(staffName);
     setNotAvailableTimeOpen(true);
   };
 
@@ -240,6 +240,7 @@ const ShowStaffDialog = ({ open, onClose, businessId, notAvailableDates, notAvai
               handleCancelForm={handleCancelForm}
               buttonText={t('addStaff')}
               buttonColor="#007bff"
+              mode="create"
             />
           </Collapse>
           <StaffList

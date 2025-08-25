@@ -16,6 +16,7 @@ import Face2Icon from '@mui/icons-material/Face2';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationPopover from './NotificationPopover';
 import { useNotificationsContext } from '../../context/NotificationsContext';
+import { motion } from 'framer-motion'; 
 
 const BusinessInfo = ({
   selectedBusiness,
@@ -56,51 +57,63 @@ const BusinessInfo = ({
     <BusinessInfoContainer>
       <BusinessInfoHeader>
         <IconButtonGroup>
-          <IconButton onClick={onBack}>
-            <ArrowCircleLeftTwoToneIcon
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <IconButton onClick={onBack}>
+              <ArrowCircleLeftTwoToneIcon
               sx={{ ...IconStyle, color: '#D2691E' }} // Warm orange-brown
             />
-          </IconButton>
-          <IconButton onClick={onAddAppointment}>
-            <AddCircleTwoToneIcon
+            </IconButton>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <IconButton onClick={onAddAppointment}>
+              <AddCircleTwoToneIcon
               sx={{ ...IconStyle, color: '#FF4500' }} // Vibrant orange-red
             />
-          </IconButton>
-          <IconButton onClick={handleCustomerOpen}>
-            <Face2Icon
+            </IconButton>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <IconButton onClick={handleCustomerOpen}>
+              <Face2Icon
               sx={{ ...IconStyle, color: '#B22222' }} // Warm crimson red
             />
-          </IconButton>
+            </IconButton>
+          </motion.div>
         </IconButtonGroup>
 
         <IconButtonGroup>
-          <CustomBadge
-            badgeContent={staffCount}
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <CustomBadge
+              badgeContent={staffCount}
             sx={{ "& .MuiBadge-badge": { backgroundColor: '#ff69b4', color: 'white' } }} // Coral for warmth
           >
-            <InsertEmoticonTwoToneIcon
-              onClick={handleStaffOpen}
-              sx={IconStyle}
-            />
-          </CustomBadge>
-          <CustomBadge
-            badgeContent={servicesCount}
-            sx={{ "& .MuiBadge-badge": { backgroundColor: '#d1007e', color: 'white' } }} // Vibrant orange
-          >
-            <AutoAwesomeTwoToneIcon
-              onClick={handleServiceOpen}
-              sx={IconStyle}
-            />
-          </CustomBadge>
-          <CustomBadge
-            badgeContent={unseenNotificationCount}
-            sx={{ "& .MuiBadge-badge": { backgroundColor: '#b00050', color: 'white' } }} // Tomato red
-          >
-            <NotificationsIcon
-              onClick={handleNotificationOpen}
-              sx={IconStyle}
-            />
-          </CustomBadge>
+              <InsertEmoticonTwoToneIcon
+                onClick={handleStaffOpen}
+                sx={IconStyle}
+              />
+            </CustomBadge>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <CustomBadge
+              badgeContent={servicesCount}
+              sx={{ "& .MuiBadge-badge": { backgroundColor: '#d1007e', color: 'white' } }} // Vibrant orange
+            >
+              <AutoAwesomeTwoToneIcon
+                onClick={handleServiceOpen}
+                sx={IconStyle}
+              />
+            </CustomBadge>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <CustomBadge
+              badgeContent={unseenNotificationCount}
+              sx={{ "& .MuiBadge-badge": { backgroundColor: '#b00050', color: 'white' } }} // Tomato red
+            >
+              <NotificationsIcon
+                onClick={handleNotificationOpen}
+                sx={IconStyle}
+              />
+            </CustomBadge>
+          </motion.div>
         </IconButtonGroup>
 
       </BusinessInfoHeader>

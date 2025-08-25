@@ -11,20 +11,18 @@ export const MainContainer = styled(Box)(({ theme }) => ({
   padding: '0 1rem',
   flex: 1,
   overflow: 'hidden',
-  zIndex: 1, // Keep content above Fireworks
+  zIndex: 1,
   [theme.breakpoints.up('md')]: {
     padding: '0 2rem',
   },
 }));
 
-// Root container style
 export const RootContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   minHeight: '100vh',
 });
 
-// Content container style
 export const ContentContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
@@ -38,31 +36,51 @@ export const ContentContainer = styled(Container)(({ theme }) => ({
   },
 }));
 
-// Card style
 export const StyledCard = styled(Card)(({ theme }) => ({
   width: '100%',
   maxWidth: '100%',
   padding: '1rem',
-  backgroundColor: 'rgba(255, 255, 255, 0.87)', // Add transparency to allow fireworks to show through
+  backgroundColor: 'rgba(255, 255, 255, 0.87)',
   boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
   borderRadius: '8px',
-  marginTop: '10px',
+  marginTop: '20px',
   marginBottom: '10px',
   textAlign: 'left',
-  display: 'flex',
-  flexDirection: 'column',
+  position: 'relative', 
+  overflow: 'hidden', 
   flexGrow: 1,
   [theme.breakpoints.up('md')]: {
     padding: '2rem',
-    marginTop: '30px',
     marginBottom: '30px',
   },
 }));
 
-// Loading container style
 export const LoadingContainer = styled(Box)({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   height: '100%',
 });
+
+export const CarouselIndicatorContainer = styled(Box)(({ theme }) => ({
+  backgroundColor: '#edf2f7',
+  paddingTop: '20px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: theme.spacing(2),
+}));
+
+export const CarouselDot = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'active',
+})(({ theme, active }) => ({
+  width: 50,
+  height: 8,
+  borderRadius: '5px',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease-in-out',
+  backgroundColor: active ? '#3182CE' : '#CBD5E0',
+  '&:hover': {
+    backgroundColor: '#3182CE',
+  },
+}));

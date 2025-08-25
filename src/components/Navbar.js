@@ -13,7 +13,7 @@ import '@fontsource/roboto';
 // Import your photo
 import Logo from '../assets/OwnerTop.jpeg';
 
-const Navbar = ({ changeView }) => {
+const Navbar = ({ changeView, selectedBusiness }) => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation('navbar');
@@ -172,7 +172,7 @@ const Navbar = ({ changeView }) => {
                     {t('login')}
                   </MenuItem>,
                 ]
-              ) : (
+              ) : selectedBusiness ? (
                 [
                   <MenuItem
                     key="home"
@@ -183,6 +183,17 @@ const Navbar = ({ changeView }) => {
                   >
                     {t('home')}
                   </MenuItem>,
+
+                  <MenuItem
+                    key="finance"
+                    onClick={() => {
+                      changeView('calculateMoney');
+                      handleMenuClose();
+                    }}
+                  >
+                    {t('financeOverview')}
+                  </MenuItem>,
+
                   <MenuItem
                     key="customer-info"
                     onClick={() => {
@@ -192,6 +203,7 @@ const Navbar = ({ changeView }) => {
                   >
                     {t('customer')}
                   </MenuItem>,
+
                   <MenuItem
                     key="logout"
                     onClick={() => {
@@ -201,6 +213,18 @@ const Navbar = ({ changeView }) => {
                   >
                     {t('logout')}
                   </MenuItem>,
+                ]
+              ) : (
+                [
+                  <MenuItem
+                    key="logout"
+                    onClick={() => {
+                      handleMenuClose();
+                      handleLogout();
+                    }}
+                  >
+                    {t('logout')}
+                  </MenuItem>
                 ]
               )}
             </Menu>

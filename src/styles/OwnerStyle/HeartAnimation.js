@@ -41,7 +41,7 @@ const HeartAnimation = () => {
         this.speed = random(0.6, 1.2); // Controlled floating speed
         this.opacity = 1;
         this.lifetime = random(500, 800); // How long it stays visible
-        this.fixedFlyHeight = 500; // **💖 Fixed height for heart flight**
+        this.fixedFlyHeight = 750; // **💖 Fixed height for heart flight**
         this.startY = this.y; // Store the initial position
       }
 
