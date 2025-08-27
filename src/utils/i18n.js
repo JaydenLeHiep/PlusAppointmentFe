@@ -132,6 +132,10 @@ import loginHeroEn from '../locales/en/auth/login/loginHeroEn.json';
 import loginHeroVi from '../locales/vi/auth/login/loginHeroVi.json';
 import loginHeroGe from '../locales/ge/ownerDashboard/auth/login/loginHeroGe.json';
 
+import loginHeroStaffEn from '../locales/en/auth/login/loginHeroStaffEn.json';
+import loginHeroStaffVi from '../locales/vi/auth/login/loginHeroStaffVi.json';
+import loginHeroStaffGe from '../locales/ge/ownerDashboard/auth/login/loginHeroStaffGe.json';
+
 // register
 import registerFormEn from '../locales/en/auth/register/registerFormEn.json';
 import registerFormVi from '../locales/vi/auth/register/registerFormVi.json';
@@ -236,6 +240,7 @@ i18n
         businessList: businessListEn,
         loginForm: loginFormEn,
         loginHero: loginHeroEn,
+        loginHeroStaff: loginHeroStaffEn,
         registerForm: registerFormEn,
         registerPage: registerPageEn,
         fullCalendarComponent: fullCalendarComponentEn,
@@ -288,6 +293,7 @@ i18n
         businessList: businessListVi,
         loginForm: loginFormVi,
         loginHero: loginHeroVi,
+        loginHeroStaff: loginHeroStaffVi,
         registerForm: registerFormVi,
         registerPage: registerPageVi,
         fullCalendarComponent: fullCalendarComponentVi,
@@ -325,6 +331,7 @@ i18n
         footer: footerGe,
         loginForm: loginFormGe,
         loginHero: loginHeroGe,
+        loginHeroStaff: loginHeroStaffGe,
         registerForm: registerFormGe,
         registerPage: registerPageGe,
         businessList: businessListGe,
