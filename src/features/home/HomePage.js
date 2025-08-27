@@ -63,6 +63,14 @@ const HomePage = () => {
           >
             {t('businessOwner')}
           </PrimaryButton>
+          <PrimaryButton
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={() => navigate('/staff-login')}
+          >
+            Staff
+          </PrimaryButton>
           <SecondaryButton
             variant="contained"
             color="secondary"
