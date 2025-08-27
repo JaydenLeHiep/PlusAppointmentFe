@@ -63,7 +63,7 @@ export const LoadingContainer = styled(Box)({
 });
 
 export const CarouselIndicatorContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: '#edf2f7',
+  backgroundColor: 'rgb(200, 0, 0)',
   paddingTop: '20px',
   display: 'flex',
   justifyContent: 'center',
@@ -79,8 +79,8 @@ export const CarouselDot = styled(Box, {
   borderRadius: '5px',
   cursor: 'pointer',
   transition: 'all 0.3s ease-in-out',
-  backgroundColor: active ? '#3182CE' : '#CBD5E0',
+  backgroundColor: active ? '#e1ff00ff' : '#ffffffff',
   '&:hover': {
-    backgroundColor: '#3182CE',
+    backgroundColor: '#fbff82ff',
   },
 }));
