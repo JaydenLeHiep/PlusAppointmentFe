@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import {
   DialogTitleStyled,
   CloseIconButtonStyled,
-  StyledTextField 
+  StyledTextField
 } from '../../styles/CalculateMoney/AssignmentCustomerModalStyles';
 import { useWorkSessionsContext } from '../../context/WorkSessionsContext';
 
@@ -39,7 +39,6 @@ const AssignCustomerModal = ({ open, onClose, staff, businessId }) => {
       setForm({ customerName: '', note: '' });
       onClose();
     } catch (err) {
-      // Optionally show error
     } finally {
       setSubmitting(false);
     }
