@@ -13,10 +13,12 @@ import {
   StyledIconButton
 } from '../../styles/OwnerStyle/StaffComPonent/StaffListStyles';
 import AssignCustomerModal from './AssignCustomerModal';
+import SearchBar from '../ownerDashboard/SearchBarContainer'; 
 
 const AssignmentPanel = ({ staff, businessId }) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(""); 
 
   const handleOpenModal = (staff) => {
     setSelectedStaff(staff);
@@ -28,6 +30,10 @@ const AssignmentPanel = ({ staff, businessId }) => {
     setSelectedStaff(null);
   };
 
+  const filteredStaff = staff?.filter(s =>
+    s.name.toLowerCase().includes(searchQuery.trim().toLowerCase())
+  ) || [];
+
   return (
     <div>
       <AssignmentPanelTitleBox>
@@ -36,13 +42,26 @@ const AssignmentPanel = ({ staff, businessId }) => {
         </AssignmentPanelTitle>
       </AssignmentPanelTitleBox>
 
+      <div style={{ margin: '18px 0 12px 0' }}>
+        <SearchBar
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          placeholder="Search staff name..."
+        />
+      </div>
+
       <StaffListOuterContainer>
         <List dense>
-          {staff?.map((s) => (
+          {filteredStaff.length === 0 && (
+            <div style={{ textAlign: "center", color: "#aaa", margin: "30px 0" }}>
+              No staff found.
+            </div>
+          )}
+          {filteredStaff.map((s) => (
             <StyledListItem key={s.staffId}>
               <StyledListItemText
                 primary={
-                  <StyledTypography variant="body1" style={{ fontSize: '1.3em'}}>
+                  <StyledTypography variant="body1" style={{ fontSize: '1.3em' }}>
                     {s.name}
                   </StyledTypography>
                 }
