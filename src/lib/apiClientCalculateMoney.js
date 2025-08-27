@@ -64,11 +64,24 @@ export const fetchBusinessDailyEarnings = async (businessId, date) => {
   return handleApiResponse(response);
 };
 
+export const fetchBusinessTodaySummary = async (businessId) => {
+  const token = localStorage.getItem('token');
+  const url = `${calculateMoneyApiUrl}/business/${businessId}/today-summary`;
+
+  const response = await fetch(url, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  return handleApiResponse(response);
+};
+
 // ==== STAFF ====
 
-export const fetchStaffYearlyEarnings = async (staffId, yearsBack = 5) => {
+export const fetchStaffYearlyEarnings = async (businessId, staffId, yearsBack = 5) => {
   const token = localStorage.getItem('token');
-  const url = `${calculateMoneyApiUrl}/staff/${staffId}/yearly?yearsBack=${yearsBack}`;
+  const url = `${calculateMoneyApiUrl}/business/${businessId}/staff/${staffId}/yearly?yearsBack=${yearsBack}`;
 
   const response = await fetch(url, {
     headers: {
@@ -79,9 +92,9 @@ export const fetchStaffYearlyEarnings = async (staffId, yearsBack = 5) => {
   return handleApiResponse(response);
 };
 
-export const fetchStaffMonthlyEarnings = async (staffId, year) => {
+export const fetchStaffMonthlyEarnings = async (businessId, staffId, year) => {
   const token = localStorage.getItem('token');
-  const url = `${calculateMoneyApiUrl}/staff/${staffId}/monthly?year=${year}`;
+  const url = `${calculateMoneyApiUrl}/business/${businessId}/staff/${staffId}/monthly?year=${year}`;
 
   const response = await fetch(url, {
     headers: {
@@ -92,9 +105,9 @@ export const fetchStaffMonthlyEarnings = async (staffId, year) => {
   return handleApiResponse(response);
 };
 
-export const fetchStaffWeeklyEarnings = async (staffId, year, isoWeek) => {
+export const fetchStaffWeeklyEarnings = async (businessId, staffId, year, isoWeek) => {
   const token = localStorage.getItem('token');
-  const url = `${calculateMoneyApiUrl}/staff/${staffId}/weekly?year=${year}&week=${isoWeek}`;
+  const url = `${calculateMoneyApiUrl}/business/${businessId}/staff/${staffId}/weekly?year=${year}&week=${isoWeek}`;
 
   const response = await fetch(url, {
     headers: {
@@ -105,9 +118,22 @@ export const fetchStaffWeeklyEarnings = async (staffId, year, isoWeek) => {
   return handleApiResponse(response);
 };
 
-export const fetchStaffDailyEarnings = async (staffId, date) => {
+export const fetchStaffDailyEarnings = async (businessId, staffId, date) => {
   const token = localStorage.getItem('token');
-  const url = `${calculateMoneyApiUrl}/staff/${staffId}/daily?date=${date}`;
+  const url = `${calculateMoneyApiUrl}/business/${businessId}/staff/${staffId}/daily?date=${date}`;
+
+  const response = await fetch(url, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  return handleApiResponse(response);
+};
+
+export const fetchStaffTodaySummary = async (businessId, staffId) => {
+  const token = localStorage.getItem('token');
+  const url = `${calculateMoneyApiUrl}/business/${businessId}/staff/${staffId}/today-summary`;
 
   const response = await fetch(url, {
     headers: {
