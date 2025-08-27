@@ -48,7 +48,8 @@ const OwnerDashboard = () => {
     getBusinessYearlyEarnings,
     getBusinessMonthlyEarnings,
     getBusinessWeeklyEarnings,
-    getBusinessDailyEarnings
+    getBusinessDailyEarnings,
+    getBusinessTodaySummary
   } = useCalculateMoneyContext();
 
   const [businesses, setBusinesses] = useState([]);
@@ -128,7 +129,8 @@ const OwnerDashboard = () => {
           fetchAllNotifications(selectedBusiness.businessId),
           fetchOpeningHoursForBusiness(selectedBusiness.businessId),
           fetchWorkSessionsByBusinessData(selectedBusiness.businessId),
-          getBusinessWeeklyEarnings(selectedBusiness.businessId, currentYear, currentWeek)
+          getBusinessWeeklyEarnings(selectedBusiness.businessId, currentYear, currentWeek),
+          getBusinessTodaySummary(selectedBusiness.businessId)
         ]);
       } catch (error) {
         setError(error.message);
@@ -150,7 +152,8 @@ const OwnerDashboard = () => {
     fetchAllNotifications,
     fetchOpeningHoursForBusiness,
     fetchWorkSessionsByBusinessData,
-    getBusinessWeeklyEarnings
+    getBusinessWeeklyEarnings,
+    getBusinessTodaySummary
   ]);
 
   // Setup SignalR connection
@@ -277,6 +280,7 @@ const OwnerDashboard = () => {
                 getBusinessMonthlyEarnings(selectedBusiness.businessId, year, month),
                 getBusinessWeeklyEarnings(selectedBusiness.businessId, year, week),
                 getBusinessDailyEarnings(selectedBusiness.businessId, day),
+                getBusinessTodaySummary(selectedBusiness.businessId)
               ]);
             }
           }
@@ -308,6 +312,7 @@ const OwnerDashboard = () => {
     getBusinessMonthlyEarnings,
     getBusinessWeeklyEarnings,
     getBusinessDailyEarnings,
+    getBusinessTodaySummary,
     t
   ]);
 
@@ -396,6 +401,7 @@ const OwnerDashboard = () => {
                       workSessions={workSessions}
                       earningsSummary={businessEarnings}
                       staff={staff}
+                      currentWeek={getISOWeek(new Date())}
                     />
                   )}
                   {activeView === 'customersInfo' && (
