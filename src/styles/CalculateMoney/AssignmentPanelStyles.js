@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const StaffListOuterContainer = styled(Box)({
-    maxHeight: '60vh',
+    maxHeight: '70vh',
     overflowY: 'auto',
     paddingRight: 10,
 });

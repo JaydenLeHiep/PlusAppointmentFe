@@ -13,7 +13,7 @@ export const MainGrid = styled(Box)(({ theme }) => ({
 }));
 
 export const OverviewSection = styled(Box)(({ theme }) => ({
-  flex: 2,
+  flex: 3,
   paddingRight: 12,
   [theme.breakpoints.up('md')]: {
     borderRight: '1px solid #ccc',
